@@ -5,11 +5,15 @@ import '../style/font_style.dart';
 
 class TextFieldWidget extends StatefulWidget {
   final String? hintText;
-  final GlobalKey<FormState>? keyword;
-  final TextEditingController? controller; // Add controller property
+  final GlobalKey<FormState>? formKey;
+  final TextEditingController? controller;
 
-  const TextFieldWidget(
-      {super.key, this.hintText, this.controller, this.keyword});
+  const TextFieldWidget({
+    Key? key,
+    this.hintText,
+    this.formKey,
+    this.controller,
+  }) : super(key: key);
 
   @override
   _TextFieldWidgetState createState() => _TextFieldWidgetState();
@@ -18,25 +22,30 @@ class TextFieldWidget extends StatefulWidget {
 class _TextFieldWidgetState extends State<TextFieldWidget> {
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 38,
-      width: 332,
-      child: TextFormField(
-        key: widget.keyword,
-        controller: widget.controller, // Set the controller
-        // keyboardType: TextInputType.multiline,
-        // minLines: 5,
-        // maxLines: 10,
-        decoration: InputDecoration(
-          filled: true,
-          fillColor: ColorStyle().tertiaryColors,
-          border: OutlineInputBorder(
+    return Form(
+      key: widget.formKey,
+      child: SizedBox(
+        height: 38,
+        child: TextFormField(
+          controller: widget.controller,
+          decoration: InputDecoration(
+            filled: true,
+            fillColor: ColorStyle().tertiaryColors,
+            border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(4),
-              borderSide: BorderSide.none),
-          hintText: widget.hintText,
-          hintStyle: FontFamily()
-              .regularText
-              .copyWith(color: ColorStyle().disableColors),
+              borderSide: BorderSide.none,
+            ),
+            hintText: widget.hintText,
+            hintStyle: FontFamily().regularText.copyWith(
+                  color: ColorStyle().disableColors,
+                ),
+          ),
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Please enter a skill';
+            }
+            return null;
+          },
         ),
       ),
     );

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mentormatch_apps/screen/Login_screen.dart';
-import 'package:mentormatch_apps/screen/register_screen.dart';
+import 'package:mentormatch_apps/screen/login-register/Login_screen.dart';
+import 'package:mentormatch_apps/screen/login-register/register_screen.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
 import 'package:mentormatch_apps/widget/button.dart';
 
