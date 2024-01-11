@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:mentormatch_apps/screen/MyClass/MyClass_list_screen.dart';
+import 'package:mentormatch_apps/screen/community_screen.dart';
 import 'package:mentormatch_apps/screen/login-register/Login_screen.dart';
 import 'package:mentormatch_apps/screen/login-register/edit_profile.dart';
 import 'package:mentormatch_apps/screen/home_screen.dart';
 import 'package:mentormatch_apps/screen/login-register/register_screen.dart';
+import 'package:mentormatch_apps/screen/profile/mentee_profile_screen.dart';
 import 'package:mentormatch_apps/widget/bottom_nav.dart';
 
 class BottomNavbarScreen extends StatefulWidget {
@@ -25,11 +28,11 @@ class _BottomNavbarScreenState extends State<BottomNavbarScreen> {
     if (index == 0) {
       return const HomeScreen();
     } else if (index == 1) {
-      return const RegisterScreen();
+      return MyClassList();
     } else if (index == 2) {
-      return const LoginScreen();
+      return CommunityScreen();
     } else {
-      return const ChangeProfileScreen();
+      return MenteeProfileScreen();
     }
   }
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mentormatch_apps/screen/notification_screen.dart';
 import 'package:mentormatch_apps/screen/premiumClass/detail_booking_premium_class_screen.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
@@ -20,7 +21,14 @@ class _RincianKegiatanScreenState extends State<RincianKegiatanScreen> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           TextButton.icon(
-            onPressed: () {},
+             onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => NotificationScreen(),
+                  ),
+                );
+              },
             icon: Icon(
               Icons.arrow_back,
               color: ColorStyle().secondaryColors,

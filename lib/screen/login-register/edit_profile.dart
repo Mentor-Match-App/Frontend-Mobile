@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mentormatch_apps/screen/bottom_screen.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
 import 'package:mentormatch_apps/style/text.dart';
@@ -109,7 +110,7 @@ class _ChangeProfileScreenState extends State<ChangeProfileScreen> {
                     return Padding(
                       padding: const EdgeInsets.only(right: 12),
                       child: Padding(
-                        padding: const EdgeInsets.only(top : 8.0),
+                        padding: const EdgeInsets.only(top: 8.0),
                         child: Container(
                           constraints: const BoxConstraints(maxWidth: 123),
                           decoration: BoxDecoration(
@@ -123,9 +124,8 @@ class _ChangeProfileScreenState extends State<ChangeProfileScreen> {
                                 padding: const EdgeInsets.all(8.0),
                                 child: Text(
                                   data['skill']!,
-                                  style: FontFamily()
-                                      .regularText
-                                      .copyWith(color: ColorStyle().whiteColors),
+                                  style: FontFamily().regularText.copyWith(
+                                      color: ColorStyle().whiteColors),
                                 ),
                               ),
                               IconButton(
@@ -169,7 +169,18 @@ class _ChangeProfileScreenState extends State<ChangeProfileScreen> {
               const SizedBox(
                 height: 40,
               ),
-              ElevatedButtonWidget(title: "Simpan", onPressed: () {}),
+              ElevatedButtonWidget(
+                title: "Simpan",
+                onPressed: () {
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const BottomNavbarScreen(),
+                    ),
+                    (route) => false,
+                  );
+                },
+              ),
               const SizedBox(height: 10),
             ],
           ),

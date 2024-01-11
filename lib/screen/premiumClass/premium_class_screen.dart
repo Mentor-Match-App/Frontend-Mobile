@@ -14,16 +14,13 @@ class _PremiumClassScreenState extends State<PremiumClassScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        actions: [
-          Image.asset('assets/Handoff/logo/LogoMobile.png'),
-          Container(
-            margin:
-                // ignore: prefer_const_constructors
-                EdgeInsets.only(right: 16.0), // Sesuaikan jarak sebelah kanan
-            child:
-                PopMenuButtonWidget(), // Widget yang ingin ditampilkan di sebelah kanan
-          ),
-        ],
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Image.asset('assets/Handoff/logo/LogoMobile.png'),
+            PopMenuButtonWidget(),
+          ],
+        ),
       ),
       body: ListView(
         children: const [

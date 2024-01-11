@@ -25,32 +25,45 @@ class _CommunityScreenState extends State<CommunityScreen> {
             padding: EdgeInsets.all(20),
             child: Column(
               children: [
-                Container(
-                    constraints:
-                        BoxConstraints.expand(), // or set a specific size
-                    child: GridView(
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        crossAxisSpacing:
-                            10.0, // Optional, add spacing between columns
-                        mainAxisSpacing:
-                            10.0, // Optional, add spacing between rows
-                      ),
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.all(20),
-                          child: Column(
-                            children: [
-                              CardCommunity(
-                                imagePath:
-                                    'assets/Handoff/CommunityLogo/Flutter.png',
-                              ),
-                            ],
-                          ),
-                        ),
-                        // Add more items as needed
-                      ],
-                    ))
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    CardCommunity(
+                      title: "FlutterXperience Community",
+                      imagePath: 'assets/Handoff/CommunityLogo/Flutter.png',
+                    ),
+                    CardCommunity(
+                      title: "UXElevation Network",
+                      imagePath: 'assets/Handoff/CommunityLogo/UIUX.png',
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    CardCommunity(
+                      title: "KotlinKoders Community",
+                      imagePath: 'assets/Handoff/CommunityLogo/Kotlin.png',
+                    ),
+                    CardCommunity(
+                      title: "Python Community",
+                      imagePath: 'assets/Handoff/CommunityLogo/Python.png',
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    CardCommunity(
+                      title: "HTMLCSSInnovate Network",
+                      imagePath: 'assets/Handoff/CommunityLogo/HTMLCSS.png',
+                    ),
+                    CardCommunity(
+                      title: "ReactCatalyst Developers",
+                      imagePath: 'assets/Handoff/CommunityLogo/JS.png',
+                    ),
+                  ],
+                ),
               ],
             ),
           )

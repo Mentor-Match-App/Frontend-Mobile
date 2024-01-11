@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mentormatch_apps/screen/login-register/edit_profile.dart';
 import 'package:mentormatch_apps/widget/button.dart';
 
 class ChooseRoleScreen extends StatelessWidget {
@@ -51,7 +52,15 @@ class ChooseRoleScreen extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               ElevatedButtonWidget(
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const ChangeProfileScreen(),
+                                    ),
+                                  );
+                                },
                                 title: "As a Mentee",
                               ),
                               const Center(
@@ -64,7 +73,15 @@ class ChooseRoleScreen extends StatelessWidget {
                                 ),
                               ),
                               ElevatedButtonWidget(
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const ChangeProfileScreen(),
+                                    ),
+                                  );
+                                },
                                 title: "As a Mentor",
                               )
                             ],

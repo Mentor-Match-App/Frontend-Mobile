@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mentormatch_apps/screen/notification_screen.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
 import 'package:mentormatch_apps/widget/button.dart';
@@ -16,7 +17,24 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Image.asset('assets/Handoff/logo/LogoMobile.png'),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Image.asset('assets/Handoff/logo/LogoMobile.png'),
+            IconButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => NotificationScreen(),
+                  ),
+                );
+              },
+              icon: Icon(Icons.notifications_none_outlined),
+              color: ColorStyle().secondaryColors,
+            )
+          ],
+        ),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -47,10 +65,10 @@ class _HomeScreenState extends State<HomeScreen> {
                           ],
                         ),
                         const SizedBox(height: 12),
-                        Text(
-                          "Selamat Datang di Aplikasi Mentoring Terbaik!",
-                          style: FontFamily().titleText.copyWith( color: ColorStyle().primaryColors)
-                        ),
+                        Text("Selamat Datang di Aplikasi Mentoring Terbaik!",
+                            style: FontFamily()
+                                .titleText
+                                .copyWith(color: ColorStyle().primaryColors)),
                         const SizedBox(height: 2),
                         Text(
                           "Buka pintu kesuksesan dan pertumbuhan pribadi Anda. Temukan mentor atau jadilah mentor yang memimpin. Mulai petualangan menuju puncak kesuksesan bersama kami.",

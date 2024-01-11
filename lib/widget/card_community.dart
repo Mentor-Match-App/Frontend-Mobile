@@ -4,10 +4,13 @@ import 'package:mentormatch_apps/style/font_style.dart';
 import 'package:mentormatch_apps/widget/button.dart';
 
 class CardCommunity extends StatefulWidget {
+  final String title;
+
   final String imagePath;
   CardCommunity({
     Key? key,
     required this.imagePath,
+    required this.title,
   }) : super(key: key);
 
   @override
@@ -20,7 +23,7 @@ class _GirdItemMentorState extends State<CardCommunity> {
     return Padding(
       padding: EdgeInsets.all(8.0),
       child: Container(
-        height: 160,
+        height: 210,
         width: 140,
         decoration: BoxDecoration(
           color: ColorStyle().tertiaryColors,
@@ -36,14 +39,22 @@ class _GirdItemMentorState extends State<CardCommunity> {
                 width: 111,
                 fit: BoxFit.fill,
               ),
-              const SizedBox(height: 8),
+              Padding(
+                padding: const EdgeInsets.only(top: 12.0, bottom: 12.0),
+                child: Text(
+                  textAlign: TextAlign.center,
+                  widget.title,
+                  style: FontFamily().boldText.copyWith(
+                      color: ColorStyle().secondaryColors, fontSize: 12),
+                ),
+              ),
               SmallElevatedButton(
                   style: FontFamily()
                       .regularText
                       .copyWith(color: ColorStyle().whiteColors, fontSize: 12),
                   height: 24,
                   width: 136,
-                  title: "Available",
+                  title: "Bergabung",
                   onPressed: () {})
             ],
           ),

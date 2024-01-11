@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:mentormatch_apps/screen/home_screen.dart';
+import 'package:mentormatch_apps/screen/login-register/edit_profile.dart';
 import 'package:mentormatch_apps/screen/login-register/first_screen.dart';
+import 'package:mentormatch_apps/screen/notification_screen.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
 import 'package:mentormatch_apps/widget/button.dart';
@@ -8,24 +9,41 @@ import 'package:mentormatch_apps/widget/experience_widget.dart';
 import 'package:mentormatch_apps/widget/profile_avatar.dart';
 import 'package:mentormatch_apps/widget/review_widget.dart';
 
-class DetailMentorSession extends StatefulWidget {
-  DetailMentorSession({Key? key}) : super(key: key);
+class MenteeProfileScreen extends StatefulWidget {
+  MenteeProfileScreen({Key? key}) : super(key: key);
 
   @override
-  State<DetailMentorSession> createState() => _DetailMentorSessionState();
+  State<MenteeProfileScreen> createState() => _MenteeProfileScreenState();
 }
 
-class _DetailMentorSessionState extends State<DetailMentorSession> {
+class _MenteeProfileScreenState extends State<MenteeProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Image.asset('assets/Handoff/logo/LogoMobile.png'),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Image.asset('assets/Handoff/logo/LogoMobile.png'),
+            IconButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => NotificationScreen(),
+                  ),
+                );
+              },
+              icon: Icon(Icons.notifications_none_outlined),
+              color: ColorStyle().secondaryColors,
+            )
+          ],
+        ),
       ),
       body: ListView(
         children: [
           Padding(
-            padding: const EdgeInsets.all(20),
+            padding: EdgeInsets.all(20),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -41,11 +59,32 @@ class _DetailMentorSessionState extends State<DetailMentorSession> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            "Charline June",
-                            style: FontFamily().boldText,
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "Charline June",
+                                style: FontFamily().boldText,
+                              ),
+                              IconButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const ChangeProfileScreen(),
+                                    ),
+                                  );
+                                },
+                                icon: Icon(
+                                  Icons.edit_outlined,
+                                  size: 16,
+                                  color: ColorStyle().primaryColors,
+                                ),
+                              )
+                            ],
                           ),
-                          const SizedBox(height: 12),
+                          SizedBox(height: 12),
                           Row(
                             children: [
                               Row(
@@ -55,14 +94,14 @@ class _DetailMentorSessionState extends State<DetailMentorSession> {
                                     size: 16,
                                     color: ColorStyle().primaryColors,
                                   ),
-                                  const SizedBox(width: 4),
-                                  const Text(
+                                  SizedBox(width: 4),
+                                  Text(
                                     "UI/UX Designer",
                                     style: TextStyle(fontSize: 10),
                                   ),
                                 ],
                               ),
-                              const SizedBox(width: 20),
+                              SizedBox(width: 20),
                               Row(
                                 children: [
                                   Icon(
@@ -70,8 +109,8 @@ class _DetailMentorSessionState extends State<DetailMentorSession> {
                                     size: 16,
                                     color: ColorStyle().primaryColors,
                                   ),
-                                  const SizedBox(width: 4),
-                                  const Text(
+                                  SizedBox(width: 4),
+                                  Text(
                                     "Jakarta Selatan",
                                     style: TextStyle(fontSize: 10),
                                   ),
@@ -86,8 +125,8 @@ class _DetailMentorSessionState extends State<DetailMentorSession> {
                                 size: 16,
                                 color: ColorStyle().primaryColors,
                               ),
-                              const SizedBox(width: 4),
-                              const Text(
+                              SizedBox(width: 4),
+                              Text(
                                 "PT. Sinar Terus",
                                 style: TextStyle(fontSize: 10),
                               ),
@@ -112,7 +151,7 @@ class _DetailMentorSessionState extends State<DetailMentorSession> {
                   child: ElevatedButton.icon(
                     style: ElevatedButton.styleFrom(
                       primary: ColorStyle().primaryColors,
-                      padding: const EdgeInsets.symmetric(
+                      padding: EdgeInsets.symmetric(
                           vertical: 8.0,
                           horizontal: 16.0), // Sesuaikan sesuai kebutuhan Anda
                       shape: RoundedRectangleBorder(
@@ -125,7 +164,7 @@ class _DetailMentorSessionState extends State<DetailMentorSession> {
                     label: Text("linkedln", style: FontFamily().buttonText),
                   ),
                 ),
-                const SizedBox(height: 12),
+                SizedBox(height: 12),
                 Text(
                   "Skill",
                   style: FontFamily().boldText.copyWith(
@@ -139,7 +178,7 @@ class _DetailMentorSessionState extends State<DetailMentorSession> {
                         style: OutlinedButton.styleFrom(
                           primary: ColorStyle()
                               .primaryColors, // Warna garis atau border
-                          padding: const EdgeInsets.symmetric(
+                          padding: EdgeInsets.symmetric(
                             vertical: 8.0,
                             horizontal: 16.0,
                           ), // Sesuaikan sesuai kebutuhan Anda
@@ -156,14 +195,14 @@ class _DetailMentorSessionState extends State<DetailMentorSession> {
                         ),
                       ),
                     ),
-                    const SizedBox(width: 8),
+                    SizedBox(width: 8),
                     Padding(
                       padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
                       child: OutlinedButton(
                         style: OutlinedButton.styleFrom(
                           primary: ColorStyle()
                               .primaryColors, // Warna garis atau border
-                          padding: const EdgeInsets.symmetric(
+                          padding: EdgeInsets.symmetric(
                             vertical: 8.0,
                             horizontal: 16.0,
                           ), // Sesuaikan sesuai kebutuhan Anda
@@ -182,7 +221,7 @@ class _DetailMentorSessionState extends State<DetailMentorSession> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 12),
+                SizedBox(height: 12),
                 Text(
                   "Experience",
                   style: FontFamily().boldText.copyWith(
@@ -192,56 +231,6 @@ class _DetailMentorSessionState extends State<DetailMentorSession> {
                     role: "Full Stack Developer", company: "Alaska"),
                 ExperienceWidget(
                     role: "Full Stack Developer", company: "Alaska"),
-                const Divider(),
-                Text(
-                  "Jadwal Sessions",
-                  style: FontFamily().boldText.copyWith(
-                      color: ColorStyle().primaryColors, fontSize: 16),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(12),
-                  child: Text(
-                    textAlign: TextAlign.center,
-                    '\" Mastering Modern Web Development with Node.js and React \"',
-                    style: FontFamily().boldText.copyWith(
-                        color: ColorStyle().secondaryColors, fontSize: 14),
-                  ),
-                ),
-                Row(
-                  children: [
-                    Icon(
-                      Icons.calendar_today_outlined,
-                      color: ColorStyle().primaryColors,
-                    ),
-                    const SizedBox(width: 8),
-                    Text(
-                      "Senin, 20 September 2021",
-                      style: FontFamily().boldText.copyWith(
-                          color: ColorStyle().secondaryColors, fontSize: 14),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    Icon(
-                      Icons.people_outline,
-                      color: ColorStyle().primaryColors,
-                    ),
-                    const SizedBox(width: 8),
-                    Text(
-                      "15/100 Peserta",
-                      style: FontFamily().boldText.copyWith(
-                          color: ColorStyle().secondaryColors, fontSize: 14),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 48),
-                ElevatedButtonWidget(
-                  title: "Booking Sessions",
-                  onPressed: () {
-                    _showDialog(context);
-                  },
-                ),
               ],
             ),
           ),
@@ -249,74 +238,4 @@ class _DetailMentorSessionState extends State<DetailMentorSession> {
       ),
     );
   }
-}
-
-void _showDialog(BuildContext context) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
-        backgroundColor: ColorStyle().whiteColors,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            Text("Booking Class", style: FontFamily().titleText),
-            IconButton(
-              onPressed: () => Navigator.of(context).pop(),
-              icon: Icon(
-                Icons.close_sharp,
-                color: ColorStyle().errorColors,
-              ),
-            )
-          ],
-        ),
-        content: Padding(
-          padding: const EdgeInsets.all(12),
-          child: Text(
-            "Apakah Kamu yakin untuk memesan Session ini?",
-            textAlign: TextAlign.center,
-            style: FontFamily().regularText,
-          ),
-        ),
-        actions: <Widget>[
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              SmallOutlinedButton(
-                style: FontFamily()
-                    .regularText
-                    .copyWith(color: ColorStyle().primaryColors, fontSize: 12),
-                height: 36,
-                width: 100,
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                title: "Cancel",
-              ),
-              SizedBox(width: 8),
-              SmallElevatedButton(
-                style: FontFamily()
-                    .regularText
-                    .copyWith(color: ColorStyle().whiteColors, fontSize: 12),
-                height: 36,
-                width: 100,
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => HomeScreen(),
-                    ),
-                  );
-                },
-                title: "Booking",
-              ),
-            ],
-          ),
-        ],
-      );
-    },
-  );
 }
