@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mentormatch_apps/screen/Session/session_screen.dart';
-import 'package:mentormatch_apps/screen/premiumClass/premium_class_screen.dart';
+import 'package:mentormatch_apps/mentee/screen/Session/session_screen.dart';
+import 'package:mentormatch_apps/mentee/screen/premiumClass/premium_class_screen.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
 
 class PopMenuButtonWidget extends StatefulWidget {
