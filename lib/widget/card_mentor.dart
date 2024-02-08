@@ -24,9 +24,9 @@ class _GirdItemMentorState extends State<CardItemMentor> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(8.0),
+      padding: EdgeInsets.only( right :8.0, left:8.0),
       child: Container(
-        height: 230,
+        height: 240,
         width: 140,
         decoration: BoxDecoration(
           color: ColorStyle().tertiaryColors,
@@ -35,22 +35,26 @@ class _GirdItemMentorState extends State<CardItemMentor> {
         child: Padding(
           padding: const EdgeInsets.all(12),
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Image.asset(
+              Image.network(
                 widget.imagePath,
-                height: 100,
-                width: 111,
+                height: 102,
+                width: 112,
                 fit: BoxFit.fill,
               ),
               Padding(
-                padding: const EdgeInsets.all(12),
+                padding: const EdgeInsets.all(8),
                 child: Text(
                   widget.name,
-                  style: TextStyle(fontSize: 12),
+                  style: FontFamily().boldText.copyWith(
+                      color: ColorStyle().secondaryColors, fontSize: 12),
                 ),
               ),
               Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Row(
                     children: [
@@ -62,7 +66,7 @@ class _GirdItemMentorState extends State<CardItemMentor> {
                       SizedBox(width: 4),
                       Text(
                         widget.job,
-                        style: TextStyle(fontSize: 10),
+                        style: FontFamily().regularText.copyWith(fontSize: 10),
                       ),
                     ],
                   ),
@@ -77,7 +81,7 @@ class _GirdItemMentorState extends State<CardItemMentor> {
                       SizedBox(width: 4),
                       Text(
                         widget.company,
-                        style: TextStyle(fontSize: 10),
+                        style: FontFamily().regularText.copyWith(fontSize: 10),
                       ),
                     ],
                   ),
@@ -85,8 +89,8 @@ class _GirdItemMentorState extends State<CardItemMentor> {
                   SmallElevatedButton(
                       style: FontFamily().regularText.copyWith(
                           color: ColorStyle().whiteColors, fontSize: 12),
-                      height: 24,
-                      width: 136,
+                      height: 28,
+                      width: 120,
                       title: "Available",
                       onPressed: () {})
                 ],

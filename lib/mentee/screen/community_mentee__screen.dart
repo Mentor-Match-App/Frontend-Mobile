@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:mentormatch_apps/mentee/model/community_model.dart';
+import 'package:mentormatch_apps/mentee/service/community_service.dart';
 import 'package:mentormatch_apps/widget/card_community.dart';
 import 'package:mentormatch_apps/widget/navbar.dart';
+import 'package:mentormatch_apps/widget/search_bar.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class CommunityMenteeScreen extends StatefulWidget {
   CommunityMenteeScreen({Key? key}) : super(key: key);
@@ -10,6 +14,15 @@ class CommunityMenteeScreen extends StatefulWidget {
 }
 
 class _CommunityMenteeScreenState extends State<CommunityMenteeScreen> {
+  _launchURL(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Tidak dapat membuka $url';
+    }
+  }
+
+  final CommunityService communityService = CommunityService();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,55 +32,63 @@ class _CommunityMenteeScreenState extends State<CommunityMenteeScreen> {
           PopMenuButtonWidget(),
         ],
       ),
-      body: ListView(
-        children: [
-          Padding(
-            padding: EdgeInsets.all(20),
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    CardCommunity(
-                      title: "FlutterXperience Community",
-                      imagePath: 'assets/Handoff/CommunityLogo/Flutter.png',
+      body: FutureBuilder<CommunityModels>(
+        future: communityService.fetchCommunities(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (snapshot.hasError) {
+            return Center(
+              child: Text('Error: ${snapshot.error}'),
+            );
+          } else {
+            final communityList = snapshot.data?.communities;
+            if (communityList == null || communityList.isEmpty) {
+              return const Center(
+                child: Text('No communities available.'),
+              );
+            } else {
+              return Column(
+                children: [
+                  SearchBarWidget(
+                    title: "Search by name,company, role ",
+                    onPressed: () {},
+                  ),
+                  
+                  Expanded(
+                    child: GridView.builder(
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 10,
+                        mainAxisSpacing: 10,
+                        childAspectRatio: 0.7,
+                      ),
+                      itemCount: communityList.length,
+                      itemBuilder: (context, index) {
+                        var community = communityList[index];
+                        return Column(
+                          children: [
+                            CardCommunity(
+                              title: community.name ?? '',
+                              imagePath: community.imageUrl ?? '',
+                              onPressed: () {
+                                final communityUrl = community.link ?? '';
+                                _launchURL(communityUrl);
+                              },
+                            ),
+                          ],
+                        );
+                      },
                     ),
-                    CardCommunity(
-                      title: "UXElevation Network",
-                      imagePath: 'assets/Handoff/CommunityLogo/UIUX.png',
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    CardCommunity(
-                      title: "KotlinKoders Community",
-                      imagePath: 'assets/Handoff/CommunityLogo/Kotlin.png',
-                    ),
-                    CardCommunity(
-                      title: "Python Community",
-                      imagePath: 'assets/Handoff/CommunityLogo/Python.png',
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    CardCommunity(
-                      title: "HTMLCSSInnovate Network",
-                      imagePath: 'assets/Handoff/CommunityLogo/HTMLCSS.png',
-                    ),
-                    CardCommunity(
-                      title: "ReactCatalyst Developers",
-                      imagePath: 'assets/Handoff/CommunityLogo/JS.png',
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          )
-        ],
+                  )
+                ],
+              );
+            }
+          }
+        },
       ),
     );
   }

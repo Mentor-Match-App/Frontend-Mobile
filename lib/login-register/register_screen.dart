@@ -64,24 +64,20 @@ class RegisterScreen extends StatelessWidget {
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       children: [
-                                        Text(
-                                          'Sudah punya akun?',
-                                          style: FontFamily().regularText
-                                        ),
+                                        Text('Sudah punya akun?',
+                                            style: FontFamily().regularText),
                                         TextButton(
                                           onPressed: () {
                                             Navigator.push(
                                               context,
                                               MaterialPageRoute(
                                                 builder: (context) =>
-                                                    const LoginScreen(),
+                                                    LoginScreen(),
                                               ),
                                             );
                                           },
-                                          child: Text(
-                                            'Login',
-                                            style:FontFamily().boldText
-                                          ),
+                                          child: Text('Login',
+                                              style: FontFamily().boldText),
                                         ),
                                       ],
                                     )),

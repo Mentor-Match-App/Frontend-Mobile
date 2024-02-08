@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "525040360284",
+    "project_id": "loginappmobile-233e9",
+    "storage_bucket": "loginappmobile-233e9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:525040360284:android:4bff629053e614d3d73f99",
+        "android_client_info": {
+          "package_name": "com.example.mentormatch_apps"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBPZjt1rTSW9tNcKIeAUwerLb2baVS9oEM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

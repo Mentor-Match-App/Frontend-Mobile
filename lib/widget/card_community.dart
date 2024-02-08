@@ -5,12 +5,14 @@ import 'package:mentormatch_apps/widget/button.dart';
 
 class CardCommunity extends StatefulWidget {
   final String title;
-
   final String imagePath;
+  final VoidCallback onPressed;
+
+
   CardCommunity({
     Key? key,
     required this.imagePath,
-    required this.title,
+    required this.title, required this.onPressed,
   }) : super(key: key);
 
   @override
@@ -33,7 +35,7 @@ class _GirdItemMentorState extends State<CardCommunity> {
           padding: const EdgeInsets.all(12),
           child: Column(
             children: [
-              Image.asset(
+              Image.network(
                 widget.imagePath,
                 height: 100,
                 width: 111,
@@ -49,13 +51,14 @@ class _GirdItemMentorState extends State<CardCommunity> {
                 ),
               ),
               SmallElevatedButton(
-                  style: FontFamily()
-                      .regularText
-                      .copyWith(color: ColorStyle().whiteColors, fontSize: 12),
-                  height: 24,
-                  width: 136,
-                  title: "Bergabung",
-                  onPressed: () {})
+                style: FontFamily()
+                    .regularText
+                    .copyWith(color: ColorStyle().whiteColors, fontSize: 12),
+                height: 24,
+                width: 136,
+                title: "Bergabung",
+                 onPressed: widget.onPressed,
+              )
             ],
           ),
         ),

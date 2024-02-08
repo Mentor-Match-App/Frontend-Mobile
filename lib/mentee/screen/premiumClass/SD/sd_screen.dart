@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:mentormatch_apps/login-register/first_screen.dart';
-import 'package:mentormatch_apps/widget/card_mentor.dart';
-import 'package:mentormatch_apps/widget/menu_category.dart';
+import 'package:mentormatch_apps/mentee/screen/premiumClass/SD/all_sd_screen.dart';
+import 'package:mentormatch_apps/mentee/screen/premiumClass/SD/bahasa_sd_screen.dart';
+import 'package:mentormatch_apps/mentee/screen/premiumClass/SD/math_sd_scree.dart';
+import 'package:mentormatch_apps/mentee/screen/premiumClass/SD/sains_sd_screen.dart';
+import 'package:mentormatch_apps/mentee/screen/premiumClass/SD/tech_sd_screen.dart';
+import 'package:mentormatch_apps/style/color_style.dart';
+import 'package:mentormatch_apps/style/font_style.dart';
+import 'package:mentormatch_apps/widget/category_card.dart';
+import 'package:mentormatch_apps/widget/navbar.dart';
 import 'package:mentormatch_apps/widget/search_bar.dart';
 
 class SDScreen extends StatefulWidget {
@@ -12,11 +18,64 @@ class SDScreen extends StatefulWidget {
 }
 
 class _SDScreenState extends State<SDScreen> {
+  bool isAllCategoryActive = true;
+  bool isBahasaActive = false;
+  bool isSainsActive = false;
+  bool isTechActive = false;
+  bool isMathActive = false;
+
+  void _handleMenuSelected(String menu) {
+    setState(
+      () {
+        if (menu == 'All') {
+          isAllCategoryActive = true;
+          isBahasaActive = false;
+          isSainsActive = false;
+          isTechActive = false;
+          isMathActive = false;
+        } else if (menu == 'Bahasa') {
+          isAllCategoryActive = false;
+          isBahasaActive = true;
+          isSainsActive = false;
+          isTechActive = false;
+          isMathActive = false;
+        } else if (menu == 'Sains') {
+          isAllCategoryActive = false;
+          isBahasaActive = false;
+          isSainsActive = true;
+          isTechActive = false;
+          isMathActive = false;
+        } else if (menu == 'Teknologi') {
+          isAllCategoryActive = false;
+          isBahasaActive = false;
+          isSainsActive = false;
+          isTechActive = true;
+          isMathActive = false;
+        } else if (menu == 'Matematika') {
+          isAllCategoryActive = false;
+          isBahasaActive = false;
+          isSainsActive = false;
+          isTechActive = false;
+          isMathActive = true;
+        }
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Image.asset('assets/Handoff/logo/LogoMobile.png'),
+        actions: [
+          AppBarPremiumClass(),
+        ],
+        title: Text(
+          'SD',
+          style: FontFamily().boldText.copyWith(
+                color: ColorStyle().primaryColors,
+                fontSize: 14.0,
+              ),
+        ),
       ),
       body: ListView(
         children: [
@@ -27,59 +86,73 @@ class _SDScreenState extends State<SDScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SearchBarWidget(
-                  title: 'Search by name,role,company',
+                  title: 'Search by name, role, company',
                   onPressed: () {},
                 ),
-                SizedBox(
-                  height: 100, // Sesuaikan tinggi dengan kebutuhan Anda
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: categoryList.length,
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        child: CustomCategoryWidget(
-                          text: categoryList[index],
-                          img: getCategoryImage(index),
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const FirstScreen(),
-                              ),
-                            );
-                          },
-                        ),
-                      );
-                    },
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: [
+                      CategoriCardWidget(
+                        isActive: isAllCategoryActive,
+                        onTap: () {
+                          _handleMenuSelected('All');
+                        },
+                        title: "All",
+                        img: 'assets/Handoff/icon/categoryIcon/SD/all.png',
+                      ),
+                      CategoriCardWidget(
+                        isActive: isMathActive,
+                        onTap: () {
+                          _handleMenuSelected('Matematika');
+                        },
+                        title: "Matematika",
+                        img: 'assets/Handoff/icon/categoryIcon/SD/math.png',
+                      ),
+                      CategoriCardWidget(
+                        isActive: isSainsActive,
+                        onTap: () {
+                          _handleMenuSelected('Sains');
+                        },
+                        title: "Sains",
+                        img:
+                            'assets/Handoff/icon/categoryIcon/SD/Pengetahuan.jpg',
+                      ),
+                      CategoriCardWidget(
+                        isActive: isBahasaActive,
+                        onTap: () {
+                          _handleMenuSelected('Bahasa');
+                        },
+                        title: "Bahasa",
+                        img:
+                            'assets/Handoff/icon/categoryIcon/SD/Sastra Bahasa.png',
+                      ),
+                      CategoriCardWidget(
+                        isActive: isTechActive,
+                        onTap: () {
+                          _handleMenuSelected('Teknologi');
+                        },
+                        title: "Teknologi",
+                        img: 'assets/Handoff/icon/categoryIcon/SD/tech.png',
+                      ),
+                    ],
                   ),
                 ),
-                Row(
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    CardItemMentor(
-                        imagePath: 'assets/Handoff/ilustrator/profile.png',
-                        name: 'Charline June',
-                        job: 'UI/UX Designer',
-                        company: 'Google'),
-                    CardItemMentor(
-                        imagePath: 'assets/Handoff/ilustrator/profile.png',
-                        name: 'Charline June',
-                        job: 'UI/UX Designer',
-                        company: 'Google'),
-                  ],
-                ),
-                Row(
-                  children: [
-                    CardItemMentor(
-                        imagePath: 'assets/Handoff/ilustrator/profile.png',
-                        name: 'Charline June',
-                        job: 'UI/UX Designer',
-                        company: 'Google'),
-                    CardItemMentor(
-                        imagePath: 'assets/Handoff/ilustrator/profile.png',
-                        name: 'Charline June',
-                        job: 'UI/UX Designer',
-                        company: 'Google'),
+                    isAllCategoryActive
+                        ? AllSDScreen()
+                        : isBahasaActive
+                            ? BahasaSDScreen()
+                            : isSainsActive
+                                ? SainsSDScreen()
+                                : isTechActive
+                                    ? TechSDScreen()
+                                    : isMathActive
+                                        ? MathSDScreen()
+                                        : AllSDScreen()
                   ],
                 ),
               ],
@@ -89,32 +162,4 @@ class _SDScreenState extends State<SDScreen> {
       ),
     );
   }
-
-  String getCategoryImage(int index) {
-    // Ganti logika ini sesuai kebutuhan Anda
-    List<String> imagePaths = [
-      'assets/Handoff/icon/categoryIcon/SD/all.png',
-      'assets/Handoff/icon/categoryIcon/SD/tech.png',
-      'assets/Handoff/icon/categoryIcon/SD/pengetahuan.jpg',
-      'assets/Handoff/icon/categoryIcon/SD/Sastra Bahasa.png',
-      'assets/Handoff/icon/categoryIcon/SD/math.png',
-    ];
-
-    // Pastikan indeks berada dalam rentang yang benar
-    if (index >= 0 && index < imagePaths.length) {
-      return imagePaths[index];
-    } else {
-      // Atur fallback atau logika tambahan jika indeks di luar rentang yang diinginkan
-      return 'assets/Handoff/icon/categoryIcon/SD/all.png'; // Contoh fallback
-    }
-  }
-
-  List<String> categoryList = [
-    "All",
-    "Teknologi",
-    "Matematika",
-    "Pengetahuan",
-    "Bahasa",
-    // Tambahkan kategori lainnya sesuai kebutuhan
-  ];
 }

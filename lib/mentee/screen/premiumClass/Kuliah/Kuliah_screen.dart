@@ -1,7 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:mentormatch_apps/login-register/first_screen.dart';
-import 'package:mentormatch_apps/widget/card_mentor.dart';
-import 'package:mentormatch_apps/widget/menu_category.dart';
+import 'package:mentormatch_apps/mentee/screen/premiumClass/Kuliah/all_kuliah_screen.dart';
+import 'package:mentormatch_apps/mentee/screen/premiumClass/Kuliah/bahasa_kuliah_screen.dart';
+import 'package:mentormatch_apps/mentee/screen/premiumClass/Kuliah/computerS_kuliah_screen.dart';
+import 'package:mentormatch_apps/mentee/screen/premiumClass/Kuliah/design_kuliah_screen.dart';
+import 'package:mentormatch_apps/mentee/screen/premiumClass/Kuliah/electro_kulaih_screem.dart';
+import 'package:mentormatch_apps/mentee/screen/premiumClass/Kuliah/ilkom_kuliah_screen.dart';
+import 'package:mentormatch_apps/mentee/screen/premiumClass/Kuliah/information_kuliah_screen.dart';
+import 'package:mentormatch_apps/mentee/screen/premiumClass/Kuliah/manajemen_kuliah_screen.dart';
+import 'package:mentormatch_apps/mentee/screen/premiumClass/Kuliah/psikolog_kuliah_screen.dart';
+import 'package:mentormatch_apps/mentee/screen/premiumClass/Kuliah/teacher_kuliah_screen.dart';
+import 'package:mentormatch_apps/style/color_style.dart';
+import 'package:mentormatch_apps/style/font_style.dart';
+import 'package:mentormatch_apps/widget/category_card.dart';
 import 'package:mentormatch_apps/widget/navbar.dart';
 import 'package:mentormatch_apps/widget/search_bar.dart';
 
@@ -13,15 +23,149 @@ class KuliahScreen extends StatefulWidget {
 }
 
 class _KuliahScreenState extends State<KuliahScreen> {
+  bool isAllCategoryActive = true;
+  bool isBahasaActive = false;
+  bool isIlkomActive = false;
+  bool isComputerScienceActive = false;
+  bool isPsikologiActive = false;
+  bool isManajemenActive = false;
+  bool isPendidikanGuruActive = false;
+  bool isInformationActive = false;
+  bool isElektroActive = false;
+  bool isDesignActive = false;
+
+  void _handleMenuSelected(String menu) {
+    setState(
+      () {
+        if (menu == 'All') {
+          isAllCategoryActive = true;
+          isBahasaActive = false;
+          isIlkomActive = false;
+          isComputerScienceActive = false;
+          isPsikologiActive = false;
+          isManajemenActive = false;
+          isPendidikanGuruActive = false;
+          isInformationActive = false;
+          isElektroActive = false;
+          isDesignActive = false;
+        } else if (menu == 'Design') {
+          isAllCategoryActive = false;
+          isBahasaActive = false;
+          isIlkomActive = false;
+          isComputerScienceActive = false;
+          isPsikologiActive = false;
+          isManajemenActive = false;
+          isPendidikanGuruActive = false;
+          isInformationActive = false;
+          isElektroActive = false;
+          isDesignActive = true;
+        } else if (menu == 'Ilmu Komunikasi') {
+          isAllCategoryActive = false;
+          isBahasaActive = false;
+          isIlkomActive = true;
+          isComputerScienceActive = false;
+          isPsikologiActive = false;
+          isManajemenActive = false;
+          isPendidikanGuruActive = false;
+          isInformationActive = false;
+          isElektroActive = false;
+          isDesignActive = true;
+        } else if (menu == 'Computer Science') {
+          isAllCategoryActive = false;
+          isBahasaActive = false;
+          isIlkomActive = false;
+          isComputerScienceActive = true;
+          isPsikologiActive = false;
+          isManajemenActive = false;
+          isPendidikanGuruActive = false;
+          isInformationActive = false;
+          isElektroActive = false;
+          isDesignActive = true;
+        } else if (menu == 'Bahasa') {
+          isAllCategoryActive = false;
+          isBahasaActive = true;
+          isIlkomActive = false;
+          isComputerScienceActive = false;
+          isPsikologiActive = false;
+          isManajemenActive = false;
+          isPendidikanGuruActive = false;
+          isInformationActive = false;
+          isElektroActive = false;
+          isDesignActive = false;
+        } else if (menu == 'Psikologi') {
+          isAllCategoryActive = false;
+          isBahasaActive = false;
+          isIlkomActive = false;
+          isComputerScienceActive = false;
+          isPsikologiActive = true;
+          isManajemenActive = false;
+          isPendidikanGuruActive = false;
+          isInformationActive = false;
+          isElektroActive = false;
+          isDesignActive = false;
+        } else if (menu == 'Manajemen') {
+          isAllCategoryActive = false;
+          isBahasaActive = false;
+          isIlkomActive = false;
+          isComputerScienceActive = false;
+          isPsikologiActive = false;
+          isManajemenActive = true;
+          isPendidikanGuruActive = false;
+          isInformationActive = false;
+          isElektroActive = false;
+          isDesignActive = false;
+        } else if (menu == 'Pendidikan Guru') {
+          isAllCategoryActive = false;
+          isBahasaActive = false;
+          isIlkomActive = false;
+          isComputerScienceActive = false;
+          isPsikologiActive = false;
+          isManajemenActive = false;
+          isPendidikanGuruActive = true;
+          isInformationActive = false;
+          isElektroActive = false;
+          isDesignActive = false;
+        } else if (menu == 'Information') {
+          isAllCategoryActive = false;
+          isBahasaActive = false;
+          isIlkomActive = false;
+          isComputerScienceActive = false;
+          isPsikologiActive = false;
+          isManajemenActive = false;
+          isPendidikanGuruActive = false;
+          isInformationActive = true;
+          isElektroActive = false;
+          isDesignActive = false;
+        } else if (menu == 'Elektro') {
+          isAllCategoryActive = false;
+          isBahasaActive = false;
+          isIlkomActive = false;
+          isComputerScienceActive = false;
+          isPsikologiActive = false;
+          isManajemenActive = false;
+          isPendidikanGuruActive = false;
+          isInformationActive = false;
+          isElektroActive = true;
+          isDesignActive = false;
+        }
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Image.asset('assets/Handoff/logo/LogoMobile.png'),
-        actions: [ 
-          PopMenuButtonWidget(),
-          
+        actions: [
+          AppBarPremiumClass(),
         ],
+        title: Text(
+          'Kuliah',
+          style: FontFamily().boldText.copyWith(
+                color: ColorStyle().primaryColors,
+                fontSize: 14.0,
+              ),
+        ),
       ),
       body: ListView(
         children: [
@@ -32,61 +176,132 @@ class _KuliahScreenState extends State<KuliahScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SearchBarWidget(
-                  title: 'Search by name,role,company',
+                  title: 'Search by name, role, company',
                   onPressed: () {},
                 ),
-                SizedBox(
-                  height: 100, // Sesuaikan tinggi dengan kebutuhan Anda
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: categoryList.length,
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        child: CustomCategoryWidget(
-                          text: categoryList[index],
-                          img: getCategoryImage(index),
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const FirstScreen(),
-                              ),
-                            );
-                          },
-                        ),
-                      );
-                    },
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: [
+                      CategoriCardWidget(
+                        isActive: isAllCategoryActive,
+                        onTap: () {
+                          _handleMenuSelected('All');
+                        },
+                        title: "All",
+                        img: 'assets/Handoff/icon/categoryIcon/Kuliah/all.png',
+                      ),
+                      CategoriCardWidget(
+                        isActive: isBahasaActive,
+                        onTap: () {
+                          _handleMenuSelected('Bahasa');
+                        },
+                        title: "Bahasa",
+                        img:
+                            'assets/Handoff/icon/categoryIcon/Kuliah/Sastra Bahasa.png',
+                      ),
+                      CategoriCardWidget(
+                        isActive: isComputerScienceActive,
+                        onTap: () {
+                          _handleMenuSelected('Computer Science');
+                        },
+                        title: "Computer Science",
+                        img:
+                            'assets/Handoff/icon/categoryIcon/Kuliah/Computer Scince.png',
+                      ),
+                      CategoriCardWidget(
+                        isActive: isDesignActive,
+                        onTap: () {
+                          _handleMenuSelected('Design');
+                        },
+                        title: "Design",
+                        img:
+                            'assets/Handoff/icon/categoryIcon/Kuliah/design.png',
+                      ),
+                      CategoriCardWidget(
+                        isActive: isElektroActive,
+                        onTap: () {
+                          _handleMenuSelected('Elektro');
+                        },
+                        title: "Elecktro",
+                        img:
+                            'assets/Handoff/icon/categoryIcon/Kuliah/electro.png',
+                      ),
+                      CategoriCardWidget(
+                        isActive: isIlkomActive,
+                        onTap: () {
+                          _handleMenuSelected('Ilmu Komunikasi');
+                        },
+                        title: "Ilmu Komunikasi",
+                        img:
+                            'assets/Handoff/icon/categoryIcon/Kuliah/ilkon.png',
+                      ),
+                      CategoriCardWidget(
+                        isActive: isInformationActive,
+                        onTap: () {
+                          _handleMenuSelected('Information');
+                        },
+                        title: "Information",
+                        img:
+                            'assets/Handoff/icon/categoryIcon/Kuliah/Information.png',
+                      ),
+                      CategoriCardWidget(
+                        isActive: isManajemenActive,
+                        onTap: () {
+                          _handleMenuSelected('Manajemen');
+                        },
+                        title: "Manajemen",
+                        img:
+                            'assets/Handoff/icon/categoryIcon/Kuliah/manajemen.png',
+                      ),
+                      CategoriCardWidget(
+                        isActive: isPsikologiActive,
+                        onTap: () {
+                          _handleMenuSelected('Psikologi');
+                        },
+                        title: "Psikologi",
+                        img:
+                            'assets/Handoff/icon/categoryIcon/Kuliah/psikolog.png',
+                      ),
+                      CategoriCardWidget(
+                        isActive: isPendidikanGuruActive,
+                        onTap: () {
+                          _handleMenuSelected('Pendidikan Guru');
+                        },
+                        title: "Pendidikan Guru",
+                        img:
+                            'assets/Handoff/icon/categoryIcon/Kuliah/teacher.png',
+                      ),
+                    ],
                   ),
                 ),
-                Row(
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    CardItemMentor(
-                        imagePath: 'assets/Handoff/ilustrator/profile.png',
-                        name: 'Charline June',
-                        job: 'UI/UX Designer',
-                        company: 'Google'),
-                    CardItemMentor(
-                        imagePath: 'assets/Handoff/ilustrator/profile.png',
-                        name: 'Charline June',
-                        job: 'UI/UX Designer',
-                        company: 'Google'),
+                    isAllCategoryActive
+                        ? AllKuliahScreen()
+                        : isBahasaActive
+                            ? BahasaKuliahScreen()
+                            : isIlkomActive
+                                ? IlkomKuliahScreen()
+                                : isComputerScienceActive
+                                    ? ComputerScinceKuliahScreen()
+                                    : isDesignActive
+                                        ? DesignKuliahScreen()
+                                        : isElektroActive
+                                            ? ElectroKuliahScreen()
+                                            : isInformationActive
+                                                ? InformationKuliahScreen()
+                                                : isManajemenActive
+                                                    ? ManajemenKuliahScreen()
+                                                    : isPendidikanGuruActive
+                                                        ? TeacherKuliahScreen()
+                                                        : isPsikologiActive
+                                                            ? PsikologKuliahScreen()
+                                                            : AllKuliahScreen()
                   ],
                 ),
-                Row(
-                  children: [
-                    CardItemMentor(
-                        imagePath: 'assets/Handoff/ilustrator/profile.png',
-                        name: 'Charline June',
-                        job: 'UI/UX Designer',
-                        company: 'Google'),
-                    CardItemMentor(
-                        imagePath: 'assets/Handoff/ilustrator/profile.png',
-                        name: 'Charline June',
-                        job: 'UI/UX Designer',
-                        company: 'Google'),
-                  ],
-                )
               ],
             ),
           ),
@@ -94,43 +309,4 @@ class _KuliahScreenState extends State<KuliahScreen> {
       ),
     );
   }
-
-  String getCategoryImage(int index) {
-    // Ganti logika ini sesuai kebutuhan Anda
-    List<String> imagePaths = [
-      'assets/Handoff/icon/categoryIcon/Kuliah/all.png',
-      'assets/Handoff/icon/categoryIcon/Kuliah/Computer Scince.png',
-      'assets/Handoff/icon/categoryIcon/Kuliah/design.png',
-      'assets/Handoff/icon/categoryIcon/Kuliah/electro.png',
-      'assets/Handoff/icon/categoryIcon/Kuliah/ilkon.png',
-      'assets/Handoff/icon/categoryIcon/Kuliah/Information.png',
-      'assets/Handoff/icon/categoryIcon/Kuliah/manajemen.png',
-      'assets/Handoff/icon/categoryIcon/Kuliah/psikolog.png',
-      'assets/Handoff/icon/categoryIcon/Kuliah/Sastra Bahasa.png',
-      'assets/Handoff/icon/categoryIcon/Kuliah/teacher.png',
-    ];
-
-    // Pastikan indeks berada dalam rentang yang benar
-    if (index >= 0 && index < imagePaths.length) {
-      return imagePaths[index];
-    } else {
-      // Atur fallback atau logika tambahan jika indeks di luar rentang yang diinginkan
-      return 'assets/Handoff/icon/categoryIcon/Kuliah/all.png'; // Contoh fallback
-    }
-  }
-
-  List<String> categoryList = [
-    "All",
-    "Computer Scince",
-    "Design",
-    "Elektro",
-    "Ilmu Komunikasi",
-    "Information",
-    "Manajemen",
-    "Psikologi",
-    "Sastra Bahasa",
-    "Guru",
-
-    // Tambahkan kategori lainnya sesuai kebutuhan
-  ];
 }

@@ -26,7 +26,7 @@ class _BottomNavbarMenteeScreenState extends State<BottomNavbarMenteeScreen> {
 
   Widget screenBottomNavigation(int index) {
     if (index == 0) {
-      return const HomeMenteeScreen();
+      return  HomeMenteeScreen();
     } else if (index == 1) {
       return MyClassMenteeListScreen();
     } else if (index == 2) {

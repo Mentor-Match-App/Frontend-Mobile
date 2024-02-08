@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:mentormatch_apps/mentee/screen/premiumClass/Karier/Karier_screen.dart';
+import 'package:mentormatch_apps/mentee/screen/premiumClass/Kuliah/Kuliah_screen.dart';
+import 'package:mentormatch_apps/mentee/screen/premiumClass/SD/sd_screen.dart';
+import 'package:mentormatch_apps/mentee/screen/premiumClass/SMA/SMA_screen.dart';
+import 'package:mentormatch_apps/mentee/screen/premiumClass/SMP/SMP_screen.dart';
 import 'package:mentormatch_apps/widget/card_premium_class.dart';
 import 'package:mentormatch_apps/widget/navbar.dart';
 
@@ -23,38 +28,73 @@ class _PremiumClassScreenState extends State<PremiumClassScreen> {
         ),
       ),
       body: ListView(
-        children: const [
+        children: [
           Padding(
             padding: EdgeInsets.all(20),
             child: Column(
               children: [
                 CardPremiumClassOptions(
-                  onPressed: null,
-                  title: 'SD',
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => SDScreen(),
+                      ),
+                    );
+                  },
+                  image: 'assets/Handoff/education_level/SD.png',
                   description:
                       'Nikmati pembelajaran yang lebih baik dengan dukungan khusus dari mentor untuk tingkat SD yang membantu Anda dalam proses pembelajaran.',
                 ),
                 CardPremiumClassOptions(
-                  onPressed: null,
-                  title: 'SMP',
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => SMPScreen(),
+                      ),
+                    );
+                  },
+                  image: 'assets/Handoff/education_level/SMP.png',
                   description:
                       'Nikmati bimbingan personal dari mentor ahli yang akan membimbing Anda dalam memahami pelajaran dan membuka wawasan baru.',
                 ),
                 CardPremiumClassOptions(
-                  onPressed: null,
-                  title: 'SMA',
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => SMAScreen(),
+                      ),
+                    );
+                  },
+                  image: 'assets/Handoff/education_level/SMA.png',
                   description:
                       'Dapatkan dukungan khusus dari mentor kami untuk pembelajaran yang optimal dan persiapan ujian perguruan tinggi yang sukses.',
                 ),
                 CardPremiumClassOptions(
-                  onPressed: null,
-                  title: 'Kuliah',
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => KuliahScreen(),
+                      ),
+                    );
+                  },
+                  image: 'assets/Handoff/education_level/KULIAH.png',
                   description:
                       'Dapatkan panduan khusus dari mentor mahasiswa kami untuk meraih keberhasilan akademis dan persiapkan diri Anda untuk masa depan karier yang cemerlang.',
                 ),
                 CardPremiumClassOptions(
-                  onPressed: null,
-                  title: 'Karier',
+                 onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => KarierScreen(),
+                      ),
+                    );
+                  },
+                  image: 'assets/Handoff/education_level/KARIER.png',
                   description:
                       'Temukan dukungan khusus dari mentor profesional kami untuk merancang dan mengembangkan karier Anda.',
                 ),
