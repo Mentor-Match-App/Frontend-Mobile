@@ -4,6 +4,7 @@ import 'package:mentormatch_apps/style/font_style.dart';
 import 'package:mentormatch_apps/widget/button.dart';
 
 class CardItemMentor extends StatefulWidget {
+  final VoidCallback onPressesd;
   final String imagePath;
   final String name;
   final String job;
@@ -13,7 +14,7 @@ class CardItemMentor extends StatefulWidget {
       required this.imagePath,
       required this.name,
       required this.job,
-      required this.company})
+      required this.company, required this.onPressesd})
       : super(key: key);
 
   @override
@@ -46,10 +47,13 @@ class _GirdItemMentorState extends State<CardItemMentor> {
               ),
               Padding(
                 padding: const EdgeInsets.all(8),
-                child: Text(
-                  widget.name,
-                  style: FontFamily().boldText.copyWith(
-                      color: ColorStyle().secondaryColors, fontSize: 12),
+                child: Expanded(
+                  child: Text(
+                    widget.name,
+                    style: FontFamily().boldText.copyWith(
+                        color: ColorStyle().secondaryColors, fontSize: 12),
+                        overflow: TextOverflow.ellipsis,
+                  ),
                 ),
               ),
               Column(
@@ -64,9 +68,12 @@ class _GirdItemMentorState extends State<CardItemMentor> {
                         color: ColorStyle().secondaryColors,
                       ),
                       SizedBox(width: 4),
-                      Text(
-                        widget.job,
-                        style: FontFamily().regularText.copyWith(fontSize: 10),
+                        Expanded(
+                        child: Text(
+                          widget.job,
+                          style: FontFamily().regularText.copyWith(fontSize: 10),
+                            overflow: TextOverflow.ellipsis,
+                        ),
                       ),
                     ],
                   ),
@@ -79,20 +86,23 @@ class _GirdItemMentorState extends State<CardItemMentor> {
                             .secondaryColors, // Ganti dengan warna yang diinginkan
                       ),
                       SizedBox(width: 4),
-                      Text(
-                        widget.company,
-                        style: FontFamily().regularText.copyWith(fontSize: 10),
+                      Expanded(
+                        child: Text(
+                          widget.company,
+                          style: FontFamily().regularText.copyWith(fontSize: 10),
+                            overflow: TextOverflow.ellipsis,
+                        ),
                       ),
                     ],
                   ),
                   const SizedBox(height: 8),
                   SmallElevatedButton(
                       style: FontFamily().regularText.copyWith(
-                          color: ColorStyle().whiteColors, fontSize: 12),
+                          color: ColorStyle().whiteColors, fontSize: 10),
                       height: 28,
                       width: 120,
                       title: "Available",
-                      onPressed: () {})
+                      onPressed: widget.onPressesd)
                 ],
               )
             ],

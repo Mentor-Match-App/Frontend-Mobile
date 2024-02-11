@@ -15,7 +15,7 @@ class ReviewWidget extends StatelessWidget {
       child: Column(
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(Icons.emoji_emotions_outlined,
                   size: 40, color: ColorStyle().secondaryColors),

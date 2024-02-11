@@ -176,7 +176,7 @@ class _SMPScreenState extends State<SMPScreen> {
                           _handleMenuSelected('Geografi');
                         },
                         title: "Geografi",
-                        img: 'assets/Handoff/icon/categoryIcon/SMP/math.png',
+                        img: 'assets/Handoff/icon/categoryIcon/SMP/geografi.png',
                       ),
                       CategoriCardWidget(
                         isActive: isEkonomiActive,
@@ -209,7 +209,7 @@ class _SMPScreenState extends State<SMPScreen> {
                         onTap: () {
                           _handleMenuSelected('Bahasa');
                         },
-                        title: "Fisika",
+                        title: "Bahasa",
                         img: 'assets/Handoff/icon/categoryIcon/SMP/Sastra Bahasa.png',
                       ),
                        CategoriCardWidget(
@@ -227,6 +227,14 @@ class _SMPScreenState extends State<SMPScreen> {
                         },
                         title: "Teknologi",
                         img: 'assets/Handoff/icon/categoryIcon/SMP/tech.png',
+                      ),
+                       CategoriCardWidget(
+                        isActive: isMathActive,
+                        onTap: () {
+                          _handleMenuSelected('Matematika');
+                        },
+                        title: "Matematika",
+                        img: 'assets/Handoff/icon/categoryIcon/SMP/math.png',
                       ),
                     ],
                   ),

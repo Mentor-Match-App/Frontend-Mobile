@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:mentormatch_apps/mentee/screen/premiumClass/Kuliah/all_kuliah_screen.dart';
-import 'package:mentormatch_apps/mentee/screen/premiumClass/Kuliah/bahasa_kuliah_screen.dart';
 import 'package:mentormatch_apps/mentee/screen/premiumClass/Kuliah/computerS_kuliah_screen.dart';
 import 'package:mentormatch_apps/mentee/screen/premiumClass/Kuliah/design_kuliah_screen.dart';
 import 'package:mentormatch_apps/mentee/screen/premiumClass/Kuliah/electro_kulaih_screem.dart';
@@ -69,23 +68,12 @@ class _KuliahScreenState extends State<KuliahScreen> {
           isPendidikanGuruActive = false;
           isInformationActive = false;
           isElektroActive = false;
-          isDesignActive = true;
+          isDesignActive = false;
         } else if (menu == 'Computer Science') {
           isAllCategoryActive = false;
           isBahasaActive = false;
           isIlkomActive = false;
           isComputerScienceActive = true;
-          isPsikologiActive = false;
-          isManajemenActive = false;
-          isPendidikanGuruActive = false;
-          isInformationActive = false;
-          isElektroActive = false;
-          isDesignActive = true;
-        } else if (menu == 'Bahasa') {
-          isAllCategoryActive = false;
-          isBahasaActive = true;
-          isIlkomActive = false;
-          isComputerScienceActive = false;
           isPsikologiActive = false;
           isManajemenActive = false;
           isPendidikanGuruActive = false;
@@ -192,22 +180,13 @@ class _KuliahScreenState extends State<KuliahScreen> {
                         img: 'assets/Handoff/icon/categoryIcon/Kuliah/all.png',
                       ),
                       CategoriCardWidget(
-                        isActive: isBahasaActive,
+                        isActive: isPsikologiActive,
                         onTap: () {
-                          _handleMenuSelected('Bahasa');
+                          _handleMenuSelected('Psikologi');
                         },
-                        title: "Bahasa",
+                        title: "Psikologi",
                         img:
-                            'assets/Handoff/icon/categoryIcon/Kuliah/Sastra Bahasa.png',
-                      ),
-                      CategoriCardWidget(
-                        isActive: isComputerScienceActive,
-                        onTap: () {
-                          _handleMenuSelected('Computer Science');
-                        },
-                        title: "Computer Science",
-                        img:
-                            'assets/Handoff/icon/categoryIcon/Kuliah/Computer Scince.png',
+                            'assets/Handoff/icon/categoryIcon/Kuliah/psikolog.png',
                       ),
                       CategoriCardWidget(
                         isActive: isDesignActive,
@@ -228,13 +207,13 @@ class _KuliahScreenState extends State<KuliahScreen> {
                             'assets/Handoff/icon/categoryIcon/Kuliah/electro.png',
                       ),
                       CategoriCardWidget(
-                        isActive: isIlkomActive,
+                        isActive: isManajemenActive,
                         onTap: () {
-                          _handleMenuSelected('Ilmu Komunikasi');
+                          _handleMenuSelected('Manajemen');
                         },
-                        title: "Ilmu Komunikasi",
+                        title: "Manajemen",
                         img:
-                            'assets/Handoff/icon/categoryIcon/Kuliah/ilkon.png',
+                            'assets/Handoff/icon/categoryIcon/Kuliah/manajemen.png',
                       ),
                       CategoriCardWidget(
                         isActive: isInformationActive,
@@ -246,22 +225,22 @@ class _KuliahScreenState extends State<KuliahScreen> {
                             'assets/Handoff/icon/categoryIcon/Kuliah/Information.png',
                       ),
                       CategoriCardWidget(
-                        isActive: isManajemenActive,
+                        isActive: isComputerScienceActive,
                         onTap: () {
-                          _handleMenuSelected('Manajemen');
+                          _handleMenuSelected('Computer Science');
                         },
-                        title: "Manajemen",
+                        title: "Computer Science",
                         img:
-                            'assets/Handoff/icon/categoryIcon/Kuliah/manajemen.png',
+                            'assets/Handoff/icon/categoryIcon/Kuliah/Computer Scince.png',
                       ),
                       CategoriCardWidget(
-                        isActive: isPsikologiActive,
+                        isActive: isIlkomActive,
                         onTap: () {
-                          _handleMenuSelected('Psikologi');
+                          _handleMenuSelected('Ilmu Komunikasi');
                         },
-                        title: "Psikologi",
+                        title: "Ilmu Komunikasi",
                         img:
-                            'assets/Handoff/icon/categoryIcon/Kuliah/psikolog.png',
+                            'assets/Handoff/icon/categoryIcon/Kuliah/ilkon.png',
                       ),
                       CategoriCardWidget(
                         isActive: isPendidikanGuruActive,
@@ -281,25 +260,23 @@ class _KuliahScreenState extends State<KuliahScreen> {
                   children: [
                     isAllCategoryActive
                         ? AllKuliahScreen()
-                        : isBahasaActive
-                            ? BahasaKuliahScreen()
-                            : isIlkomActive
-                                ? IlkomKuliahScreen()
-                                : isComputerScienceActive
-                                    ? ComputerScinceKuliahScreen()
-                                    : isDesignActive
-                                        ? DesignKuliahScreen()
-                                        : isElektroActive
-                                            ? ElectroKuliahScreen()
-                                            : isInformationActive
-                                                ? InformationKuliahScreen()
-                                                : isManajemenActive
-                                                    ? ManajemenKuliahScreen()
-                                                    : isPendidikanGuruActive
-                                                        ? TeacherKuliahScreen()
-                                                        : isPsikologiActive
-                                                            ? PsikologKuliahScreen()
-                                                            : AllKuliahScreen()
+                        : isIlkomActive
+                            ? IlkomKuliahScreen()
+                            : isComputerScienceActive
+                                ? ComputerScinceKuliahScreen()
+                                : isDesignActive
+                                    ? DesignKuliahScreen()
+                                    : isElektroActive
+                                        ? ElectroKuliahScreen()
+                                        : isInformationActive
+                                            ? InformationKuliahScreen()
+                                            : isManajemenActive
+                                                ? ManajemenKuliahScreen()
+                                                : isPendidikanGuruActive
+                                                    ? TeacherKuliahScreen()
+                                                    : isPsikologiActive
+                                                        ? PsikologKuliahScreen()
+                                                        : AllKuliahScreen()
                   ],
                 ),
               ],

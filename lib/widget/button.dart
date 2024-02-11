@@ -31,7 +31,9 @@ class ElevatedButtonWidget extends StatelessWidget {
         // },
         child: Text(
           title!,
-          style: FontFamily().buttonText,
+          style: FontFamily().buttonText.copyWith(
+            fontSize: 16,
+          ),
         ),
       ),
     );

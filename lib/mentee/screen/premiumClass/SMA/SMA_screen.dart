@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mentormatch_apps/mentee/screen/premiumClass/SD/all_sd_screen.dart';
 import 'package:mentormatch_apps/mentee/screen/premiumClass/SD/math_sd_scree.dart';
 import 'package:mentormatch_apps/mentee/screen/premiumClass/SD/tech_sd_screen.dart';
-import 'package:mentormatch_apps/mentee/screen/premiumClass/SMA/all_sma_screen.dart';
+import 'package:mentormatch_apps/mentee/screen/premiumClass/SMA/all_mentor_SMA_screen.dart';
 import 'package:mentormatch_apps/mentee/screen/premiumClass/SMA/bahasa_sma_screen.dart';
 import 'package:mentormatch_apps/mentee/screen/premiumClass/SMA/biology_sma_screen.dart';
 import 'package:mentormatch_apps/mentee/screen/premiumClass/SMA/ekonomi_sma_screen.dart';
@@ -178,7 +178,7 @@ class _SMAScreenState extends State<SMAScreen> {
                           _handleMenuSelected('Geografi');
                         },
                         title: "Geografi",
-                        img: 'assets/Handoff/icon/categoryIcon/SMA/math.png',
+                        img: 'assets/Handoff/icon/categoryIcon/SMA/geografi.png',
                       ),
                       CategoriCardWidget(
                         isActive: isEkonomiActive,
@@ -211,7 +211,7 @@ class _SMAScreenState extends State<SMAScreen> {
                         onTap: () {
                           _handleMenuSelected('Bahasa');
                         },
-                        title: "Fisika",
+                        title: "Bahasa",
                         img: 'assets/Handoff/icon/categoryIcon/SMA/Sastra Bahasa.png',
                       ),
                        CategoriCardWidget(
@@ -229,6 +229,14 @@ class _SMAScreenState extends State<SMAScreen> {
                         },
                         title: "Teknologi",
                         img: 'assets/Handoff/icon/categoryIcon/SMA/tech.png',
+                      ),
+                      CategoriCardWidget(
+                        isActive: isMathActive,
+                        onTap: () {
+                          _handleMenuSelected('Matematika');
+                        },
+                        title: "Matematika",
+                        img: 'assets/Handoff/icon/categoryIcon/SMA/math.png',
                       ),
                     ],
                   ),

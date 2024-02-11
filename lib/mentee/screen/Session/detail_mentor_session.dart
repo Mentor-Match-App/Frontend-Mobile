@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mentormatch_apps/mentee/screen/home_mentee_screen.dart';
 import 'package:mentormatch_apps/login-register/first_screen.dart';
+import 'package:mentormatch_apps/mentor/model/category_SD_model.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
 import 'package:mentormatch_apps/widget/button.dart';
@@ -9,7 +10,7 @@ import 'package:mentormatch_apps/widget/profile_avatar.dart';
 import 'package:mentormatch_apps/widget/review_widget.dart';
 
 class DetailMentorSession extends StatefulWidget {
-  DetailMentorSession({Key? key}) : super(key: key);
+  DetailMentorSession({Key? key, required String about, required String name, required String photoUrl, required String job, required String company, required String email, required String linkedin, required List<String> skills, required String location, required String description, required List<String> terms, required MentorSD mentor}) : super(key: key);
 
   @override
   State<DetailMentorSession> createState() => _DetailMentorSessionState();

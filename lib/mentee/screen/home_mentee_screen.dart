@@ -120,6 +120,7 @@ class HomeMenteeScreen extends StatelessWidget {
                 (BuildContext context, int index) {
                   final mentor = mentors[index];
                   return CardItemMentor(
+                     onPressesd: () {},
                     imagePath:
                         mentor.photoUrl ?? '', // Ubah ke foto mentor jika ada
                     name: mentor.name ?? '',
