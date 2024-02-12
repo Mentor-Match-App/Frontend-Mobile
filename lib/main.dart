@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:mentormatch_apps/login-register/Login_screen.dart';
-import 'package:mentormatch_apps/mentee/screen/premiumClass/SD/sd_screen.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:mentormatch_apps/preferences/%20preferences_helper.dart';
+import 'firebase_options.dart';
 
-
-
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized(); // Pastikan ini dipanggil pertama
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  await UserPreferences.init();
   runApp(const MyApp());
 }
 
