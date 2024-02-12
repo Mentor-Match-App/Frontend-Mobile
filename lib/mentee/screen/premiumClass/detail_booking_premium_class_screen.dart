@@ -1,11 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
 import 'package:mentormatch_apps/widget/button.dart';
 
 class DetailBookingPremiumClass extends StatefulWidget {
-  DetailBookingPremiumClass({Key? key}) : super(key: key);
+  final int price;
+  final String nama_mentor;
+  final int durasi;
+  final String nama_kelas;
+
+  DetailBookingPremiumClass(
+      {Key? key,
+      required this.price,
+      required this.nama_mentor,
+      required this.durasi,
+      required this.nama_kelas})
+      : super(key: key);
 
   @override
   State<DetailBookingPremiumClass> createState() =>
@@ -35,10 +47,10 @@ class _DetailBookingPremiumClassState extends State<DetailBookingPremiumClass> {
                     Center(
                       child: Card(
                         color: ColorStyle().succesColors,
-                        child: const Padding(
-                          padding: const EdgeInsets.all(16.0),
+                        child: Padding(
+                          padding: EdgeInsets.all(16.0),
                           child: Text(
-                            'IDR 1.000.000,00',
+                              "${NumberFormat.currency(locale: 'id', symbol: 'Rp').format(widget.price)}",
                             style: TextStyle(color: Colors.white),
                           ),
                         ),
@@ -50,7 +62,7 @@ class _DetailBookingPremiumClassState extends State<DetailBookingPremiumClass> {
                           color: ColorStyle().primaryColors, fontSize: 16),
                     ),
                     Text(
-                      'UI/UX Research & Design',
+                      widget.nama_kelas,
                       style: FontFamily().regularText,
                     ),
                     const SizedBox(
@@ -62,7 +74,7 @@ class _DetailBookingPremiumClassState extends State<DetailBookingPremiumClass> {
                           color: ColorStyle().primaryColors, fontSize: 16),
                     ),
                     Text(
-                      'Steven Jobs',
+                      widget.nama_mentor,
                       style: FontFamily().regularText,
                     ),
                     const SizedBox(
@@ -74,7 +86,7 @@ class _DetailBookingPremiumClassState extends State<DetailBookingPremiumClass> {
                           color: ColorStyle().primaryColors, fontSize: 16),
                     ),
                     Text(
-                      '3 Bulan',
+                      '${widget.durasi} Hari',
                       style: FontFamily().regularText,
                     ),
                     const SizedBox(
@@ -140,7 +152,7 @@ class _DetailBookingPremiumClassState extends State<DetailBookingPremiumClass> {
                             // Tampilkan snackbar atau pesan bahwa teks telah disalin
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
-                                duration:const  Duration(seconds: 2),
+                                duration: const Duration(seconds: 2),
                                 backgroundColor: ColorStyle().tertiaryColors,
                                 behavior: SnackBarBehavior.floating,
                                 content: Text(

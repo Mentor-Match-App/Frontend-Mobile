@@ -2,25 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:mentormatch_apps/mentee/screen/premiumClass/Kuliah/detail_mentor_kuliah_screen.dart';
 import 'package:mentormatch_apps/mentee/service/service_Kuliah.dart';
 import 'package:mentormatch_apps/mentor/model/category_Kuliah_model.dart';
-
 import 'package:mentormatch_apps/widget/card_mentor.dart';
 
-class IlkomKuliahScreen extends StatefulWidget {
-  IlkomKuliahScreen({Key? key}) : super(key: key);
+class BahasaKuliahScreen extends StatefulWidget {
+  BahasaKuliahScreen({Key? key}) : super(key: key);
 
   @override
-  State<IlkomKuliahScreen> createState() => _IlkomKuliahScreenState();
+  State<BahasaKuliahScreen> createState() => _BahasaKuliahScreenState();
 }
 
-class _IlkomKuliahScreenState extends State<IlkomKuliahScreen> {
- late Future<Kuliah> futureKuliahData;
+class _BahasaKuliahScreenState extends State<BahasaKuliahScreen> {
+late Future<Kuliah> futureKuliahData;
 
   @override
   void initState() {
     super.initState();
     futureKuliahData = KuliahServices().getKuliahData();
   }
-
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<Kuliah>(
@@ -32,7 +30,7 @@ class _IlkomKuliahScreenState extends State<IlkomKuliahScreen> {
           return Center(child: Text('Error: ${snapshot.error}'));
         } else if (snapshot.hasData) {
           final mentorsWithLanguageCategory = snapshot.data!.mentors!
-              .where((mentor) => mentor.mentorClass?.category == "Ilmu Komunikasi")
+              .where((mentor) => mentor.mentorClass?.category == "Bahasa")
               .toList();
 
           return GridView.builder(

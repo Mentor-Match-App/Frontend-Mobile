@@ -12,7 +12,7 @@ class SainsSDScreen extends StatefulWidget {
 }
 
 class _SainsSDScreenState extends State<SainsSDScreen> {
-   late Future<SD> futureSDData;
+  late Future<SD> futureSDData;
 
   @override
   void initState() {
@@ -36,10 +36,10 @@ class _SainsSDScreenState extends State<SainsSDScreen> {
 
           return GridView.builder(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2, 
-              childAspectRatio: 3 / 5, 
+              crossAxisCount: 2,
+              childAspectRatio: 3 / 5,
               crossAxisSpacing: 2,
-              mainAxisSpacing: 2, 
+              mainAxisSpacing: 2,
             ),
             itemCount: mentorsWithLanguageCategory.length,
             itemBuilder: (context, index) {
@@ -52,42 +52,42 @@ class _SainsSDScreenState extends State<SainsSDScreen> {
               );
 
               return CardItemMentor(
-                 onPressesd: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => DetailMentorSDScreen(
-                          reviews: mentor.mentorReviews ?? [],
-                          namakelas: mentor.mentorClass?.name ?? "",
-                          about: mentor.about ?? "",
-                          name: mentor.name ?? "",
-                          photoUrl: mentor.photoUrl ?? "",
-                          job: mentor.experiences
-                                  ?.firstWhere(
-                                      (exp) => exp.isCurrentJob == true,
-                                      orElse: () =>
-                                          Experience(jobTitle: "", company: ""))
-                                  .jobTitle ??
-                              "",
-                          company: mentor.experiences
-                                  ?.firstWhere(
-                                      (exp) => exp.isCurrentJob == true,
-                                      orElse: () =>
-                                          Experience(jobTitle: "", company: ""))
-                                  .company ??
-                              "",
-                          email: mentor.email ?? "",
-                          linkedin: mentor.linkedin ?? "",
-                          skills: mentor.skills ?? [],
-                          location: mentor.location ?? "",
-                          description: mentor.mentorClass?.description ?? "",
-                          terms: mentor.mentorClass?.terms ?? [],
-                          price: mentor.mentorClass?.price ?? 0,
-                          mentor: mentor,
-                        ),
+                onPressesd: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => DetailMentorSDScreen(
+                                 classid : mentor.mentorClass!.id ?? "",
+                        periode: mentor.mentorClass?.durationInDays ?? 0,
+                        reviews: mentor.mentorReviews ?? [],
+                        namakelas: mentor.mentorClass?.name ?? "",
+                        about: mentor.about ?? "",
+                        name: mentor.name ?? "",
+                        photoUrl: mentor.photoUrl ?? "",
+                        job: mentor.experiences
+                                ?.firstWhere((exp) => exp.isCurrentJob == true,
+                                    orElse: () =>
+                                        Experience(jobTitle: "", company: ""))
+                                .jobTitle ??
+                            "",
+                        company: mentor.experiences
+                                ?.firstWhere((exp) => exp.isCurrentJob == true,
+                                    orElse: () =>
+                                        Experience(jobTitle: "", company: ""))
+                                .company ??
+                            "",
+                        email: mentor.email ?? "",
+                        linkedin: mentor.linkedin ?? "",
+                        skills: mentor.skills ?? [],
+                        location: mentor.location ?? "",
+                        description: mentor.mentorClass?.description ?? "",
+                        terms: mentor.mentorClass?.terms ?? [],
+                        price: mentor.mentorClass?.price ?? 0,
+                        mentor: mentor,
                       ),
-                    );
-                  },
+                    ),
+                  );
+                },
                 imagePath:
                     mentor.photoUrl ?? 'assets/Handoff/ilustrator/profile.png',
                 name: mentor.name ?? 'No Name',

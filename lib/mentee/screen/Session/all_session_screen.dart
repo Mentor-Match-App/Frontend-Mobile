@@ -58,7 +58,7 @@ late Future<Session> _sessionFuture;
                   job: currentExperience.jobTitle ?? '',
                   company: currentExperience.company ?? 'Placeholder Company',
                 ),
-              );
+              ); 
             },
             shrinkWrap: true,
             physics:

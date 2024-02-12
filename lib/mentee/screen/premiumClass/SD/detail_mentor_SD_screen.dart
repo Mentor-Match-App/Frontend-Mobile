@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mentormatch_apps/login-register/first_screen.dart';
 import 'package:mentormatch_apps/mentee/screen/premiumClass/detail_booking_premium_class_screen.dart';
+import 'package:mentormatch_apps/mentee/service/bookingClass/bookclass_service.dart';
 import 'package:mentormatch_apps/mentor/model/category_SD_model.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
@@ -11,7 +12,9 @@ import 'package:mentormatch_apps/widget/profile_avatar.dart';
 import 'package:mentormatch_apps/widget/review_widget.dart';
 
 class DetailMentorSDScreen extends StatefulWidget {
-      final List<MentorReview>? reviews;
+  final String classid;
+  final int periode;
+  final List<MentorReview>? reviews;
   final int price;
   final String namakelas;
   final String about;
@@ -42,7 +45,10 @@ class DetailMentorSDScreen extends StatefulWidget {
     required this.terms,
     required this.mentor,
     required this.namakelas,
-    required this.price, this.reviews,
+    required this.price,
+    this.reviews,
+    required this.periode,
+    required this.classid,
   }) : super(key: key);
 
   @override
@@ -303,73 +309,89 @@ class _DetailMentorSDScreenState extends State<DetailMentorSDScreen> {
       ),
     );
   }
-}
 
-void _showDialog(BuildContext context) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
-        backgroundColor: ColorStyle().whiteColors,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            Text("Booking Class", style: FontFamily().titleText),
-            IconButton(
-              onPressed: () => Navigator.of(context).pop(),
-              icon: Icon(
-                Icons.close_sharp,
-                color: ColorStyle().errorColors,
-              ),
-            )
-          ],
-        ),
-        content: Padding(
-          padding: const EdgeInsets.all(12),
-          child: Text(
-            "Apakah Kamu yakin untuk memesan Premium Class ini?",
-            textAlign: TextAlign.center,
-            style: FontFamily().regularText,
+  void _showDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
           ),
-        ),
-        actions: <Widget>[
-          Row(
+          backgroundColor: ColorStyle().whiteColors,
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              SmallOutlinedButton(
-                style: FontFamily()
-                    .regularText
-                    .copyWith(color: ColorStyle().primaryColors, fontSize: 12),
-                height: 48,
-                width: 152,
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                title: "Cancel",
-              ),
-              const SizedBox(width: 8),
-              SmallElevatedButton(
-                style: FontFamily()
-                    .regularText
-                    .copyWith(color: ColorStyle().whiteColors, fontSize: 12),
-                height: 48,
-                width: 152,
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => DetailBookingPremiumClass(),
-                    ),
-                  );
-                },
-                title: "Booking",
-              ),
+              Text("Booking Class", style: FontFamily().titleText),
+              IconButton(
+                onPressed: () => Navigator.of(context).pop(),
+                icon: Icon(
+                  Icons.close_sharp,
+                  color: ColorStyle().errorColors,
+                ),
+              )
             ],
           ),
-        ],
-      );
-    },
-  );
+          content: Padding(
+            padding: const EdgeInsets.all(12),
+            child: Text(
+              "Apakah Kamu yakin untuk memesan Premium Class ini?",
+              textAlign: TextAlign.center,
+              style: FontFamily().regularText,
+            ),
+          ),
+          actions: <Widget>[
+            // Actions untuk booking class...
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                SmallOutlinedButton(
+                  style: FontFamily().regularText.copyWith(
+                      color: ColorStyle().primaryColors, fontSize: 12),
+                  height: 48,
+                  width: 100,
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  title: "Cancel",
+                ),
+                SmallElevatedButton(
+                  style: FontFamily()
+                      .regularText
+                      .copyWith(color: ColorStyle().whiteColors, fontSize: 12),
+                  height: 48,
+                  width: 100,
+                  onPressed: () async {
+                    // Panggil API untuk melakukan booking
+                    bool isBooked = await bookClass(
+                      widget.classid, // Gantikan dengan classId yang sesuai
+                      'e7f66a38-af11-477c-8d68-3b5f7ad5709d', // Gantikan dengan userId yang sesuai
+                    );
+
+                    // Jika booking berhasil, navigasikan ke halaman DetailBookingPremiumClass
+                    if (isBooked) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => DetailBookingPremiumClass(
+                            price: widget.price,
+                            nama_mentor: widget.name,
+                            nama_kelas: widget.namakelas,
+                            durasi: widget.periode,
+                          ),
+                        ),
+                      );
+                    } else {
+                      // Tampilkan pesan error atau lakukan sesuatu jika booking gagal
+                    }
+                  },
+                  title: "Booking",
+                ),
+              ],
+            ),
+          ],
+        );
+      },
+    );
+  }
 }

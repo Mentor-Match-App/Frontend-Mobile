@@ -6,16 +6,6 @@ import 'package:mentormatch_apps/login-register/register_screen.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
 import 'package:mentormatch_apps/widget/button.dart';
 
-const List<String> scopes = <String>[
-  'email',
-  'https://www.googleapis.com/auth/contacts.readonly',
-];
-
-GoogleSignIn _googleSignIn = GoogleSignIn(
-  // Optional clientId
-  clientId: 'your-client_id.apps.googleusercontent.com',
-  scopes: scopes,
-);
 
 class LoginScreen extends StatefulWidget {
   LoginScreen({Key? key}) : super(key: key);
@@ -25,47 +15,16 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  GoogleSignInAccount? _currentUser;
-
-  // void signInSilently() async {
-  //   try {
-  //     final GoogleSignInAccount? googleSignInAccount =
-  //         await _googleSignIn.signInSilently();
-  //     // Handle signed in user (googleSignInAccount)
-  //   } catch (error) {
-  //     // Handle error
-  //   }
-  // }
-
-  Future<void> _handleSignIn() async {
-    try {
-      await _googleSignIn.signIn();
-    } catch (error) {
-      print(error);
-    }
-  }
 
   @override
-  void initState() {
-    _googleSignIn.onCurrentUserChanged.listen((event) {
-      setState(() {
-        _currentUser = event;
-      });
-    });
-    _googleSignIn.signInSilently();
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: _currentUser == null
-              ? Image.asset('assets/Handoff/logo/LogoMobile.png')
-              : Text('Dasboard'),
+          title: Text('Login'),
         ),
-        body: _currentUser == null
-            ? ListView(
+        body:  ListView(
                 children: [
                   Padding(
                     padding: const EdgeInsets.all(20),
@@ -106,7 +65,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       ElevatedButtonWidget(
-                                        onPressed: () => _googleSignIn.signIn(),
+                                        onPressed: () {},
                                         title: "Login with Google Account",
                                       ),
                                       Center(
@@ -149,12 +108,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ],
               )
-            : Container(
-                child: ListTile(
-                  leading: GoogleUserCircleAvatar(identity: _currentUser!),
-                  title: Text(_currentUser!.displayName ?? ''),
-                  subtitle: Text(_currentUser!.email),
-                ),
-              ));
+            );
   }
 }

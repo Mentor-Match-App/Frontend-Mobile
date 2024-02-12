@@ -10,7 +10,7 @@ import 'package:mentormatch_apps/widget/profile_avatar.dart';
 import 'package:mentormatch_apps/widget/review_widget.dart';
 
 class DetailMentorSMPScreen extends StatefulWidget {
-      final List<MentorReview>? reviews;
+  final List<MentorReview>? reviews;
   final int price;
   final String namakelas;
   final String about;
@@ -41,7 +41,8 @@ class DetailMentorSMPScreen extends StatefulWidget {
     required this.terms,
     required this.mentor,
     required this.namakelas,
-    required this.price, this.reviews,
+    required this.price,
+    this.reviews,
   }) : super(key: key);
 
   @override
@@ -356,14 +357,16 @@ void _showDialog(BuildContext context) {
                 height: 48,
                 width: 152,
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => DetailBookingPremiumClass(),
-                    ),
-                  );
+                  // Navigator.push(
+                  //   context,
+                  //   MaterialPageRoute(
+                  //     builder: (context) => DetailBookingPremiumClass(
+                  //       nama_mentor : widget.namakelas.t,
+                  //     ),
+                  //   ),
+                  // );
                 },
-                title: "Booking",
+                title: "Booking" , 
               ),
             ],
           ),

@@ -356,12 +356,12 @@ void _showDialog(BuildContext context) {
                 height: 48,
                 width: 152,
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => DetailBookingPremiumClass(),
-                    ),
-                  );
+                  // Navigator.push(
+                  //   context,
+                  //   MaterialPageRoute(
+                  //     builder: (context) => DetailBookingPremiumClass(),
+                  //   ),
+                  // );
                 },
                 title: "Booking",
               ),

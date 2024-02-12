@@ -58,6 +58,8 @@ class _AllSDScreenState extends State<AllSDScreen> {
                       context,
                       MaterialPageRoute(
                         builder: (context) => DetailMentorSDScreen(
+                          classid : mentor.mentorClass!.id ?? "",
+                        periode : mentor.mentorClass?.durationInDays ?? 0,
                           reviews: mentor.mentorReviews ?? [],
                           namakelas: mentor.mentorClass?.name ?? "",
                           about: mentor.about ?? "",

@@ -56,7 +56,9 @@ class _MathSDScreenState extends State<MathSDScreen> {
                       context,
                       MaterialPageRoute(
                         builder: (context) => DetailMentorSDScreen(
-                          reviews: mentor.mentorReviews ?? [],
+                                   classid : mentor.mentorClass!.id ?? "",
+                            periode : mentor.mentorClass?.durationInDays ?? 0,
+                                    reviews: mentor.mentorReviews ?? [],
                           namakelas: mentor.mentorClass?.name ?? "",
                           about: mentor.about ?? "",
                           name: mentor.name ?? "",

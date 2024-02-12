@@ -4,10 +4,10 @@ import 'package:mentormatch_apps/mentor/model/category_Kuliah_model.dart';
 class KuliahServices {
   final Dio _dio = Dio();
 
-  KuliahServices() {
-    // Menambahkan token ke header default untuk semua permintaan
-    _dio.options.headers['Authorization'] = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IkplcmVteWxld2lAZ21haWwuY29tIiwiaWF0IjoxNzA3MDQ5MzQxfQ.mEg7JJACQbYgaDxYpQaGDZfi92Ks_NmeQ-ZPvpOt3ks';
-  }
+  // KuliahServices() {
+  //   // Menambahkan token ke header default untuk semua permintaan
+  //   _dio.options.headers['Authorization'] = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IkplcmVteWxld2lAZ21haWwuY29tIiwiaWF0IjoxNzA3MDQ5MzQxfQ.mEg7JJACQbYgaDxYpQaGDZfi92Ks_NmeQ-ZPvpOt3ks';
+  // }
 
   Future<Kuliah> getKuliahData() async {
     try {

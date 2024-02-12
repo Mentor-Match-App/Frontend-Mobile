@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mentormatch_apps/mentee/screen/premiumClass/Kuliah/detail_mentor_kuliah_screen.dart';
 import 'package:mentormatch_apps/mentee/service/service_Kuliah.dart';
 import 'package:mentormatch_apps/mentor/model/category_Kuliah_model.dart';
 import 'package:mentormatch_apps/widget/card_mentor.dart';
@@ -51,7 +52,42 @@ late Future<Kuliah> futureKuliahData;
               return Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: CardItemMentor(
-                   onPressesd: () {},
+                 onPressesd: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => DetailMentorKuliahScreen(
+                          reviews: mentor.mentorReviews ?? [],
+                          namakelas: mentor.mentorClass?.name ?? "",
+                          about: mentor.about ?? "",
+                          name: mentor.name ?? "",
+                          photoUrl: mentor.photoUrl ?? "",
+                          job: mentor.experiences
+                                  ?.firstWhere(
+                                      (exp) => exp.isCurrentJob == true,
+                                      orElse: () =>
+                                          Experience(jobTitle: "", company: ""))
+                                  .jobTitle ??
+                              "",
+                          company: mentor.experiences
+                                  ?.firstWhere(
+                                      (exp) => exp.isCurrentJob == true,
+                                      orElse: () =>
+                                          Experience(jobTitle: "", company: ""))
+                                  .company ??
+                              "",
+                          email: mentor.email ?? "",
+                          linkedin: mentor.linkedin ?? "",
+                          skills: mentor.skills ?? [],
+                          location: mentor.location ?? "",
+                          description: mentor.mentorClass?.description ?? "",
+                          terms: mentor.mentorClass?.terms ?? [],
+                          price: mentor.mentorClass?.price ?? 0,
+                          mentor: mentor,
+                        ),
+                      ),
+                    );
+                  },
                   imagePath:
                       mentor.photoUrl ?? 'assets/Handoff/ilustrator/profile.png',
                   name: mentor.name ?? 'No Name',
