@@ -10,7 +10,7 @@ import 'package:mentormatch_apps/widget/profile_avatar.dart';
 import 'package:mentormatch_apps/widget/review_widget.dart';
 
 class DetailMentorSMAScreen extends StatefulWidget {
-      final List<MentorReview>? reviews;
+  final List<MentorReview>? reviews;
   final int price;
   final String namakelas;
   final String about;
@@ -221,7 +221,7 @@ class _DetailMentorSMAScreenState extends State<DetailMentorSMAScreen> {
                   style: FontFamily().boldText.copyWith(
                       color: ColorStyle().primaryColors, fontSize: 16),
                 ),
-                ExperienceWidget(
+                 ExperienceWidget(
                     role: widget.mentor.experiences?.first.jobTitle ??
                         'No Job Title',
                     company: widget.mentor.experiences?.first.company ??

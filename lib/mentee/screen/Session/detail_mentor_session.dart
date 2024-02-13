@@ -1,30 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:mentormatch_apps/mentee/screen/home_mentee_screen.dart';
-import 'package:mentormatch_apps/login-register/first_screen.dart';
-import 'package:mentormatch_apps/mentor/model/category_SD_model.dart';
+import 'package:mentormatch_apps/mentor/model/session_model.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
 import 'package:mentormatch_apps/widget/button.dart';
 import 'package:mentormatch_apps/widget/experience_widget.dart';
 import 'package:mentormatch_apps/widget/profile_avatar.dart';
-import 'package:mentormatch_apps/widget/review_widget.dart';
 
 class DetailMentorSession extends StatefulWidget {
-  DetailMentorSession(
-      {Key? key,
-      required String about,
-      required String name,
-      required String photoUrl,
-      required String job,
-      required String company,
-      required String email,
-      required String linkedin,
-      required List<String> skills,
-      required String location,
-      required String description,
-      required List<String> terms,
-      required MentorSD mentor})
-      : super(key: key);
+  final int participants;
+  final String namaSessios;
+  final String about;
+  final String photoUrl;
+  final String namaMentor;
+  final String company;
+  final String job;
+  final String email;
+  final String linkedin;
+  final List<String> skills;
+  final String location;
+  final String description;
+  final MentorSession mentor;
+  final String jadwal ;
+
+  DetailMentorSession({
+    Key? key, required this.namaSessios, required this.about, required this.photoUrl, required this.namaMentor, required this.company, required this.job, required this.email, required this.linkedin, required this.skills, required this.location, required this.description, required this.mentor, required this.jadwal, required this.participants,
+  }) : super(key: key);
 
   @override
   State<DetailMentorSession> createState() => _DetailMentorSessionState();
@@ -48,7 +49,7 @@ class _DetailMentorSessionState extends State<DetailMentorSession> {
                 Row(
                   children: [
                     ProfileAvatar(
-                      imageUrl: 'assets/Handoff/ilustrator/profile.png',
+                      imageUrl: widget.photoUrl,
                       radius: 40,
                     ),
                     Expanded(
@@ -57,10 +58,10 @@ class _DetailMentorSessionState extends State<DetailMentorSession> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "Charline June",
+                            widget.namaMentor,
                             style: FontFamily().boldText,
                           ),
-                          const SizedBox(height: 12),
+                          const SizedBox(height: 14),
                           Row(
                             children: [
                               Row(
@@ -71,8 +72,8 @@ class _DetailMentorSessionState extends State<DetailMentorSession> {
                                     color: ColorStyle().primaryColors,
                                   ),
                                   const SizedBox(width: 4),
-                                  const Text(
-                                    "UI/UX Designer",
+                                Text(
+                                    widget.job,
                                     style: TextStyle(fontSize: 10),
                                   ),
                                 ],
@@ -86,8 +87,8 @@ class _DetailMentorSessionState extends State<DetailMentorSession> {
                                     color: ColorStyle().primaryColors,
                                   ),
                                   const SizedBox(width: 4),
-                                  const Text(
-                                    "Jakarta Selatan",
+                                   Text(
+                                    widget.location,
                                     style: TextStyle(fontSize: 10),
                                   ),
                                 ],
@@ -102,8 +103,8 @@ class _DetailMentorSessionState extends State<DetailMentorSession> {
                                 color: ColorStyle().primaryColors,
                               ),
                               const SizedBox(width: 4),
-                              const Text(
-                                "PT. Sinar Terus",
+                           Text(
+                                widget.company,
                                 style: TextStyle(fontSize: 10),
                               ),
                             ],
@@ -119,7 +120,7 @@ class _DetailMentorSessionState extends State<DetailMentorSession> {
                       color: ColorStyle().primaryColors, fontSize: 16),
                 ),
                 Text(
-                  'Experienced in business strategy, startup development, and leadership. Specialized expertise in building mobile applications.',
+                  widget.about,
                   style: FontFamily().regularText,
                 ),
                 Padding(
@@ -164,7 +165,7 @@ class _DetailMentorSessionState extends State<DetailMentorSession> {
                         ),
                         onPressed: () {},
                         child: Text(
-                          "Java Script",
+                        widget.skills[0],
                           style: FontFamily()
                               .buttonText
                               .copyWith(color: ColorStyle().secondaryColors),
@@ -188,7 +189,7 @@ class _DetailMentorSessionState extends State<DetailMentorSession> {
                         ),
                         onPressed: () {},
                         child: Text(
-                          "Flutter/Dart",
+                          widget.skills[1],
                           style: FontFamily()
                               .buttonText
                               .copyWith(color: ColorStyle().secondaryColors),
@@ -203,10 +204,16 @@ class _DetailMentorSessionState extends State<DetailMentorSession> {
                   style: FontFamily().boldText.copyWith(
                       color: ColorStyle().primaryColors, fontSize: 16),
                 ),
+                 ExperienceWidget(
+                    role: widget.mentor.experiences?.first.jobTitle ??
+                        'No Job Title',
+                    company: widget.mentor.experiences?.first.company ??
+                        'No Company'),
                 ExperienceWidget(
-                    role: "Full Stack Developer", company: "Alaska"),
-                ExperienceWidget(
-                    role: "Full Stack Developer", company: "Alaska"),
+                    role: widget.mentor.experiences?.last.jobTitle ??
+                        'No Job Title',
+                    company: widget.mentor.experiences?.last.company ??
+                        'No Company'),
                 const Divider(),
                 Text(
                   "Jadwal Sessions",
@@ -217,7 +224,7 @@ class _DetailMentorSessionState extends State<DetailMentorSession> {
                   padding: const EdgeInsets.all(12),
                   child: Text(
                     textAlign: TextAlign.center,
-                    '\" Mastering Modern Web Development with Node.js and React \"',
+                    widget.namaSessios,
                     style: FontFamily().boldText.copyWith(
                         color: ColorStyle().secondaryColors, fontSize: 14),
                   ),
@@ -230,7 +237,7 @@ class _DetailMentorSessionState extends State<DetailMentorSession> {
                     ),
                     const SizedBox(width: 8),
                     Text(
-                      "Senin, 20 September 2021",
+                      widget.jadwal,
                       style: FontFamily().boldText.copyWith(
                           color: ColorStyle().secondaryColors, fontSize: 14),
                     ),
@@ -244,7 +251,7 @@ class _DetailMentorSessionState extends State<DetailMentorSession> {
                     ),
                     const SizedBox(width: 8),
                     Text(
-                      "15/100 Peserta",
+                      widget.participants.toString(),
                       style: FontFamily().boldText.copyWith(
                           color: ColorStyle().secondaryColors, fontSize: 14),
                     ),
