@@ -45,7 +45,6 @@ class MentorSession {
     String? photoUrl;
     String? about;
     List<SessionElement>? session;
-    List<MentorReview>? mentorReviews;
     List<Experience>? experiences;
 
     MentorSession({
@@ -61,7 +60,6 @@ class MentorSession {
         this.photoUrl,
         this.about,
         this.session,
-        this.mentorReviews,
         this.experiences,
     });
 
@@ -78,7 +76,6 @@ class MentorSession {
         photoUrl: json["photoUrl"],
         about: json["about"],
         session: json["session"] == null ? [] : List<SessionElement>.from(json["session"]!.map((x) => SessionElement.fromMap(x))),
-        mentorReviews: json["mentorReviews"] == null ? [] : List<MentorReview>.from(json["mentorReviews"]!.map((x) => MentorReview.fromMap(x))),
         experiences: json["experiences"] == null ? [] : List<Experience>.from(json["experiences"]!.map((x) => Experience.fromMap(x))),
     );
 
@@ -95,7 +92,6 @@ class MentorSession {
         "photoUrl": photoUrl,
         "about": about,
         "session": session == null ? [] : List<dynamic>.from(session!.map((x) => x.toMap())),
-        "mentorReviews": mentorReviews == null ? [] : List<dynamic>.from(mentorReviews!.map((x) => x.toMap())),
         "experiences": experiences == null ? [] : List<dynamic>.from(experiences!.map((x) => x.toMap())),
     };
 }
@@ -132,34 +128,6 @@ class Experience {
     };
 }
 
-class MentorReview {
-    String? id;
-    String? reviewerId;
-    String? mentorId;
-    String? content;
-
-    MentorReview({
-        this.id,
-        this.reviewerId,
-        this.mentorId,
-        this.content,
-    });
-
-    factory MentorReview.fromMap(Map<String, dynamic> json) => MentorReview(
-        id: json["id"],
-        reviewerId: json["reviewerId"],
-        mentorId: json["mentorId"],
-        content: json["content"],
-    );
-
-    Map<String, dynamic> toMap() => {
-        "id": id,
-        "reviewerId": reviewerId,
-        "mentorId": mentorId,
-        "content": content,
-    };
-}
-
 class SessionElement {
     String? id;
     String? mentorId;
@@ -172,7 +140,7 @@ class SessionElement {
     int? maxParticipants;
     bool? isActive;
     dynamic zoomLink;
-    List<Participant>? participant;
+    List<dynamic>? participant;
 
     SessionElement({
         this.id,
@@ -201,7 +169,7 @@ class SessionElement {
         maxParticipants: json["maxParticipants"],
         isActive: json["isActive"],
         zoomLink: json["zoomLink"],
-        participant: json["participant"] == null ? [] : List<Participant>.from(json["participant"]!.map((x) => Participant.fromMap(x))),
+        participant: json["participant"] == null ? [] : List<dynamic>.from(json["participant"]!.map((x) => x)),
     );
 
     Map<String, dynamic> toMap() => {
@@ -216,26 +184,6 @@ class SessionElement {
         "maxParticipants": maxParticipants,
         "isActive": isActive,
         "zoomLink": zoomLink,
-        "participant": participant == null ? [] : List<dynamic>.from(participant!.map((x) => x.toMap())),
-    };
-}
-
-class Participant {
-    String? sessionId;
-    String? userId;
-
-    Participant({
-        this.sessionId,
-        this.userId,
-    });
-
-    factory Participant.fromMap(Map<String, dynamic> json) => Participant(
-        sessionId: json["sessionId"],
-        userId: json["userId"],
-    );
-
-    Map<String, dynamic> toMap() => {
-        "sessionId": sessionId,
-        "userId": userId,
+        "participant": participant == null ? [] : List<dynamic>.from(participant!.map((x) => x)),
     };
 }

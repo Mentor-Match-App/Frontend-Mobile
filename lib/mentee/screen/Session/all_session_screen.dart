@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mentormatch_apps/mentee/screen/Session/detail_mentor_session.dart';
 import 'package:mentormatch_apps/mentee/service/session_mentor_service.dart';
 import 'package:mentormatch_apps/mentor/model/session_model.dart';
 import 'package:mentormatch_apps/widget/card_mentor.dart';
@@ -34,7 +35,7 @@ late Future<Session> _sessionFuture;
           return GridView.builder(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
-              childAspectRatio: 3 / 5,
+              childAspectRatio: 3 / 4,
               crossAxisSpacing: 2,
               mainAxisSpacing: 2,
             ),
@@ -51,7 +52,60 @@ late Future<Session> _sessionFuture;
               return Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: CardItemMentor(
-                   onPressesd: () {},
+                  onPressesd: () {
+                  // Assuming you are still working with the first active session
+                  var firstActiveSession = mentor.session?.firstWhere(
+                    (s) => s.isActive == true,
+                    orElse: () =>
+                        SessionElement(), // Provide a default session element if no active session is found
+                  );
+                  var numberOfParticipants =
+                      firstActiveSession!.participant?.length ?? 0;
+                  var activeSessionName =
+                      firstActiveSession.title ?? "No active session";
+                  var activeSessionDateTime =
+                      firstActiveSession.dateTime ?? "No date/time provided";
+                  var activeSessionDescription =
+                      firstActiveSession.description ??
+                          "No description provided";
+
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => DetailMentorSession(
+                        participants: numberOfParticipants,
+                        about: mentor.about ?? "",
+                        namaMentor: mentor.name ?? "",
+                        photoUrl: mentor.photoUrl ?? "",
+                        job: mentor.experiences
+                                ?.firstWhere(
+                                  (exp) => exp.isCurrentJob == true,
+                                  orElse: () =>
+                                      Experience(jobTitle: "", company: ""),
+                                )
+                                .jobTitle ??
+                            "",
+                        company: mentor.experiences
+                                ?.firstWhere(
+                                  (exp) => exp.isCurrentJob == true,
+                                  orElse: () =>
+                                      Experience(jobTitle: "", company: ""),
+                                )
+                                .company ??
+                            "",
+                        email: mentor.email ?? "",
+                        linkedin: mentor.linkedin ?? "",
+                        skills: mentor.skills ?? [],
+                        location: mentor.location ?? "",
+                        mentor: mentor,
+                        namaSessios: activeSessionName, // Session name
+                        jadwal: activeSessionDateTime, // Session date/time
+                        description:
+                            activeSessionDescription, // Session description
+                      ),
+                    ),
+                  );
+                },
                   imagePath:
                       mentor.photoUrl ?? 'assets/Handoff/ilustrator/profile.png',
                   name: mentor.name ?? 'No Name',
