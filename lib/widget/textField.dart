@@ -7,12 +7,15 @@ class TextFieldWidget extends StatefulWidget {
   final String? hintText;
   final GlobalKey<FormState>? formKey;
   final TextEditingController? controller;
+  final bool? enabled; // tambahkan properti enabled
 
   const TextFieldWidget({
     Key? key,
     this.hintText,
     this.formKey,
     this.controller,
+    this.enabled = true,
+    Function(String p1)? onChanged, // inisialisasi properti enabled
   }) : super(key: key);
 
   @override
@@ -28,6 +31,7 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
         height: 38,
         child: TextFormField(
           controller: widget.controller,
+          enabled: widget.enabled, // gunakan properti enabled
           decoration: InputDecoration(
             filled: true,
             fillColor: ColorStyle().tertiaryColors,
@@ -40,12 +44,6 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
                   color: ColorStyle().disableColors,
                 ),
           ),
-          validator: (value) {
-            if (value == null || value.isEmpty) {
-              return 'Please enter a skill';
-            }
-            return null;
-          },
         ),
       ),
     );

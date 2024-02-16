@@ -14,19 +14,20 @@ class _ProfileAvatarState extends State<ProfileAvatar> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding:EdgeInsets.all(8.0),
+      padding: EdgeInsets.all(8.0),
       child: Container(
         decoration: BoxDecoration(borderRadius: BorderRadius.circular(80)),
-        child:Column(
+        child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              CircleAvatar(
-                backgroundColor: Colors.white,
-                radius: widget.radius ?? 50,
-                backgroundImage: NetworkImage(
+              ClipOval(
+                child: Image.network(
                   widget.imageUrl.toString(),
-                   ),
+                  fit: BoxFit.cover,
+                  width: 120,
+                  height: 120,
+                ),
               ),
             ]),
       ),

@@ -1,0 +1,56 @@
+import 'package:dio/dio.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+class ProfileService {
+  Dio dio = Dio(); // Create Dio instance
+  final String baseUrl = "https://hwx70h6x-8000.asse.devtunnels.ms";
+
+  Future<void> updateProfile({
+    required String job,
+    required String school,
+    required List<String> skills,
+    required String location,
+    required String about,
+    required String linkedin,
+  }) async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token') ?? '';
+    final id = prefs.getString('userId') ?? '';
+
+    // Ensure headers are correctly set
+    dio.options.headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
+
+    try {
+      final response = await dio.patch(
+        '$baseUrl/users/mentee/$id/profile', // Make sure this endpoint is correct
+        data: {
+          'job': job,
+          'school': school,
+          'skills': skills,
+          'location': location,
+          'about': about,
+          'linkedin': linkedin,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        print("Profile updated successfully: ${response.data}");
+      } else {
+        // Use more specific error handling here to capture and log the status code
+        print("Error updating profile: HTTP status ${response.statusCode}");
+      }
+    } on DioError catch (e) {
+      // Enhanced error handling for more specific feedback
+      if (e.response != null) {
+        print("Dio error: ${e.response?.statusCode} - ${e.response?.data}");
+      } else {
+        print("Dio error without response: ${e.message}");
+      }
+    } catch (e) {
+      print("Unexpected error: $e");
+    }
+  }
+}
