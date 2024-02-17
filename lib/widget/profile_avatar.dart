@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mentormatch_apps/style/color_style.dart';
 
 // ignore: must_be_immutable
 class ProfileAvatar extends StatefulWidget {
@@ -16,20 +17,33 @@ class _ProfileAvatarState extends State<ProfileAvatar> {
     return Padding(
       padding: EdgeInsets.all(8.0),
       child: Container(
-        decoration: BoxDecoration(borderRadius: BorderRadius.circular(80)),
-        child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              ClipOval(
-                child: Image.network(
-                  widget.imageUrl.toString(),
-                  fit: BoxFit.cover,
-                  width: 120,
-                  height: 120,
-                ),
-              ),
-            ]),
+        width: 126, // Tingkatkan ukuran untuk mengakomodasi border di luar
+        height: 126, // Tingkatkan ukuran untuk mengakomodasi border di luar
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(
+              63), // Setengah dari lebar atau tinggi container yang baru
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.5),
+              spreadRadius: 0,
+              blurRadius: 7,
+              offset: Offset(0, 3), // changes position of shadow
+            ),
+          ],
+          border: Border.all(
+            color:
+                ColorStyle().tertiaryColors, // Ganti dengan warna yang sesuai
+            width: 3,
+          ),
+        ),
+        child: ClipOval(
+          child: Image.network(
+            widget.imageUrl!,
+            fit: BoxFit.cover,
+            width: 120,
+            height: 120,
+          ),
+        ),
       ),
     );
   }
