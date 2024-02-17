@@ -1,10 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:mentormatch_apps/mentee/screen/profile/edit_profile_mentee_screen.dart';
+import 'package:mentormatch_apps/login-register/choose_role_service.dart';
+import 'package:mentormatch_apps/mentor/screen/daftar_mentor/first_form.dart';
 import 'package:mentormatch_apps/widget/button.dart';
 
-class ChooseRoleScreen extends StatelessWidget {
-  const ChooseRoleScreen({Key? key}) : super(key: key);
+import '../mentee/screen/profile/edit_profile_mentee_screen.dart';
+
+class ChooseRoleScreen extends StatefulWidget {
+  ChooseRoleScreen({Key? key}) : super(key: key);
+
+  @override
+  State<ChooseRoleScreen> createState() => _ChooseRoleScreenState();
+}
+
+class _ChooseRoleScreenState extends State<ChooseRoleScreen> {
+  final ChooseRoleService chooseRoleService = ChooseRoleService();
 
   @override
   Widget build(BuildContext context) {
@@ -52,14 +62,21 @@ class ChooseRoleScreen extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               ElevatedButtonWidget(
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          const EditProfileMenteeScreen(),
-                                    ),
-                                  );
+                                onPressed: () async {
+                                  // Start the async operation
+                                  await chooseRoleService.chooseRole("Mentee");
+
+                                  // Check if the widget is still mounted before using the context
+                                  if (mounted) {
+                                    Navigator.pushAndRemoveUntil(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            EditProfileMenteeScreen(),
+                                      ),
+                                      (route) => false,
+                                    );
+                                  }
                                 },
                                 title: "As a Mentee",
                               ),
@@ -73,17 +90,24 @@ class ChooseRoleScreen extends StatelessWidget {
                                 ),
                               ),
                               ElevatedButtonWidget(
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          const EditProfileMenteeScreen(),
-                                    ),
-                                  );
+                                onPressed: () async {
+                                  // Assuming you have an instance of AuthService
+                                  await chooseRoleService.chooseRole("Mentor");
+
+                                  // Check if the widget is still mounted before using the context
+                                  if (mounted) {
+                                    Navigator.pushAndRemoveUntil(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            FirstFormRegistMentorScreen(),
+                                      ),
+                                      (route) => false,
+                                    );
+                                  }
                                 },
                                 title: "As a Mentor",
-                              )
+                              ),
                             ],
                           ),
                         ),

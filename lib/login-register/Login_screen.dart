@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -5,7 +6,6 @@ import 'package:mentormatch_apps/login-register/choose_role_screen.dart';
 import 'package:mentormatch_apps/login-register/login_service.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
 import 'package:mentormatch_apps/widget/button.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginScreen extends StatefulWidget {
   LoginScreen({Key? key}) : super(key: key);
@@ -49,7 +49,8 @@ class _LoginScreenState extends State<LoginScreen> {
           // Cek data yang disimpan di SharedPreferences
           Map<String, String?> userData = await AuthService.getUserData();
           print("Data yang disimpan:");
-          print("UserID: ${userData['userId']}, Token: ${userData['token']}");
+          print(
+              "UserID: ${userData['userId']}, Token: ${userData['token']}, Name: ${userData['name']}, Email: ${userData['email']}, Photo URL: ${userData['photoUrl']}, User Type: ${userData['userType']}");
 
           // Navigasi ke halaman lain setelah login berhasil
           Navigator.of(context).pushReplacement(
@@ -163,7 +164,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const ChooseRoleScreen(),
+                    builder: (context) => ChooseRoleScreen(),
                   ),
                 );
               },

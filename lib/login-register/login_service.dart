@@ -22,10 +22,18 @@ class AuthService {
         // Simpan user ID dan token ke SharedPreferences
         final userId = response.data['user']['id'];
         final token = response.data['token'];
+        final name = response.data['user']['name'];
+        final email = response.data['user']['email'];
+        final photoUrl = response.data['user']['photoUrl'];
+        final userType = response.data['user']['userType'];
 
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString('userId', userId);
         await prefs.setString('token', token);
+        await prefs.setString('name', name);
+        await prefs.setString('email', email);
+        await prefs.setString('photoUrl', photoUrl);
+        await prefs.setString('userType', userType);
       } else {
         print("Error saat login: ${response.statusCode}");
       }
@@ -37,14 +45,23 @@ class AuthService {
   }
 
   // Function ini digunakan untuk mengambil data user ID dan token dari SharedPreferences
-  
+
   static Future<Map<String, String?>> getUserData() async {
     final prefs = await SharedPreferences.getInstance();
     final userId = prefs.getString('userId');
     final token = prefs.getString('token');
+    final name = prefs.getString('name');
+    final email = prefs.getString('email');
+    final photoUrl = prefs.getString('photoUrl');
+    final userType = prefs.getString('userType');
+
     return {
       'userId': userId,
       'token': token,
+      'name': name,
+      'email': email,
+      'photoUrl': photoUrl,
+      'userType': userType,
     };
   }
 }
