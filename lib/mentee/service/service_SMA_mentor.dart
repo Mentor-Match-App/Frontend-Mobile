@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:mentormatch_apps/mentor/model/category_SD_model.dart';
 import 'package:mentormatch_apps/mentor/model/category_SMA_model.dart';
 
 class SMAServices {

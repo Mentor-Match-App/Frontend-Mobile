@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:mentormatch_apps/mentee/screen/MyClassMentee/evalusi_mentee_screen.dart';
 import 'package:mentormatch_apps/mentee/screen/MyClassMentee/review_mentor_screen.dart';
 import 'package:mentormatch_apps/mentee/screen/notification_mentee_screen.dart';
-import 'package:mentormatch_apps/mentee/screen/premiumClass/detail_booking_premium_class_screen.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
 import 'package:mentormatch_apps/widget/button.dart';

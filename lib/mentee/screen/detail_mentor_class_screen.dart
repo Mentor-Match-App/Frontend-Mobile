@@ -3,7 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:mentormatch_apps/mentee/screen/premiumClass/detail_booking_premium_class_screen.dart';
 import 'package:mentormatch_apps/mentee/service/bookingClass/bookclass_service.dart';
 import 'package:mentormatch_apps/mentee/service/bookingClass/bookclass_model.dart';
-import 'package:mentormatch_apps/mentor/model/category_SMA_model.dart';
+import 'package:mentormatch_apps/mentor/model/mentor_model.dart';
 import 'package:mentormatch_apps/preferences/%20preferences_helper.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
@@ -16,7 +16,7 @@ import 'package:mentormatch_apps/widget/profile_avatar.dart';
 import 'package:mentormatch_apps/widget/review_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class DetailMentorSMAScreen extends StatefulWidget {
+class DetailMentorClassScreen extends StatefulWidget {
   final String classid;
   final int periode;
   final List<MentorReview>? reviews;
@@ -33,8 +33,8 @@ class DetailMentorSMAScreen extends StatefulWidget {
   final String location;
   final String description;
   final List<String> terms;
-  final MentorSMA mentor;
-  DetailMentorSMAScreen(
+  final MentorClass mentor;
+  DetailMentorClassScreen(
       {Key? key,
       required this.classid,
       required this.periode,
@@ -56,17 +56,19 @@ class DetailMentorSMAScreen extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<DetailMentorSMAScreen> createState() => _DetailMentorSMAScreenState();
+  State<DetailMentorClassScreen> createState() =>
+      _DetailMentorClassScreenState();
 }
 
-class _DetailMentorSMAScreenState extends State<DetailMentorSMAScreen> {
-    _launchURL(String url) async {
+class _DetailMentorClassScreenState extends State<DetailMentorClassScreen> {
+  _launchURL(String url) async {
     if (await canLaunch(url)) {
       await launch(url);
     } else {
       throw 'Tidak dapat membuka $url';
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -102,8 +104,7 @@ class _DetailMentorSMAScreenState extends State<DetailMentorSMAScreen> {
                         widget.name,
                         style: FontFamily().boldText.copyWith(
                               fontSize: 16,
-                           
-                        ),
+                            ),
                       ),
                       TextButton.icon(
                         onPressed: () {},
@@ -147,9 +148,9 @@ class _DetailMentorSMAScreenState extends State<DetailMentorSMAScreen> {
                                     primary: ColorStyle().whiteColors,
                                   ),
                                   onPressed: () {
-                                final linkedlnlink = widget.linkedin ?? '';
-                                _launchURL(linkedlnlink);
-                              },
+                                    final linkedlnlink = widget.linkedin ?? '';
+                                    _launchURL(linkedlnlink);
+                                  },
                                   icon: Icon(Icons.link),
                                   label: Text('Linkedln',
                                       style: FontFamily().regularText.copyWith(
@@ -168,7 +169,7 @@ class _DetailMentorSMAScreenState extends State<DetailMentorSMAScreen> {
                             title: 'Experience',
                             color: ColorStyle().primaryColors,
                           ),
-                         Column(
+                          Column(
                             children: widget.mentor.experiences
                                     ?.map((experience) {
                                   return ExperienceWidget(
@@ -187,7 +188,7 @@ class _DetailMentorSMAScreenState extends State<DetailMentorSMAScreen> {
                           color: ColorStyle().primaryColors,
                         ),
                       ),
-                       SingleChildScrollView(
+                      SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -287,27 +288,27 @@ class _DetailMentorSMAScreenState extends State<DetailMentorSMAScreen> {
 
   //////review mentor///////
   Widget buildReviewWidgets() {
-  // Periksa apakah reviews ada dan tidak kosong
-  if (widget.reviews != null && widget.reviews!.isNotEmpty) {
-    return Column(
-      children: widget.reviews!.map((review) {
-        return ReviewWidget(
-          name: review.reviewer ?? "No Name",
-          review: review.content ?? "No Review",
-        );
-      }).toList(),
-    );
-  } else {
-    // Jika tidak ada review, tampilkan pesan
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Text("Belum ada review", style: TextStyle(fontWeight: FontWeight.bold)),
-      ),
-    );
+    // Periksa apakah reviews ada dan tidak kosong
+    if (widget.reviews != null && widget.reviews!.isNotEmpty) {
+      return Column(
+        children: widget.reviews!.map((review) {
+          return ReviewWidget(
+            name: review.reviewer ?? "No Name",
+            review: review.content ?? "No Review",
+          );
+        }).toList(),
+      );
+    } else {
+      // Jika tidak ada review, tampilkan pesan
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text("Belum ada review",
+              style: TextStyle(fontWeight: FontWeight.bold)),
+        ),
+      );
+    }
   }
-}
-
 
   ///// booking class ////
   void _showDialog(BuildContext context) {

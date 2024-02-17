@@ -1,28 +1,28 @@
 // To parse this JSON data, do
 //
-//     final mentorModel = mentorModelFromMap(jsonString);
+//     final mentorClassModel = mentorClassModelFromMap(jsonString);
 
 import 'dart:convert';
 
-MentorModel mentorModelFromMap(String str) => MentorModel.fromMap(json.decode(str));
+MentorClassModel mentorClassModelFromMap(String str) => MentorClassModel.fromMap(json.decode(str));
 
-String mentorModelToMap(MentorModel data) => json.encode(data.toMap());
+String mentorClassModelToMap(MentorClassModel data) => json.encode(data.toMap());
 
-class MentorModel {
+class MentorClassModel {
     bool? error;
     String? message;
-    List<Mentor>? mentors;
+    List<MentorClass>? mentors;
 
-    MentorModel({
+    MentorClassModel({
         this.error,
         this.message,
         this.mentors,
     });
 
-    factory MentorModel.fromMap(Map<String, dynamic> json) => MentorModel(
+    factory MentorClassModel.fromMap(Map<String, dynamic> json) => MentorClassModel(
         error: json["error"],
         message: json["message"],
-        mentors: json["mentors"] == null ? [] : List<Mentor>.from(json["mentors"]!.map((x) => Mentor.fromMap(x))),
+        mentors: json["mentors"] == null ? [] : List<MentorClass>.from(json["mentors"]!.map((x) => MentorClass.fromMap(x))),
     );
 
     Map<String, dynamic> toMap() => {
@@ -32,134 +32,82 @@ class MentorModel {
     };
 }
 
-class Mentor {
+class MentorClass {
     String? id;
     String? userType;
     String? email;
     String? name;
-    String? gender;
     List<String>? skills;
+    String? gender;
     String? location;
     String? linkedin;
-    String? portfolio;
+    String? portofolio;
     String? photoUrl;
     String? about;
-    List<Experience>? experience;
-    List<Community>? community;
-    List<dynamic>? session;
-    List<dynamic>? historySession;
-    List<dynamic>? classes;
-    List<dynamic>? transactionsMentor;
-    List<dynamic>? transactionsMentee;
-    List<dynamic>? transaction;
+    Class? mentorClass;
+    List<MentorReview>? mentorReviews;
+    List<ExperienceMentorClass>? experiences;
 
-    Mentor({
+    MentorClass({
         this.id,
         this.userType,
         this.email,
         this.name,
-        this.gender,
         this.skills,
+        this.gender,
         this.location,
         this.linkedin,
-        this.portfolio,
+        this.portofolio,
         this.photoUrl,
         this.about,
-        this.experience,
-        this.community,
-        this.session,
-        this.historySession,
-        this.classes,
-        this.transactionsMentor,
-        this.transactionsMentee,
-        this.transaction,
+        this.mentorClass,
+        this.mentorReviews,
+        this.experiences,
     });
 
-    factory Mentor.fromMap(Map<String, dynamic> json) => Mentor(
+    factory MentorClass.fromMap(Map<String, dynamic> json) => MentorClass(
         id: json["id"],
-        userType: json["user_type"],
+        userType: json["userType"],
         email: json["email"],
         name: json["name"],
-        gender: json["gender"],
         skills: json["skills"] == null ? [] : List<String>.from(json["skills"]!.map((x) => x)),
+        gender: json["gender"],
         location: json["location"],
         linkedin: json["linkedin"],
-        portfolio: json["portfolio"],
-        photoUrl: json["photo_url"],
+        portofolio: json["portofolio"],
+        photoUrl: json["photoUrl"],
         about: json["about"],
-        experience: json["Experience"] == null ? [] : List<Experience>.from(json["Experience"]!.map((x) => Experience.fromMap(x))),
-        community: json["Community"] == null ? [] : List<Community>.from(json["Community"]!.map((x) => Community.fromMap(x))),
-        session: json["Session"] == null ? [] : List<dynamic>.from(json["Session"]!.map((x) => x)),
-        historySession: json["HistorySession"] == null ? [] : List<dynamic>.from(json["HistorySession"]!.map((x) => x)),
-        classes: json["Classes"] == null ? [] : List<dynamic>.from(json["Classes"]!.map((x) => x)),
-        transactionsMentor: json["TransactionsMentor"] == null ? [] : List<dynamic>.from(json["TransactionsMentor"]!.map((x) => x)),
-        transactionsMentee: json["TransactionsMentee"] == null ? [] : List<dynamic>.from(json["TransactionsMentee"]!.map((x) => x)),
-        transaction: json["Transaction"] == null ? [] : List<dynamic>.from(json["Transaction"]!.map((x) => x)),
+        mentorClass: json["class"] == null ? null : Class.fromMap(json["class"]),
+        mentorReviews: json["mentorReviews"] == null ? [] : List<MentorReview>.from(json["mentorReviews"]!.map((x) => MentorReview.fromMap(x))),
+        experiences: json["experiences"] == null ? [] : List<ExperienceMentorClass>.from(json["experiences"]!.map((x) => ExperienceMentorClass.fromMap(x))),
     );
 
     Map<String, dynamic> toMap() => {
         "id": id,
-        "user_type": userType,
+        "userType": userType,
         "email": email,
         "name": name,
-        "gender": gender,
         "skills": skills == null ? [] : List<dynamic>.from(skills!.map((x) => x)),
+        "gender": gender,
         "location": location,
         "linkedin": linkedin,
-        "portfolio": portfolio,
-        "photo_url": photoUrl,
+        "portofolio": portofolio,
+        "photoUrl": photoUrl,
         "about": about,
-        "Experience": experience == null ? [] : List<dynamic>.from(experience!.map((x) => x.toMap())),
-        "Community": community == null ? [] : List<dynamic>.from(community!.map((x) => x.toMap())),
-        "Session": session == null ? [] : List<dynamic>.from(session!.map((x) => x)),
-        "HistorySession": historySession == null ? [] : List<dynamic>.from(historySession!.map((x) => x)),
-        "Classes": classes == null ? [] : List<dynamic>.from(classes!.map((x) => x)),
-        "TransactionsMentor": transactionsMentor == null ? [] : List<dynamic>.from(transactionsMentor!.map((x) => x)),
-        "TransactionsMentee": transactionsMentee == null ? [] : List<dynamic>.from(transactionsMentee!.map((x) => x)),
-        "Transaction": transaction == null ? [] : List<dynamic>.from(transaction!.map((x) => x)),
+        "class": mentorClass?.toMap(),
+        "mentorReviews": mentorReviews == null ? [] : List<dynamic>.from(mentorReviews!.map((x) => x.toMap())),
+        "experiences": experiences == null ? [] : List<dynamic>.from(experiences!.map((x) => x.toMap())),
     };
 }
 
-class Community {
-    String? id;
-    String? adminId;
-    String? name;
-    String? link;
-    String? image;
-
-    Community({
-        this.id,
-        this.adminId,
-        this.name,
-        this.link,
-        this.image,
-    });
-
-    factory Community.fromMap(Map<String, dynamic> json) => Community(
-        id: json["id"],
-        adminId: json["adminId"],
-        name: json["name"],
-        link: json["link"],
-        image: json["image"],
-    );
-
-    Map<String, dynamic> toMap() => {
-        "id": id,
-        "adminId": adminId,
-        "name": name,
-        "link": link,
-        "image": image,
-    };
-}
-
-class Experience {
+class ExperienceMentorClass {
     String? id;
     String? userId;
     bool? isCurrentJob;
     String? company;
     String? jobTitle;
 
-    Experience({
+    ExperienceMentorClass({
         this.id,
         this.userId,
         this.isCurrentJob,
@@ -167,7 +115,7 @@ class Experience {
         this.jobTitle,
     });
 
-    factory Experience.fromMap(Map<String, dynamic> json) => Experience(
+    factory ExperienceMentorClass.fromMap(Map<String, dynamic> json) => ExperienceMentorClass(
         id: json["id"],
         userId: json["userId"],
         isCurrentJob: json["isCurrentJob"],
@@ -181,5 +129,101 @@ class Experience {
         "isCurrentJob": isCurrentJob,
         "company": company,
         "jobTitle": jobTitle,
+    };
+}
+
+class Class {
+    String? id;
+    String? mentorId;
+    String? educationLevel;
+    String? category;
+    String? name;
+    String? description;
+    List<String>? terms;
+    int? price;
+    bool? isActive;
+    bool? isAvailable;
+    bool? isVerified;
+    int? durationInDays;
+    dynamic zoomLink;
+
+    Class({
+        this.id,
+        this.mentorId,
+        this.educationLevel,
+        this.category,
+        this.name,
+        this.description,
+        this.terms,
+        this.price,
+        this.isActive,
+        this.isAvailable,
+        this.isVerified,
+        this.durationInDays,
+        this.zoomLink,
+    });
+
+    factory Class.fromMap(Map<String, dynamic> json) => Class(
+        id: json["id"],
+        mentorId: json["mentorId"],
+        educationLevel: json["educationLevel"],
+        category: json["category"],
+        name: json["name"],
+        description: json["description"],
+        terms: json["terms"] == null ? [] : List<String>.from(json["terms"]!.map((x) => x)),
+        price: json["price"],
+        isActive: json["isActive"],
+        isAvailable: json["isAvailable"],
+        isVerified: json["isVerified"],
+        durationInDays: json["durationInDays"],
+        zoomLink: json["zoomLink"],
+    );
+
+    Map<String, dynamic> toMap() => {
+        "id": id,
+        "mentorId": mentorId,
+        "educationLevel": educationLevel,
+        "category": category,
+        "name": name,
+        "description": description,
+        "terms": terms == null ? [] : List<dynamic>.from(terms!.map((x) => x)),
+        "price": price,
+        "isActive": isActive,
+        "isAvailable": isAvailable,
+        "isVerified": isVerified,
+        "durationInDays": durationInDays,
+        "zoomLink": zoomLink,
+    };
+}
+
+class MentorReview {
+    String? id;
+    String? reviewerId;
+    String? mentorId;
+    String? content;
+    String? reviewer;
+
+    MentorReview({
+        this.id,
+        this.reviewerId,
+        this.mentorId,
+        this.content,
+        this.reviewer,
+    });
+
+    factory MentorReview.fromMap(Map<String, dynamic> json) => MentorReview(
+        id: json["id"],
+        reviewerId: json["reviewerId"],
+        mentorId: json["mentorId"],
+        content: json["content"],
+        reviewer: json["reviewer"],
+    );
+
+    Map<String, dynamic> toMap() => {
+        "id": id,
+        "reviewerId": reviewerId,
+        "mentorId": mentorId,
+        "content": content,
+        "reviewer": reviewer,
     };
 }

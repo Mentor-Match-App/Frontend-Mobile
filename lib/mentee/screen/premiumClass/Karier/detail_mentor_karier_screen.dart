@@ -1,16 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:mentormatch_apps/login-register/first_screen.dart';
 import 'package:mentormatch_apps/mentee/screen/premiumClass/detail_booking_premium_class_screen.dart';
+import 'package:mentormatch_apps/mentee/service/bookingClass/bookclass_service.dart';
+import 'package:mentormatch_apps/mentee/service/bookingClass/bookclass_model.dart';
 import 'package:mentormatch_apps/mentor/model/category_Karier_model.dart';
+import 'package:mentormatch_apps/preferences/%20preferences_helper.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
+import 'package:mentormatch_apps/style/text.dart';
 import 'package:mentormatch_apps/widget/button.dart';
+import 'package:mentormatch_apps/widget/category_card.dart';
 import 'package:mentormatch_apps/widget/experience_widget.dart';
+import 'package:mentormatch_apps/widget/navbar.dart';
 import 'package:mentormatch_apps/widget/profile_avatar.dart';
 import 'package:mentormatch_apps/widget/review_widget.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class DetailMentorKarierScreen extends StatefulWidget {
+  final String classid;
+  final int periode;
   final List<MentorReview>? reviews;
   final int price;
   final String namakelas;
@@ -26,361 +34,388 @@ class DetailMentorKarierScreen extends StatefulWidget {
   final String description;
   final List<String> terms;
   final MentorKarier mentor;
-
-  const DetailMentorKarierScreen({
-    Key? key,
-    required this.about,
-    required this.photoUrl,
-    required this.name,
-    required this.company,
-    required this.job,
-    required this.email,
-    required this.linkedin,
-    required this.skills,
-    required this.location,
-    required this.description,
-    required this.terms,
-    required this.mentor,
-    required this.namakelas,
-    required this.price,
-    this.reviews,
-  }) : super(key: key);
+  DetailMentorKarierScreen(
+      {Key? key,
+      required this.classid,
+      required this.periode,
+      this.reviews,
+      required this.price,
+      required this.namakelas,
+      required this.about,
+      required this.photoUrl,
+      required this.name,
+      required this.company,
+      required this.job,
+      required this.email,
+      required this.linkedin,
+      required this.skills,
+      required this.location,
+      required this.description,
+      required this.terms,
+      required this.mentor})
+      : super(key: key);
 
   @override
-  State<DetailMentorKarierScreen> createState() =>
-      _DetailMentorKarierScreenState();
+  State<DetailMentorKarierScreen> createState() => _DetailMentorKarierScreenState();
 }
 
 class _DetailMentorKarierScreenState extends State<DetailMentorKarierScreen> {
+    _launchURL(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Tidak dapat membuka $url';
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Image.asset('assets/Handoff/logo/LogoMobile.png'),
-      ),
+          backgroundColor: ColorStyle().tertiaryColors,
+          title: AppBarLogoNotif()),
       body: ListView(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    ProfileAvatar(
-                      imageUrl: widget.photoUrl,
-                      radius: 40,
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Container(
+                width: double.infinity,
+                height: MediaQuery.of(context).size.height * 0.20,
+                decoration: BoxDecoration(
+                    color: ColorStyle()
+                        .tertiaryColors // Warna latar belakang yang diinginkan
                     ),
-                    Expanded(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
+              ),
+              Transform.translate(
+                offset: Offset(0.0, -120 / 2.0),
+                child: Center(
+                  child: Column(
+                    children: [
+                      ProfileAvatar(
+                        imageUrl: widget.photoUrl,
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        widget.name,
+                        style: FontFamily().boldText.copyWith(
+                              fontSize: 16,
+                           
+                        ),
+                      ),
+                      TextButton.icon(
+                        onPressed: () {},
+                        icon: Icon(
+                          Icons.location_on,
+                          color: ColorStyle().primaryColors,
+                        ),
+                        label: Text(
+                          widget.location,
+                          style: FontFamily().regularText,
+                        ),
+                      ),
+                      Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            widget.name,
-                           style: FontFamily().regularText.copyWith(
-                                        color: ColorStyle().primaryColors,
-                                        fontSize: 10)
+                          TitleProfile(
+                            title: 'About',
+                            color: ColorStyle().primaryColors,
                           ),
-                          const SizedBox(height: 12),
-                          Row(
-                            children: [
-                              Row(
-                                children: [
-                                  Icon(
-                                    Icons.work_outline_outlined,
-                                    size: 16,
-                                    color: ColorStyle().primaryColors,
-                                  ),
-                                  const SizedBox(width: 4),
-                                  Text(
-                                    widget.job,
-                                    style: FontFamily().regularText.copyWith(
-                                        color: ColorStyle().primaryColors,
-                                        fontSize: 10
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(width: 20),
-                              Row(
-                                children: [
-                                  Icon(
-                                    Icons.location_on_outlined,
-                                    size: 16,
-                                    color: ColorStyle().primaryColors,
-                                  ),
-                                  const SizedBox(width: 4),
-                                  Text(
-                                    widget.location,
-                                    style: const TextStyle(fontSize: 10),
-                                  ),
-                                ],
-                              ),
-                            ],
+                          Padding(
+                            padding: const EdgeInsets.only(left: 12.0),
+                            child: Text(
+                              widget.about,
+                              style: FontFamily().regularText,
+                            ),
                           ),
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.home_work_outlined,
-                                size: 16,
-                                color: ColorStyle().primaryColors,
+                          Padding(
+                            padding:
+                                const EdgeInsets.only(right: 12.0, top: 8.0),
+                            child: Align(
+                              alignment: Alignment.centerRight,
+                              child: Container(
+                                width: 120,
+                                height: 40,
+                                decoration: BoxDecoration(
+                                  color: ColorStyle().primaryColors,
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                                child: TextButton.icon(
+                                  style: TextButton.styleFrom(
+                                    primary: ColorStyle().whiteColors,
+                                  ),
+                                  onPressed: () {
+                                final linkedlnlink = widget.linkedin ?? '';
+                                _launchURL(linkedlnlink);
+                              },
+                                  icon: Icon(Icons.link),
+                                  label: Text('Linkedln',
+                                      style: FontFamily().regularText.copyWith(
+                                            color: ColorStyle().whiteColors,
+                                          )),
+                                ),
                               ),
-                              const SizedBox(width: 4),
-                              Text(
-                                widget.company,
-                                 style: FontFamily().regularText.copyWith(
-                                        color: ColorStyle().primaryColors,
-                                        fontSize: 10
-                                 ),
-                              ),
-                            ],
+                            ),
                           ),
                         ],
                       ),
-                    ),
-                  ],
-                ),
-                Text(
-                  "About",
-                  style: FontFamily().boldText.copyWith(
-                      color: ColorStyle().primaryColors, fontSize: 16
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          TitleProfile(
+                            title: 'Experience',
+                            color: ColorStyle().primaryColors,
+                          ),
+                          Column(
+                            children: widget.mentor.experiences
+                                    ?.map((experience) {
+                                  return ExperienceWidget(
+                                    role: experience.jobTitle ?? 'No Job Title',
+                                    company: experience.company ?? 'No Company',
+                                  );
+                                }).toList() ??
+                                [Text('No experiences')],
+                          )
+                        ],
                       ),
-                ),
-                Text(
-                  widget.about,
-                  style: FontFamily().regularText,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                  child: ElevatedButton.icon(
-                    style: ElevatedButton.styleFrom(
-                      primary: ColorStyle().primaryColors,
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 8.0,
-                          horizontal: 16.0), // Sesuaikan sesuai kebutuhan Anda
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(
-                            4.0), // Atur border radius menjadi 4
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: TitleProfile(
+                          title: 'Skills',
+                          color: ColorStyle().primaryColors,
+                        ),
                       ),
-                    ),
-                    onPressed: () {},
-                    icon: Icon(Icons.link, color: ColorStyle().whiteColors),
-                    label: Text("linkedln", style: FontFamily().buttonText),
+                      SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: widget.skills
+                              .map((skill) => SkillCard(skill: skill))
+                              .toList(),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 12,
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          TitleProfile(
+                            title: widget.namakelas,
+                            color: ColorStyle().primaryColors,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 12.0),
+                            child: Text(
+                              widget.description,
+                              style: FontFamily().regularText,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          TitleProfile(
+                            title: 'Syarat & Ketentuan Kelas',
+                            color: ColorStyle().primaryColors,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 12.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: widget.mentor.mentorClass?.terms
+                                      ?.asMap()
+                                      .entries
+                                      .map<Widget>((entry) {
+                                    int index = entry.key;
+                                    String term = entry.value;
+                                    return Padding(
+                                      padding: const EdgeInsets.only(
+                                          bottom:
+                                              8.0), // Tambahkan sedikit ruang antar baris
+                                      child: Text(
+                                        "${index + 1}.  $term", // Menambahkan indeks + 1 untuk membuat nomor urutan dimulai dari 1
+                                        style: FontFamily().regularText,
+                                      ),
+                                    );
+                                  }).toList() ??
+                                  [
+                                    Text("No terms available",
+                                        style: FontFamily().regularText)
+                                  ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ElevatedButtonWidget(
+                          onPressed: () {
+                            _showDialog(context);
+                          },
+                          title:
+                              "${NumberFormat.currency(locale: 'id', symbol: 'Rp').format(widget.price)}",
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 12,
+                      ),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: TitleProfile(
+                          title: 'Review',
+                          color: ColorStyle().primaryColors,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: buildReviewWidgets(),
+                      ),
+                    ],
                   ),
                 ),
-                const SizedBox(height: 12),
-                Text(
-                  "Skill",
-                  style: FontFamily().boldText.copyWith(
-                      color: ColorStyle().primaryColors, fontSize: 16),
-                ),
-                Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                      child: OutlinedButton(
-                        style: OutlinedButton.styleFrom(
-                          primary: ColorStyle()
-                              .primaryColors, // Warna garis atau border
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 8.0,
-                            horizontal: 16.0,
-                          ), // Sesuaikan sesuai kebutuhan Anda
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(4.0),
-                          ),
-                        ),
-                        onPressed: () {},
-                        child: Text(
-                          widget.skills[0],
-                          style: FontFamily()
-                              .buttonText
-                              .copyWith(color: ColorStyle().secondaryColors),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                      child: OutlinedButton(
-                        style: OutlinedButton.styleFrom(
-                          primary: ColorStyle()
-                              .primaryColors, // Warna garis atau border
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 8.0,
-                            horizontal: 16.0,
-                          ), // Sesuaikan sesuai kebutuhan Anda
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(4.0),
-                          ),
-                        ),
-                        onPressed: () {},
-                        child: Text(
-                          widget.skills[1] ?? "No Skill",
-                          style: FontFamily()
-                              .buttonText
-                              .copyWith(color: ColorStyle().secondaryColors),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 12),
-                Text(
-                  "Experience",
-                  style: FontFamily().boldText.copyWith(
-                      color: ColorStyle().primaryColors, fontSize: 16),
-                ),
-                ExperienceWidget(
-                    role: widget.mentor.experiences?.first.jobTitle ??
-                        'No Job Title',
-                    company: widget.mentor.experiences?.first.company ??
-                        'No Company'),
-                ExperienceWidget(
-                    role: widget.mentor.experiences?.last.jobTitle ??
-                        'No Job Title',
-                    company: widget.mentor.experiences?.last.company ??
-                        'No Company'),
-                SizedBox(height: 12),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      widget.namakelas,
-                      style: FontFamily().boldText.copyWith(
-                          color: ColorStyle().primaryColors, fontSize: 16),
-                    ),
-                    Text(
-                      widget.description,
-                      style: FontFamily().regularText,
-                    ),
-                    const SizedBox(height: 12),
-                    Text(
-                      "Syrarat & Ketentuan",
-                      style: FontFamily().boldText.copyWith(
-                          color: ColorStyle().primaryColors, fontSize: 16),
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: widget.mentor.mentorClass?.terms
-                              ?.asMap()
-                              .entries
-                              .map<Widget>((entry) {
-                            int index = entry.key;
-                            String term = entry.value;
-                            return Padding(
-                              padding: const EdgeInsets.only(
-                                  bottom:
-                                      8.0), // Tambahkan sedikit ruang antar baris
-                              child: Text(
-                                "${index + 1}.  $term", // Menambahkan indeks + 1 untuk membuat nomor urutan dimulai dari 1
-                                style: FontFamily().regularText,
-                              ),
-                            );
-                          }).toList() ??
-                          [
-                            Text("No terms available",
-                                style: FontFamily().regularText)
-                          ],
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: ElevatedButtonWidget(
-                        onPressed: () {
-                          _showDialog(context);
-                        },
-                        title:
-                            "${NumberFormat.currency(locale: 'id', symbol: 'Rp').format(widget.price)}",
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 12),
-                Text(
-                  "Review",
-                  style: FontFamily().boldText.copyWith(
-                      color: ColorStyle().primaryColors, fontSize: 16),
-                ),
-                ReviewWidget(
-                  name: "Jhonson Alexa",
-                  review: "Mentor yang sangat baik dan ramah",
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ],
       ),
     );
   }
+
+  //////review mentor///////
+ Widget buildReviewWidgets() {
+  // Periksa apakah reviews ada dan tidak kosong
+  if (widget.reviews != null && widget.reviews!.isNotEmpty) {
+    return Column(
+      children: widget.reviews!.map((review) {
+        return ReviewWidget(
+          name: review.reviewer ?? "No Name",
+          review: review.content ?? "No Review",
+        );
+      }).toList(),
+    );
+  } else {
+    // Jika tidak ada review, tampilkan pesan
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Text("Belum ada review", style: TextStyle(fontWeight: FontWeight.bold)),
+      ),
+    );
+  }
 }
 
-void _showDialog(BuildContext context) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
-        backgroundColor: ColorStyle().whiteColors,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            Text("Booking Class", style: FontFamily().titleText),
-            IconButton(
-              onPressed: () => Navigator.of(context).pop(),
-              icon: Icon(
-                Icons.close_sharp,
-                color: ColorStyle().errorColors,
-              ),
-            )
-          ],
-        ),
-        content: Padding(
-          padding: const EdgeInsets.all(12),
-          child: Text(
-            "Apakah Kamu yakin untuk memesan Premium Class ini?",
-            textAlign: TextAlign.center,
-            style: FontFamily().regularText,
+
+  ///// booking class ////
+  void _showDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
           ),
-        ),
-        actions: <Widget>[
-          Row(
+          backgroundColor: ColorStyle().whiteColors,
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              SmallOutlinedButton(
-                style: FontFamily()
-                    .regularText
-                    .copyWith(color: ColorStyle().primaryColors, fontSize: 12),
-                height: 48,
-                width: 152,
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                title: "Cancel",
-              ),
-              const SizedBox(width: 8),
-              SmallElevatedButton(
-                style: FontFamily()
-                    .regularText
-                    .copyWith(color: ColorStyle().whiteColors, fontSize: 12),
-                height: 48,
-                width: 152,
-                onPressed: () {
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(
-                  //     builder: (context) => DetailBookingPremiumClass(),
-                  //   ),
-                  // );
-                },
-                title: "Booking",
-              ),
+              Text("Booking Class", style: FontFamily().titleText),
+              IconButton(
+                onPressed: () => Navigator.of(context).pop(),
+                icon: Icon(
+                  Icons.close_sharp,
+                  color: ColorStyle().errorColors,
+                ),
+              )
             ],
           ),
-        ],
-      );
-    },
-  );
+          content: Padding(
+            padding: const EdgeInsets.all(12),
+            child: Text(
+              "Apakah Kamu yakin untuk memesan Premium Class ini?",
+              textAlign: TextAlign.center,
+              style: FontFamily().regularText,
+            ),
+          ),
+          actions: <Widget>[
+            // Actions untuk booking class...
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                SmallOutlinedButton(
+                  style: FontFamily().regularText.copyWith(
+                      color: ColorStyle().primaryColors, fontSize: 12),
+                  height: 48,
+                  width: 100,
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  title: "Cancel",
+                ),
+                SmallElevatedButton(
+                  style: FontFamily()
+                      .regularText
+                      .copyWith(color: ColorStyle().whiteColors, fontSize: 12),
+                  height: 48,
+                  width: 100,
+                  onPressed: () async {
+                    try {
+                      // Initialize UserPreferences if not already done.
+                      await UserPreferences.init();
+
+                      // Retrieve the user ID from SharedPreferences
+                      String? userId = UserPreferences.getUserId();
+
+                      if (userId != null) {
+                        BookingResultSession result =
+                            await bookClass(widget.classid, userId);
+
+                        if (result.isSuccess) {
+                          // If booking succeeds, navigate to the next screen
+                          int? uniqueCode =
+                              result.uniqueCode; // Here you get the uniqueCode
+                          // ignore: use_build_context_synchronously
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => DetailBookingClass(
+                                price: widget.price,
+                                nama_mentor: widget.name,
+                                nama_kelas: widget.namakelas,
+                                durasi: widget.periode,
+                                uniqueCode: uniqueCode!,
+                              ),
+                            ),
+                          );
+                        } else {
+                          // If booking fails, show an error message
+                          throw Exception("tidak bisa booking kelas ini");
+                        }
+                      } else {
+                        // If userId is not found, show an error
+                        throw Exception(
+                            "Anda belum login, silahkan login terlebih dahulu");
+                      }
+                    } catch (e) {
+                      // Show a SnackBar if an exception occurs
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text("Error: ${e.toString()}"),
+                          backgroundColor: ColorStyle().errorColors,
+                        ),
+                      );
+                    }
+                  },
+                  title: "Booking",
+                )
+              ],
+            ),
+          ],
+        );
+      },
+    );
+  }
 }

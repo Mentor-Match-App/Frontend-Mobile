@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mentormatch_apps/mentee/screen/Session/session_screen.dart';
+import 'package:mentormatch_apps/mentee/screen/notification_mentee_screen.dart';
 import 'package:mentormatch_apps/mentee/screen/premiumClass/premium_class_screen.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
@@ -81,9 +82,9 @@ class _AppBarPremiumClassState extends State<AppBarPremiumClass> {
               const Icon(Icons.arrow_drop_down_outlined),
               Text(
                 "Program & Layanan",
-                style: FontFamily().regularText.copyWith(
-                      color: ColorStyle().primaryColors, fontSize: 14
-                    ),
+                style: FontFamily()
+                    .regularText
+                    .copyWith(color: ColorStyle().primaryColors, fontSize: 14),
               ),
             ],
           ),
@@ -94,8 +95,7 @@ class _AppBarPremiumClassState extends State<AppBarPremiumClass> {
                 child: Text(
                   "Premium Class",
                   style: FontFamily().regularText.copyWith(
-                        color: ColorStyle().primaryColors, fontSize: 14
-                      ),
+                      color: ColorStyle().primaryColors, fontSize: 14),
                 ),
               ),
               PopupMenuItem<int>(
@@ -103,8 +103,7 @@ class _AppBarPremiumClassState extends State<AppBarPremiumClass> {
                 child: Text(
                   "Session",
                   style: FontFamily().regularText.copyWith(
-                        color: ColorStyle().primaryColors, fontSize: 14
-                      ),
+                      color: ColorStyle().primaryColors, fontSize: 14),
                 ),
               ),
             ];
@@ -137,6 +136,73 @@ class _AppBarPremiumClassState extends State<AppBarPremiumClass> {
               Icons.notifications_active,
               color: ColorStyle().secondaryColors,
             ))
+      ],
+    );
+  }
+}
+
+class AppBarLogoNotif extends StatefulWidget {
+  AppBarLogoNotif({Key? key}) : super(key: key);
+
+  @override
+  State<AppBarLogoNotif> createState() => _AppBarLogoNotifState();
+}
+
+class _AppBarLogoNotifState extends State<AppBarLogoNotif> {
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Image.asset('assets/Handoff/logo/LogoMobile.png'),
+        IconButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => NotificationMenteeScreen(),
+              ),
+            );
+          },
+          icon: Icon(Icons.notifications_none_outlined),
+          color: ColorStyle().secondaryColors,
+        )
+      ],
+    );
+  }
+}
+
+class AppBarHomePage extends StatefulWidget {
+  AppBarHomePage({Key? key}) : super(key: key);
+
+  @override
+  State<AppBarHomePage> createState() => _AppBarHomePageState();
+}
+
+class _AppBarHomePageState extends State<AppBarHomePage> {
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Image.asset('assets/Handoff/logo/LogoMobile.png',
+            width: 120, height:120,),
+        // SizedBox(
+        //   width: 20,
+        // ),
+        PopMenuButtonWidget(),
+        IconButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => NotificationMenteeScreen(),
+              ),
+            );
+          },
+          icon: Icon(Icons.notifications_none_outlined),
+          color: ColorStyle().secondaryColors,
+        )
       ],
     );
   }

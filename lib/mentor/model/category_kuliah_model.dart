@@ -218,29 +218,33 @@ class Class {
 }
 
 class MentorReview {
-  String? id;
-  String? reviewerId;
-  String? mentorId;
-  String? content;
+    String? id;
+    String? reviewerId;
+    String? mentorId;
+    String? content;
+    String? reviewer;
 
-  MentorReview({
-    this.id,
-    this.reviewerId,
-    this.mentorId,
-    this.content,
-  });
+    MentorReview({
+        this.id,
+        this.reviewerId,
+        this.mentorId,
+        this.content,
+        this.reviewer,
+    });
 
-  factory MentorReview.fromMap(Map<String, dynamic> json) => MentorReview(
+    factory MentorReview.fromMap(Map<String, dynamic> json) => MentorReview(
         id: json["id"],
         reviewerId: json["reviewerId"],
         mentorId: json["mentorId"],
         content: json["content"],
-      );
+        reviewer: json["reviewer"],
+    );
 
-  Map<String, dynamic> toMap() => {
+    Map<String, dynamic> toMap() => {
         "id": id,
         "reviewerId": reviewerId,
         "mentorId": mentorId,
         "content": content,
-      };
+        "reviewer": reviewer,
+    };
 }
