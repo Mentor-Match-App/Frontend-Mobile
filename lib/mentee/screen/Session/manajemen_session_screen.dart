@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:mentormatch_apps/mentee/screen/Session/detail_mentor_session.dart';
+import 'package:mentormatch_apps/mentee/screen/Session/detail_session_mentor.dart';
 import 'package:mentormatch_apps/mentee/service/session_mentor_service.dart';
 import 'package:mentormatch_apps/mentor/model/session_model.dart';
+import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/widget/card_mentor.dart';
 
 class ManajemenSessionScreen extends StatefulWidget {
@@ -46,72 +47,100 @@ class _ManajemenSessionScreenState extends State<ManajemenSessionScreen> {
             itemBuilder: (context, index) {
               final mentor = mentorsWithManajemenSession[index];
               // Logika untuk menentukan currentExperience sama seperti sebelumnya
-              final currentExperience = mentor.experiences!.firstWhere(
+          final currentExperience = mentor.experiences!.firstWhere(
                 (experience) => experience.isCurrentJob ?? false,
                 orElse: () =>
                     Experience(), // Menyediakan default Experience jika tidak ditemukan
               );
+              ////// session active///////
 
-              return CardItemMentor(
-                 onPressesd: () {
-                  // Assuming you are still working with the first active session
-                  var firstActiveSession = mentor.session?.firstWhere(
-                    (s) => s.isActive == true,
-                    orElse: () =>
-                        SessionElement(), // Provide a default session element if no active session is found
-                  );
-                  var numberOfParticipants =
-                      firstActiveSession!.participant?.length ?? 0;
-                  var activeSessionName =
-                      firstActiveSession.title ?? "No active session";
-                  var activeSessionDateTime =
-                      firstActiveSession.dateTime ?? "No date/time provided";
-                  var activeSessionDescription =
-                      firstActiveSession.description ??
-                          "No description provided";
+              var firstActiveSession = mentor.session?.firstWhere(
+                (s) => s.isActive == true,
+                orElse: () =>
+                    SessionElement(), // Provide a default session element if no active session is found
+              );
+              ////// session full///////
+              var isSessionFull =
+                  (firstActiveSession?.participant?.length ?? 0) >=
+                      (firstActiveSession?.maxParticipants ?? 0);
+              var numberOfParticipants =
+                  firstActiveSession!.participant?.length ?? 0;
+              ////// name session///////
+              var activeSessionName =
+                  firstActiveSession.title ?? "No active session";
+              ////// date time session///////
+              var activeSessionDateTime =
+                  firstActiveSession.dateTime ?? "No date/time provided";
+              ////// description session///////
+              var activeSessionDescription =
+                  firstActiveSession.description ?? "No description provided";
+              ////// button color is full //////
+              final Color buttonColor = isSessionFull
+                  ? ColorStyle().disableColors
+                  : ColorStyle().primaryColors;
+                              SessionElement sessionElement = mentor.session!.first;
+              int maxParticipants = sessionElement.maxParticipants ?? 0;
+              int currentParticipants = sessionElement.participant?.length ?? 0;
+              int availableSlots = maxParticipants - currentParticipants;
 
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => DetailMentorSession(
-                        participants: numberOfParticipants,
-                        about: mentor.about ?? "",
-                        namaMentor: mentor.name ?? "",
-                        photoUrl: mentor.photoUrl ?? "",
-                        job: mentor.experiences
-                                ?.firstWhere(
-                                  (exp) => exp.isCurrentJob == true,
-                                  orElse: () =>
-                                      Experience(jobTitle: "", company: ""),
-                                )
-                                .jobTitle ??
-                            "",
-                        company: mentor.experiences
-                                ?.firstWhere(
-                                  (exp) => exp.isCurrentJob == true,
-                                  orElse: () =>
-                                      Experience(jobTitle: "", company: ""),
-                                )
-                                .company ??
-                            "",
-                        email: mentor.email ?? "",
-                        linkedin: mentor.linkedin ?? "",
-                        skills: mentor.skills ?? [],
-                        location: mentor.location ?? "",
-                        mentor: mentor,
-                        namaSessios: activeSessionName, // Session name
-                        jadwal: activeSessionDateTime, // Session date/time
-                        description:
-                            activeSessionDescription, // Session description
-                      ),
-                    ),
-                  );
-                },
-                imagePath:
-                    mentor.photoUrl ?? 'assets/Handoff/ilustrator/profile.png',
-                name: mentor.name ?? 'No Name',
-                job: currentExperience.jobTitle ?? '',
-                company: currentExperience.company ?? 'Placeholder Company',
+              return Padding(
+             padding: const EdgeInsets.only(bottom: 8.0),
+                child: CardItemMentor(
+                  color: buttonColor,
+                  onPressesd: isSessionFull
+                      ? () {}
+                      : () {
+                          // Logika untuk navigasi ketika sesi belum penuh
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => DetailMentorSessionsNew(
+                                availableSlots: availableSlots,
+                                sessionsid: mentor.session!
+                                        .firstWhere((s) => s.isActive == true)
+                                        .id ??
+                                    "",
+                
+                                participants: numberOfParticipants,
+                                about: mentor.about ?? "",
+                                namaMentor: mentor.name ?? "",
+                                photoUrl: mentor.photoUrl ?? "",
+                                job: mentor.experiences
+                                        ?.firstWhere(
+                                          (exp) => exp.isCurrentJob == true,
+                                          orElse: () => Experience(
+                                              jobTitle: "", company: ""),
+                                        )
+                                        .jobTitle ??
+                                    "",
+                                company: mentor.experiences
+                                        ?.firstWhere(
+                                          (exp) => exp.isCurrentJob == true,
+                                          orElse: () => Experience(
+                                              jobTitle: "", company: ""),
+                                        )
+                                        .company ??
+                                    "",
+                                email: mentor.email ?? "",
+                                linkedin: mentor.linkedin ?? "",
+                                skills: mentor.skills ?? [],
+                                location: mentor.location ?? "",
+                                mentor: mentor,
+                                namaSessios: activeSessionName, // Session name
+                                jadwal:
+                                    activeSessionDateTime, // Session date/time
+                                description:
+                                    activeSessionDescription, // Session description
+                              ),
+                            ),
+                          );
+                        },
+                  imagePath:
+                      mentor.photoUrl ?? 'assets/Handoff/ilustrator/profile.png',
+                  name: mentor.name ?? 'No Name',
+                  job: currentExperience.jobTitle ?? '',
+                  company: currentExperience.company ?? 'Placeholder Company',
+                ),
               );
             },
             shrinkWrap: true,

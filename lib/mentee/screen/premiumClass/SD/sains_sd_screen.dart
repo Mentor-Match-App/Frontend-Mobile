@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mentormatch_apps/mentee/screen/premiumClass/SD/detail_mentor_SD_screen.dart';
 import 'package:mentormatch_apps/mentee/service/service_SD_mentor.dart';
 import 'package:mentormatch_apps/mentor/model/category_SD_model.dart';
+import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/widget/card_mentor.dart';
 
 class SainsSDScreen extends StatefulWidget {
@@ -34,12 +35,12 @@ class _SainsSDScreenState extends State<SainsSDScreen> {
               .where((mentor) => mentor.mentorClass?.category == "Pengetahuan")
               .toList();
 
-          return GridView.builder(
+         return GridView.builder(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              childAspectRatio: 3 / 5,
+              crossAxisCount: 2, 
+              childAspectRatio: 3 / 5, 
               crossAxisSpacing: 2,
-              mainAxisSpacing: 2,
+              mainAxisSpacing: 2, 
             ),
             itemCount: mentorsWithLanguageCategory.length,
             itemBuilder: (context, index) {
@@ -50,50 +51,61 @@ class _SainsSDScreenState extends State<SainsSDScreen> {
                 orElse: () =>
                     Experience(), // Menyediakan default Experience jika tidak ditemukan
               );
-
+              final bool isClassAvailable = mentor.mentorClass?.isAvailable ??
+                  false; // Default to false if null
+                  final Color buttonColor = isClassAvailable
+                  ? ColorStyle().primaryColors
+                  : ColorStyle().disableColors;
               return CardItemMentor(
-                onPressesd: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => DetailMentorSDScreen(
-                                 classid : mentor.mentorClass!.id ?? "",
-                        periode: mentor.mentorClass?.durationInDays ?? 0,
-                        reviews: mentor.mentorReviews ?? [],
-                        namakelas: mentor.mentorClass?.name ?? "",
-                        about: mentor.about ?? "",
-                        name: mentor.name ?? "",
-                        photoUrl: mentor.photoUrl ?? "",
-                        job: mentor.experiences
-                                ?.firstWhere((exp) => exp.isCurrentJob == true,
-                                    orElse: () =>
-                                        Experience(jobTitle: "", company: ""))
-                                .jobTitle ??
-                            "",
-                        company: mentor.experiences
-                                ?.firstWhere((exp) => exp.isCurrentJob == true,
-                                    orElse: () =>
-                                        Experience(jobTitle: "", company: ""))
-                                .company ??
-                            "",
-                        email: mentor.email ?? "",
-                        linkedin: mentor.linkedin ?? "",
-                        skills: mentor.skills ?? [],
-                        location: mentor.location ?? "",
-                        description: mentor.mentorClass?.description ?? "",
-                        terms: mentor.mentorClass?.terms ?? [],
-                        price: mentor.mentorClass?.price ?? 0,
-                        mentor: mentor,
-                      ),
-                    ),
-                  );
-                },
-                imagePath:
-                    mentor.photoUrl ?? 'assets/Handoff/ilustrator/profile.png',
-                name: mentor.name ?? 'No Name',
-                job: currentExperience.jobTitle ?? '',
-                company: currentExperience.company ?? 'Placeholder Company',
-              );
+                  color:
+                      buttonColor, // Use the determined color based on class availability
+                  onPressesd: isClassAvailable
+                      ? () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => DetailMentorSDScreen(
+                                classid: mentor.mentorClass!.id ?? "",
+                                periode:
+                                    mentor.mentorClass?.durationInDays ?? 0,
+                                reviews: mentor.mentorReviews ?? [],
+                                namakelas: mentor.mentorClass?.name ?? "",
+                                about: mentor.about ?? "",
+                                name: mentor.name ?? "",
+                                photoUrl: mentor.photoUrl ?? "",
+                                job: mentor.experiences
+                                        ?.firstWhere(
+                                            (exp) => exp.isCurrentJob == true,
+                                            orElse: () => Experience(
+                                                jobTitle: "", company: ""))
+                                        .jobTitle ??
+                                    "",
+                                company: mentor.experiences
+                                        ?.firstWhere(
+                                            (exp) => exp.isCurrentJob == true,
+                                            orElse: () => Experience(
+                                                jobTitle: "", company: ""))
+                                        .company ??
+                                    "",
+                                email: mentor.email ?? "",
+                                linkedin: mentor.linkedin ?? "",
+                                skills: mentor.skills ?? [],
+                                location: mentor.location ?? "",
+                                description:
+                                    mentor.mentorClass?.description ?? "",
+                                terms: mentor.mentorClass?.terms ?? [],
+                                price: mentor.mentorClass?.price ?? 0,
+                                mentor: mentor,
+                              ),
+                            ),
+                          );
+                        }
+                      : () => null,
+                  imagePath: mentor.photoUrl.toString(),
+                  name: mentor.name ?? 'No Name',
+                  job: currentExperience.jobTitle ?? '',
+                  company: currentExperience.company ?? 'Placeholder Company',
+                );
             },
             shrinkWrap: true,
             physics:

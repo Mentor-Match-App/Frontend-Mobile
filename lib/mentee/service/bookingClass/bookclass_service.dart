@@ -1,23 +1,30 @@
 import 'package:dio/dio.dart';
+import 'package:mentormatch_apps/mentee/service/bookingClass/bookclass_model.dart';
 
-Future<bool> bookClass(String classId, String userId) async {
+Future<BookingResultSession> bookClass(String classId, String userId) async {
+  const String baseUrl = "https://hwx70h6x-8000.asse.devtunnels.ms"; // Use your actual server URL
   var dio = Dio();
-  // Ganti dengan URL server Anda
-  
-  const String baseUrl = "https://hwx70h6x-8000.asse.devtunnels.ms"; 
+
   try {
     final response = await dio.post(
-      '$baseUrl/class/$classId/book', // URL endpoint untuk booking
-      data: {
-        'userId': userId, // Data yang dikirimkan
-      },
+      '$baseUrl/class/$classId/book',
+      data: {'userId': userId},
     );
-    // Periksa status response, asumsikan 200 menandakan sukses
-    return response.statusCode == 200;
+
+    if (response.statusCode == 200 && response.data != null) {
+      int? uniqueCode;
+      if (response.data['booking']['uniqueCode'] != null) {
+        uniqueCode = int.tryParse(response.data['booking']['uniqueCode'].toString());
+      }
+      print('Unique code: $uniqueCode');
+      return BookingResultSession(isSuccess: true, uniqueCode: uniqueCode);
+    } else {
+      print('Error booking class: ${response.data}');
+      return BookingResultSession(isSuccess: false);
+    
+    }
   } catch (e) {
     print('Error booking class: $e');
-    // Jika terjadi exception, anggap proses booking gagal
-    return false;
+    return BookingResultSession(isSuccess: false);
   }
 }
-

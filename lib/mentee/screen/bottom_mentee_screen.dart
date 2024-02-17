@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:mentormatch_apps/mentee/screen/MyClassMentee/MyClass_list_mentee_screen.dart';
 import 'package:mentormatch_apps/mentee/screen/community_mentee__screen.dart';
 import 'package:mentormatch_apps/login-register/Login_screen.dart';
+import 'package:mentormatch_apps/mentee/screen/home_screen_mentee.dart';
 import 'package:mentormatch_apps/mentee/screen/profile/edit_profile_mentee_screen.dart';
-import 'package:mentormatch_apps/mentee/screen/home_mentee_screen.dart';
+
 import 'package:mentormatch_apps/login-register/register_screen.dart';
 import 'package:mentormatch_apps/mentee/screen/profile/mentee_profile_screen.dart';
 import 'package:mentormatch_apps/widget/bottom_nav.dart';
@@ -12,7 +13,8 @@ class BottomNavbarMenteeScreen extends StatefulWidget {
   const BottomNavbarMenteeScreen({Key? key}) : super(key: key);
 
   @override
-  State<BottomNavbarMenteeScreen> createState() => _BottomNavbarMenteeScreenState();
+  State<BottomNavbarMenteeScreen> createState() =>
+      _BottomNavbarMenteeScreenState();
 }
 
 class _BottomNavbarMenteeScreenState extends State<BottomNavbarMenteeScreen> {
@@ -26,7 +28,7 @@ class _BottomNavbarMenteeScreenState extends State<BottomNavbarMenteeScreen> {
 
   Widget screenBottomNavigation(int index) {
     if (index == 0) {
-      return  HomeMenteeScreen();
+      return HomeMenteeScreen();
     } else if (index == 1) {
       return MyClassMenteeListScreen();
     } else if (index == 2) {

@@ -32,8 +32,8 @@ class ElevatedButtonWidget extends StatelessWidget {
         child: Text(
           title!,
           style: FontFamily().buttonText.copyWith(
-            fontSize: 16,
-          ),
+                fontSize: 16,
+              ),
         ),
       ),
     );
@@ -80,20 +80,20 @@ class OutlineButtonWidget extends StatelessWidget {
 /////////////////////////////////////// SMALL BUTTON /////////////////////////
 
 /////Elevated Button////////
+
 class SmallElevatedButton extends StatelessWidget {
   final Function()? onPressed;
   final double height;
   final double width;
   final String title;
-  final Color color;
+  final Color color; // Keep this if you want to allow custom colors
   final TextStyle? style;
 
   const SmallElevatedButton({
     Key? key,
     this.onPressed,
     this.title = "", // Provide a default value for title
-    this.color = Colors
-        .blue, // Provide a default color or choose based on your app's design
+    this.color = Colors.blue, // This will be overridden if not used
     this.style, // You may provide a default style or handle it in the build method
     this.height = 32,
     this.width = 72,
@@ -101,6 +101,11 @@ class SmallElevatedButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Determine the color to use, defaulting to ColorStyle().primaryColors if color is Colors.blue
+    final buttonColor = color == Colors.blue
+        ? MaterialStateProperty.all<Color>(ColorStyle().primaryColors)
+        : MaterialStateProperty.all<Color>(color);
+
     return SizedBox(
       width: width,
       height: height,
@@ -111,8 +116,7 @@ class SmallElevatedButton extends StatelessWidget {
               borderRadius: BorderRadius.circular(12),
             ),
           ),
-          backgroundColor:
-              MaterialStateProperty.all<Color>(ColorStyle().primaryColors),
+          backgroundColor: buttonColor, // Use the determined color
         ),
         onPressed: onPressed,
         child: Text(
@@ -208,6 +212,53 @@ class ButtonDetailKegiatan extends StatelessWidget {
                 color: ColorStyle().whiteColors,
               ),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class ButtonEducationLevels extends StatefulWidget {
+  final String title;
+  final Function() onPressed;
+  ButtonEducationLevels({Key? key, required this.title, required this.onPressed}) : super(key: key);
+
+  @override
+  State<ButtonEducationLevels> createState() => _ButtonEducationLevelsState();
+}
+
+class _ButtonEducationLevelsState extends State<ButtonEducationLevels> {
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only( top :8.0, bottom: 8.0, right: 8.0 , left: 4.0),
+      child: Container(
+        height: 40,
+        width: 100,
+        decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.5), // warna bayangan
+              spreadRadius: 0, // jarak penyebaran bayangan
+              blurRadius: 5, // intensitas blur bayangan
+              offset: Offset(0, 3), // posisi bayangan (horizontal, vertical)
+            ),
+          ],
+        ),
+        child: ElevatedButton(
+          onPressed: widget.onPressed,
+          child: Text(
+            widget.title,
+            style: FontFamily()
+                .buttonText
+                .copyWith(color: ColorStyle().secondaryColors),
+          ),
+          style: ElevatedButton.styleFrom(
+            primary: ColorStyle().tertiaryColors,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(0),
+            ),
           ),
         ),
       ),

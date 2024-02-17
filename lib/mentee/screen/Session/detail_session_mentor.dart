@@ -1,9 +1,11 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:mentormatch_apps/mentee/screen/premiumClass/detail_booking_premium_class_screen.dart';
-import 'package:mentormatch_apps/mentee/service/bookingClass/bookclass_service.dart';
-import 'package:mentormatch_apps/mentee/service/bookingClass/bookclass_model.dart';
-import 'package:mentormatch_apps/mentor/model/category_SMA_model.dart';
+import 'package:mentormatch_apps/mentee/screen/Session/detail_booking_session_screen.dart';
+import 'package:mentormatch_apps/mentee/service/bookSessions/bookSesion.dart';
+import 'package:mentormatch_apps/mentee/service/bookSessions/save_booking_session.dart';
+import 'package:mentormatch_apps/mentor/model/session_model.dart';
 import 'package:mentormatch_apps/preferences/%20preferences_helper.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
@@ -13,18 +15,16 @@ import 'package:mentormatch_apps/widget/category_card.dart';
 import 'package:mentormatch_apps/widget/experience_widget.dart';
 import 'package:mentormatch_apps/widget/navbar.dart';
 import 'package:mentormatch_apps/widget/profile_avatar.dart';
-import 'package:mentormatch_apps/widget/review_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class DetailMentorSMAScreen extends StatefulWidget {
-  final String classid;
-  final int periode;
-  final List<MentorReview>? reviews;
-  final int price;
-  final String namakelas;
+class DetailMentorSessionsNew extends StatefulWidget {
+  final int availableSlots;
+  final String sessionsid;
+  final int participants;
+  final String namaSessios;
   final String about;
   final String photoUrl;
-  final String name;
+  final String namaMentor;
   final String company;
   final String job;
   final String email;
@@ -32,43 +32,48 @@ class DetailMentorSMAScreen extends StatefulWidget {
   final List<String> skills;
   final String location;
   final String description;
-  final List<String> terms;
-  final MentorSMA mentor;
-  DetailMentorSMAScreen(
-      {Key? key,
-      required this.classid,
-      required this.periode,
-      this.reviews,
-      required this.price,
-      required this.namakelas,
-      required this.about,
-      required this.photoUrl,
-      required this.name,
-      required this.company,
-      required this.job,
-      required this.email,
-      required this.linkedin,
-      required this.skills,
-      required this.location,
-      required this.description,
-      required this.terms,
-      required this.mentor})
-      : super(key: key);
-
+  final MentorSession mentor;
+  final String jadwal;
+  DetailMentorSessionsNew({
+    Key? key,
+    required this.namaSessios,
+    required this.about,
+    required this.photoUrl,
+    required this.namaMentor,
+    required this.company,
+    required this.job,
+    required this.email,
+    required this.linkedin,
+    required this.skills,
+    required this.location,
+    required this.description,
+    required this.mentor,
+    required this.jadwal,
+    required this.participants,
+    required this.sessionsid,
+    required this.availableSlots,
+  }) : super(key: key);
   @override
-  State<DetailMentorSMAScreen> createState() => _DetailMentorSMAScreenState();
+  State<DetailMentorSessionsNew> createState() =>
+      _DetailMentorSessionsNewState();
 }
 
-class _DetailMentorSMAScreenState extends State<DetailMentorSMAScreen> {
-    _launchURL(String url) async {
+class _DetailMentorSessionsNewState extends State<DetailMentorSessionsNew> {
+  _launchURL(String url) async {
+    // ignore: deprecated_member_use
     if (await canLaunch(url)) {
       await launch(url);
     } else {
       throw 'Tidak dapat membuka $url';
     }
   }
+
   @override
   Widget build(BuildContext context) {
+    DateTime parsedJadwal = DateTime.parse(widget.jadwal);
+    String formattedJadwal =
+        DateFormat('dd MMMM yyyy HH:mm').format(parsedJadwal);
+
     return Scaffold(
       appBar: AppBar(
           backgroundColor: ColorStyle().tertiaryColors,
@@ -88,22 +93,21 @@ class _DetailMentorSMAScreenState extends State<DetailMentorSMAScreen> {
                     ),
               ),
               Transform.translate(
-                offset: Offset(0.0, -120 / 2.0),
+                offset: const Offset(0.0, -120 / 2.0),
                 child: Center(
                   child: Column(
                     children: [
                       ProfileAvatar(
                         imageUrl: widget.photoUrl,
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
                       Text(
-                        widget.name,
+                        widget.namaMentor,
                         style: FontFamily().boldText.copyWith(
                               fontSize: 16,
-                           
-                        ),
+                            ),
                       ),
                       TextButton.icon(
                         onPressed: () {},
@@ -147,10 +151,10 @@ class _DetailMentorSMAScreenState extends State<DetailMentorSMAScreen> {
                                     primary: ColorStyle().whiteColors,
                                   ),
                                   onPressed: () {
-                                final linkedlnlink = widget.linkedin ?? '';
-                                _launchURL(linkedlnlink);
-                              },
-                                  icon: Icon(Icons.link),
+                                    final linkedlnlink = widget.linkedin;
+                                    _launchURL(linkedlnlink);
+                                  },
+                                  icon: const Icon(Icons.link),
                                   label: Text('Linkedln',
                                       style: FontFamily().regularText.copyWith(
                                             color: ColorStyle().whiteColors,
@@ -168,7 +172,7 @@ class _DetailMentorSMAScreenState extends State<DetailMentorSMAScreen> {
                             title: 'Experience',
                             color: ColorStyle().primaryColors,
                           ),
-                         Column(
+                          Column(
                             children: widget.mentor.experiences
                                     ?.map((experience) {
                                   return ExperienceWidget(
@@ -176,7 +180,7 @@ class _DetailMentorSMAScreenState extends State<DetailMentorSMAScreen> {
                                     company: experience.company ?? 'No Company',
                                   );
                                 }).toList() ??
-                                [Text('No experiences')],
+                                [const Text('No experiences')],
                           )
                         ],
                       ),
@@ -187,7 +191,7 @@ class _DetailMentorSMAScreenState extends State<DetailMentorSMAScreen> {
                           color: ColorStyle().primaryColors,
                         ),
                       ),
-                       SingleChildScrollView(
+                      SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -199,81 +203,76 @@ class _DetailMentorSMAScreenState extends State<DetailMentorSMAScreen> {
                       const SizedBox(
                         height: 12,
                       ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          TitleProfile(
-                            title: widget.namakelas,
-                            color: ColorStyle().primaryColors,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 12.0),
-                            child: Text(
-                              widget.description,
-                              style: FontFamily().regularText,
-                            ),
-                          ),
-                        ],
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          TitleProfile(
-                            title: 'Syarat & Ketentuan Kelas',
-                            color: ColorStyle().primaryColors,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 12.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: widget.mentor.mentorClass?.terms
-                                      ?.asMap()
-                                      .entries
-                                      .map<Widget>((entry) {
-                                    int index = entry.key;
-                                    String term = entry.value;
-                                    return Padding(
-                                      padding: const EdgeInsets.only(
-                                          bottom:
-                                              8.0), // Tambahkan sedikit ruang antar baris
-                                      child: Text(
-                                        "${index + 1}.  $term", // Menambahkan indeks + 1 untuk membuat nomor urutan dimulai dari 1
-                                        style: FontFamily().regularText,
-                                      ),
-                                    );
-                                  }).toList() ??
-                                  [
-                                    Text("No terms available",
-                                        style: FontFamily().regularText)
-                                  ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ElevatedButtonWidget(
-                          onPressed: () {
-                            _showDialog(context);
-                          },
-                          title:
-                              "${NumberFormat.currency(locale: 'id', symbol: 'Rp').format(widget.price)}",
+                      Container(
+                        width: double.infinity,
+                        constraints: BoxConstraints(
+                          minHeight: MediaQuery.of(context).size.height,
                         ),
-                      ),
-                      const SizedBox(
-                        height: 12,
-                      ),
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: TitleProfile(
-                          title: 'Review',
-                          color: ColorStyle().primaryColors,
+                        decoration: BoxDecoration(
+                          color: ColorStyle().tertiaryColors,
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(90),
+                          ),
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: buildReviewWidgets(),
-                      ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  top: 24.0,
+                                  left: 24,
+                                  bottom: 12.0,
+                                  right: 12.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Align(
+                                    alignment: Alignment.centerRight,
+                                    child: Text(
+                                      "Jadwal Session",
+                                      style: FontFamily().titleText.copyWith(
+                                            color: ColorStyle().primaryColors,
+                                          ),
+                                    ),
+                                  ),
+                                  JadwalSessionWidget(
+                                    icon: Icons.comment,
+                                    title1: "topic",
+                                    title2: widget.namaSessios,
+                                  ),
+                                  JadwalSessionWidget(
+                                    icon: Icons.access_time_outlined,
+                                    title1: "time",
+                                    // title2: widget.jadwal,
+                                    title2: formattedJadwal,
+                                  ),
+                                  const JadwalSessionWidget(
+                                      icon: Icons.location_on_outlined,
+                                      title1: "location",
+                                      title2: "Meeting Zoom"),
+                                  JadwalSessionWidget(
+                                    icon: Icons.people_alt_outlined,
+                                    title1: "Total Participants",
+                                    title2: widget.participants.toString(),
+                                  ),
+                                  JadwalSessionWidget(
+                                    icon: Icons.chair_alt,
+                                    title1: "Available Slots",
+                                    title2: widget.availableSlots.toString(),
+                                  ),
+                                  const SizedBox(height: 24),
+                                  ElevatedButtonWidget(
+                                    title: "Join Session",
+                                    onPressed: () {
+                                      _showDialog(context);
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
                     ],
                   ),
                 ),
@@ -285,32 +284,11 @@ class _DetailMentorSMAScreenState extends State<DetailMentorSMAScreen> {
     );
   }
 
-  //////review mentor///////
-  Widget buildReviewWidgets() {
-  // Periksa apakah reviews ada dan tidak kosong
-  if (widget.reviews != null && widget.reviews!.isNotEmpty) {
-    return Column(
-      children: widget.reviews!.map((review) {
-        return ReviewWidget(
-          name: review.reviewer ?? "No Name",
-          review: review.content ?? "No Review",
-        );
-      }).toList(),
-    );
-  } else {
-    // Jika tidak ada review, tampilkan pesan
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Text("Belum ada review", style: TextStyle(fontWeight: FontWeight.bold)),
-      ),
-    );
-  }
-}
-
-
-  ///// booking class ////
+  /// booking class ////
   void _showDialog(BuildContext context) {
+    DateTime parsedJadwal = DateTime.parse(widget.jadwal);
+    String formattedJadwal =
+        DateFormat('dd MMMM yyyy HH:mm').format(parsedJadwal);
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -322,7 +300,7 @@ class _DetailMentorSMAScreenState extends State<DetailMentorSMAScreen> {
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              Text("Booking Class", style: FontFamily().titleText),
+              Text("Booking Session", style: FontFamily().titleText),
               IconButton(
                 onPressed: () => Navigator.of(context).pop(),
                 icon: Icon(
@@ -335,7 +313,7 @@ class _DetailMentorSMAScreenState extends State<DetailMentorSMAScreen> {
           content: Padding(
             padding: const EdgeInsets.all(12),
             child: Text(
-              "Apakah Kamu yakin untuk memesan Premium Class ini?",
+              "Apakah Kamu yakin untuk memesan Session ini?",
               textAlign: TextAlign.center,
               style: FontFamily().regularText,
             ),
@@ -363,44 +341,36 @@ class _DetailMentorSMAScreenState extends State<DetailMentorSMAScreen> {
                   width: 100,
                   onPressed: () async {
                     try {
-                      // Initialize UserPreferences if not already done.
-                      await UserPreferences.init();
-
-                      // Retrieve the user ID from SharedPreferences
-                      String? userId = UserPreferences.getUserId();
+                      // Asumsikan UserPreferences.init() dan UserPreferences.getUserId() sudah benar
+                      String? userId = await UserPreferences.getUserId();
 
                       if (userId != null) {
-                        BookingResultSession result =
-                            await bookClass(widget.classid, userId);
+                        // Memanggil bookSession dan menangani respons di dalam try-catch
+                        await bookSession(widget.sessionsid, userId);
 
-                        if (result.isSuccess) {
-                          // If booking succeeds, navigate to the next screen
-                          int? uniqueCode =
-                              result.uniqueCode; // Here you get the uniqueCode
-                          // ignore: use_build_context_synchronously
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => DetailBookingClass(
-                                price: widget.price,
-                                nama_mentor: widget.name,
-                                nama_kelas: widget.namakelas,
-                                durasi: widget.periode,
-                                uniqueCode: uniqueCode!,
-                              ),
-                            ),
-                          );
-                        } else {
-                          // If booking fails, show an error message
-                          throw Exception("tidak bisa booking kelas ini");
-                        }
+                        // Simpan data booking ke history
+                        await saveBookingData(
+                            widget.namaSessios,
+                            widget.namaMentor,
+                            formattedJadwal); // Pastikan ini sesuai dengan definisi fungsi saveBookingData Anda
+
+                        // Jika tidak ada error yang dilempar, asumsikan booking berhasil
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => DetailBookingSession(
+                                nama_session: widget.namaSessios,
+                                nama_mentor: widget.namaMentor,
+                                jadwal_session: formattedJadwal),
+                          ),
+                        );
                       } else {
-                        // If userId is not found, show an error
+                        // Tampilkan pesan error jika user belum login
                         throw Exception(
                             "Anda belum login, silahkan login terlebih dahulu");
                       }
                     } catch (e) {
-                      // Show a SnackBar if an exception occurs
+                      print("Error: ${e.toString()}");
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text("Error: ${e.toString()}"),

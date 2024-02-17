@@ -16,11 +16,11 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
       child: Container(
         // height: 352.0,
         // width: 200.0, // Ubah nilai lebar sesuai kebutuhan
-        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+        padding: const EdgeInsets.symmetric(horizontal: 6.0),
         child: TextField(
           controller: _searchController,
           decoration: InputDecoration(

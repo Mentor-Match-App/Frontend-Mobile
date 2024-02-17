@@ -4,6 +4,8 @@ import 'package:mentormatch_apps/mentee/service/service_SMA_mentor.dart';
 import 'package:mentormatch_apps/mentor/model/category_SMA_model.dart';
 import 'package:mentormatch_apps/widget/card_mentor.dart';
 
+import '../../../../style/color_style.dart';
+
 class BiologiSMAScreen extends StatefulWidget {
   BiologiSMAScreen({Key? key}) : super(key: key);
 
@@ -34,12 +36,12 @@ late Future<SMA> futureSMAData;
               .where((mentor) => mentor.mentorClass?.category == "Biologi")
               .toList();
 
-          return GridView.builder(
+        return GridView.builder(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2, 
-              childAspectRatio: 3 / 5, 
+              crossAxisCount: 2,
+              childAspectRatio: 3 / 5,
               crossAxisSpacing: 2,
-              mainAxisSpacing: 2, 
+              mainAxisSpacing: 2,
             ),
             itemCount: mentorsWithLanguageCategory.length,
             itemBuilder: (context, index) {
@@ -50,46 +52,56 @@ late Future<SMA> futureSMAData;
                 orElse: () =>
                     Experience(), // Menyediakan default Experience jika tidak ditemukan
               );
-
+              final bool isClassAvailable = mentor.mentorClass?.isAvailable ??
+                  false; // Default to false if null
+              final Color buttonColor = isClassAvailable
+                  ? ColorStyle().primaryColors
+                  : ColorStyle().disableColors;
               return CardItemMentor(
-                 onPressesd: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => DetailMentorSMAScreen(
-                          reviews: mentor.mentorReviews ?? [],
-                          namakelas: mentor.mentorClass?.name ?? "",
-                          about: mentor.about ?? "",
-                          name: mentor.name ?? "",
-                          photoUrl: mentor.photoUrl ?? "",
-                          job: mentor.experiences
-                                  ?.firstWhere(
-                                      (exp) => exp.isCurrentJob == true,
-                                      orElse: () =>
-                                          Experience(jobTitle: "", company: ""))
-                                  .jobTitle ??
-                              "",
-                          company: mentor.experiences
-                                  ?.firstWhere(
-                                      (exp) => exp.isCurrentJob == true,
-                                      orElse: () =>
-                                          Experience(jobTitle: "", company: ""))
-                                  .company ??
-                              "",
-                          email: mentor.email ?? "",
-                          linkedin: mentor.linkedin ?? "",
-                          skills: mentor.skills ?? [],
-                          location: mentor.location ?? "",
-                          description: mentor.mentorClass?.description ?? "",
-                          terms: mentor.mentorClass?.terms ?? [],
-                          price: mentor.mentorClass?.price ?? 0,
-                          mentor: mentor,
-                        ),
-                      ),
-                    );
-                  },
-                imagePath:
-                    mentor.photoUrl ?? 'assets/Handoff/ilustrator/profile.png',
+                color:
+                    buttonColor, // Use the determined color based on class availability
+                onPressesd: isClassAvailable
+                    ? () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => DetailMentorSMAScreen(
+                              classid: mentor.mentorClass!.id ?? "",
+                              periode: mentor.mentorClass?.durationInDays ?? 0,
+                              reviews: mentor.mentorReviews ?? [],
+                              namakelas: mentor.mentorClass?.name ?? "",
+                              about: mentor.about ?? "",
+                              name: mentor.name ?? "",
+                              photoUrl: mentor.photoUrl ?? "",
+                              job: mentor.experiences
+                                      ?.firstWhere(
+                                          (exp) => exp.isCurrentJob == true,
+                                          orElse: () => Experience(
+                                              jobTitle: "", company: ""))
+                                      .jobTitle ??
+                                  "",
+                              company: mentor.experiences
+                                      ?.firstWhere(
+                                          (exp) => exp.isCurrentJob == true,
+                                          orElse: () => Experience(
+                                              jobTitle: "", company: ""))
+                                      .company ??
+                                  "",
+                              email: mentor.email ?? "",
+                              linkedin: mentor.linkedin ?? "",
+                              skills: mentor.skills ?? [],
+                              location: mentor.location ?? "",
+                              description:
+                                  mentor.mentorClass?.description ?? "",
+                              terms: mentor.mentorClass?.terms ?? [],
+                              price: mentor.mentorClass?.price ?? 0,
+                              mentor: mentor,
+                            ),
+                          ),
+                        );
+                      }
+                    : () => null,
+                imagePath: mentor.photoUrl.toString(),
                 name: mentor.name ?? 'No Name',
                 job: currentExperience.jobTitle ?? '',
                 company: currentExperience.company ?? 'Placeholder Company',
