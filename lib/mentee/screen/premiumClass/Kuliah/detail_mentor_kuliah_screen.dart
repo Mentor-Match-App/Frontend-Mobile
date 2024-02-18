@@ -3,8 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mentormatch_apps/mentee/screen/premiumClass/detail_booking_premium_class_screen.dart';
-import 'package:mentormatch_apps/mentee/service/bookingClass/bookclass_service.dart';
 import 'package:mentormatch_apps/mentee/service/bookingClass/bookclass_model.dart';
+import 'package:mentormatch_apps/mentee/service/bookingClass/bookclass_service.dart';
 import 'package:mentormatch_apps/mentor/model/category_Kuliah_model.dart';
 import 'package:mentormatch_apps/preferences/%20preferences_helper.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
@@ -58,17 +58,19 @@ class DetailMentorKuliahScreen extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<DetailMentorKuliahScreen> createState() => _DetailMentorKuliahScreenState();
+  State<DetailMentorKuliahScreen> createState() =>
+      _DetailMentorKuliahScreenState();
 }
 
 class _DetailMentorKuliahScreenState extends State<DetailMentorKuliahScreen> {
-    _launchURL(String url) async {
+  _launchURL(String url) async {
     if (await canLaunch(url)) {
       await launch(url);
     } else {
       throw 'Tidak dapat membuka $url';
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -104,8 +106,7 @@ class _DetailMentorKuliahScreenState extends State<DetailMentorKuliahScreen> {
                         widget.name,
                         style: FontFamily().boldText.copyWith(
                               fontSize: 16,
-                           
-                        ),
+                            ),
                       ),
                       TextButton.icon(
                         onPressed: () {},
@@ -149,9 +150,9 @@ class _DetailMentorKuliahScreenState extends State<DetailMentorKuliahScreen> {
                                     primary: ColorStyle().whiteColors,
                                   ),
                                   onPressed: () {
-                                final linkedlnlink = widget.linkedin ?? '';
-                                _launchURL(linkedlnlink);
-                              },
+                                    final linkedlnlink = widget.linkedin ?? '';
+                                    _launchURL(linkedlnlink);
+                                  },
                                   icon: const Icon(Icons.link),
                                   label: Text('Linkedln',
                                       style: FontFamily().regularText.copyWith(
@@ -288,28 +289,28 @@ class _DetailMentorKuliahScreenState extends State<DetailMentorKuliahScreen> {
   }
 
   //////review mentor///////
-Widget buildReviewWidgets() {
-  // Periksa apakah reviews ada dan tidak kosong
-  if (widget.reviews != null && widget.reviews!.isNotEmpty) {
-    return Column(
-      children: widget.reviews!.map((review) {
-        return ReviewWidget(
-          name: review.reviewer ?? "No Name",
-          review: review.content ?? "No Review",
-        );
-      }).toList(),
-    );
-  } else {
-    // Jika tidak ada review, tampilkan pesan
-    return const Center(
-      child: Padding(
-        padding: EdgeInsets.all(8.0),
-        child: Text("Belum ada review", style: TextStyle(fontWeight: FontWeight.bold)),
-      ),
-    );
+  Widget buildReviewWidgets() {
+    // Periksa apakah reviews ada dan tidak kosong
+    if (widget.reviews != null && widget.reviews!.isNotEmpty) {
+      return Column(
+        children: widget.reviews!.map((review) {
+          return ReviewWidget(
+            name: review.reviewerId ?? "No Name",
+            review: review.content ?? "No Review",
+          );
+        }).toList(),
+      );
+    } else {
+      // Jika tidak ada review, tampilkan pesan
+      return const Center(
+        child: Padding(
+          padding: EdgeInsets.all(8.0),
+          child: Text("Belum ada review",
+              style: TextStyle(fontWeight: FontWeight.bold)),
+        ),
+      );
+    }
   }
-}
-
 
   ///// booking class ////
   void _showDialog(BuildContext context) {

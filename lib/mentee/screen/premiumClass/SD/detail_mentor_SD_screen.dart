@@ -74,7 +74,8 @@ class _DetailMentorSDScreenState extends State<DetailMentorSDScreen> {
       appBar: AppBar(
           backgroundColor: ColorStyle().tertiaryColors,
           title: AppBarLogoNotif()),
-      body: ListView(
+      body:
+       ListView(
         children: [
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,

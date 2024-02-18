@@ -1,43 +1,38 @@
 // To parse this JSON data, do
 //
-//     final menteeModel = menteeModelFromMap(jsonString);
+//     final mentee = menteeFromMap(jsonString);
 
 import 'dart:convert';
 
-MenteeModel menteeModelFromMap(String str) =>
-    MenteeModel.fromMap(json.decode(str));
+Mentee menteeFromMap(String str) => Mentee.fromMap(json.decode(str));
 
-String menteeModelToMap(MenteeModel data) => json.encode(data.toMap());
+String menteeToMap(Mentee data) => json.encode(data.toMap());
 
-class MenteeModel {
+class Mentee {
   bool? error;
   String? message;
-  List<Mentee>? mentees;
+  User? user;
 
-  MenteeModel({
+  Mentee({
     this.error,
     this.message,
-    this.mentees,
+    this.user,
   });
 
-  factory MenteeModel.fromMap(Map<String, dynamic> json) => MenteeModel(
+  factory Mentee.fromMap(Map<String, dynamic> json) => Mentee(
         error: json["error"],
         message: json["message"],
-        mentees: json["mentees"] == null
-            ? []
-            : List<Mentee>.from(json["mentees"]!.map((x) => Mentee.fromMap(x))),
+        user: json["user"] == null ? null : User.fromMap(json["user"]),
       );
 
   Map<String, dynamic> toMap() => {
         "error": error,
         "message": message,
-        "mentees": mentees == null
-            ? []
-            : List<dynamic>.from(mentees!.map((x) => x.toMap())),
+        "user": user?.toMap(),
       };
 }
 
-class Mentee {
+class User {
   String? id;
   String? userType;
   String? email;
@@ -49,14 +44,14 @@ class Mentee {
   dynamic portofolio;
   String? photoUrl;
   String? about;
-  List<dynamic>? communities;
-  dynamic menteeClass;
-  List<dynamic>? session;
-  List<dynamic>? participant;
-  List<Transaction>? transactions;
   List<Experience>? experiences;
+  List<dynamic>? communities;
+  dynamic userClass;
+  List<dynamic>? session;
+  List<Participant>? participant;
+  List<Transaction>? transactions;
 
-  Mentee({
+  User({
     this.id,
     this.userType,
     this.email,
@@ -68,15 +63,15 @@ class Mentee {
     this.portofolio,
     this.photoUrl,
     this.about,
+    this.experiences,
     this.communities,
-    this.menteeClass,
+    this.userClass,
     this.session,
     this.participant,
     this.transactions,
-    this.experiences,
   });
 
-  factory Mentee.fromMap(Map<String, dynamic> json) => Mentee(
+  factory User.fromMap(Map<String, dynamic> json) => User(
         id: json["id"],
         userType: json["userType"],
         email: json["email"],
@@ -90,24 +85,25 @@ class Mentee {
         portofolio: json["portofolio"],
         photoUrl: json["photoUrl"],
         about: json["about"],
+        experiences: json["experiences"] == null
+            ? []
+            : List<Experience>.from(
+                json["experiences"]!.map((x) => Experience.fromMap(x))),
         communities: json["communities"] == null
             ? []
             : List<dynamic>.from(json["communities"]!.map((x) => x)),
-        menteeClass: json["class"],
+        userClass: json["class"],
         session: json["session"] == null
             ? []
             : List<dynamic>.from(json["session"]!.map((x) => x)),
         participant: json["participant"] == null
             ? []
-            : List<dynamic>.from(json["participant"]!.map((x) => x)),
+            : List<Participant>.from(
+                json["participant"]!.map((x) => Participant.fromMap(x))),
         transactions: json["transactions"] == null
             ? []
             : List<Transaction>.from(
                 json["transactions"]!.map((x) => Transaction.fromMap(x))),
-        experiences: json["experiences"] == null
-            ? []
-            : List<Experience>.from(
-                json["experiences"]!.map((x) => Experience.fromMap(x))),
       );
 
   Map<String, dynamic> toMap() => {
@@ -123,21 +119,21 @@ class Mentee {
         "portofolio": portofolio,
         "photoUrl": photoUrl,
         "about": about,
+        "experiences": experiences == null
+            ? []
+            : List<dynamic>.from(experiences!.map((x) => x.toMap())),
         "communities": communities == null
             ? []
             : List<dynamic>.from(communities!.map((x) => x)),
-        "class": menteeClass,
+        "class": userClass,
         "session":
             session == null ? [] : List<dynamic>.from(session!.map((x) => x)),
         "participant": participant == null
             ? []
-            : List<dynamic>.from(participant!.map((x) => x)),
+            : List<dynamic>.from(participant!.map((x) => x.toMap())),
         "transactions": transactions == null
             ? []
             : List<dynamic>.from(transactions!.map((x) => x.toMap())),
-        "experiences": experiences == null
-            ? []
-            : List<dynamic>.from(experiences!.map((x) => x.toMap())),
       };
 }
 
@@ -170,6 +166,26 @@ class Experience {
         "isCurrentJob": isCurrentJob,
         "company": company,
         "jobTitle": jobTitle,
+      };
+}
+
+class Participant {
+  String? sessionId;
+  String? userId;
+
+  Participant({
+    this.sessionId,
+    this.userId,
+  });
+
+  factory Participant.fromMap(Map<String, dynamic> json) => Participant(
+        sessionId: json["sessionId"],
+        userId: json["userId"],
+      );
+
+  Map<String, dynamic> toMap() => {
+        "sessionId": sessionId,
+        "userId": userId,
       };
 }
 
