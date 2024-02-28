@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mentormatch_apps/mentor/screen/profile_mentor/edit_profile_mentor_screen.dart';
 import 'package:mentormatch_apps/mentor/screen/profile_mentor/service.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
@@ -71,8 +72,25 @@ class _MentorProfileScreenState extends State<MentorProfileScreen> {
                             ProfileAvatar(
                               imageUrl: mentor!.user?.photoUrl,
                             ),
-                            SizedBox(
-                              height: 10,
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                left: 12.0,
+                                right: 16.0,
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  IconButton(
+                                      onPressed: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const EditProfileMentorScreen()));
+                                      },
+                                      icon: Icon(Icons.edit))
+                                ],
+                              ),
                             ),
                             Text(
                               "David Wilson",
