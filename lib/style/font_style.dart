@@ -9,7 +9,7 @@ class FontFamily {
     fontSize: 20,
     color: ColorStyle().secondaryColors,
   );
-    TextStyle buttonText = GoogleFonts.poppins(
+  TextStyle buttonText = GoogleFonts.poppins(
     fontWeight: FontWeight.w300,
     fontSize: 14,
     color: ColorStyle().whiteColors,

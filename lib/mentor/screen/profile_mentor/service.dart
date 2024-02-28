@@ -1,22 +1,18 @@
 import 'package:dio/dio.dart';
+import 'package:mentormatch_apps/mentor/model/profile_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class RegisterMentorService {
+class ProfileService {
   Dio dio = Dio(); // Create Dio instance
   final String baseUrl = "https://hwx70h6x-8000.asse.devtunnels.ms";
 
-  Future<void> registerMentor({
-    required String gender,
+  Future<void> updateProfile({
     required String job,
-    required String company,
+    required String school,
     required List<String> skills,
     required String location,
     required String about,
     required String linkedin,
-    required String portofolio,
-    required String accountName,
-    required String accountNumber,
-    required List<Map<String, String>> experience,
   }) async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token') ?? '';
@@ -30,19 +26,14 @@ class RegisterMentorService {
 
     try {
       final response = await dio.patch(
-        '$baseUrl/users/mentor/$id/register', // Make sure this endpoint is correct
+        '$baseUrl/users/mentor/$id/profile', // Make sure this endpoint is correct
         data: {
-          'gender': gender,
           'job': job,
-          'company': company,
+          'school': school,
           'skills': skills,
           'location': location,
           'about': about,
           'linkedin': linkedin,
-          'portofolio': portofolio,
-          'experience': experience,
-          'accountName': accountName,
-          'accountNumber': accountNumber,
         },
       );
 
@@ -61,6 +52,20 @@ class RegisterMentorService {
       }
     } catch (e) {
       print("Unexpected error: $e");
+    }
+  }
+
+  // get mentor profile
+
+  Future<MentorProfile> getMentorProfile() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? userId = prefs.getString('userId');
+    try {
+      final response = await dio.get("$baseUrl/mentors/$userId/profile");
+      print('API response: ${response.data}');
+      return MentorProfile.fromMap(response.data);
+    } catch (error) {
+      throw Exception("Failed to fetch Mentee: $error");
     }
   }
 }

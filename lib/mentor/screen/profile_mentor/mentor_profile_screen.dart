@@ -1,265 +1,197 @@
 import 'package:flutter/material.dart';
-import 'package:mentormatch_apps/mentee/screen/profile/edit_profile_mentee_screen.dart';
-import 'package:mentormatch_apps/login-register/first_screen.dart';
-import 'package:mentormatch_apps/mentee/screen/notification_mentee_screen.dart';
+import 'package:mentormatch_apps/mentor/screen/profile_mentor/service.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
-import 'package:mentormatch_apps/widget/button.dart';
+import 'package:mentormatch_apps/style/text.dart';
+import 'package:mentormatch_apps/widget/category_card.dart';
 import 'package:mentormatch_apps/widget/experience_widget.dart';
+import 'package:mentormatch_apps/widget/navbar.dart';
 import 'package:mentormatch_apps/widget/profile_avatar.dart';
-import 'package:mentormatch_apps/widget/review_widget.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-class ProfileMentorScreen extends StatefulWidget {
-  ProfileMentorScreen({Key? key}) : super(key: key);
+import '../../model/profile_model.dart';
+
+class MentorProfileScreen extends StatefulWidget {
+  const MentorProfileScreen({super.key});
 
   @override
-  State<ProfileMentorScreen> createState() => _ProfileMentorScreenState();
+  State<MentorProfileScreen> createState() => _MentorProfileScreenState();
 }
 
-class _ProfileMentorScreenState extends State<ProfileMentorScreen> {
+class _MentorProfileScreenState extends State<MentorProfileScreen> {
+  _launchURL(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Tidak dapat membuka $url';
+    }
+  }
+
+  final ProfileService mentorService = ProfileService();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Image.asset('assets/Handoff/logo/LogoMobile.png'),
-            IconButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => NotificationMenteeScreen(),
-                  ),
-                );
-              },
-              icon: Icon(Icons.notifications_none_outlined),
-              color: ColorStyle().secondaryColors,
-            )
-          ],
-        ),
-      ),
-      body: ListView(
-        children: [
-          Padding(
-            padding: EdgeInsets.all(20),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
+          backgroundColor: ColorStyle().tertiaryColors,
+          title: AppBarLogoNotif()),
+      body: FutureBuilder<MentorProfile>(
+        future: mentorService
+            .getMentorProfile(), // Call the asynchronous fetchMentee method here
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (snapshot.hasError) {
+            return Center(
+              child: Text('Error: ${snapshot.error}'),
+            );
+          } else {
+            final mentor = snapshot.data;
+
+            return ListView(
               children: [
-                Row(
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    ProfileAvatar(
-                      imageUrl: 'assets/Handoff/ilustrator/profile.png',
-                      radius: 40,
+                    Container(
+                      width: double.infinity,
+                      height: MediaQuery.of(context).size.height * 0.20,
+                      decoration: BoxDecoration(
+                          color: ColorStyle()
+                              .tertiaryColors // Warna latar belakang yang diinginkan
+                          ),
                     ),
-                    Expanded(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                "Steven Jobs",
-                                style: FontFamily().boldText,
-                              ),
-                              IconButton(
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          const EditProfileMenteeScreen(),
-                                    ),
-                                  );
-                                },
-                                icon: Icon(
-                                  Icons.edit_outlined,
-                                  size: 16,
-                                  color: ColorStyle().primaryColors,
-                                ),
-                              )
-                            ],
-                          ),
-                          SizedBox(height: 12),
-                          Row(
-                            children: [
-                              Row(
-                                children: [
-                                  Icon(
-                                    Icons.work_outline_outlined,
-                                    size: 16,
-                                    color: ColorStyle().primaryColors,
+                    Transform.translate(
+                      offset: Offset(0.0, -120 / 2.0),
+                      child: Center(
+                        child: Column(
+                          children: [
+                            ProfileAvatar(
+                              imageUrl: mentor!.user?.photoUrl,
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Text(
+                              "David Wilson",
+                              style: FontFamily().boldText.copyWith(
+                                    fontSize: 16,
                                   ),
-                                  SizedBox(width: 4),
-                                  Text(
-                                    "UI/UX Designer",
-                                    style: TextStyle(fontSize: 10),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(width: 20),
-                              Row(
-                                children: [
-                                  Icon(
-                                    Icons.location_on_outlined,
-                                    size: 16,
-                                    color: ColorStyle().primaryColors,
-                                  ),
-                                  SizedBox(width: 4),
-                                  Text(
-                                    "Jakarta Selatan",
-                                    style: TextStyle(fontSize: 10),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.home_work_outlined,
-                                size: 16,
+                            ),
+                            TextButton.icon(
+                              onPressed: () {},
+                              icon: Icon(
+                                Icons.location_on,
                                 color: ColorStyle().primaryColors,
                               ),
-                              SizedBox(width: 4),
-                              Text(
-                                "PT. Sinar Terus",
-                                style: TextStyle(fontSize: 10),
+                              label: Text(
+                                "Jakarta",
+                                style: FontFamily().regularText,
                               ),
-                            ],
-                          ),
-                        ],
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                TitleProfile(
+                                  title: "About",
+                                  color: ColorStyle().primaryColors,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 12.0),
+                                  child: Text(
+                                    mentor.user?.about ?? '',
+                                    style: FontFamily().regularText,
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      right: 12.0, top: 8.0),
+                                  child: Align(
+                                    alignment: Alignment.centerRight,
+                                    child: Container(
+                                      width: 120,
+                                      height: 40,
+                                      decoration: BoxDecoration(
+                                        color: ColorStyle().primaryColors,
+                                        borderRadius: BorderRadius.circular(4),
+                                      ),
+                                      child: TextButton.icon(
+                                        style: TextButton.styleFrom(
+                                          primary: ColorStyle().whiteColors,
+                                        ),
+                                        onPressed: () {
+                                          final linkedlnlink =
+                                              mentor?.user!.linkedin ?? '';
+                                          _launchURL(linkedlnlink);
+                                        },
+                                        icon: Icon(Icons.link),
+                                        label: Text('Linkedln',
+                                            style: FontFamily()
+                                                .regularText
+                                                .copyWith(
+                                                  color:
+                                                      ColorStyle().whiteColors,
+                                                )),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                TitleProfile(
+                                  title: 'Experience',
+                                  color: ColorStyle().primaryColors,
+                                ),
+                                Column(
+                                  children: mentor?.user!.experiences
+                                          ?.map((experience) {
+                                        return ExperienceWidget(
+                                          role: experience.jobTitle ??
+                                              'No Job Title',
+                                          company: experience.company ??
+                                              'No Company',
+                                        );
+                                      }).toList() ??
+                                      [Text('No experiences')],
+                                )
+                              ],
+                            ),
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: TitleProfile(
+                                title: 'Skills',
+                                color: ColorStyle().primaryColors,
+                              ),
+                            ),
+                            SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: mentor?.user!.skills
+                                          ?.map((skill) => SkillCard(
+                                                skill: skill,
+                                              ))
+                                          .toList() ??
+                                      [Text('No skills')]),
+                            ),
+                            const SizedBox(
+                              height: 12,
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ],
                 ),
-                Text(
-                  "About",
-                  style: FontFamily().boldText.copyWith(
-                      color: ColorStyle().primaryColors, fontSize: 16),
-                ),
-                Text(
-                  'Experienced in business strategy, startup development, and leadership. Specialized expertise in building mobile applications.',
-                  style: FontFamily().regularText,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                  child: ElevatedButton.icon(
-                    style: ElevatedButton.styleFrom(
-                      primary: ColorStyle().primaryColors,
-                      padding: EdgeInsets.symmetric(
-                          vertical: 8.0,
-                          horizontal: 16.0), // Sesuaikan sesuai kebutuhan Anda
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(
-                            4.0), // Atur border radius menjadi 4
-                      ),
-                    ),
-                    onPressed: () {},
-                    icon: Icon(Icons.link, color: ColorStyle().whiteColors),
-                    label: Text("linkedln", style: FontFamily().buttonText),
-                  ),
-                ),
-                SizedBox(height: 12),
-                Text(
-                  "Skill",
-                  style: FontFamily().boldText.copyWith(
-                      color: ColorStyle().primaryColors, fontSize: 16),
-                ),
-                Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                      child: OutlinedButton(
-                        style: OutlinedButton.styleFrom(
-                          primary: ColorStyle()
-                              .primaryColors, // Warna garis atau border
-                          padding: EdgeInsets.symmetric(
-                            vertical: 8.0,
-                            horizontal: 16.0,
-                          ), // Sesuaikan sesuai kebutuhan Anda
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(4.0),
-                          ),
-                        ),
-                        onPressed: () {},
-                        child: Text(
-                          "Java Script",
-                          style: FontFamily()
-                              .buttonText
-                              .copyWith(color: ColorStyle().secondaryColors),
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: 8),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                      child: OutlinedButton(
-                        style: OutlinedButton.styleFrom(
-                          primary: ColorStyle()
-                              .primaryColors, // Warna garis atau border
-                          padding: EdgeInsets.symmetric(
-                            vertical: 8.0,
-                            horizontal: 16.0,
-                          ), // Sesuaikan sesuai kebutuhan Anda
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(4.0),
-                          ),
-                        ),
-                        onPressed: () {},
-                        child: Text(
-                          "Flutter/Dart",
-                          style: FontFamily()
-                              .buttonText
-                              .copyWith(color: ColorStyle().secondaryColors),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 12),
-                Text(
-                  "Experience",
-                  style: FontFamily().boldText.copyWith(
-                      color: ColorStyle().primaryColors, fontSize: 16),
-                ),
-                ExperienceWidget(
-                    role: "Full Stack Developer", company: "Alaska"),
-                ExperienceWidget(
-                    role: "Full Stack Developer", company: "Alaska"),
-                ButtonDetailKegiatan(
-                  firstText: "IDR 1.000.000,00",
-                  secondText: "Rincian Keiatan",
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => FirstScreen(),
-                      ),
-                    );
-                  },
-                ),
-                Text(
-                  "Review",
-                  style: FontFamily().boldText.copyWith(
-                      color: ColorStyle().primaryColors, fontSize: 16),
-                ),
-                ReviewWidget(
-                    name: "Jhonson Alexa",
-                    review:
-                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat !!!"),
-                ReviewWidget(
-                    name: "Jhonson Alexa",
-                    review:
-                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat !!!"),
               ],
-            ),
-          ),
-        ],
+            );
+          }
+        },
       ),
     );
   }

@@ -9,7 +9,8 @@ class BottomNavbarMentorScreen extends StatefulWidget {
   const BottomNavbarMentorScreen({Key? key}) : super(key: key);
 
   @override
-  State<BottomNavbarMentorScreen> createState() => _BottomNavbarMentorScreenState();
+  State<BottomNavbarMentorScreen> createState() =>
+      _BottomNavbarMentorScreenState();
 }
 
 class _BottomNavbarMentorScreenState extends State<BottomNavbarMentorScreen> {
@@ -29,7 +30,7 @@ class _BottomNavbarMentorScreenState extends State<BottomNavbarMentorScreen> {
     } else if (index == 2) {
       return CommunityMentorScreen();
     } else {
-      return ProfileMentorScreen();
+      return MentorProfileScreen();
     }
   }
 

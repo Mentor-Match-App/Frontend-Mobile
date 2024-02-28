@@ -31,6 +31,9 @@ class _RegisterMentorScreenState extends State<RegisterMentorScreen> {
   final TextEditingController _roleController = TextEditingController();
   final TextEditingController _experienceCompanyController =
       TextEditingController();
+  final TextEditingController _accountNumberController =
+      TextEditingController();
+  final TextEditingController _accountNameController = TextEditingController();
 
   String _name = "";
   String _selectedGender = '';
@@ -40,6 +43,8 @@ class _RegisterMentorScreenState extends State<RegisterMentorScreen> {
   String linkedin = "";
   String about = "";
   String portofolio = "";
+  String accountNumber = "";
+  String accountName = "";
   List<String> skills = [];
   // list experience with role and experienceCompany
   List<Map<String, String>> experience = [];
@@ -54,6 +59,8 @@ class _RegisterMentorScreenState extends State<RegisterMentorScreen> {
     _linkedinController.text = linkedin;
     _aboutController.text = about;
     _portofolioController.text = portofolio;
+    _accountNumberController.text = accountNumber;
+    _accountNameController.text = accountName;
   }
 
   Future<void> _loadProfileData() async {
@@ -72,6 +79,8 @@ class _RegisterMentorScreenState extends State<RegisterMentorScreen> {
     _linkedinController.dispose();
     _aboutController.dispose();
     _portofolioController.dispose();
+    _accountNameController.dispose();
+    _accountNumberController.dispose();
     super.dispose();
   }
 
@@ -112,6 +121,8 @@ class _RegisterMentorScreenState extends State<RegisterMentorScreen> {
       linkedin: _linkedinController.text,
       portofolio: _portofolioController.text,
       experience: experience,
+      accountName: _accountNameController.text,
+      accountNumber: _accountNumberController.text,
     );
   }
 
@@ -176,6 +187,59 @@ class _RegisterMentorScreenState extends State<RegisterMentorScreen> {
               company = value;
             });
           },
+        ),
+        const SizedBox(height: 12),
+        // Text(
+        //   "Rekening Bank",
+        //   style: FontFamily()
+        //       .titleText
+        //       .copyWith(color: ColorStyle().secondaryColors, fontSize: 16),
+        // ),
+
+        Align(
+          alignment: Alignment.centerLeft,
+          child: TittleTextField(
+            title: "Rekening Bank",
+            color: ColorStyle().secondaryColors,
+          ),
+        ),
+
+        Padding(
+          // Add padding left to the column
+          padding: const EdgeInsets.only(left: 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              TittleTextField(
+                title: "Bank",
+                color: ColorStyle().secondaryColors,
+              ),
+              TextFieldWidget(
+                enabled: false,
+                hintText: "BCA",
+              ),
+              _textFieldWithTitle(
+                "Account Name",
+                _accountNameController,
+                "Enter Your Account Name",
+                onChanged: (value) {
+                  setState(() {
+                    accountName = value;
+                  });
+                },
+              ),
+              _textFieldWithTitle(
+                "Account Number",
+                _accountNumberController,
+                "Enter Your Account Number",
+                onChanged: (value) {
+                  setState(() {
+                    accountNumber = value;
+                  });
+                },
+              ),
+            ],
+          ),
         ),
         const SizedBox(height: 12),
         _skillField(),
@@ -336,21 +400,23 @@ class _RegisterMentorScreenState extends State<RegisterMentorScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        TittleTextField(title: "Gender", color: ColorStyle().secondaryColors),
+        TittleTextField(
+            title: "What your gender", color: ColorStyle().secondaryColors),
         DropdownButtonFormField<String>(
           value: _selectedGender.isEmpty ? null : _selectedGender,
           decoration: InputDecoration(
-            enabledBorder: OutlineInputBorder(
-              borderSide:
-                  BorderSide(color: ColorStyle().secondaryColors, width: 1),
-              borderRadius: BorderRadius.circular(12),
-            ),
+            filled: true,
+            fillColor: ColorStyle().tertiaryColors,
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(4),
+              borderSide: BorderSide.none,
             ),
-            contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
           ),
           hint: Text("Select Your Gender"),
+          style: FontFamily().regularText.copyWith(
+                color: ColorStyle().disableColors,
+              ),
+          //  buat waktu dropdown di klik stylenya sama dengan textfield
           onChanged: (String? newValue) {
             setState(() {
               _selectedGender = newValue!;

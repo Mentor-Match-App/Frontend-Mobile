@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mentormatch_apps/mentee/screen/premiumClass/detail_booking_premium_class_screen.dart';
-import 'package:mentormatch_apps/mentee/service/bookingClass/bookclass_service.dart';
 import 'package:mentormatch_apps/mentee/service/bookingClass/bookclass_model.dart';
+import 'package:mentormatch_apps/mentee/service/bookingClass/bookclass_service.dart';
 import 'package:mentormatch_apps/mentor/model/mentor_model.dart';
 import 'package:mentormatch_apps/preferences/%20preferences_helper.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
