@@ -8,11 +8,12 @@ class ProfileService {
 
   Future<void> updateProfile({
     required String job,
-    required String school,
+    required String company,
     required List<String> skills,
     required String location,
     required String about,
     required String linkedin,
+    required List<Map<String, String>> experiences,
   }) async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token') ?? '';
@@ -26,14 +27,15 @@ class ProfileService {
 
     try {
       final response = await dio.patch(
-        '$baseUrl/users/mentor/$id/profile', // Make sure this endpoint is correct
+        '$baseUrl/mentors/$id/profile', // Make sure this endpoint is correct
         data: {
           'job': job,
-          'school': school,
+          'company': company,
           'skills': skills,
           'location': location,
           'about': about,
           'linkedin': linkedin,
+          'experiences': experiences,
         },
       );
 
@@ -62,7 +64,7 @@ class ProfileService {
     String? userId = prefs.getString('userId');
     try {
       final response = await dio.get("$baseUrl/mentors/$userId/profile");
-      print('API response: ${response.data}');
+      // print('API response: ${response.data}');
       return MentorProfile.fromMap(response.data);
     } catch (error) {
       throw Exception("Failed to fetch Mentee: $error");

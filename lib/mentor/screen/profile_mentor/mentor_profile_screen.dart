@@ -28,7 +28,67 @@ class _MentorProfileScreenState extends State<MentorProfileScreen> {
     }
   }
 
+  @override
+  void initState() {
+    super.initState();
+    // Contoh memanggil fungsi load data di sini, sehingga setiap kali kembali ke halaman ini, data terbaru akan dimuat
+    _loadData();
+  }
+
+  void _loadData() async {
+    final profileData = await mentorService.getMentorProfile();
+    setState(() {
+      // Update your state with the new profile data
+    });
+  }
+
   final ProfileService mentorService = ProfileService();
+
+  void _navigateToEditProfile() async {
+    final mentor = await mentorService
+        .getMentorProfile(); // Assuming you fetch the mentor profile here
+
+    if (!mounted) return; // Check if the widget is still in the widget tree
+
+    if (mentor != null && mentor.user != null) {
+      List<Map<String, String>> experiencesMaps = mentor.user!.experiences!
+          .where((experience) =>
+              experience.isCurrentJob ==
+              false) // Filter experiences where isCurrentJob is false
+          .map((experience) => {
+                "jobTitle": experience.jobTitle ?? '',
+
+                "company": experience.company ?? '',
+                // Add other fields as necessary
+              })
+          .toList();
+
+      // Navigate to EditProfileMentorScreen with the converted experiences
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => EditProfileMentorScreen(
+            linkedin: mentor.user!.linkedin ?? '',
+            about: mentor.user!.about ?? '',
+            location: mentor.user!.location ?? '',
+            currentJob: mentor.user!.experiences
+                    ?.firstWhere((element) => element.isCurrentJob == true,
+                        orElse: () => Experience())
+                    .jobTitle ??
+                '',
+            currentCompany: mentor.user!.experiences
+                    ?.firstWhere((element) => element.isCurrentJob == true,
+                        orElse: () => Experience())
+                    .company ??
+                '',
+            experiences: experiencesMaps,
+            skills: mentor.user!.skills ?? [],
+          ),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,8 +113,6 @@ class _MentorProfileScreenState extends State<MentorProfileScreen> {
             return ListView(
               children: [
                 Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Container(
                       width: double.infinity,
@@ -68,45 +126,75 @@ class _MentorProfileScreenState extends State<MentorProfileScreen> {
                       offset: Offset(0.0, -120 / 2.0),
                       child: Center(
                         child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             ProfileAvatar(
                               imageUrl: mentor!.user?.photoUrl,
                             ),
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                left: 12.0,
-                                right: 16.0,
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
+                            SizedBox(
+                              height:
+                                  40, // Adjust the height to ensure enough space for the Stack
+                              child: Stack(
                                 children: [
-                                  IconButton(
-                                      onPressed: () {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    const EditProfileMentorScreen()));
-                                      },
-                                      icon: Icon(Icons.edit))
+                                  Center(
+                                    child: Text(
+                                      mentor.user?.name ?? '',
+                                      style: FontFamily().boldText.copyWith(
+                                            fontSize: 16,
+                                          ),
+                                    ),
+                                  ),
+                                  Positioned(
+                                      right: 0,
+                                      top:
+                                          0, // Adjust as needed to position the edit icon correctly
+                                      child: IconButton(
+                                        icon: Icon(Icons.edit),
+                                        onPressed:
+                                            _navigateToEditProfile, // Use the method to navigate
+                                      )),
                                 ],
                               ),
                             ),
-                            Text(
-                              "David Wilson",
-                              style: FontFamily().boldText.copyWith(
-                                    fontSize: 16,
+                            // For Work Information Row
+                            Center(
+                              child: Row(
+                                mainAxisSize: MainAxisSize
+                                    .min, // This ensures the Row only takes up necessary space
+                                children: [
+                                  Icon(
+                                    Icons.work,
+                                    color: ColorStyle().primaryColors,
                                   ),
-                            ),
-                            TextButton.icon(
-                              onPressed: () {},
-                              icon: Icon(
-                                Icons.location_on,
-                                color: ColorStyle().primaryColors,
+                                  SizedBox(
+                                      width:
+                                          8), // Provides a small gap between the icon and the text
+                                  Text(
+                                    "${mentor.user?.experiences?.firstWhere((element) => element.isCurrentJob == true).jobTitle ?? ""} at ${mentor.user?.experiences?.firstWhere((element) => element.isCurrentJob == true).company ?? ""}",
+                                    style: FontFamily().regularText,
+                                  ),
+                                ],
                               ),
-                              label: Text(
-                                "Jakarta",
-                                style: FontFamily().regularText,
+                            ),
+
+// For Location Information Row
+                            Center(
+                              child: Row(
+                                mainAxisSize: MainAxisSize
+                                    .min, // This ensures the Row only takes up necessary space
+                                children: [
+                                  Icon(
+                                    Icons.location_on,
+                                    color: ColorStyle().primaryColors,
+                                  ),
+                                  SizedBox(
+                                      width:
+                                          8), // Provides a small gap between the icon and the text
+                                  Text(
+                                    mentor.user?.location ?? '',
+                                    style: FontFamily().regularText,
+                                  ),
+                                ],
                               ),
                             ),
                             Column(
@@ -166,7 +254,7 @@ class _MentorProfileScreenState extends State<MentorProfileScreen> {
                                   color: ColorStyle().primaryColors,
                                 ),
                                 Column(
-                                  children: mentor?.user!.experiences
+                                  children: mentor.user!.experiences
                                           ?.map((experience) {
                                         return ExperienceWidget(
                                           role: experience.jobTitle ??
@@ -190,7 +278,7 @@ class _MentorProfileScreenState extends State<MentorProfileScreen> {
                               scrollDirection: Axis.horizontal,
                               child: Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
-                                  children: mentor?.user!.skills
+                                  children: mentor.user!.skills
                                           ?.map((skill) => SkillCard(
                                                 skill: skill,
                                               ))

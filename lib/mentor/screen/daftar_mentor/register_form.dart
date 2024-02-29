@@ -189,12 +189,6 @@ class _RegisterMentorScreenState extends State<RegisterMentorScreen> {
           },
         ),
         const SizedBox(height: 12),
-        // Text(
-        //   "Rekening Bank",
-        //   style: FontFamily()
-        //       .titleText
-        //       .copyWith(color: ColorStyle().secondaryColors, fontSize: 16),
-        // ),
 
         Align(
           alignment: Alignment.centerLeft,
@@ -252,6 +246,8 @@ class _RegisterMentorScreenState extends State<RegisterMentorScreen> {
             linkedin = value;
           });
         }),
+
+
 
         _textFieldWithTitle("About", _aboutController, "Enter Your About",
             onChanged: (value) {

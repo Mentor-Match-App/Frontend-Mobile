@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mentormatch_apps/mentee/screen/profile/service.dart';
 import 'package:mentormatch_apps/mentor/screen/profile_mentor/mentor_profile_screen.dart';
+import 'package:mentormatch_apps/mentor/screen/profile_mentor/service.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
 import 'package:mentormatch_apps/widget/button.dart';
@@ -11,7 +11,24 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../../style/text.dart';
 
 class EditProfileMentorScreen extends StatefulWidget {
-  const EditProfileMentorScreen({Key? key}) : super(key: key);
+  final List<String> skills; // Ini harus di-pass ke State
+  final String linkedin;
+  final String about;
+  final String location;
+  final String currentJob;
+  final String currentCompany;
+  final List<Map<String, String>> experiences;
+
+  const EditProfileMentorScreen({
+    Key? key,
+    required this.skills,
+    required this.linkedin,
+    required this.about,
+    required this.location,
+    required this.currentJob,
+    required this.currentCompany,
+    required this.experiences,
+  }) : super(key: key);
 
   @override
   _EditProfileMentorScreenState createState() =>
@@ -20,15 +37,18 @@ class EditProfileMentorScreen extends StatefulWidget {
 
 class _EditProfileMentorScreenState extends State<EditProfileMentorScreen> {
   final TextEditingController _skillController = TextEditingController();
-  final List<Map<String, String>> _skills = [];
+  List<Map<String, String>> _skills = [];
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _jobController = TextEditingController();
-  final TextEditingController _schoolController = TextEditingController();
+  final TextEditingController _companyController = TextEditingController();
   final TextEditingController _locationController = TextEditingController();
   final TextEditingController _aboutController = TextEditingController();
   final TextEditingController _linkedinController = TextEditingController();
+  final TextEditingController _roleController = TextEditingController();
+  final TextEditingController _experienceCompanyController =
+      TextEditingController();
 
   String _email = "";
   String _name = "";
@@ -39,18 +59,30 @@ class _EditProfileMentorScreenState extends State<EditProfileMentorScreen> {
   String location = '';
   String about = '';
   String linkedin = '';
+  List<Map<String, String>> experiences = [];
 
   @override
   void initState() {
     super.initState();
+    _skills = widget.skills.map((skill) => {"skill": skill}).toList();
+    _linkedinController.text = widget.linkedin;
+    _aboutController.text = widget.about;
+    _locationController.text = widget.location;
+    _jobController.text = widget.currentJob;
+    _companyController.text = widget.currentCompany;
+    // Saring dan ubah experiences
+    experiences = widget.experiences
+        .map((exp) =>
+            {'role': exp['jobTitle']!, 'experienceCompany': exp['company']!})
+        .toList();
     _loadProfileData();
     _emailController.text = _email;
     _nameController.text = _name;
-    _jobController.text = job;
-    _schoolController.text = school;
-    _locationController.text = location;
-    _aboutController.text = about;
-    _linkedinController.text = linkedin;
+    // _jobController.text = job;
+    // _schoolController.text = school;
+    // _locationController.text = location;
+    // _aboutController.text = about;
+    // _linkedinController.text = linkedin;
   }
 
   Future<void> _loadProfileData() async {
@@ -75,17 +107,31 @@ class _EditProfileMentorScreenState extends State<EditProfileMentorScreen> {
     }
   }
 
+  void _addExperience() {
+    if (_formKey.currentState!.validate()) {
+      setState(() {
+        experiences.add({
+          'role': _roleController.text,
+          'experienceCompany': _experienceCompanyController.text
+        });
+        _roleController.clear();
+        _experienceCompanyController.clear();
+      });
+    }
+  }
+
   void _updateUserProfile() async {
     skills = _skills.map((skill) => skill['skill']!).toList();
     // Instance of ProfileService
     ProfileService profileService = ProfileService();
     await profileService.updateProfile(
       job: _jobController.text,
-      school: _schoolController.text,
+      company: _companyController.text,
       skills: skills,
       location: _locationController.text,
       about: _aboutController.text,
       linkedin: _linkedinController.text,
+      experiences: experiences,
     );
     // Handle post-update actions, like showing a confirmation dialog
   }
@@ -96,7 +142,7 @@ class _EditProfileMentorScreenState extends State<EditProfileMentorScreen> {
     _emailController.dispose();
     _nameController.dispose();
     _jobController.dispose();
-    _schoolController.dispose();
+    _companyController.dispose();
     _locationController.dispose();
     _aboutController.dispose();
     _linkedinController.dispose();
@@ -180,7 +226,7 @@ class _EditProfileMentorScreenState extends State<EditProfileMentorScreen> {
         ),
         _textFieldWithTitle(
           "School/University/Company",
-          _schoolController,
+          _companyController,
           "Enter Your School/University/Company",
           onChanged: (value) {
             setState(() {
@@ -212,6 +258,9 @@ class _EditProfileMentorScreenState extends State<EditProfileMentorScreen> {
             linkedin = value;
           });
         }),
+        const SizedBox(height: 12),
+        _experienceField(),
+        _experienceChips(),
       ],
     );
   }
@@ -254,6 +303,60 @@ class _EditProfileMentorScreenState extends State<EditProfileMentorScreen> {
           formKey: _formKey,
         ),
       ],
+    );
+  }
+
+  Widget _experienceField() {
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            TittleTextField(
+                title: "Experience", color: ColorStyle().secondaryColors),
+            TextButton.icon(
+              onPressed: _addExperience,
+              icon: const Icon(Icons.add, size: 16),
+              label: Text("Add Experience", style: FontFamily().regularText),
+            ),
+          ],
+        ),
+        TextFieldWidget(
+          controller: _roleController,
+          hintText: "Role",
+        ),
+        const SizedBox(height: 12),
+        TextFieldWidget(
+          controller: _experienceCompanyController,
+          hintText: "Company",
+        ),
+      ],
+    );
+  }
+
+  Widget _experienceChips() {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: experiences.map((exp) => _buildExperienceChip(exp)).toList(),
+      ),
+    );
+  }
+
+  Widget _buildExperienceChip(Map<String, String> exp) {
+    return Padding(
+      padding: const EdgeInsets.only(right: 12, top: 8),
+      child: Chip(
+        label: Text(
+          exp['role']! + " at " + exp['experienceCompany']!,
+          style: FontFamily().regularText.copyWith(color: Colors.white),
+        ),
+        backgroundColor: ColorStyle().primaryColors,
+        deleteIcon: const Icon(Icons.close, size: 12),
+        onDeleted: () {
+          setState(() => experiences.remove(exp));
+        },
+      ),
     );
   }
 
