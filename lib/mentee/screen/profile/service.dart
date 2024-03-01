@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:mentormatch_apps/mentee/model/profile_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileService {
@@ -7,11 +8,12 @@ class ProfileService {
 
   Future<void> updateProfile({
     required String job,
-    required String school,
+    required String company,
     required List<String> skills,
     required String location,
     required String about,
     required String linkedin,
+    required List<Map<String, String>> experiences,
   }) async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token') ?? '';
@@ -25,14 +27,15 @@ class ProfileService {
 
     try {
       final response = await dio.patch(
-        '$baseUrl/users/mentee/$id/profile', // Make sure this endpoint is correct
+        '$baseUrl/mentees/$id/profile', // Make sure this endpoint is correct
         data: {
           'job': job,
-          'school': school,
+          'company': company,
           'skills': skills,
           'location': location,
           'about': about,
           'linkedin': linkedin,
+          'experiences': experiences,
         },
       );
 
@@ -51,6 +54,20 @@ class ProfileService {
       }
     } catch (e) {
       print("Unexpected error: $e");
+    }
+  }
+
+  // get mentee profile
+
+  Future<MenteeProfile> getMenteeProfile() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? userId = prefs.getString('userId');
+    try {
+      final response = await dio.get("$baseUrl/mentees/$userId/profile");
+      // print('API response: ${response.data}');
+      return MenteeProfile.fromMap(response.data);
+    } catch (error) {
+      throw Exception("Failed to fetch Mentee: $error");
     }
   }
 }

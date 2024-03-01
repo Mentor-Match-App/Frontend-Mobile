@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mentormatch_apps/login-register/choose_role_service.dart';
+import 'package:mentormatch_apps/mentee/screen/profile/mentee_profile_screen.dart';
 import 'package:mentormatch_apps/mentor/screen/daftar_mentor/register_form.dart';
 import 'package:mentormatch_apps/widget/button.dart';
-
-import '../mentee/screen/profile/edit_profile_mentee_screen.dart';
 
 class ChooseRoleScreen extends StatefulWidget {
   ChooseRoleScreen({Key? key}) : super(key: key);
@@ -72,7 +71,7 @@ class _ChooseRoleScreenState extends State<ChooseRoleScreen> {
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) =>
-                                            EditProfileMenteeScreen(),
+                                            ProfileMenteeScreen(),
                                       ),
                                       (route) => false,
                                     );

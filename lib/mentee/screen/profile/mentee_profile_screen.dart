@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:mentormatch_apps/mentee/model/mentee.dart';
+import 'package:mentormatch_apps/mentee/model/profile_model.dart';
 import 'package:mentormatch_apps/mentee/screen/notification_mentee_screen.dart';
-import 'package:mentormatch_apps/mentee/screen/profile/mentee_service.dart';
+import 'package:mentormatch_apps/mentee/screen/profile/edit_profile_mentee_screen.dart';
+import 'package:mentormatch_apps/mentee/screen/profile/service.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
 import 'package:mentormatch_apps/style/text.dart';
@@ -26,7 +27,66 @@ class _ProfileMenteeScreenState extends State<ProfileMenteeScreen> {
     }
   }
 
-  final MenteeService menteeService = MenteeService();
+  @override
+  void initState() {
+    super.initState();
+    // Contoh memanggil fungsi load data di sini, sehingga setiap kali kembali ke halaman ini, data terbaru akan dimuat
+    _loadData();
+  }
+
+  void _loadData() async {
+    final profileData = await menteeService.getMenteeProfile();
+    setState(() {
+      // Update your state with the new profile data
+    });
+  }
+
+  void _navigateToEditProfile() async {
+    final mentor = await menteeService
+        .getMenteeProfile(); // Assuming you fetch the mentor profile here
+
+    if (!mounted) return; // Check if the widget is still in the widget tree
+
+    if (mentor != null && mentor.user != null) {
+      List<Map<String, String>> experiencesMaps = mentor.user!.experiences!
+          .where((experience) =>
+              experience.isCurrentJob ==
+              false) // Filter experiences where isCurrentJob is false
+          .map((experience) => {
+                "jobTitle": experience.jobTitle ?? '',
+
+                "company": experience.company ?? '',
+                // Add other fields as necessary
+              })
+          .toList();
+
+      // Navigate to EditProfileMentorScreen with the converted experiences
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => EditProfileMenteeScreen(
+            linkedin: mentor.user!.linkedin ?? '',
+            about: mentor.user!.about ?? '',
+            location: mentor.user!.location ?? '',
+            currentJob: mentor.user!.experiences
+                    ?.firstWhere((element) => element.isCurrentJob == true,
+                        orElse: () => Experience())
+                    .jobTitle ??
+                '',
+            currentCompany: mentor.user!.experiences
+                    ?.firstWhere((element) => element.isCurrentJob == true,
+                        orElse: () => Experience())
+                    .company ??
+                '',
+            experiences: experiencesMaps,
+            skills: mentor.user!.skills ?? [],
+          ),
+        ),
+      );
+    }
+  }
+
+  final ProfileService menteeService = ProfileService();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,9 +110,9 @@ class _ProfileMenteeScreenState extends State<ProfileMenteeScreen> {
           ],
         ),
       ),
-      body: FutureBuilder<Mentee>(
+      body: FutureBuilder<MenteeProfile>(
         future: menteeService
-            .fetchMentee(), // Call the asynchronous fetchMentee method here
+            .getMenteeProfile(), // Call the asynchronous fetchMentee method here
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(
@@ -88,36 +148,80 @@ class _ProfileMenteeScreenState extends State<ProfileMenteeScreen> {
                               imageUrl: mentee?.user!.photoUrl ?? '',
                             ),
                             SizedBox(
-                              height: 10,
-                            ),
-                            Text(
-                              mentee?.user!.name ?? '',
-                              style: FontFamily().boldText.copyWith(
-                                    fontSize: 16,
+                              height:
+                                  40, // Adjust the height to ensure enough space for the Stack
+                              child: Stack(
+                                children: [
+                                  Center(
+                                    child: Text(
+                                      mentee!.user?.name ?? '',
+                                      style: FontFamily().boldText.copyWith(
+                                            fontSize: 16,
+                                          ),
+                                    ),
                                   ),
-                            ),
-                            TextButton.icon(
-                              onPressed: () {},
-                              icon: Icon(
-                                Icons.location_on,
-                                color: ColorStyle().primaryColors,
+                                  Positioned(
+                                      right: 0,
+                                      top:
+                                          0, // Adjust as needed to position the edit icon correctly
+                                      child: IconButton(
+                                        icon: Icon(Icons.edit),
+                                        onPressed: _navigateToEditProfile,
+                                      )),
+                                ],
                               ),
-                              label: Text(
-                                mentee?.user!.location ?? '',
-                                style: FontFamily().regularText,
+                            ),
+                            Center(
+                              child: Row(
+                                mainAxisSize: MainAxisSize
+                                    .min, // This ensures the Row only takes up necessary space
+                                children: [
+                                  Icon(
+                                    Icons.work,
+                                    color: ColorStyle().primaryColors,
+                                  ),
+                                  SizedBox(
+                                      width:
+                                          8), // Provides a small gap between the icon and the text
+                                  Text(
+                                    "${mentee.user?.experiences?.firstWhere((element) => element.isCurrentJob == true).jobTitle ?? ""} at ${mentee.user?.experiences?.firstWhere((element) => element.isCurrentJob == true).company ?? ""}",
+                                    style: FontFamily().regularText,
+                                  ),
+                                ],
+                              ),
+                            ),
+
+// For Location Information Row
+                            Center(
+                              child: Row(
+                                mainAxisSize: MainAxisSize
+                                    .min, // This ensures the Row only takes up necessary space
+                                children: [
+                                  Icon(
+                                    Icons.location_on,
+                                    color: ColorStyle().primaryColors,
+                                  ),
+                                  SizedBox(
+                                      width:
+                                          8), // Provides a small gap between the icon and the text
+                                  Text(
+                                    mentee.user?.location ?? '',
+                                    style: FontFamily().regularText,
+                                  ),
+                                ],
                               ),
                             ),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 TitleProfile(
-                                  title: 'About',
+                                  title: "About",
                                   color: ColorStyle().primaryColors,
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.only(left: 12.0),
                                   child: Text(
-                                    mentee?.user!.about ?? '',
+                                    mentee.user?.about ?? '',
                                     style: FontFamily().regularText,
                                   ),
                                 ),
@@ -164,7 +268,7 @@ class _ProfileMenteeScreenState extends State<ProfileMenteeScreen> {
                                   color: ColorStyle().primaryColors,
                                 ),
                                 Column(
-                                  children: mentee?.user!.experiences
+                                  children: mentee.user!.experiences
                                           ?.map((experience) {
                                         return ExperienceWidget(
                                           role: experience.jobTitle ??
@@ -188,7 +292,7 @@ class _ProfileMenteeScreenState extends State<ProfileMenteeScreen> {
                               scrollDirection: Axis.horizontal,
                               child: Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
-                                  children: mentee?.user!.skills
+                                  children: mentee.user!.skills
                                           ?.map((skill) => SkillCard(
                                                 skill: skill,
                                               ))
