@@ -30,25 +30,24 @@ class _ProfileMenteeScreenState extends State<ProfileMenteeScreen> {
   @override
   void initState() {
     super.initState();
-    // Contoh memanggil fungsi load data di sini, sehingga setiap kali kembali ke halaman ini, data terbaru akan dimuat
     _loadData();
   }
 
   void _loadData() async {
     final profileData = await menteeService.getMenteeProfile();
-    setState(() {
-      // Update your state with the new profile data
-    });
+    setState(() {});
   }
 
+  final ProfileService menteeService = ProfileService();
+
   void _navigateToEditProfile() async {
-    final mentor = await menteeService
-        .getMenteeProfile(); // Assuming you fetch the mentor profile here
+    final mentee = await menteeService
+        .getMenteeProfile(); // Assuming you fetch the mentee profile here
 
     if (!mounted) return; // Check if the widget is still in the widget tree
 
-    if (mentor != null && mentor.user != null) {
-      List<Map<String, String>> experiencesMaps = mentor.user!.experiences!
+    if (mentee != null && mentee.user != null) {
+      List<Map<String, String>> experiencesMaps = mentee.user!.experiences!
           .where((experience) =>
               experience.isCurrentJob ==
               false) // Filter experiences where isCurrentJob is false
@@ -60,33 +59,32 @@ class _ProfileMenteeScreenState extends State<ProfileMenteeScreen> {
               })
           .toList();
 
-      // Navigate to EditProfileMentorScreen with the converted experiences
+      // Navigate to EditProfileMenteeScreen with the converted experiences
       Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => EditProfileMenteeScreen(
-            linkedin: mentor.user!.linkedin ?? '',
-            about: mentor.user!.about ?? '',
-            location: mentor.user!.location ?? '',
-            currentJob: mentor.user!.experiences
+            linkedin: mentee.user!.linkedin ?? '',
+            about: mentee.user!.about ?? '',
+            location: mentee.user!.location ?? '',
+            currentJob: mentee.user!.experiences
                     ?.firstWhere((element) => element.isCurrentJob == true,
                         orElse: () => Experience())
                     .jobTitle ??
                 '',
-            currentCompany: mentor.user!.experiences
+            currentCompany: mentee.user!.experiences
                     ?.firstWhere((element) => element.isCurrentJob == true,
                         orElse: () => Experience())
                     .company ??
                 '',
             experiences: experiencesMaps,
-            skills: mentor.user!.skills ?? [],
+            skills: mentee.user!.skills ?? [],
           ),
         ),
       );
     }
   }
 
-  final ProfileService menteeService = ProfileService();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -171,24 +169,51 @@ class _ProfileMenteeScreenState extends State<ProfileMenteeScreen> {
                                 ],
                               ),
                             ),
-                            Center(
-                              child: Row(
-                                mainAxisSize: MainAxisSize
-                                    .min, // This ensures the Row only takes up necessary space
-                                children: [
-                                  Icon(
-                                    Icons.work,
-                                    color: ColorStyle().primaryColors,
-                                  ),
-                                  SizedBox(
-                                      width:
-                                          8), // Provides a small gap between the icon and the text
-                                  Text(
-                                    "${mentee.user?.experiences?.firstWhere((element) => element.isCurrentJob == true).jobTitle ?? ""} at ${mentee.user?.experiences?.firstWhere((element) => element.isCurrentJob == true).company ?? ""}",
-                                    style: FontFamily().regularText,
-                                  ),
-                                ],
-                              ),
+                            Builder(
+                              builder: (context) {
+                                // Check if there are experiences and if any of them is marked as a current job.
+                                var hasCurrentJob = mentee.user?.experiences
+                                        ?.any((element) =>
+                                            element.isCurrentJob == true) ??
+                                    false;
+
+                                // Only display the Row widget if there is a current job experience.
+                                if (hasCurrentJob) {
+                                  var currentExperience =
+                                      mentee.user!.experiences!.firstWhere(
+                                    (element) => element.isCurrentJob == true,
+                                  );
+
+                                  String jobTitle =
+                                      currentExperience.jobTitle ??
+                                          "No Job Title";
+                                  String company =
+                                      currentExperience.company ?? "No Company";
+
+                                  return Center(
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize
+                                          .min, // Ensures the Row only takes up necessary space
+                                      children: [
+                                        Icon(
+                                          Icons.work,
+                                          color: ColorStyle().primaryColors,
+                                        ),
+                                        SizedBox(
+                                            width:
+                                                8), // Provides a small gap between the icon and the text
+                                        Text(
+                                          "$jobTitle at $company",
+                                          style: FontFamily().regularText,
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                } else {
+                                  // Return an empty Container if there's no current job experience.
+                                  return Container();
+                                }
+                              },
                             ),
 
 // For Location Information Row
@@ -269,7 +294,9 @@ class _ProfileMenteeScreenState extends State<ProfileMenteeScreen> {
                                 ),
                                 Column(
                                   children: mentee.user!.experiences
-                                          ?.map((experience) {
+                                          ?.where((experience) =>
+                                              experience.isCurrentJob == false)
+                                          .map((experience) {
                                         return ExperienceWidget(
                                           role: experience.jobTitle ??
                                               'No Job Title',
@@ -277,7 +304,9 @@ class _ProfileMenteeScreenState extends State<ProfileMenteeScreen> {
                                               'No Company',
                                         );
                                       }).toList() ??
-                                      [Text('No experiences')],
+                                      [
+                                        Text('No experiences')
+                                      ], // Jika tidak ada pengalaman atau list kosong, tampilkan 'No experiences'
                                 )
                               ],
                             ),

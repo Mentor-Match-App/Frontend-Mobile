@@ -64,7 +64,6 @@ class ProfileService {
     String? userId = prefs.getString('userId');
     try {
       final response = await dio.get("$baseUrl/mentees/$userId/profile");
-      // print('API response: ${response.data}');
       return MenteeProfile.fromMap(response.data);
     } catch (error) {
       throw Exception("Failed to fetch Mentee: $error");

@@ -31,15 +31,12 @@ class _MentorProfileScreenState extends State<MentorProfileScreen> {
   @override
   void initState() {
     super.initState();
-    // Contoh memanggil fungsi load data di sini, sehingga setiap kali kembali ke halaman ini, data terbaru akan dimuat
     _loadData();
   }
 
   void _loadData() async {
     final profileData = await mentorService.getMentorProfile();
-    setState(() {
-      // Update your state with the new profile data
-    });
+    setState(() {});
   }
 
   final ProfileService mentorService = ProfileService();
@@ -255,7 +252,9 @@ class _MentorProfileScreenState extends State<MentorProfileScreen> {
                                 ),
                                 Column(
                                   children: mentor.user!.experiences
-                                          ?.map((experience) {
+                                          ?.where((experience) =>
+                                              experience.isCurrentJob == false)
+                                          .map((experience) {
                                         return ExperienceWidget(
                                           role: experience.jobTitle ??
                                               'No Job Title',

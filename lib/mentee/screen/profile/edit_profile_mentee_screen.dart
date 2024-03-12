@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mentormatch_apps/mentee/screen/profile/mentee_profile_screen.dart';
+import 'package:mentormatch_apps/mentee/screen/bottom_mentee_screen.dart';
 import 'package:mentormatch_apps/mentee/screen/profile/service.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
@@ -54,7 +54,7 @@ class _EditProfileMenteeScreenState extends State<EditProfileMenteeScreen> {
   String _name = "";
   String _photoUrl = "";
   String job = '';
-  String school = '';
+  String company = '';
   List<String> skills = []; // Consider how you'll collect and manage list input
   String location = '';
   String about = '';
@@ -70,7 +70,6 @@ class _EditProfileMenteeScreenState extends State<EditProfileMenteeScreen> {
     _locationController.text = widget.location;
     _jobController.text = widget.currentJob;
     _companyController.text = widget.currentCompany;
-    // Saring dan ubah experiences
     experiences = widget.experiences
         .map((exp) =>
             {'role': exp['jobTitle']!, 'experienceCompany': exp['company']!})
@@ -78,11 +77,6 @@ class _EditProfileMenteeScreenState extends State<EditProfileMenteeScreen> {
     _loadProfileData();
     _emailController.text = _email;
     _nameController.text = _name;
-    // _jobController.text = job;
-    // _schoolController.text = school;
-    // _locationController.text = location;
-    // _aboutController.text = about;
-    // _linkedinController.text = linkedin;
   }
 
   Future<void> _loadProfileData() async {
@@ -92,7 +86,6 @@ class _EditProfileMenteeScreenState extends State<EditProfileMenteeScreen> {
       _name = prefs.getString('name') ?? "";
       _photoUrl = prefs.getString('photoUrl') ?? "";
 
-      // Update the controllers with the fetched values
       _emailController.text = _email;
       _nameController.text = _name;
     });
@@ -230,7 +223,7 @@ class _EditProfileMenteeScreenState extends State<EditProfileMenteeScreen> {
           "Enter Your School/University/Company",
           onChanged: (value) {
             setState(() {
-              school = value;
+              company = value;
             });
           },
         ),
@@ -381,7 +374,8 @@ class _EditProfileMenteeScreenState extends State<EditProfileMenteeScreen> {
 
             Navigator.pushAndRemoveUntil(
                 context,
-                MaterialPageRoute(builder: (context) => ProfileMenteeScreen()),
+                MaterialPageRoute(
+                    builder: (context) => BottomNavbarMenteeScreen()),
                 (route) => false);
           }
         });
