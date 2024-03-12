@@ -43,76 +43,62 @@ class _AllSDScreenState extends State<AllSDScreen> {
             itemCount: mentors.length,
             itemBuilder: (context, index) {
               final mentor = mentors[index];
-              // Assuming `isAvailable` is a boolean property of mentorClass
-              final bool isClassAvailable = mentor.mentorClass?.isAvailable ??
-                  false; // Default to false if null
-
-              // Determine the button color based on the availability of the class
-              final Color buttonColor = isClassAvailable
-                  ? ColorStyle().primaryColors
-                  : ColorStyle().disableColors;
-
-              final currentExperience = mentor.experiences!.firstWhere(
-                (experience) => experience.isCurrentJob ?? false,
-                orElse: () =>
-                    Experience(), // Provide a default Experience if not found
+              // create for experience is current job true or false
+              ExperienceSD? currentJob = mentor.experiences?.firstWhere(
+                (exp) => exp.isCurrentJob ?? false,
+                orElse: () => ExperienceSD(),
               );
 
+              /// if all class is active ///
+              bool areAllClassesActive(List<ClassMentorSD>? classes) {
+                if (classes == null || classes.isEmpty) {
+                  return false;
+                }
+                // Mengembalikan true jika semua kelas memiliki isActive == true
+                return classes
+                    .every((classMentor) => classMentor.isActive == true);
+              }
+
+              bool allClassesActive = areAllClassesActive(mentor.mentorClass);
+              Color buttonColor = allClassesActive
+                  ? ColorStyle().disableColors
+                  : ColorStyle().primaryColors;
+              String company = currentJob?.company ?? 'Placeholder Company';
+              String jobTitle = currentJob?.jobTitle ?? 'Placeholder Job';
               return Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: CardItemMentor(
-                  color:
-                      buttonColor, // Use the determined color based on class availability
-                  onPressesd: isClassAvailable
-                      ? () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => DetailMentorSDScreen(
-                                classid: mentor.mentorClass!.id ?? "",
-                                periode:
-                                    mentor.mentorClass?.durationInDays ?? 0,
-                                reviews: mentor.mentorReviews ?? [],
-                                namakelas: mentor.mentorClass?.name ?? "",
-                                about: mentor.about ?? "",
-                                name: mentor.name ?? "",
-                                photoUrl: mentor.photoUrl ?? "",
-                                job: mentor.experiences
-                                        ?.firstWhere(
-                                            (exp) => exp.isCurrentJob == true,
-                                            orElse: () => Experience(
-                                                jobTitle: "", company: ""))
-                                        .jobTitle ??
-                                    "",
-                                company: mentor.experiences
-                                        ?.firstWhere(
-                                            (exp) => exp.isCurrentJob == true,
-                                            orElse: () => Experience(
-                                                jobTitle: "", company: ""))
-                                        .company ??
-                                    "",
-                                email: mentor.email ?? "",
-                                linkedin: mentor.linkedin ?? "",
-                                skills: mentor.skills ?? [],
-                                location: mentor.location ?? "",
-                                description:
-                                    mentor.mentorClass?.description ?? "",
-                                terms: mentor.mentorClass?.terms ?? [],
-                                price: mentor.mentorClass?.price ?? 0,
-                                mentor: mentor,
-                              ),
-                            ),
-                          );
-                        }
-                      : () => null,
+                  color: buttonColor,
+                 onPressesd: allClassesActive ?() {} : (){
+                  Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => DetailMentorSDScreen(
+                            
+                            experiences: mentor.experiences ?? [],
+                            email: mentor.email ?? '',
+                            classes: mentor.mentorClass ?? [],
+                            about: mentor.about ?? '',
+                            name: mentor.name ?? 'No Name',
+                            photoUrl: mentor.photoUrl ?? '',
+                            skills: mentor.skills ?? [],
+                            classid: mentor.id.toString(),
+                            company: company,
+                            job: jobTitle,
+                            linkedin: mentor.linkedin ?? '',
+                            mentor: mentor,
+                            location: mentor.location ?? '',
+                          ),
+                        ),
+                      );
+                    } , // Jika semua kelas aktif, tidak melakukan apa-apa
                   imagePath: mentor.photoUrl.toString(),
                   name: mentor.name ?? 'No Name',
-                  job: currentExperience.jobTitle ?? '',
-                  company: currentExperience.company ?? 'Placeholder Company',
+                  job: jobTitle,
+                  company: company,
                 ),
               );
             },
-
             shrinkWrap: true,
             physics:
                 ScrollPhysics(), // Allows scrolling within a SingleChildScrollView

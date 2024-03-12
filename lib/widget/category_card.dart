@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
+import 'package:mentormatch_apps/style/text.dart';
 
 class CategoriCardWidget extends StatefulWidget {
   final bool isActive;
@@ -81,3 +82,103 @@ class _SkillCardState extends State<SkillCard> {
     );
   }
 }
+
+class CardMyClass extends StatefulWidget {
+  final String messsage;
+  final String title;
+  final String icon;
+  final VoidCallback? onTap;
+  CardMyClass(
+      {Key? key,
+      required this.title,
+      required this.icon,
+      this.onTap,
+      required this.messsage})
+      : super(key: key);
+
+  @override
+  State<CardMyClass> createState() => _CardMyClassState();
+}
+
+class _CardMyClassState extends State<CardMyClass> {
+  @override
+  Widget build(BuildContext context) {
+    return Tooltip(
+      message: widget.messsage,
+      child: Container(
+        width: 89,
+        height: 89,
+        decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              color: ColorStyle().disableColors,
+              blurRadius: 10,
+              offset: const Offset(2, 4),
+            ),
+          ],
+          borderRadius: BorderRadius.circular(12),
+          color: ColorStyle().primaryColors,
+        ),
+        child: InkWell(
+          onTap: widget.onTap,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset(
+                widget.icon,
+              ),
+              // Add space between image and text
+              const SizedBox(height: 4),
+              Text(
+                widget.title,
+                style: FontFamily().boldText.copyWith(
+                      fontSize: 12,
+                      color: ColorStyle().whiteColors,
+                    ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class InterestCardMentor extends StatefulWidget {
+  final String title;
+  final String icon;
+  InterestCardMentor({Key? key, required this.title, required this.icon})
+      : super(key: key);
+
+  @override
+  State<InterestCardMentor> createState() => _InterestCardMentorState();
+}
+
+class _InterestCardMentorState extends State<InterestCardMentor> {
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: SizedBox(
+        width: 80,
+        height: 100,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset(widget.icon, width: 60),
+            // Add space between image and text
+            const SizedBox(height: 4),
+            Text(
+              widget.title,
+              style: FontFamily().regularText.copyWith(
+                    fontSize: 12,
+                    color: ColorStyle().secondaryColors,
+                  ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+

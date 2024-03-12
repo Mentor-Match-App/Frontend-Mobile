@@ -44,9 +44,11 @@ class MentorKarier {
     String? portofolio;
     String? photoUrl;
     String? about;
-    Class? mentorClass;
-    List<MentorReview>? mentorReviews;
-    List<Experience>? experiences;
+    dynamic accountNumber;
+    dynamic accountName;
+    List<ClassMentorKarier>? mentorClass;
+    List<dynamic>? mentorReviews;
+    List<ExperienceKarier>? experiences;
 
     MentorKarier({
         this.id,
@@ -60,6 +62,8 @@ class MentorKarier {
         this.portofolio,
         this.photoUrl,
         this.about,
+        this.accountNumber,
+        this.accountName,
         this.mentorClass,
         this.mentorReviews,
         this.experiences,
@@ -77,9 +81,11 @@ class MentorKarier {
         portofolio: json["portofolio"],
         photoUrl: json["photoUrl"],
         about: json["about"],
-        mentorClass: json["class"] == null ? null : Class.fromMap(json["class"]),
-        mentorReviews: json["mentorReviews"] == null ? [] : List<MentorReview>.from(json["mentorReviews"]!.map((x) => MentorReview.fromMap(x))),
-        experiences: json["experiences"] == null ? [] : List<Experience>.from(json["experiences"]!.map((x) => Experience.fromMap(x))),
+        accountNumber: json["accountNumber"],
+        accountName: json["accountName"],
+        mentorClass: json["class"] == null ? [] : List<ClassMentorKarier>.from(json["class"]!.map((x) => ClassMentorKarier.fromMap(x))),
+        mentorReviews: json["mentorReviews"] == null ? [] : List<dynamic>.from(json["mentorReviews"]!.map((x) => x)),
+        experiences: json["experiences"] == null ? [] : List<ExperienceKarier>.from(json["experiences"]!.map((x) => ExperienceKarier.fromMap(x))),
     );
 
     Map<String, dynamic> toMap() => {
@@ -94,20 +100,22 @@ class MentorKarier {
         "portofolio": portofolio,
         "photoUrl": photoUrl,
         "about": about,
-        "class": mentorClass?.toMap(),
-         "mentorReviews": mentorReviews == null ? [] : List<dynamic>.from(mentorReviews!.map((x) => x.toMap())),
+        "accountNumber": accountNumber,
+        "accountName": accountName,
+        "class": mentorClass == null ? [] : List<dynamic>.from(mentorClass!.map((x) => x.toMap())),
+        "mentorReviews": mentorReviews == null ? [] : List<dynamic>.from(mentorReviews!.map((x) => x)),
         "experiences": experiences == null ? [] : List<dynamic>.from(experiences!.map((x) => x.toMap())),
     };
 }
 
-class Experience {
+class ExperienceKarier {
     String? id;
     String? userId;
     bool? isCurrentJob;
     String? company;
     String? jobTitle;
 
-    Experience({
+    ExperienceKarier({
         this.id,
         this.userId,
         this.isCurrentJob,
@@ -115,7 +123,7 @@ class Experience {
         this.jobTitle,
     });
 
-    factory Experience.fromMap(Map<String, dynamic> json) => Experience(
+    factory ExperienceKarier.fromMap(Map<String, dynamic> json) => ExperienceKarier(
         id: json["id"],
         userId: json["userId"],
         isCurrentJob: json["isCurrentJob"],
@@ -132,7 +140,7 @@ class Experience {
     };
 }
 
-class Class {
+class ClassMentorKarier {
     String? id;
     String? mentorId;
     String? educationLevel;
@@ -140,14 +148,22 @@ class Class {
     String? name;
     String? description;
     List<String>? terms;
+    List<String>? targetLearning;
     int? price;
     bool? isActive;
     bool? isAvailable;
     bool? isVerified;
+    String? startDate;
+    String? endDate;
+    String? schedule;
     int? durationInDays;
+    String? location;
+    dynamic address;
+    int? maxParticipants;
     dynamic zoomLink;
+    List<TransactionKarier>? transactions;
 
-    Class({
+    ClassMentorKarier({
         this.id,
         this.mentorId,
         this.educationLevel,
@@ -155,15 +171,23 @@ class Class {
         this.name,
         this.description,
         this.terms,
+        this.targetLearning,
         this.price,
         this.isActive,
         this.isAvailable,
         this.isVerified,
+        this.startDate,
+        this.endDate,
+        this.schedule,
         this.durationInDays,
+        this.location,
+        this.address,
+        this.maxParticipants,
         this.zoomLink,
+        this.transactions,
     });
 
-    factory Class.fromMap(Map<String, dynamic> json) => Class(
+    factory ClassMentorKarier.fromMap(Map<String, dynamic> json) => ClassMentorKarier(
         id: json["id"],
         mentorId: json["mentorId"],
         educationLevel: json["educationLevel"],
@@ -171,12 +195,20 @@ class Class {
         name: json["name"],
         description: json["description"],
         terms: json["terms"] == null ? [] : List<String>.from(json["terms"]!.map((x) => x)),
+       targetLearning: json["targetLearning"] == null ? [] : List<String>.from(json["targetLearning"]!.map((x) => x)),
         price: json["price"],
         isActive: json["isActive"],
         isAvailable: json["isAvailable"],
         isVerified: json["isVerified"],
+        startDate: json["startDate"],
+        endDate: json["endDate"],
+        schedule: json["schedule"],
         durationInDays: json["durationInDays"],
+        location: json["location"],
+        address: json["address"],
+        maxParticipants: json["maxParticipants"],
         zoomLink: json["zoomLink"],
+        transactions: json["transactions"] == null ? [] : List<TransactionKarier>.from(json["transactions"]!.map((x) => TransactionKarier.fromMap(x))),
     );
 
     Map<String, dynamic> toMap() => {
@@ -187,24 +219,71 @@ class Class {
         "name": name,
         "description": description,
         "terms": terms == null ? [] : List<dynamic>.from(terms!.map((x) => x)),
+        "targetLearning": targetLearning == null ? [] : List<dynamic>.from(targetLearning!.map((x) => x)),
         "price": price,
         "isActive": isActive,
         "isAvailable": isAvailable,
         "isVerified": isVerified,
+        "startDate": startDate,
+        "endDate": endDate,
+        "schedule": schedule,
         "durationInDays": durationInDays,
+        "location": location,
+        "address": address,
+        "maxParticipants": maxParticipants,
         "zoomLink": zoomLink,
+        "transactions": transactions == null ? [] : List<dynamic>.from(transactions!.map((x) => x.toMap())),
     };
 }
 
+class TransactionKarier {
+    String? id;
+    String? classId;
+    String? createdAt;
+    int? uniqueCode;
+    String? paymentStatus;
+    String? expired;
+    String? userId;
 
-class MentorReview {
+    TransactionKarier({
+        this.id,
+        this.classId,
+        this.createdAt,
+        this.uniqueCode,
+        this.paymentStatus,
+        this.expired,
+        this.userId,
+    });
+
+    factory TransactionKarier.fromMap(Map<String, dynamic> json) => TransactionKarier(
+        id: json["id"],
+        classId: json["classId"],
+        createdAt: json["createdAt"],
+        uniqueCode: json["uniqueCode"],
+        paymentStatus: json["paymentStatus"],
+        expired: json["expired"],
+        userId: json["userId"],
+    );
+
+    Map<String, dynamic> toMap() => {
+        "id": id,
+        "classId": classId,
+        "createdAt": createdAt,
+        "uniqueCode": uniqueCode,
+        "paymentStatus": paymentStatus,
+        "expired": expired,
+        "userId": userId,
+    };
+}
+
+class MentorRevieKarier {
     String? id;
     String? reviewerId;
     String? mentorId;
     String? content;
     String? reviewer;
 
-    MentorReview({
+    MentorRevieKarier({
         this.id,
         this.reviewerId,
         this.mentorId,
@@ -212,7 +291,7 @@ class MentorReview {
         this.reviewer,
     });
 
-    factory MentorReview.fromMap(Map<String, dynamic> json) => MentorReview(
+    factory MentorRevieKarier.fromMap(Map<String, dynamic> json) => MentorRevieKarier(
         id: json["id"],
         reviewerId: json["reviewerId"],
         mentorId: json["mentorId"],

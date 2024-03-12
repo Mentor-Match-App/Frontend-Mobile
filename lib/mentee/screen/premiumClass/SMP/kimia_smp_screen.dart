@@ -32,11 +32,10 @@ class _KimiaSMPScreenState extends State<KimiaSMPScreen> {
           return Center(child: Text('Error: ${snapshot.error}'));
         } else if (snapshot.hasData) {
           final mentorsWithLanguageCategory = snapshot.data!.mentors!
-              .where((mentor) => mentor.mentorClass?.category == "Kimia")
+              .where((mentor) => mentor.mentorClass!
+                  .any((mentorClass) => mentorClass.category == 'Kimia'))
               .toList();
-
-        
-          return GridView.builder(
+           return GridView.builder(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               childAspectRatio: 3 / 5,
@@ -47,64 +46,59 @@ class _KimiaSMPScreenState extends State<KimiaSMPScreen> {
             itemBuilder: (context, index) {
               final mentor = mentorsWithLanguageCategory[index];
               // Logika untuk menentukan currentExperience sama seperti sebelumnya
-              final currentExperience = mentor.experiences!.firstWhere(
-                (experience) => experience.isCurrentJob ?? false,
-                orElse: () =>
-                    Experience(), // Menyediakan default Experience jika tidak ditemukan
+              ExperienceSMP? currentJob = mentor.experiences?.firstWhere(
+                (exp) => exp.isCurrentJob ?? false,
+                orElse: () => ExperienceSMP(),
               );
-              final bool isClassAvailable = mentor.mentorClass?.isAvailable ??
-                  false; // Default to false if null
-              final Color buttonColor = isClassAvailable
-                  ? ColorStyle().primaryColors
-                  : ColorStyle().disableColors;
-              return CardItemMentor(
-                color:
-                    buttonColor, // Use the determined color based on class availability
-                onPressesd: isClassAvailable
-                    ? () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => DetailMentorSMPScreen(
-                              classid: mentor.mentorClass!.id ?? "",
-                              periode: mentor.mentorClass?.durationInDays ?? 0,
-                              reviews: mentor.mentorReviews ?? [],
-                              namakelas: mentor.mentorClass?.name ?? "",
-                              about: mentor.about ?? "",
-                              name: mentor.name ?? "",
-                              photoUrl: mentor.photoUrl ?? "",
-                              job: mentor.experiences
-                                      ?.firstWhere(
-                                          (exp) => exp.isCurrentJob == true,
-                                          orElse: () => Experience(
-                                              jobTitle: "", company: ""))
-                                      .jobTitle ??
-                                  "",
-                              company: mentor.experiences
-                                      ?.firstWhere(
-                                          (exp) => exp.isCurrentJob == true,
-                                          orElse: () => Experience(
-                                              jobTitle: "", company: ""))
-                                      .company ??
-                                  "",
-                              email: mentor.email ?? "",
-                              linkedin: mentor.linkedin ?? "",
-                              skills: mentor.skills ?? [],
-                              location: mentor.location ?? "",
-                              description:
-                                  mentor.mentorClass?.description ?? "",
-                              terms: mentor.mentorClass?.terms ?? [],
-                              price: mentor.mentorClass?.price ?? 0,
-                              mentor: mentor,
-                            ),
-                          ),
-                        );
-                      }
-                    : () => null,
-                imagePath: mentor.photoUrl.toString(),
-                name: mentor.name ?? 'No Name',
-                job: currentExperience.jobTitle ?? '',
-                company: currentExperience.company ?? 'Placeholder Company',
+
+                              /// if all class is active ///
+              bool areAllClassesActive(List<ClassMentorSMP>? classes) {
+                if (classes == null || classes.isEmpty) {
+                  return false;
+                }
+                // Mengembalikan true jika semua kelas memiliki isActive == true
+                return classes
+                    .every((classMentor) => classMentor.isActive == true);
+              }
+
+              bool allClassesActive = areAllClassesActive(mentor.mentorClass);
+              Color buttonColor = allClassesActive
+                  ? ColorStyle().disableColors
+                  : ColorStyle().primaryColors;
+              String company = currentJob?.company ?? 'Placeholder Company';
+              String jobTitle = currentJob?.jobTitle ?? 'Placeholder Job';
+              return Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: CardItemMentor(
+                  color:
+                      buttonColor,
+                  onPressesd: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => DetailMentorSMPScreen(
+                          experiences: mentor.experiences ?? [],
+                          email: mentor.email ?? '',
+                          classes: mentor.mentorClass ?? [],
+                          about: mentor.about ?? '',
+                          name: mentor.name ?? 'No Name',
+                          photoUrl: mentor.photoUrl ?? '',
+                          skills: mentor.skills ?? [],
+                          classid: mentor.id.toString(),
+                          company: company,
+                          job: jobTitle,
+                          linkedin: mentor.linkedin ?? '',
+                          mentor: mentor,
+                          location: mentor.location ?? '',
+                        ),
+                      ),
+                    );
+                  },
+                  imagePath: mentor.photoUrl.toString(),
+                  name: mentor.name ?? 'No Name',
+                  job: jobTitle,
+                  company: company,
+                ),
               );
             },
             shrinkWrap: true,
@@ -118,4 +112,3 @@ class _KimiaSMPScreenState extends State<KimiaSMPScreen> {
     );
   }
 }
-

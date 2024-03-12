@@ -1,20 +1,45 @@
 import 'package:flutter/material.dart';
-import 'package:mentormatch_apps/mentee/screen/MyClassMentee/Detail_myClass_mentee_screen.dart';
+import 'package:mentormatch_apps/mentee/provider/review_mentor_provider.dart';
 import 'package:mentormatch_apps/mentee/screen/bottom_mentee_screen.dart';
+import 'package:mentormatch_apps/preferences/%20preferences_helper.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
 import 'package:mentormatch_apps/widget/button.dart';
+import 'package:provider/provider.dart';
 
 class ReviewMentorScreen extends StatefulWidget {
-  ReviewMentorScreen({Key? key}) : super(key: key);
+  final String mentorId;
+  final String mentorPhoto;
+  final String mentorName;
+  final String className;
+  final int classPeriode;
+  ReviewMentorScreen(
+      {Key? key,
+      required this.mentorName,
+      required this.className,
+      required this.classPeriode,
+      required this.mentorPhoto,
+      required this.mentorId})
+      : super(key: key);
 
   @override
   State<ReviewMentorScreen> createState() => _ReviewMentorScreenState();
 }
 
 class _ReviewMentorScreenState extends State<ReviewMentorScreen> {
+  final TextEditingController _reviewController = TextEditingController();
+
+  @override
+  void dispose() {
+    // Membersihkan controller ketika state object dihancurkan
+    _reviewController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
+    final reviewProvider = Provider.of<ReviewProvider>(context, listen: false);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Review Mentor'),
@@ -23,19 +48,69 @@ class _ReviewMentorScreenState extends State<ReviewMentorScreen> {
         child: Padding(
           padding: EdgeInsets.all(20),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Image.asset("assets/Handoff/ilustrator/review.png"),
-              Align(
-                alignment: Alignment.topCenter,
-                child: Text(
-                    textAlign: TextAlign.center,
-                    "Halo Charline, pastikan memberikan review setelah menyelesaikan program ini. Ingat, satu rewiew saja di akhir program. Gunakan kata-kata dengan bijak dalam memberikan ulasan. Nama dan ulasanmu akan terlihat di profil mentor. Terima kasih!",
-                    style: FontFamily().regularText),
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(
+                    color: ColorStyle().tertiaryColors, // Warna border
+                    width: 1, // Lebar border
+                  ),
+                  color: Colors
+                      .transparent, // Warna bagian dalam, bisa diatur menjadi transparent atau null
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Column(
+                    children: [
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          ClipOval(
+                            child: Image.network(
+                              widget.mentorPhoto.toString(),
+                              fit: BoxFit.cover,
+                              width: 98,
+                              height: 98,
+                            ),
+                          ),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  widget.mentorName ?? '',
+                                  style: FontFamily().boldText.copyWith(
+                                      fontSize: 14,
+                                      color: ColorStyle().primaryColors),
+                                ),
+                                const SizedBox(height: 12),
+                                Text(
+                                  'Mentor : ${widget.mentorName}',
+                                  style: FontFamily().regularText,
+                                ),
+                                Text(
+                                  'Durasi : ${widget.classPeriode} Hari',
+                                  style: FontFamily().regularText,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
               ),
               const SizedBox(
-                height: 20,
+                height: 12,
               ),
               TextFormField(
+                controller: _reviewController,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
@@ -45,43 +120,69 @@ class _ReviewMentorScreenState extends State<ReviewMentorScreen> {
                 ),
                 maxLines: 5,
               ),
+              Text(
+                "Gunakan kata yang baik dan sopan, nama dan identitas kamu akan tersimpan dalam profile mentor",
+                style: FontFamily().regularText,
+              ),
               const SizedBox(
-                height: 20,
+                height: 12,
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   SmallOutlinedButton(
-                    height: 32,
-                    width: 120,
+                    width: 150,
+                    height: 38,
                     title: "Batal",
                     style: FontFamily().buttonText.copyWith(
                           fontSize: 12,
                           color: ColorStyle().primaryColors,
                         ),
                     onPressed: () {
-                      // Gantikan halaman saat ini dengan BottomNavbarScreen
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => DetailMyClassMenteeScreen()));
+                      Navigator.pop(context);
                     },
                   ),
                   SmallElevatedButton(
-                    height: 32,
-                    width: 120,
+                    width: 150,
+                    height: 38,
                     title: "Kirim",
                     style: FontFamily().buttonText.copyWith(
                           fontSize: 12,
                           color: ColorStyle().whiteColors,
                         ),
-                    onPressed: () {
+                    onPressed: () async {
+                      // Pastikan untuk mendapatkan userId dengan cara yang benar
+                      final userId = await UserPreferences
+                          .getUserId(); // Pastikan ini asynchronous call
+                      if (userId == null) {
+                        // Handle user belum login
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                              content:
+                                  Text('Anda harus login terlebih dahulu.')),
+                        );
+                        return;
+                      }
+
+                      String message = await reviewProvider.sendReview(
+                          _reviewController.text,
+                          userId,
+                          widget.mentorId,
+                          context);
+
+                      // Menunggu Flushbar ditampilkan selama beberapa detik sebelum navigasi
+                      // ignore: prefer_const_constructors
+                      await Future.delayed(Duration(
+                          seconds:
+                              3)); // Sesuaikan durasi dengan durasi Flushbar
+
+                      // Navigasi ke halaman baru
+                      // ignore: use_build_context_synchronously
                       Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => BottomNavbarMenteeScreen(),
-                        ),
-                        (route) => false,
+                            builder: (context) => BottomNavbarMenteeScreen()),
+                        (Route<dynamic> route) => false,
                       );
                     },
                   ),
@@ -93,4 +194,6 @@ class _ReviewMentorScreenState extends State<ReviewMentorScreen> {
       ),
     );
   }
+
+  // buat dengan showTopSnackBar apabila review berhaisl dikirim
 }

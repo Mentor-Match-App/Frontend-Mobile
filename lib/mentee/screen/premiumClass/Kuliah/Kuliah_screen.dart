@@ -267,7 +267,7 @@ class _KuliahScreenState extends State<KuliahScreen> {
                                 : isDesignActive
                                     ? DesignKuliahScreen()
                                     : isElektroActive
-                                        ? ElectroKuliahScreen()
+                                        ?  ElectroKuliahScreen()
                                         : isInformationActive
                                             ? InformationKuliahScreen()
                                             : isManajemenActive

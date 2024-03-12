@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:mentormatch_apps/mentee/screen/premiumClass/detail_booking_premium_class_screen.dart';
-import 'package:mentormatch_apps/mentee/service/bookingClass/bookclass_service.dart';
-import 'package:mentormatch_apps/mentee/service/bookingClass/bookclass_model.dart';
+import 'package:mentormatch_apps/mentee/screen/premiumClass/SD/detail_class_mentor_SD_screen.dart';
 import 'package:mentormatch_apps/mentor/model/category_SD_model.dart';
-import 'package:mentormatch_apps/preferences/%20preferences_helper.dart';
+
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
 import 'package:mentormatch_apps/style/text.dart';
@@ -17,11 +14,14 @@ import 'package:mentormatch_apps/widget/review_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DetailMentorSDScreen extends StatefulWidget {
+  //  final List<Experience> description;
+  final List<TransactionSD>? transaction;
+  final List<ExperienceSD> experiences;
   final String classid;
-  final int periode;
-  final List<MentorReview>? reviews;
-  final int price;
-  final String namakelas;
+  // final int periode;
+  final List<MentorReviewSD>? reviews;
+  // final int price;
+  final List<ClassMentorSD>? classes;
   final String about;
   final String photoUrl;
   final String name;
@@ -31,16 +31,17 @@ class DetailMentorSDScreen extends StatefulWidget {
   final String linkedin;
   final List<String> skills;
   final String location;
-  final String description;
-  final List<String> terms;
+
+  // final List<String> terms;
   final MentorSD mentor;
   DetailMentorSDScreen(
       {Key? key,
+      required this.experiences,
       required this.classid,
-      required this.periode,
+      // required this.periode,
       this.reviews,
-      required this.price,
-      required this.namakelas,
+      // required this.price,
+      required this.classes,
       required this.about,
       required this.photoUrl,
       required this.name,
@@ -50,8 +51,9 @@ class DetailMentorSDScreen extends StatefulWidget {
       required this.linkedin,
       required this.skills,
       required this.location,
-      required this.description,
-      required this.terms,
+      this.transaction,
+      // required this.description,
+      // required this.terms,
       required this.mentor})
       : super(key: key);
 
@@ -200,65 +202,99 @@ class _DetailMentorSDScreenState extends State<DetailMentorSDScreen> {
                       const SizedBox(
                         height: 12,
                       ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          TitleProfile(
-                            title: widget.namakelas,
-                            color: ColorStyle().primaryColors,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 12.0),
-                            child: Text(
-                              widget.description,
-                              style: FontFamily().regularText,
-                            ),
-                          ),
-                        ],
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          TitleProfile(
-                            title: 'Syarat & Ketentuan Kelas',
-                            color: ColorStyle().primaryColors,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 12.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: widget.mentor.mentorClass?.terms
-                                      ?.asMap()
-                                      .entries
-                                      .map<Widget>((entry) {
-                                    int index = entry.key;
-                                    String term = entry.value;
-                                    return Padding(
-                                      padding: const EdgeInsets.only(
-                                          bottom:
-                                              8.0), // Tambahkan sedikit ruang antar baris
-                                      child: Text(
-                                        "${index + 1}.  $term", // Menambahkan indeks + 1 untuk membuat nomor urutan dimulai dari 1
-                                        style: FontFamily().regularText,
-                                      ),
-                                    );
-                                  }).toList() ??
-                                  [
-                                    Text("No terms available",
-                                        style: FontFamily().regularText)
-                                  ],
-                            ),
-                          ),
-                        ],
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: TitleProfile(
+                          title: 'Program yang di tawarkan',
+                          color: ColorStyle().primaryColors,
+                        ),
                       ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: ElevatedButtonWidget(
-                          onPressed: () {
-                            _showDialog(context);
-                          },
-                          title:
-                              "${NumberFormat.currency(locale: 'id', symbol: 'Rp').format(widget.price)}",
+                        child: Column(
+                          children: widget.classes?.map((kelas) {
+                                int getApprovedTransactionCount(
+                                    ClassMentorSD kelas) {
+                                  int count = kelas.transactions
+                                          ?.where((t) =>
+                                              t.paymentStatus == "Approved")
+                                          .length ??
+                                      0;
+                                  print(
+                                      "Kelas: ${kelas.name}, Transaksi Approved: $count");
+                                  return count;
+                                }
+
+                                int approvedTransactions =
+                                    getApprovedTransactionCount(kelas);
+                                int availableSlots = kelas.maxParticipants! -
+                                    approvedTransactions;
+
+                                // Mengubah logika warna berdasarkan availableSlots
+                                Color buttonColor = availableSlots > 0
+                                    ? ColorStyle()
+                                        .primaryColors // Jika masih ada slot, gunakan warna primer
+                                    : ColorStyle()
+                                        .disableColors; // Jika slot penuh, gunakan warna disable
+
+                                return Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: ElevetadButtonWithIcon(
+                                    // Asumsi typo telah diperbaiki
+                                    color: buttonColor, // Terapkan warna tombol
+                                    onPressed: availableSlots > 0
+                                        ? () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    DetailClassMentorSD(
+                                                   addressMentoring:
+                                                      kelas.address ?? "",
+                                                  locationMentoring:
+                                                      kelas.location ?? "",
+                                                  mentorName: widget.name,
+                                                  transaction:
+                                                      kelas.transactions ?? [],
+                                                  mentorData: widget.mentor,
+                                                  classId: kelas.id,
+                                                  classname: kelas.name ??
+                                                      'No Class Name',
+                                                  classprice: kelas.price ?? 0,
+                                                  classduration:
+                                                      kelas.durationInDays ?? 0,
+                                                  maxParticipants:
+                                                      kelas.maxParticipants ??
+                                                          0,
+                                                  endDate: DateTime.parse(
+                                                      kelas.endDate ?? ''),
+                                                  startDate: DateTime.parse(
+                                                      kelas.startDate ?? ''),
+                                                  schedule: kelas.schedule ??
+                                                      'No Schedule',
+                                                  classDescription:
+                                                      kelas.description ??
+                                                          'No Description',
+                                                  targetLearning:
+                                                      kelas.targetLearning,
+                                                  terms: kelas.terms,
+                                                  durationInDays:
+                                                      kelas.durationInDays,
+                                                  price: kelas.price ?? 0,
+                                                  location: kelas.location,
+                                                  address: kelas.address,
+                                                  // Lanjutkan dengan parameter lainnya...
+                                                ),
+                                              ),
+                                            );
+                                          }
+                                        : null, // Menonaktifkan tombol jika slot penuh
+
+                                    title: kelas.name ?? 'No Class Name',
+                                  ),
+                                );
+                              }).toList() ??
+                              [Center(child: Text('No classes available'))],
                         ),
                       ),
                       const SizedBox(
@@ -308,115 +344,5 @@ class _DetailMentorSDScreenState extends State<DetailMentorSDScreen> {
         ),
       );
     }
-  }
-
-  ///// booking class ////
-  void _showDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          backgroundColor: ColorStyle().whiteColors,
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Text("Booking Class", style: FontFamily().titleText),
-              IconButton(
-                onPressed: () => Navigator.of(context).pop(),
-                icon: Icon(
-                  Icons.close_sharp,
-                  color: ColorStyle().errorColors,
-                ),
-              )
-            ],
-          ),
-          content: Padding(
-            padding: const EdgeInsets.all(12),
-            child: Text(
-              "Apakah Kamu yakin untuk memesan Premium Class ini?",
-              textAlign: TextAlign.center,
-              style: FontFamily().regularText,
-            ),
-          ),
-          actions: <Widget>[
-            // Actions untuk booking class...
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                SmallOutlinedButton(
-                  style: FontFamily().regularText.copyWith(
-                      color: ColorStyle().primaryColors, fontSize: 12),
-                  height: 48,
-                  width: 100,
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  title: "Cancel",
-                ),
-                SmallElevatedButton(
-                  style: FontFamily()
-                      .regularText
-                      .copyWith(color: ColorStyle().whiteColors, fontSize: 12),
-                  height: 48,
-                  width: 100,
-                  onPressed: () async {
-                    try {
-                      // Initialize UserPreferences if not already done.
-                      await UserPreferences.init();
-
-                      // Retrieve the user ID from SharedPreferences
-                      String? userId = UserPreferences.getUserId();
-
-                      if (userId != null) {
-                        BookingResultSession result =
-                            await bookClass(widget.classid, userId);
-
-                        if (result.isSuccess) {
-                          // If booking succeeds, navigate to the next screen
-                          int? uniqueCode =
-                              result.uniqueCode; // Here you get the uniqueCode
-                          // ignore: use_build_context_synchronously
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => DetailBookingClass(
-                                price: widget.price,
-                                nama_mentor: widget.name,
-                                nama_kelas: widget.namakelas,
-                                durasi: widget.periode,
-                                uniqueCode: uniqueCode!,
-                              ),
-                            ),
-                          );
-                        } else {
-                          // If booking fails, show an error message
-                          throw Exception("tidak bisa booking kelas ini");
-                        }
-                      } else {
-                        // If userId is not found, show an error
-                        throw Exception(
-                            "Anda belum login, silahkan login terlebih dahulu");
-                      }
-                    } catch (e) {
-                      // Show a SnackBar if an exception occurs
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text("Error: ${e.toString()}"),
-                          backgroundColor: ColorStyle().errorColors,
-                        ),
-                      );
-                    }
-                  },
-                  title: "Booking",
-                )
-              ],
-            ),
-          ],
-        );
-      },
-    );
   }
 }

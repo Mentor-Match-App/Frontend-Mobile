@@ -45,6 +45,8 @@ dependencies:
   http: ^1.2.0
   firebase_auth: ^4.17.4
   shared_preferences: ^2.2.2
+  multi_select_flutter: ^4.1.3
+  another_flushbar: ^1.12.30
 
 
 dev_dependencies:
@@ -78,6 +80,7 @@ flutter:
     - assets/Handoff/communityLogo/
     - assets/Handoff/ilustrator/
     - assets/Handoff/education_level/
+    - assets/Handoff/icon/MyClass/
     - assets/Handoff/icon/adminIcon/
     - assets/Handoff/icon/categoryIcon/Karier/
     - assets/Handoff/icon/categoryIcon/Kuliah/

@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:mentormatch_apps/mentee/screen/Session/detail_session_mentor.dart';
 import 'package:mentormatch_apps/mentee/screen/detail_mentor_class_screen.dart';
+import 'package:mentormatch_apps/mentee/screen/premiumClass/Karier/Karier_screen.dart';
+import 'package:mentormatch_apps/mentee/screen/premiumClass/Karier/all_karier_screen.dart';
+import 'package:mentormatch_apps/mentee/screen/premiumClass/Kuliah/Kuliah_screen.dart';
+import 'package:mentormatch_apps/mentee/screen/premiumClass/SD/sd_screen.dart';
+import 'package:mentormatch_apps/mentee/screen/premiumClass/SMA/SMA_screen.dart';
+import 'package:mentormatch_apps/mentee/screen/premiumClass/SMP/SMP_screen.dart';
 import 'package:mentormatch_apps/mentee/service/session_mentor_service.dart';
 import 'package:mentormatch_apps/mentor/model/mentor_model.dart';
 import 'package:mentormatch_apps/mentor/model/session_model.dart';
@@ -88,15 +94,56 @@ class _HomeMenteeScreenState extends State<HomeMenteeScreen> {
                         child: Row(
                           children: [
                             ButtonEducationLevels(
-                                title: "SD", onPressed: () {}),
+                              title: "SD",
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => SDScreen(),
+                                  ),
+                                );
+                              },
+                            ),
                             ButtonEducationLevels(
-                                title: "SMP", onPressed: () {}),
+                              title: "SMP",
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => SMPScreen()));
+                              },
+                            ),
                             ButtonEducationLevels(
-                                title: "SMA", onPressed: () {}),
+                              title: "SMA",
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => SMAScreen()));
+                              },
+                            ),
                             ButtonEducationLevels(
-                                title: "Kuliah", onPressed: () {}),
+                              title: "Kuliah",
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => KuliahScreen(),
+                                  ),
+                                );
+                              },
+                            ),
                             ButtonEducationLevels(
-                                title: "Karier", onPressed: () {}),
+                              title: "Karier",
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => KarierScreen(),
+                                  ),
+                                );
+                              },
+                            ),
                           ],
                         ),
                       ),
@@ -132,84 +179,52 @@ class _HomeMenteeScreenState extends State<HomeMenteeScreen> {
                             children: List.generate(
                                 mentorSessionData.mentors!.length, (index) {
                               final mentor = mentorClassData.mentors![index];
-                              final bool isClassAvailable =
-                                  mentor.mentorClass?.isAvailable ??
-                                      false; // Default to false if null
-                              // Determine the button color based on the availability of the class
-                              final Color buttonColor = isClassAvailable
-                                  ? ColorStyle().primaryColors
-                                  : ColorStyle().disableColors;
-
-                              final ExperienceMentorClass currentExperience =
+                              ExperienceClassAll? currentJob =
                                   mentor.experiences?.firstWhere(
-                                        (experience) =>
-                                            experience.isCurrentJob ?? false,
-                                        orElse: () => ExperienceMentorClass(
-                                            jobTitle: 'No Current Job',
-                                            company: 'N/A'),
-                                      ) ??
-                                      ExperienceMentorClass(
-                                          jobTitle: 'No Current Job',
-                                          company: 'N/A');
+                                (exp) => exp.isCurrentJob ?? false,
+                                orElse: () => ExperienceClassAll(),
+                              );
+
+                              String company =
+                                  currentJob?.company ?? 'Placeholder Company';
+                              String jobTitle =
+                                  currentJob?.jobTitle ?? 'Placeholder Job';
 
                               return Container(
                                 margin: const EdgeInsets.only(right: 8.0),
                                 height: 250,
                                 width: 150,
                                 child: CardItemMentor(
-                                  color: buttonColor,
-                                  onPressesd: isClassAvailable
-                                      ? () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  DetailMentorClassScreen(
-                                                about: mentor.about ?? "",
-                                                photoUrl: mentor.photoUrl ?? "",
-                                                name: mentor.name ?? "",
-                                                company:
-                                                    currentExperience.company ??
-                                                        'Placeholder Company',
-                                                job: currentExperience
-                                                        .jobTitle ??
-                                                    '',
-                                                email: mentor.email ?? '',
-                                                linkedin: mentor.linkedin ?? '',
-                                                skills: mentor.skills ?? [],
-                                                location: mentor.location ?? '',
-                                                description: mentor.mentorClass
-                                                        ?.description ??
-                                                    '',
-                                                terms:
-                                                    mentor.mentorClass?.terms ??
-                                                        [],
-                                                mentor: mentor,
-                                                reviews:
-                                                    mentor.mentorReviews ?? [],
-                                                namakelas:
-                                                    mentor.mentorClass?.name ??
-                                                        '',
-                                                price:
-                                                    mentor.mentorClass?.price ??
-                                                        0,
-                                                classid:
-                                                    mentor.mentorClass?.id ??
-                                                        '',
-                                                periode: mentor.mentorClass
-                                                        ?.durationInDays ??
-                                                    0,
-                                              ),
-                                            ),
-                                          );
-                                        }
-                                      : () {},
-                                  imagePath: mentor.photoUrl ??
-                                      '', // Ubah ke foto mentor jika ada
-                                  name: mentor.name ?? '',
-                                  job: currentExperience.jobTitle ?? '',
-                                  company: currentExperience.company ??
-                                      'Placeholder Company',
+                                  // color:
+                                  //     buttonColor, // Use the determined color based on class availability
+                                  onPressesd: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            DetailMentorClassAllScreen(
+                                              reviews: mentor.mentorReviews ?? [],
+                                          experiences: mentor.experiences ?? [],
+                                          email: mentor.email ?? '',
+                                          classes: mentor.mentorClass ?? [],
+                                          about: mentor.about ?? '',
+                                          name: mentor.name ?? 'No Name',
+                                          photoUrl: mentor.photoUrl ?? '',
+                                          skills: mentor.skills ?? [],
+                                          classid: mentor.id.toString(),
+                                          company: company,
+                                          job: jobTitle,
+                                          linkedin: mentor.linkedin ?? '',
+                                          mentor: mentor,
+                                          location: mentor.location ?? '',
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  imagePath: mentor.photoUrl.toString(),
+                                  name: mentor.name ?? 'No Name',
+                                  job: jobTitle,
+                                  company: company,
                                 ),
                               );
                             }),

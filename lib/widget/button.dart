@@ -222,7 +222,9 @@ class ButtonDetailKegiatan extends StatelessWidget {
 class ButtonEducationLevels extends StatefulWidget {
   final String title;
   final Function() onPressed;
-  ButtonEducationLevels({Key? key, required this.title, required this.onPressed}) : super(key: key);
+  ButtonEducationLevels(
+      {Key? key, required this.title, required this.onPressed})
+      : super(key: key);
 
   @override
   State<ButtonEducationLevels> createState() => _ButtonEducationLevelsState();
@@ -232,7 +234,8 @@ class _ButtonEducationLevelsState extends State<ButtonEducationLevels> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only( top :8.0, bottom: 8.0, right: 8.0 , left: 4.0),
+      padding:
+          const EdgeInsets.only(top: 8.0, bottom: 8.0, right: 8.0, left: 4.0),
       child: Container(
         height: 40,
         width: 100,
@@ -259,6 +262,60 @@ class _ButtonEducationLevelsState extends State<ButtonEducationLevels> {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(0),
             ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class ElevetadButtonWithIcon extends StatefulWidget {
+  final String title;
+  final VoidCallback? onPressed;
+  final Color? color;
+  ElevetadButtonWithIcon(
+      {Key? key, required this.title, required this.onPressed, this.color})
+      : super(key: key);
+
+  @override
+  State<ElevetadButtonWithIcon> createState() => _ElevetadButtonWithIconState();
+}
+
+class _ElevetadButtonWithIconState extends State<ElevetadButtonWithIcon> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius:
+            BorderRadius.circular(8), // Sesuaikan border radius menjadi 8
+        // Tambahkan border jika perlu
+      ),
+      child: ElevatedButton(
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.all<Color>(widget.color ??
+              ColorStyle()
+                  .primaryColors), // Gunakan properti color jika tersedia, jika tidak gunakan warna default
+          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+          ),
+        ),
+        onPressed: widget.onPressed,
+        child: Padding(
+          padding: const EdgeInsets.only( top :12.0, bottom: 12.0, left: 8.0, right: 8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Text(
+                  widget.title,
+                  style: FontFamily().buttonText.copyWith(color: Colors.white),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              Icon(Icons.arrow_forward_ios, color: Colors.white, size: 16),
+            ],
           ),
         ),
       ),

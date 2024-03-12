@@ -36,7 +36,7 @@ class _AllSessionScreenState extends State<AllSessionScreen> {
           return GridView.builder(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
-              childAspectRatio: 3 / 4,
+              childAspectRatio: 3 / 5,
               crossAxisSpacing: 2,
               mainAxisSpacing: 2,
             ),

@@ -1,10 +1,11 @@
 // ignore_for_file: deprecated_member_use
 
+import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mentormatch_apps/mentee/screen/Session/detail_booking_session_screen.dart';
-import 'package:mentormatch_apps/mentee/service/bookSessions/bookSesion.dart';
-import 'package:mentormatch_apps/mentee/service/bookSessions/save_booking_session.dart';
+import 'package:mentormatch_apps/mentee/service/bookSessionService/bookSesion.dart';
+import 'package:mentormatch_apps/mentee/service/bookSessionService/save_booking_session.dart';
 import 'package:mentormatch_apps/mentor/model/session_model.dart';
 import 'package:mentormatch_apps/preferences/%20preferences_helper.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
@@ -262,7 +263,7 @@ class _DetailMentorSessionsNewState extends State<DetailMentorSessionsNew> {
                                   ),
                                   const SizedBox(height: 24),
                                   ElevatedButtonWidget(
-                                    title: "Join Session",
+                                    title: "Booking Session",
                                     onPressed: () {
                                       _showDialog(context);
                                     },
@@ -313,79 +314,79 @@ class _DetailMentorSessionsNewState extends State<DetailMentorSessionsNew> {
           content: Padding(
             padding: const EdgeInsets.all(12),
             child: Text(
-              "Apakah Kamu yakin untuk memesan Session ini?",
+              "Apakah kamu yakin untuk memesan session ini? Kamu dapat memesan session ini secara gratis",
               textAlign: TextAlign.center,
               style: FontFamily().regularText,
             ),
           ),
           actions: <Widget>[
-            // Actions untuk booking class...
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                SmallOutlinedButton(
-                  style: FontFamily().regularText.copyWith(
-                      color: ColorStyle().primaryColors, fontSize: 12),
-                  height: 48,
-                  width: 100,
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  title: "Cancel",
-                ),
-                SmallElevatedButton(
-                  style: FontFamily()
-                      .regularText
-                      .copyWith(color: ColorStyle().whiteColors, fontSize: 12),
-                  height: 48,
-                  width: 100,
-                  onPressed: () async {
-                    try {
-                      // Asumsikan UserPreferences.init() dan UserPreferences.getUserId() sudah benar
-                      String? userId = await UserPreferences.getUserId();
-
-                      if (userId != null) {
-                        // Memanggil bookSession dan menangani respons di dalam try-catch
-                        await bookSession(widget.sessionsid, userId);
-
-                        // Simpan data booking ke history
-                        await saveBookingData(
-                            widget.namaSessios,
-                            widget.namaMentor,
-                            formattedJadwal); // Pastikan ini sesuai dengan definisi fungsi saveBookingData Anda
-
-                        // Jika tidak ada error yang dilempar, asumsikan booking berhasil
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => DetailBookingSession(
-                                nama_session: widget.namaSessios,
-                                nama_mentor: widget.namaMentor,
-                                jadwal_session: formattedJadwal),
+            SmallOutlinedButton(
+              style: FontFamily()
+                  .regularText
+                  .copyWith(color: ColorStyle().primaryColors, fontSize: 12),
+              height: 48,
+              width: 100,
+              onPressed: () => Navigator.of(context).pop(),
+              title: "Cancel",
+            ),
+            SmallElevatedButton(
+              style: FontFamily()
+                  .regularText
+                  .copyWith(color: ColorStyle().whiteColors, fontSize: 12),
+              height: 48,
+              width: 100,
+              onPressed: () async {
+                try {
+                  String? userId = await UserPreferences.getUserId();
+                  if (userId != null) {
+                    var result = await bookSession(widget.sessionsid, userId);
+                    if (result.isSuccess) {
+                      // Jika booking sukses, lakukan navigasi
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => DetailBookingSession(
+                            nama_mentor: widget.namaMentor,
+                            nama_session: widget.namaSessios,
+                            jadwal_session: formattedJadwal,
                           ),
-                        );
-                      } else {
-                        // Tampilkan pesan error jika user belum login
-                        throw Exception(
-                            "Anda belum login, silahkan login terlebih dahulu");
-                      }
-                    } catch (e) {
-                      print("Error: ${e.toString()}");
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text("Error: ${e.toString()}"),
-                          backgroundColor: ColorStyle().errorColors,
                         ),
+                        (Route<dynamic> route) => false,
                       );
+                    } else {
+                      // Jika booking gagal, tampilkan pesan error
+                      throw Exception(result.message);
                     }
-                  },
-                  title: "Booking",
-                )
-              ],
+                  } else {
+                    throw Exception(
+                        "Anda belum login, silahkan login terlebih dahulu.");
+                  }
+                } catch (e) {
+                  showTopSnackBar(context, e.toString());
+                }
+              },
+              title: "Booking",
             ),
           ],
         );
       },
     );
+  }
+
+  void showTopSnackBar(BuildContext context, String message) {
+    Flushbar(
+      backgroundColor: ColorStyle().secondaryColors,
+      message: message,
+      icon: Icon(
+        Icons.info_outline,
+        size: 28.0,
+        color: ColorStyle().whiteColors,
+      ),
+      duration: Duration(seconds: 3),
+      leftBarIndicatorColor: ColorStyle().errorColors,
+      margin: EdgeInsets.all(8),
+      borderRadius: BorderRadius.circular(8),
+      flushbarPosition: FlushbarPosition.TOP, // Menampilkan di bagian atas
+    ).show(context);
   }
 }

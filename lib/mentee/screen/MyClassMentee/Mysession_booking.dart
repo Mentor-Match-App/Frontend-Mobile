@@ -1,103 +1,150 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:mentormatch_apps/mentee/model/myClass_model.dart';
+import 'package:mentormatch_apps/mentee/service/myClassService/myClass_service.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
+import 'package:mentormatch_apps/widget/profile_avatar.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class MySessionBooking extends StatefulWidget {
-  MySessionBooking({Key? key}) : super(key: key);
-
   @override
-  State<MySessionBooking> createState() => _MySessionBookingState();
+  _MySessionBookingState createState() => _MySessionBookingState();
 }
 
 class _MySessionBookingState extends State<MySessionBooking> {
+  Future<List<ParticipantMyClass>>? _userData;
+
+  @override
+  void initState() {
+    super.initState();
+    _userData = BookingService().fetchUserSessions();
+  }
+
+//// link zoom akses///
+  _launchURL(String url) async {
+    // ignore: deprecated_member_use
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Tidak dapat membuka $url';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.all(20.0),
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          color: ColorStyle().tertiaryColors,
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    child: Image.asset(
-                      fit: BoxFit.cover,
-                      "assets/Handoff/Ilustrator/profile.png",
+    return FutureBuilder<List<ParticipantMyClass>>(
+      future: _userData,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        } else if (snapshot.hasData) {
+          final List<ParticipantMyClass> participants = snapshot.data!;
+          return SingleChildScrollView(
+            child: Column(
+              children: participants.map((participant) {
+                final session = participant.session!;
+                return Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child:Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(
+                        color: ColorStyle().tertiaryColors, // Warna border
+                        width: 2, // Lebar border
+                      ),
+                      color: Colors
+                          .transparent, // Warna bagian dalam, bisa diatur menjadi transparent atau null
                     ),
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "UI/UX Design",
-                          style: FontFamily().boldText,
-                        ),
-                        SizedBox(height: 12),
-                        Text(
-                          "30 Hari",
-                          style: FontFamily().regularText,
-                        ),
-                        Text(
-                          'Mentor ',
-                          style: FontFamily().regularText,
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 12),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: Text(
-                      'htttps/inilinkmentorigyangakankamuakses',
-                      style: FontFamily().boldText,
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 12,
-                  ),
-                  IconButton(
-                    onPressed: () {
-                      // Menyalin teks ke clipboard
-                      Clipboard.setData(const ClipboardData(
-                          text: 'htttps/inilinkmentorigyangakankamuakses'));
-
-                      // Tampilkan snackbar atau pesan bahwa teks telah disalin
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          duration: const Duration(seconds: 2),
-                          backgroundColor: ColorStyle().tertiaryColors,
-                          behavior: SnackBarBehavior.floating,
-                          content: Text(
-                            'Link disalin',
-                            style: FontFamily().regularText,
+                    child: Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: Column(
+                        children: [
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              ClipOval(
+                                child: Image.network(
+                                  session.mentor!.photoUrl.toString(),
+                                  fit: BoxFit.cover,
+                                  width: 98,
+                                  height: 98,
+                                ),
+                              ),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      session.title ?? '',
+                                      style: FontFamily().boldText.copyWith(
+                                          fontSize: 14,
+                                          color: ColorStyle().primaryColors),
+                                    ),
+                                    const SizedBox(height: 12),
+                                    Text(
+                                      'Mentor : ${session.mentor!.name}',
+                                      style: FontFamily().regularText,
+                                    ),
+                                    Text(
+                                      'Jadwal: ${session.dateTime}',
+                                      style: FontFamily().regularText,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
                           ),
-                        ),
-                      );
-                    },
-                    icon: const Icon(Icons.copy),
-                  )
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
+                          const SizedBox(height: 12),
+                          const SizedBox(
+                            width: 12,
+                          ),
+                          Padding(
+                            padding:
+                                const EdgeInsets.only(right: 12.0, top: 8.0),
+                            child: Align(
+                              alignment: Alignment.centerRight,
+                              child: Container(
+                                width: 150,
+                                height: 38,
+                                decoration: BoxDecoration(
+                                  color: ColorStyle().primaryColors,
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: TextButton.icon(
+                                  style: TextButton.styleFrom(
+                                    primary: ColorStyle().whiteColors,
+                                  ),
+                                  onPressed: () {
+                                    final zommLink = session.zoomLink ?? '';
+                                    _launchURL(zommLink);
+                                  },
+                                  icon: Icon(Icons.link),
+                                  label: Text('Join Session',
+                                      style: FontFamily().regularText.copyWith(
+                                            color: ColorStyle().whiteColors,
+                                          )),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              }).toList(),
+            ),
+          );
+        } else {
+          return Center(child: Text('No data'));
+        }
+      },
     );
   }
 }

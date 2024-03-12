@@ -48,11 +48,11 @@ class _NonAktifKelasScreenState extends State<NonAktifKelasScreen> {
                         ),
                     onPressed: () {
                       // Gantikan halaman saat ini dengan BottomNavbarScreen
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  DetailMyClassMentorScreen()));
+                      // Navigator.pushReplacement(
+                      //     context,
+                      //     MaterialPageRoute(
+                      //         builder: (context) =>
+                      //             DetailMyClassMentorScreen()));
                     },
                   ),
                   SmallElevatedButton(

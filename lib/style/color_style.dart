@@ -12,4 +12,6 @@ class ColorStyle {
   Color disableColors = const Color (0xff949090);
   Color errorColors = const Color(0xffC51818);
   Color succesColors = const Color (0xff27D024);
+    Color pendingColors = const Color (0xffF1DA0D);
+    Color fullbookedColors = const Color (0xff5D5FEF);  
 }
