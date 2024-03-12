@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mentormatch_apps/mentor/screen/daftar_mentor/first_form.dart';
+import 'package:mentormatch_apps/mentor/screen/daftar_mentor/register_form.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
 import 'package:mentormatch_apps/style/text.dart';
@@ -172,11 +172,11 @@ class _PersetujuanRekeningScreenState extends State<PersetujuanRekeningScreen> {
                   child: TextButton(
                     onPressed: _isSelected
                         ? () {
-                          Navigator.of(context).pushReplacement(
-                            MaterialPageRoute(
-                              builder: (context) => FirstFormRegistMentorScreen(),
-                            ),
-                          );  
+                            Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(
+                                builder: (context) => RegisterMentorScreen(),
+                              ),
+                            );
                           }
                         : null, // Tidak mengizinkan klik jika radio button belum dicentang
 
