@@ -1,14 +1,7 @@
-// ignore_for_file: unnecessary_string_interpolations
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mentormatch_apps/mentee/screen/premiumClass/Kuliah/detail_class_mentor_Kuliah_screen.dart';
-import 'package:mentormatch_apps/mentee/screen/premiumClass/detail_booking_premium_class_screen.dart';
-import 'package:mentormatch_apps/mentee/service/bookingClass/bookclass_model.dart';
-import 'package:mentormatch_apps/mentee/service/bookingClass/bookclass_service.dart';
-import 'package:mentormatch_apps/mentor/model/category_Kuliah_model.dart';
 import 'package:mentormatch_apps/mentor/model/category_kuliah_model.dart';
-import 'package:mentormatch_apps/preferences/%20preferences_helper.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
 import 'package:mentormatch_apps/style/text.dart';
@@ -21,11 +14,14 @@ import 'package:mentormatch_apps/widget/review_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DetailMentorKuliahScreen extends StatefulWidget {
+  //  final List<Experience> description;
+  final List<TransactionKuliah>? transaction;
+  final List<ExperienceKuliah> experiences;
   final String classid;
-  final int periode;
-  final List<MentorReview>? reviews;
-  final int price;
-  final String namakelas;
+  // final int periode;
+  final List<MentorReviewKuliah>? reviews;
+  // final int price;
+  final List<ClassMentorKuliah>? classes;
   final String about;
   final String photoUrl;
   final String name;
@@ -35,16 +31,17 @@ class DetailMentorKuliahScreen extends StatefulWidget {
   final String linkedin;
   final List<String> skills;
   final String location;
-  final String description;
-  final List<String> terms;
+
+  // final List<String> terms;
   final MentorKuliah mentor;
   DetailMentorKuliahScreen(
       {Key? key,
+      required this.experiences,
       required this.classid,
-      required this.periode,
+      // required this.periode,
       this.reviews,
-      required this.price,
-      required this.namakelas,
+      // required this.price,
+      required this.classes,
       required this.about,
       required this.photoUrl,
       required this.name,
@@ -54,8 +51,9 @@ class DetailMentorKuliahScreen extends StatefulWidget {
       required this.linkedin,
       required this.skills,
       required this.location,
-      required this.description,
-      required this.terms,
+      this.transaction,
+      // required this.description,
+      // required this.terms,
       required this.mentor})
       : super(key: key);
 
@@ -94,14 +92,14 @@ class _DetailMentorKuliahScreenState extends State<DetailMentorKuliahScreen> {
                     ),
               ),
               Transform.translate(
-                offset: const Offset(0.0, -120 / 2.0),
+                offset: Offset(0.0, -120 / 2.0),
                 child: Center(
                   child: Column(
                     children: [
                       ProfileAvatar(
                         imageUrl: widget.photoUrl,
                       ),
-                      const SizedBox(
+                      SizedBox(
                         height: 10,
                       ),
                       Text(
@@ -181,7 +179,7 @@ class _DetailMentorKuliahScreenState extends State<DetailMentorKuliahScreen> {
                                     company: experience.company ?? 'No Company',
                                   );
                                 }).toList() ??
-                                [const Text('No experiences')],
+                                [Text('No experiences')],
                           )
                         ],
                       ),
@@ -204,67 +202,101 @@ class _DetailMentorKuliahScreenState extends State<DetailMentorKuliahScreen> {
                       const SizedBox(
                         height: 12,
                       ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          TitleProfile(
-                            title: widget.namakelas,
-                            color: ColorStyle().primaryColors,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 12.0),
-                            child: Text(
-                              widget.description,
-                              style: FontFamily().regularText,
-                            ),
-                          ),
-                        ],
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          TitleProfile(
-                            title: 'Syarat & Ketentuan Kelas',
-                            color: ColorStyle().primaryColors,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 12.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: widget.mentor.mentorClass?.terms
-                                      ?.asMap()
-                                      .entries
-                                      .map<Widget>((entry) {
-                                    int index = entry.key;
-                                    String term = entry.value;
-                                    return Padding(
-                                      padding: const EdgeInsets.only(
-                                          bottom:
-                                              8.0), // Tambahkan sedikit ruang antar baris
-                                      child: Text(
-                                        "${index + 1}.  $term", // Menambahkan indeks + 1 untuk membuat nomor urutan dimulai dari 1
-                                        style: FontFamily().regularText,
-                                      ),
-                                    );
-                                  }).toList() ??
-                                  [
-                                    Text("No terms available",
-                                        style: FontFamily().regularText)
-                                  ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ElevatedButtonWidget(
-                          onPressed: () {
-                            _showDialog(context);
-                          },
-                          title:
-                              "${NumberFormat.currency(locale: 'id', symbol: 'Rp').format(widget.price)}",
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: TitleProfile(
+                          title: 'Program yang di tawarkan',
+                          color: ColorStyle().primaryColors,
                         ),
                       ),
+                      Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            children: widget.classes?.map((kelas) {
+                                  int getApprovedTransactionCount(
+                                      ClassMentorKuliah kelas) {
+                                    int count = kelas.transactions
+                                            ?.where((t) =>
+                                                t.paymentStatus == "Approved")
+                                            .length ??
+                                        0;
+                                    print(
+                                        "Kelas: ${kelas.name}, Transaksi Approved: $count");
+                                    return count;
+                                  }
+
+                                  int approvedTransactions =
+                                      getApprovedTransactionCount(kelas);
+                                  int availableSlots = kelas.maxParticipants! -
+                                      approvedTransactions;
+
+                                  // Mengubah logika warna berdasarkan availableSlots
+                                  Color buttonColor = availableSlots > 0
+                                      ? ColorStyle()
+                                          .primaryColors // Jika masih ada slot, gunakan warna primer
+                                      : ColorStyle()
+                                          .disableColors; // Jika slot penuh, gunakan warna disable
+
+                                  return Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: ElevetadButtonWithIcon(
+                                      // Asumsi typo telah diperbaiki
+                                      color:
+                                          buttonColor, // Terapkan warna tombol
+                                      onPressed: availableSlots > 0
+                                          ? () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      DetailClassMentorKuliah(
+                                                   addressMentoring:
+                                                      kelas.address ?? "",
+                                                  locationMentoring:
+                                                      kelas.location ?? "",
+                                                  mentorName: widget.name,
+                                                  transaction:
+                                                      kelas.transactions ?? [],
+                                                  mentorData: widget.mentor,
+                                                  classId: kelas.id,
+                                                  classname: kelas.name ??
+                                                      'No Class Name',
+                                                  classprice: kelas.price ?? 0,
+                                                  classduration:
+                                                      kelas.durationInDays ?? 0,
+                                                  maxParticipants:
+                                                      kelas.maxParticipants ??
+                                                          0,
+                                                  endDate: DateTime.parse(
+                                                      kelas.endDate ?? ''),
+                                                  startDate: DateTime.parse(
+                                                      kelas.startDate ?? ''),
+                                                  schedule: kelas.schedule ??
+                                                      'No Schedule',
+                                                  classDescription:
+                                                      kelas.description ??
+                                                          'No Description',
+                                                  targetLearning:
+                                                      kelas.targetLearning,
+                                                  terms: kelas.terms,
+                                                  durationInDays:
+                                                      kelas.durationInDays,
+                                                  price: kelas.price ?? 0,
+                                                  location: kelas.location,
+                                                  address: kelas.address,
+                                                    // Lanjutkan dengan parameter lainnya...
+                                                  ),
+                                                ),
+                                              );
+                                            }
+                                          : null, // Menonaktifkan tombol jika slot penuh
+
+                                      title: kelas.name ?? 'No Class Name',
+                                    ),
+                                  );
+                                }).toList() ??
+                                [Center(child: Text('No classes available'))],
+                          )),
                       const SizedBox(
                         height: 12,
                       ),
