@@ -1,78 +1,220 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:mentormatch_apps/mentee/model/myClass_model.dart';
 import 'package:mentormatch_apps/mentee/screen/MyClassMentee/Detail_myClass_mentee_screen.dart';
+import 'package:mentormatch_apps/mentee/service/myClassService/myClass_service.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
 import 'package:mentormatch_apps/widget/button.dart';
 
-class MyClassBooking extends StatefulWidget {
-  MyClassBooking({Key? key}) : super(key: key);
+import 'package:url_launcher/url_launcher.dart';
 
+class MyClassBookingMentee extends StatefulWidget {
   @override
-  State<MyClassBooking> createState() => _MyClassBookingState();
+  _MyClassBookingMenteeState createState() => _MyClassBookingMenteeState();
 }
 
-class _MyClassBookingState extends State<MyClassBooking> {
+class _MyClassBookingMenteeState extends State<MyClassBookingMentee> {
+  Future<List<TransactionMyClass>>? _userData;
+  int getClassStatusPriority(TransactionMyClass transaction) {
+    // Gunakan logika yang sama untuk menentukan status
+    DateTime now = DateTime.now();
+    DateTime startDate =
+        DateTime.parse(transaction.transactionClass?.startDate ?? '');
+    DateTime endDate =
+        DateTime.parse(transaction.transactionClass?.endDate ?? '');
+    bool isClassActive = now.isAfter(startDate) && now.isBefore(endDate);
+    bool isClassScheduled =
+        now.isBefore(startDate) && transaction.paymentStatus == "Approved";
+    bool isClassFinished = now.isAfter(endDate);
+
+    if (isClassActive) {
+      return 1;
+    } else if (isClassScheduled) {
+      return 2;
+    } else if (transaction.paymentStatus == "Pending") {
+      return 3;
+    } else if (isClassFinished) {
+      return 4;
+    } else if (transaction.paymentStatus == "Expired") {
+      return 5;
+    }
+
+    return 6; // Untuk status lain atau tidak diketahui
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _userData = BookingService().fetchUserTransactions().then((transactions) {
+      transactions.sort((a, b) =>
+          getClassStatusPriority(a).compareTo(getClassStatusPriority(b)));
+      return transactions;
+    });
+  }
+
+// Helper function to create a styled button
+  Widget createStatusButton(String title, Color color) {
+    return Align(
+      alignment: Alignment.centerRight,
+      child: SmallElevatedButton(
+        color: color,
+        onPressed: () {}, // Define the action
+        height: 28,
+        width: 124,
+        title: title,
+        style: FontFamily().buttonText,
+      ),
+    );
+  }
+
+//// link zoom akses///
+  _launchURL(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Tidak dapat membuka $url';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Padding(
-          padding: EdgeInsets.all(20.0),
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: ColorStyle().tertiaryColors,
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    child: Image.asset(
-                      fit: BoxFit.cover,
-                      "assets/Handoff/Ilustrator/profile.png",
+    return FutureBuilder<List<TransactionMyClass>>(
+      future: _userData,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        } else if (snapshot.hasData) {
+          final List<TransactionMyClass> classBooking = snapshot.data!;
+          return SingleChildScrollView(
+            child: Column(
+              children: classBooking.map((data) {
+                int statusButton = getClassStatusPriority(data);
+                final classData = data.transactionClass!;
+                return Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(
+                        color: ColorStyle().tertiaryColors,
+                        width: 2,
+                      ),
+                      color: Colors.transparent,
                     ),
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "UI/UX Design",
-                          style: FontFamily().boldText,
-                        ),
-                        SizedBox(height: 12),
-                        Text(
-                          "30 Hari",
-                          style: FontFamily().regularText,
-                        ),
-                        Text(
-                          'Mentor ',
-                          style: FontFamily().regularText,
-                        ),
-                        SizedBox(height: 12),
-                        Align(
-                          alignment: Alignment.bottomRight,
-                          child: SmallElevatedButton(
-                            height: 32,
-                            width: 120,
-                            title: "Lihat Kelas",
-                            style: FontFamily().buttonText.copyWith(
-                                  fontSize: 12,
-                                  color: ColorStyle().whiteColors,
+                    child: Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: Column(
+                        children: [
+                          if (statusButton == 1)
+                            createStatusButton(
+                                "Active", ColorStyle().succesColors)
+                          else if (statusButton == 2)
+                            createStatusButton(
+                                "Scheduled", ColorStyle().secondaryColors)
+                          else if (statusButton == 3)
+                            createStatusButton(
+                                "Pending", ColorStyle().pendingColors)
+                          else if (statusButton == 4)
+                            createStatusButton(
+                                "Finished", ColorStyle().disableColors)
+                          else if (statusButton == 5)
+                            createStatusButton(
+                                "Expired", ColorStyle().errorColors),
+                          SizedBox(height: 10),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              ClipOval(
+                                child: Image.network(
+                                  classData.mentor!.photoUrl.toString(),
+                                  fit: BoxFit.cover,
+                                  width: 98,
+                                  height: 98,
                                 ),
-                            onPressed: (){}
+                              ),
+                              const SizedBox(width: 10),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      classData.name ?? '',
+                                      style: FontFamily().boldText.copyWith(
+                                          fontSize: 14,
+                                          color: ColorStyle().primaryColors),
+                                    ),
+                                    const SizedBox(height: 12),
+                                    Text('Mentor : ${classData.mentor!.name}',
+                                        style: FontFamily().regularText),
+                                    Text(
+                                        'Durasi : ${classData.durationInDays} Hari',
+                                        style: FontFamily().regularText),
+                                  ],
+                                ),
+                              ),
+                            ],
                           ),
-                        ),
-                      ],
+                          const SizedBox(height: 8),
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: TextButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        DetailMyClassMenteeScreen(
+                                      learningMaterial:
+                                          classData.learningMaterial ?? [],
+                                      endDate: DateTime.parse(
+                                          classData.endDate ?? ''),
+                                      startDate: DateTime.parse(
+                                          classData.startDate ?? ''),
+                                      targetLearning:
+                                          classData.targetLearning ?? [],
+                                      maxParticipants:
+                                          classData.maxParticipants ?? 0,
+                                      schedule: classData.schedule ?? '',
+                                      mentorId: classData.mentorId ?? '',
+                                      mentorPhoto:
+                                          classData.mentor!.photoUrl ?? '',
+                                      classData: classData,
+                                      descriptionKelas:
+                                          classData.description.toString(),
+                                      terms: classData.terms ?? [],
+                                      evaluasi: classData.evaluations ?? [],
+                                      linkEvaluasi: classData.zoomLink ?? '',
+                                      mentorName: classData.mentor!.name ?? '',
+                                      linkZoom: classData.zoomLink ?? '',
+                                      namaKelas: classData.name ?? '',
+                                      periode: classData.durationInDays ?? 0,
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: Text(
+                                'Lihat Detail',
+                                style: FontFamily().boldText.copyWith(
+                                    color: ColorStyle().secondaryColors,
+                                    fontSize: 14),
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
                     ),
                   ),
-                ],
-              ),
-            )
-          ),
-        );
+                );
+              }).toList(),
+            ),
+          );
+        } else {
+          return Center(child: Text('No data'));
+        }
+      },
+    );
   }
 }

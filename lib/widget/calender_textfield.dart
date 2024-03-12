@@ -42,6 +42,9 @@ import '../style/color_style.dart';
 import '../style/font_style.dart';
 
 class CalendarTextField extends StatefulWidget {
+  final Function(String) onDateSelected;
+
+  CalendarTextField({Key? key, required this.onDateSelected}) : super(key: key);
   @override
   _CalendarTextFieldState createState() => _CalendarTextFieldState();
 }

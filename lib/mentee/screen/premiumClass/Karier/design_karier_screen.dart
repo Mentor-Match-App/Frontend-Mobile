@@ -31,81 +31,75 @@ late Future<Karier> futureKarierData;
         } else if (snapshot.hasError) {
           return Center(child: Text('Error: ${snapshot.error}'));
         } else if (snapshot.hasData) {
-          final mentorsWithLanguageCategory = snapshot.data!.mentors!
-              .where((mentor) => mentor.mentorClass?.category == "Desain")
+        final mentorsWithLanguageCategory = snapshot.data!.mentors!
+              .where((mentor) => mentor.mentorClass!
+                  .any((mentorClass) => mentorClass.category == 'Desain'))
               .toList();
-
            return GridView.builder(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2, 
-              childAspectRatio: 3 / 5, 
+              crossAxisCount: 2,
+              childAspectRatio: 3 / 5,
               crossAxisSpacing: 2,
-              mainAxisSpacing: 2, 
+              mainAxisSpacing: 2,
             ),
             itemCount: mentorsWithLanguageCategory.length,
             itemBuilder: (context, index) {
               final mentor = mentorsWithLanguageCategory[index];
               // Logika untuk menentukan currentExperience sama seperti sebelumnya
-              final currentExperience = mentor.experiences!.firstWhere(
-                (experience) => experience.isCurrentJob ?? false,
-                orElse: () =>
-                    Experience(), // Menyediakan default Experience jika tidak ditemukan
+              ExperienceKarier? currentJob = mentor.experiences?.firstWhere(
+                (exp) => exp.isCurrentJob ?? false,
+                orElse: () => ExperienceKarier(),
               );
-              final bool isClassAvailable = mentor.mentorClass?.isAvailable ??
-                  false; // Default to false if null
-                  final Color buttonColor = isClassAvailable
-                  ? ColorStyle().primaryColors
-                  : ColorStyle().disableColors;
-              return CardItemMentor(
+
+                    /// if all class is active ///
+              bool areAllClassesActive(List<ClassMentorKarier>? classes) {
+                if (classes == null || classes.isEmpty) {
+                  return false;
+                }
+                // Mengembalikan true jika semua kelas memiliki isActive == true
+                return classes
+                    .every((classMentor) => classMentor.isActive == true);
+              }
+
+              bool allClassesActive = areAllClassesActive(mentor.mentorClass);
+              Color buttonColor = allClassesActive
+                  ? ColorStyle().disableColors
+                  : ColorStyle().primaryColors;
+              String company = currentJob?.company ?? 'Placeholder Company';
+              String jobTitle = currentJob?.jobTitle ?? 'Placeholder Job';
+              return Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: CardItemMentor(
                   color:
-                      buttonColor, // Use the determined color based on class availability
-                  onPressesd: isClassAvailable
-                      ? () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => DetailMentorKarierScreen(
-                                classid: mentor.mentorClass!.id ?? "",
-                                periode:
-                                    mentor.mentorClass?.durationInDays ?? 0,
-                                reviews: mentor.mentorReviews ?? [],
-                                namakelas: mentor.mentorClass?.name ?? "",
-                                about: mentor.about ?? "",
-                                name: mentor.name ?? "",
-                                photoUrl: mentor.photoUrl ?? "",
-                                job: mentor.experiences
-                                        ?.firstWhere(
-                                            (exp) => exp.isCurrentJob == true,
-                                            orElse: () => Experience(
-                                                jobTitle: "", company: ""))
-                                        .jobTitle ??
-                                    "",
-                                company: mentor.experiences
-                                        ?.firstWhere(
-                                            (exp) => exp.isCurrentJob == true,
-                                            orElse: () => Experience(
-                                                jobTitle: "", company: ""))
-                                        .company ??
-                                    "",
-                                email: mentor.email ?? "",
-                                linkedin: mentor.linkedin ?? "",
-                                skills: mentor.skills ?? [],
-                                location: mentor.location ?? "",
-                                description:
-                                    mentor.mentorClass?.description ?? "",
-                                terms: mentor.mentorClass?.terms ?? [],
-                                price: mentor.mentorClass?.price ?? 0,
-                                mentor: mentor,
-                              ),
-                            ),
-                          );
-                        }
-                      : () => null,
+                      buttonColor,
+                  onPressesd: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => DetailMentorKarierScreen(
+                          experiences: mentor.experiences ?? [],
+                          email: mentor.email ?? '',
+                          classes: mentor.mentorClass ?? [],
+                          about: mentor.about ?? '',
+                          name: mentor.name ?? 'No Name',
+                          photoUrl: mentor.photoUrl ?? '',
+                          skills: mentor.skills ?? [],
+                          classid: mentor.id.toString(),
+                          company: company,
+                          job: jobTitle,
+                          linkedin: mentor.linkedin ?? '',
+                          mentor: mentor,
+                          location: mentor.location ?? '',
+                        ),
+                      ),
+                    );
+                  },
                   imagePath: mentor.photoUrl.toString(),
                   name: mentor.name ?? 'No Name',
-                  job: currentExperience.jobTitle ?? '',
-                  company: currentExperience.company ?? 'Placeholder Company',
-                );
+                  job: jobTitle,
+                  company: company,
+                ),
+              );
             },
             shrinkWrap: true,
             physics:
@@ -118,4 +112,3 @@ late Future<Karier> futureKarierData;
     );
   }
 }
-

@@ -28,9 +28,6 @@ class _CommunityMentorScreenState extends State<CommunityMentorScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Image.asset('assets/Handoff/logo/LogoMobile.png'),
-        actions: [
-          PopMenuButtonWidget(),
-        ],
       ),
       body: FutureBuilder<CommunityModels>(
         future: communityService.fetchCommunities(),
@@ -56,7 +53,6 @@ class _CommunityMentorScreenState extends State<CommunityMentorScreen> {
                     title: "Search by name,company, role ",
                     onPressed: () {},
                   ),
-                  
                   Expanded(
                     child: GridView.builder(
                       gridDelegate:

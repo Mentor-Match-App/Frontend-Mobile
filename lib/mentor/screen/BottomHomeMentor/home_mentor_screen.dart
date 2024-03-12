@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:mentormatch_apps/mentee/screen/notification_mentee_screen.dart';
 import 'package:mentormatch_apps/mentor/screen/createClass_Session/form_create_class.dart';
+import 'package:mentormatch_apps/mentor/screen/createClass_Session/form_create_session.dart';
+import 'package:mentormatch_apps/mentor/screen/daftar_mentor/syaratketentuan_daftar_mentor/persetujuan_premium_class_mentor.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
 import 'package:mentormatch_apps/widget/button.dart';
+import 'package:mentormatch_apps/widget/category_card.dart';
 
 class HomeMentorScreen extends StatefulWidget {
   const HomeMentorScreen({Key? key}) : super(key: key);
@@ -37,147 +40,239 @@ class _HomeMentorScreenState extends State<HomeMentorScreen> {
         ),
       ),
       body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                  color: ColorStyle()
-                      .tertiaryColors // Set your desired background color
+        child: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  "Build Your Awesome Class",
+                  style: FontFamily().regularText.copyWith(
+                        fontSize: 14,
+                        color: ColorStyle().secondaryColors,
+                      ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    color: ColorStyle().tertiaryColors,
                   ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            const SizedBox(height: 12),
                             Text(
-                              "Hai,",
+                              "Tingkatkan Masa Depan Generasi Muda",
+                              style: FontFamily().boldText.copyWith(
+                                  color: ColorStyle().secondaryColors,
+                                  fontSize: 14),
+                            ),
+                            const SizedBox(height: 2),
+                            Text(
+                              'Dengan menjadi mentor, Anda memberikan ilmu inspiratif, mengembangkan potensi mentee, dan bersama membangun masa depan cerah.',
                               style: FontFamily().regularText,
                             ),
-                            const SizedBox(width: 4),
-                            Text("Charline",
-                                style: FontFamily().boldText.copyWith(
-                                    color: ColorStyle().secondaryColors)),
+                            const SizedBox(
+                              height: 12,
+                            ),
                           ],
                         ),
-                        const SizedBox(height: 12),
-                        Text("Jelajahi Dunia Mentoring yang Menginspirasi",
-                            style: FontFamily()
-                                .titleText
-                                .copyWith(color: ColorStyle().primaryColors)),
-                        const SizedBox(height: 2),
-                        Text(
-                          "Bagikan kisah sukses dan tantangan pribadi Anda. Ini membuat Anda lebih mudah dicapai dan memberikan inspirasi nyata. Dorong peserta untuk berpikir kritis dengan mengajukan pertanyaan terbuka. Ini membuka pintu untuk diskusi yang mendalam.",
-                          style: FontFamily().regularText,
-                        ),
-                        const SizedBox(
-                          height: 12,
-                        ),
-                        SmallElevatedButton(
-                          height: 36,
-                          width: 140,
-                          title: "Buat Kelas",
-                          style: FontFamily().buttonText.copyWith(
-                                fontSize: 12,
-                                color: ColorStyle().whiteColors,
-                              ),
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    FormCreatePremiumClassScreen(),
-                              ),
-                            );
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    height: 100,
-                    width: 100,
-                    decoration: const BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage(
-                            'assets/Handoff/ilustrator/mentor in zoom.png'),
-                        fit: BoxFit.cover,
                       ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                  color: ColorStyle()
-                      .tertiaryColors // Set your desired background color
-                  ),
-              child: Row(
-                children: [
-                  Container(
-                    height: 100,
-                    width: 100,
-                    decoration: const BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage(
-                            'assets/Handoff/ilustrator/learn by online.png'),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: Column(
-                      children: [
-                        Text(
-                            textAlign: TextAlign.right,
-                            "Pimpin Perubahan, Jadi Mentor dalam Sesi Inovatif dan Pendidikan",
-                            style: FontFamily()
-                                .titleText
-                                .copyWith(color: ColorStyle().primaryColors)),
-                        const SizedBox(height: 2),
-                        Text(
-                          textAlign: TextAlign.right,
-                          "Bagikan kisah sukses dan tantangan pribadi Anda. Ini membuat Anda lebih mudah dicapai dan memberikan inspirasi nyata. Dorong peserta untuk berpikir kritis dengan mengajukan pertanyaan terbuka. Ini membuka pintu untuk diskusi yang mendalam.",
-                          style: FontFamily().regularText,
-                        ),
-                        const SizedBox(height: 12),
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: SmallElevatedButton(
-                            height: 36,
-                            width: 140,
-                            title: "Buat Session",
-                            style: FontFamily().buttonText.copyWith(
-                                  fontSize: 12,
-                                  color: ColorStyle().whiteColors,
-                                ),
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      FormCreatePremiumClassScreen(),
-                                ),
-                              );
-                            },
+                      Container(
+                        height: 100,
+                        width: 100,
+                        decoration: const BoxDecoration(
+                          image: DecorationImage(
+                            image: AssetImage(
+                                'assets/Handoff/ilustrator/mentor in zoom.png'),
+                            fit: BoxFit.cover,
                           ),
                         ),
-                      ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  "Field and Interest",
+                  style: FontFamily().boldText.copyWith(
+                        fontSize: 14,
+                        color: ColorStyle().secondaryColors,
+                      ),
+                ),
+              ),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      InterestCardMentor(
+                          title: 'Technology',
+                          icon: 'assets/Handoff/icon/categoryIcon/SD/tech.png'),
+                      InterestCardMentor(
+                          title: 'Engineering',
+                          icon:
+                              'assets/Handoff/icon/categoryIcon/Kuliah/electro.png'),
+                      InterestCardMentor(
+                          title: 'Sains',
+                          icon:
+                              'assets/Handoff/icon/categoryIcon/SD/Pengetahuan.jpg'),
+                      InterestCardMentor(
+                          title: 'Business',
+                          icon:
+                              'assets/Handoff/icon/categoryIcon/Karier/finance.png'),
+                      InterestCardMentor(
+                          title: 'Math',
+                          icon: 'assets/Handoff/icon/categoryIcon/SD/math.png'),
+                    ],
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(
+                      color: ColorStyle().tertiaryColors,
+                      width: 1,
                     ),
                   ),
-                ],
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const SizedBox(height: 12),
+                            Text(
+                              "Bangun Kelas yang Menginspirasi",
+                              style: FontFamily().boldText.copyWith(
+                                  color: ColorStyle().secondaryColors,
+                                  fontSize: 14),
+                            ),
+                            const SizedBox(height: 2),
+                            Text(
+                              'Temukan potensi dalam menciptakan kelas menginspirasi yang mengubah hidup. Bergabunglah dalam perjalanan belajar yang tak terlupakan',
+                              style: FontFamily().regularText,
+                            ),
+                            const SizedBox(
+                              height: 12,
+                            ),
+                            SmallElevatedButton(
+                              width: 150,
+                              height: 38,
+                              title: 'Buat Kelas',
+                              style:  FontFamily().buttonText,
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        PersetujuanPremiClassMentor(),
+                                  ),
+                                );
+                              },
+                            )
+                          ],
+                        ),
+                      ),
+                      Container(
+                        height: 100,
+                        width: 100,
+                        decoration: const BoxDecoration(
+                          image: DecorationImage(
+                            image: AssetImage(
+                                'assets/Handoff/ilustrator/looking mentor.png'),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
-            ),
-          ],
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(
+                      color: ColorStyle().tertiaryColors,
+                      width: 1,
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const SizedBox(height: 12),
+                            Text(
+                              "Berikan Pengalaman menarik melalui Session",
+                              style: FontFamily().boldText.copyWith(
+                                  color: ColorStyle().secondaryColors,
+                                  fontSize: 14),
+                            ),
+                            const SizedBox(height: 2),
+                            Text(
+                              'Raih Potensi Anda dalam Membuat Sesi yang Menginspirasi. Bergabunglah dalam Perjalanan Menciptakan Pengalaman Belajar yang Tak Terlupakan untuk Semua',
+                              style: FontFamily().regularText,
+                            ),
+                            const SizedBox(
+                              height: 12,
+                            ),
+                            SmallElevatedButton(
+                              width: 150,
+                              height: 38,
+                              title: 'Buat session',
+                              style:  FontFamily().buttonText,
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        FormCreateSessionScreen(),
+                                  ),
+                                );
+                              },
+                            )
+                          ],
+                        ),
+                      ),
+                      Container(
+                        height: 100,
+                        width: 100,
+                        decoration: const BoxDecoration(
+                          image: DecorationImage(
+                            image: AssetImage(
+                                'assets/Handoff/ilustrator/learn together 2.png'),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

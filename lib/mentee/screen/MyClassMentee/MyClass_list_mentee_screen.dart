@@ -29,6 +29,7 @@ class _MyClassMenteeListScreenState extends State<MyClassMenteeListScreen> {
       }
     });
   }
+  
 
   @override
   Widget build(BuildContext context) {
@@ -61,47 +62,57 @@ class _MyClassMenteeListScreenState extends State<MyClassMenteeListScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  TextButton.icon(
-                    onPressed: () {
-                      changeClass("My Class");
-                    },
-                    icon: Icon(Icons.menu_book_outlined,
-                        color: isClassActive
-                            ? ColorStyle().primaryColors
-                            : Colors.grey),
-                    label: Text("My Class",
+                  Container(
+                    width: 150,
+                    height: 38,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(4),
+                      color: isClassActive
+                          ? ColorStyle().secondaryColors
+                          : ColorStyle().tertiaryColors,
+                    ),
+                    child: TextButton(
+                      onPressed: () {
+                        changeClass("My Class");
+                      },
+                      child: Text(
+                        "My Class",
                         style: FontFamily().boldText.copyWith(
                             color: isClassActive
-                                ? ColorStyle().primaryColors
-                                : Colors.grey)),
+                                ? ColorStyle().whiteColors
+                                : ColorStyle().disableColors),
+                      ),
+                    ),
                   ),
-                  TextButton.icon(
-                    onPressed: () {
-                      changeClass("My Session");
-                    },
-                    icon: Icon(Icons.volume_down_alt,
-                        color: isSessionActive
-                            ? ColorStyle().primaryColors
-                            : Colors.grey),
-                    label: Text("My Session",
-                        style: FontFamily().boldText.copyWith(
-                            color: isSessionActive
-                                ? ColorStyle().primaryColors
-                                : Colors.grey)),
+                  Container(
+                    width: 150,
+                    height: 38,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(4),
+                      color: isSessionActive
+                          ? ColorStyle().secondaryColors
+                          : ColorStyle().tertiaryColors,
+                    ),
+                    child: TextButton(
+                        onPressed: () {
+                          changeClass("My Session");
+                        },
+                        child: Text("My Session",
+                            style: FontFamily().boldText.copyWith(
+                                color: isSessionActive
+                                    ? ColorStyle().whiteColors
+                                    : ColorStyle().disableColors))),
                   ),
                 ],
               ),
             ),
-            Divider(
-              color: ColorStyle().disableColors,
-            ),
             Column(
               children: [
                 isClassActive
-                    ? MyClassBooking()
+                    ? MyClassBookingMentee()
                     : isSessionActive
                         ? MySessionBooking()
-                        : MyClassBooking(),
+                        : MyClassBookingMentee(),
               ],
             )
           ],

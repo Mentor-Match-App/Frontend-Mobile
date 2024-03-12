@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mentormatch_apps/mentee/screen/home_mentee_screen.dart';
+import 'package:mentormatch_apps/mentee/screen/bottom_mentee_screen.dart';
+import 'package:mentormatch_apps/mentee/screen/home_screen_mentee.dart';
 import 'package:mentormatch_apps/mentee/screen/profile/service.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
@@ -278,7 +279,7 @@ class _EditProfileMenteeScreenState extends State<EditProfileMenteeScreen> {
             // navigate to HomeMenteeScreen after updating the profile
             Navigator.pushAndRemoveUntil(
                 context,
-                MaterialPageRoute(builder: (context) => HomeMenteeScreen()),
+                MaterialPageRoute(builder: (context) => BottomNavbarMenteeScreen()),
                 (route) => false);
           }
         });

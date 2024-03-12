@@ -1,65 +1,20 @@
-// import 'package:flutter/material.dart';
-// import 'package:mentormatch_apps/style/font_style.dart';
-
-// class MyDropdownWidget extends StatefulWidget {
-//   final List<String> items;
-
-//   const MyDropdownWidget({Key? key, required this.items}) : super(key: key);
-
-//   @override
-//   _MyDropdownWidgetState createState() => _MyDropdownWidgetState();
-// }
-
-// class _MyDropdownWidgetState extends State<MyDropdownWidget> {
-//   String? selectedValue; // Default selected value set to null
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return SizedBox(
-//       height: 56,
-//       child: DropdownButtonFormField<String>(
-//         value: selectedValue,
-//         decoration: InputDecoration(
-//           filled: true,
-//           fillColor: Colors.grey[200],
-//           border: OutlineInputBorder(
-//             borderRadius: BorderRadius.circular(4),
-//             borderSide: BorderSide.none,
-//           ),
-//           hintText: selectedValue ?? 'Select an item', // Updated hint text
-//           hintStyle: FontFamily().regularText.copyWith(
-//                 color: Colors.grey[500],
-//           ),
-//         ),
-//         onChanged: (String? newValue) {
-//           setState(() {
-//             selectedValue = newValue;
-//           });
-//         },
-//         items: ['Select an item', ...widget.items]
-//             .map<DropdownMenuItem<String>>((String value) {
-//           return DropdownMenuItem<String>(
-//             value: value,
-//             child: Text(value, style: FontFamily().regularText,),
-//           );
-//         }).toList(),
-//       ),
-//     );
-//   }
-// }
-
 import 'package:flutter/material.dart';
+import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
 
 class MyDropdownWidget extends StatefulWidget {
+  final String hintText;
   final List<String> items;
   final Color? textColor;
   final ValueChanged<String>? onChanged;
+  final String? initialValue;
 
   const MyDropdownWidget({
     Key? key,
+    this.hintText = 'Select an item',
     required this.items,
     this.textColor,
+    this.initialValue,
     this.onChanged,
   }) : super(key: key);
 
@@ -69,6 +24,12 @@ class MyDropdownWidget extends StatefulWidget {
 
 class _MyDropdownWidgetState extends State<MyDropdownWidget> {
   String? selectedValue;
+    @override
+  void initState() {
+    super.initState();
+    // Inisialisasi selectedValue dengan initialValue jika disediakan
+    selectedValue = widget.initialValue;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -78,15 +39,15 @@ class _MyDropdownWidgetState extends State<MyDropdownWidget> {
         value: selectedValue,
         decoration: InputDecoration(
           filled: true,
-          fillColor: Colors.grey[200],
+          fillColor: ColorStyle().tertiaryColors,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(4),
             borderSide: BorderSide.none,
           ),
-          hintText: selectedValue ?? 'Select an item',
+          hintText: selectedValue ?? widget.hintText,
           hintStyle: FontFamily().regularText.copyWith(
-            color: Colors.grey[500],
-          ),
+                color: ColorStyle().disableColors,
+              ),
         ),
         onChanged: (String? newValue) {
           setState(() {
@@ -104,12 +65,53 @@ class _MyDropdownWidgetState extends State<MyDropdownWidget> {
             child: Text(
               value,
               style: FontFamily().regularText.copyWith(
-                color: widget.textColor ?? Colors.black,
-              ),
+                    color: widget.textColor ?? Colors.black,
+                  ),
             ),
           );
         }).toList(),
       ),
+    );
+  }
+}
+
+class MyDropdownWidgetSession extends StatelessWidget {
+  final List<String> items;
+  final String? selectedValue;
+  final Function(String?) onChanged;
+
+  MyDropdownWidgetSession(
+      {Key? key,
+      required this.items,
+      this.selectedValue,
+      required this.onChanged})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 56,
+      child: DropdownButtonFormField<String>(
+          value: selectedValue,
+          decoration: InputDecoration(
+            filled: true,
+            fillColor: ColorStyle().tertiaryColors,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(4),
+              borderSide: BorderSide.none,
+            ),
+            hintText: selectedValue ?? 'select category session',
+            hintStyle: FontFamily().regularText.copyWith(
+                  color: ColorStyle().disableColors,
+                ),
+          ),
+          onChanged: onChanged,
+          items: items.map<DropdownMenuItem<String>>((String value) {
+            return DropdownMenuItem<String>(
+              value: value,
+              child: Text(value),
+            );
+          }).toList()),
     );
   }
 }

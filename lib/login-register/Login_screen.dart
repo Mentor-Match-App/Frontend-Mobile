@@ -48,9 +48,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
           // Cek data yang disimpan di SharedPreferences
           Map<String, String?> userData = await AuthService.getUserData();
-          print("Data yang disimpan:");
-          print(
-              "UserID: ${userData['userId']}, Token: ${userData['token']}, Name: ${userData['name']}, Email: ${userData['email']}, Photo URL: ${userData['photoUrl']}, User Type: ${userData['userType']}");
+          // print("Data yang disimpan:");
+          // print(
+          //     "UserID: ${userData['userId']}, Token: ${userData['token']}, Name: ${userData['name']}, Email: ${userData['email']}, Photo URL: ${userData['photoUrl']}, User Type: ${userData['userType']}");
 
           // Navigasi ke halaman lain setelah login berhasil
           Navigator.of(context).pushReplacement(
@@ -75,7 +75,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Login'),
+        title: Image.asset('assets/Handoff/logo/LogoMobile.png'),
       ),
       body: ListView(
         children: [
@@ -93,7 +93,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return Center(
       child: Column(
         children: [
-          Image.asset('assets/Handoff/ilustrator/login.png'),
+          Image.asset('assets/Handoff/ilustrator/first screen.png'),
           Padding(
             padding: const EdgeInsets.all(20),
             child: Column(
@@ -102,7 +102,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 // Widget UI teks dan tombol login
                 welcomeText(),
                 loginButton(),
-                registerPrompt(),
               ],
             ),
           ),
@@ -148,31 +147,6 @@ class _LoginScreenState extends State<LoginScreen> {
               await signInWithGoogle();
             },
       title: "Login with Google Account",
-    );
-  }
-
-  Widget registerPrompt() {
-    return Center(
-      child: Padding(
-        padding: EdgeInsets.only(top: 10, bottom: 10),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text('Tidak punya akun?', style: FontFamily().regularText),
-            TextButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ChooseRoleScreen(),
-                  ),
-                );
-              },
-              child: Text('Register', style: FontFamily().boldText),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }

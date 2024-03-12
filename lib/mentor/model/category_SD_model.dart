@@ -1,12 +1,12 @@
 // To parse this JSON data, do
 //
-//     final kuliah = kuliahFromMap(jsonString);
+//     final sd = sdFromMap(jsonString);
 
 import 'dart:convert';
 
-SD kuliahFromMap(String str) => SD.fromMap(json.decode(str));
+SD sdFromMap(String str) => SD.fromMap(json.decode(str));
 
-String kuliahToMap(SD data) => json.encode(data.toMap());
+String sdToMap(SD data) => json.encode(data.toMap());
 
 class SD {
     bool? error;
@@ -44,9 +44,11 @@ class MentorSD {
     String? portofolio;
     String? photoUrl;
     String? about;
-    Class? mentorClass;
-    List<MentorReview>? mentorReviews;
-    List<Experience>? experiences;
+    String? accountNumber;
+    String? accountName;
+    List<ClassMentorSD>? mentorClass;
+    List<MentorReviewSD>? mentorReviews;
+    List<ExperienceSD>? experiences;
 
     MentorSD({
         this.id,
@@ -60,6 +62,8 @@ class MentorSD {
         this.portofolio,
         this.photoUrl,
         this.about,
+        this.accountNumber,
+        this.accountName,
         this.mentorClass,
         this.mentorReviews,
         this.experiences,
@@ -77,9 +81,11 @@ class MentorSD {
         portofolio: json["portofolio"],
         photoUrl: json["photoUrl"],
         about: json["about"],
-        mentorClass: json["class"] == null ? null : Class.fromMap(json["class"]),
-        mentorReviews: json["mentorReviews"] == null ? [] : List<MentorReview>.from(json["mentorReviews"]!.map((x) => MentorReview.fromMap(x))),
-        experiences: json["experiences"] == null ? [] : List<Experience>.from(json["experiences"]!.map((x) => Experience.fromMap(x))),
+        accountNumber: json["accountNumber"],
+        accountName: json["accountName"],
+        mentorClass: json["class"] == null ? [] : List<ClassMentorSD>.from(json["class"]!.map((x) => ClassMentorSD.fromMap(x))),
+        mentorReviews: json["mentorReviews"] == null ? [] : List<MentorReviewSD>.from(json["mentorReviews"]!.map((x) => MentorReviewSD.fromMap(x))),
+        experiences: json["experiences"] == null ? [] : List<ExperienceSD>.from(json["experiences"]!.map((x) => ExperienceSD.fromMap(x))),
     );
 
     Map<String, dynamic> toMap() => {
@@ -94,20 +100,22 @@ class MentorSD {
         "portofolio": portofolio,
         "photoUrl": photoUrl,
         "about": about,
-        "class": mentorClass?.toMap(),
+        "accountNumber": accountNumber,
+        "accountName": accountName,
+        "class": mentorClass == null ? [] : List<dynamic>.from(mentorClass!.map((x) => x.toMap())),
         "mentorReviews": mentorReviews == null ? [] : List<dynamic>.from(mentorReviews!.map((x) => x.toMap())),
         "experiences": experiences == null ? [] : List<dynamic>.from(experiences!.map((x) => x.toMap())),
     };
 }
 
-class Experience {
+class ExperienceSD {
     String? id;
     String? userId;
     bool? isCurrentJob;
     String? company;
     String? jobTitle;
 
-    Experience({
+    ExperienceSD({
         this.id,
         this.userId,
         this.isCurrentJob,
@@ -115,7 +123,7 @@ class Experience {
         this.jobTitle,
     });
 
-    factory Experience.fromMap(Map<String, dynamic> json) => Experience(
+    factory ExperienceSD.fromMap(Map<String, dynamic> json) => ExperienceSD(
         id: json["id"],
         userId: json["userId"],
         isCurrentJob: json["isCurrentJob"],
@@ -132,7 +140,7 @@ class Experience {
     };
 }
 
-class Class {
+class ClassMentorSD {
     String? id;
     String? mentorId;
     String? educationLevel;
@@ -140,14 +148,22 @@ class Class {
     String? name;
     String? description;
     List<String>? terms;
+    List<String>? targetLearning;
     int? price;
     bool? isActive;
     bool? isAvailable;
     bool? isVerified;
+    String? startDate;
+    String? endDate;
+    String? schedule;
     int? durationInDays;
+    String? location;
+    dynamic address;
+    int? maxParticipants;
     dynamic zoomLink;
+    List<TransactionSD>? transactions;
 
-    Class({
+    ClassMentorSD({
         this.id,
         this.mentorId,
         this.educationLevel,
@@ -155,15 +171,23 @@ class Class {
         this.name,
         this.description,
         this.terms,
+        this.targetLearning,
         this.price,
         this.isActive,
         this.isAvailable,
         this.isVerified,
+        this.startDate,
+        this.endDate,
+        this.schedule,
         this.durationInDays,
+        this.location,
+        this.address,
+        this.maxParticipants,
         this.zoomLink,
+        this.transactions,
     });
 
-    factory Class.fromMap(Map<String, dynamic> json) => Class(
+    factory ClassMentorSD.fromMap(Map<String, dynamic> json) => ClassMentorSD(
         id: json["id"],
         mentorId: json["mentorId"],
         educationLevel: json["educationLevel"],
@@ -171,12 +195,20 @@ class Class {
         name: json["name"],
         description: json["description"],
         terms: json["terms"] == null ? [] : List<String>.from(json["terms"]!.map((x) => x)),
+        targetLearning: json["targetLearning"] == null ? [] : List<String>.from(json["targetLearning"]!.map((x) => x)),
         price: json["price"],
         isActive: json["isActive"],
         isAvailable: json["isAvailable"],
         isVerified: json["isVerified"],
+        startDate: json["startDate"],
+        endDate: json["endDate"],
+        schedule: json["schedule"],
         durationInDays: json["durationInDays"],
+        location: json["location"],
+        address: json["address"],
+        maxParticipants: json["maxParticipants"],
         zoomLink: json["zoomLink"],
+        transactions: json["transactions"] == null ? [] : List<TransactionSD>.from(json["transactions"]!.map((x) => TransactionSD.fromMap(x))),
     );
 
     Map<String, dynamic> toMap() => {
@@ -187,23 +219,71 @@ class Class {
         "name": name,
         "description": description,
         "terms": terms == null ? [] : List<dynamic>.from(terms!.map((x) => x)),
+        "targetLearning": targetLearning == null ? [] : List<dynamic>.from(targetLearning!.map((x) => x)),
         "price": price,
         "isActive": isActive,
         "isAvailable": isAvailable,
         "isVerified": isVerified,
+        "startDate": startDate,
+        "endDate": endDate,
+        "schedule": schedule,
         "durationInDays": durationInDays,
+        "location": location,
+        "address": address,
+        "maxParticipants": maxParticipants,
         "zoomLink": zoomLink,
+        "transactions": transactions == null ? [] : List<dynamic>.from(transactions!.map((x) => x.toMap())),
     };
 }
 
-class MentorReview {
+class TransactionSD {
+    String? id;
+    String? classId;
+    String? createdAt;
+    int? uniqueCode;
+    String? paymentStatus;
+    String? expired;
+    String? userId;
+
+    TransactionSD({
+        this.id,
+        this.classId,
+        this.createdAt,
+        this.uniqueCode,
+        this.paymentStatus,
+        this.expired,
+        this.userId,
+    });
+
+    factory TransactionSD.fromMap(Map<String, dynamic> json) => TransactionSD(
+        id: json["id"],
+        classId: json["classId"],
+        createdAt: json["createdAt"],
+        uniqueCode: json["uniqueCode"],
+        paymentStatus: json["paymentStatus"],
+        expired: json["expired"],
+        userId: json["userId"],
+    );
+
+    Map<String, dynamic> toMap() => {
+        "id": id,
+        "classId": classId,
+        "createdAt": createdAt,
+        "uniqueCode": uniqueCode,
+        "paymentStatus": paymentStatus,
+        "expired": expired,
+        "userId": userId,
+    };
+}
+
+class MentorReviewSD {
     String? id;
     String? reviewerId;
     String? mentorId;
     String? content;
     String? reviewer;
 
-    MentorReview({
+    MentorReviewSD({
         this.id,
         this.reviewerId,
         this.mentorId,
@@ -211,7 +291,7 @@ class MentorReview {
         this.reviewer,
     });
 
-    factory MentorReview.fromMap(Map<String, dynamic> json) => MentorReview(
+    factory MentorReviewSD.fromMap(Map<String, dynamic> json) => MentorReviewSD(
         id: json["id"],
         reviewerId: json["reviewerId"],
         mentorId: json["mentorId"],

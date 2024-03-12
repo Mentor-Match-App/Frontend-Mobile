@@ -106,6 +106,7 @@ class _CardItemMentorState extends State<CardItemMentor> {
                 onPressed: widget.onPressesd,
               ),
             ),
+            SizedBox(height: 8)
           ],
         ),
       ),
