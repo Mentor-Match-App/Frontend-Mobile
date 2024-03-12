@@ -2,10 +2,12 @@
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:mentormatch_apps/mentee/screen/premiumClass/Kuliah/detail_class_mentor_Kuliah_screen.dart';
 import 'package:mentormatch_apps/mentee/screen/premiumClass/detail_booking_premium_class_screen.dart';
 import 'package:mentormatch_apps/mentee/service/bookingClass/bookclass_model.dart';
 import 'package:mentormatch_apps/mentee/service/bookingClass/bookclass_service.dart';
 import 'package:mentormatch_apps/mentor/model/category_Kuliah_model.dart';
+import 'package:mentormatch_apps/mentor/model/category_kuliah_model.dart';
 import 'package:mentormatch_apps/preferences/%20preferences_helper.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
@@ -153,7 +155,7 @@ class _DetailMentorKuliahScreenState extends State<DetailMentorKuliahScreen> {
                                     final linkedlnlink = widget.linkedin ?? '';
                                     _launchURL(linkedlnlink);
                                   },
-                                  icon: const Icon(Icons.link),
+                                  icon: Icon(Icons.link),
                                   label: Text('Linkedln',
                                       style: FontFamily().regularText.copyWith(
                                             color: ColorStyle().whiteColors,
@@ -295,130 +297,20 @@ class _DetailMentorKuliahScreenState extends State<DetailMentorKuliahScreen> {
       return Column(
         children: widget.reviews!.map((review) {
           return ReviewWidget(
-            name: review.reviewerId ?? "No Name",
+            name: review.reviewer ?? "No Name",
             review: review.content ?? "No Review",
           );
         }).toList(),
       );
     } else {
       // Jika tidak ada review, tampilkan pesan
-      return const Center(
+      return Center(
         child: Padding(
-          padding: EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(8.0),
           child: Text("Belum ada review",
               style: TextStyle(fontWeight: FontWeight.bold)),
         ),
       );
     }
-  }
-
-  ///// booking class ////
-  void _showDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          backgroundColor: ColorStyle().whiteColors,
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Text("Booking Class", style: FontFamily().titleText),
-              IconButton(
-                onPressed: () => Navigator.of(context).pop(),
-                icon: Icon(
-                  Icons.close_sharp,
-                  color: ColorStyle().errorColors,
-                ),
-              )
-            ],
-          ),
-          content: Padding(
-            padding: const EdgeInsets.all(12),
-            child: Text(
-              "Apakah Kamu yakin untuk memesan Premium Class ini?",
-              textAlign: TextAlign.center,
-              style: FontFamily().regularText,
-            ),
-          ),
-          actions: <Widget>[
-            // Actions untuk booking class...
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                SmallOutlinedButton(
-                  style: FontFamily().regularText.copyWith(
-                      color: ColorStyle().primaryColors, fontSize: 12),
-                  height: 48,
-                  width: 100,
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  title: "Cancel",
-                ),
-                SmallElevatedButton(
-                  style: FontFamily()
-                      .regularText
-                      .copyWith(color: ColorStyle().whiteColors, fontSize: 12),
-                  height: 48,
-                  width: 100,
-                  onPressed: () async {
-                    try {
-                      // Initialize UserPreferences if not already done.
-                      await UserPreferences.init();
-
-                      // Retrieve the user ID from SharedPreferences
-                      String? userId = UserPreferences.getUserId();
-
-                      if (userId != null) {
-                        BookingResultSession result =
-                            await bookClass(widget.classid, userId);
-
-                        if (result.isSuccess) {
-                          // If booking succeeds, navigate to the next screen
-                          int? uniqueCode =
-                              result.uniqueCode; // Here you get the uniqueCode
-                          // ignore: use_build_context_synchronously
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => DetailBookingClass(
-                                price: widget.price,
-                                nama_mentor: widget.name,
-                                nama_kelas: widget.namakelas,
-                                durasi: widget.periode,
-                                uniqueCode: uniqueCode!,
-                              ),
-                            ),
-                          );
-                        } else {
-                          // If booking fails, show an error message
-                          throw Exception("tidak bisa booking kelas ini");
-                        }
-                      } else {
-                        // If userId is not found, show an error
-                        throw Exception(
-                            "Anda belum login, silahkan login terlebih dahulu");
-                      }
-                    } catch (e) {
-                      // Show a SnackBar if an exception occurs
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text("Error: ${e.toString()}"),
-                          backgroundColor: ColorStyle().errorColors,
-                        ),
-                      );
-                    }
-                  },
-                  title: "Booking",
-                )
-              ],
-            ),
-          ],
-        );
-      },
-    );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mentormatch_apps/mentee/screen/detail_class_mentorclass.dart';
 import 'package:intl/intl.dart';
 import 'package:mentormatch_apps/mentee/screen/premiumClass/detail_booking_premium_class_screen.dart';
 import 'package:mentormatch_apps/mentee/service/bookingClass/bookclass_model.dart';
