@@ -48,7 +48,7 @@ class MyApp extends StatelessWidget {
           useMaterial3: true,
         ),
         home:
-            BottomNavbarMenteeScreen(), // Pastikan ini adalah widget awal yang Anda inginkan
+        BottomNavbarMenteeScreen(), // Pastikan ini adalah widget awal yang Anda inginkan
       ),
     );
   }
