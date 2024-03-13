@@ -51,4 +51,9 @@ class UserPreferences {
 
   static bool? getIsRoleJustSelected() =>
       _preferences.getBool(_keyIsRoleJustSelected);
+
+  static bool isLoggedIn() {
+    final token = getToken();
+    return token != null && token.isNotEmpty;
+  }
 }

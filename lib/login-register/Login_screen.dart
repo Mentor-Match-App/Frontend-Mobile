@@ -4,7 +4,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:mentormatch_apps/login-register/choose_role_screen.dart';
 import 'package:mentormatch_apps/login-register/login_service.dart';
-import 'package:mentormatch_apps/style/font_style.dart';
+import 'package:mentormatch_apps/mentee/screen/bottom_mentee_screen.dart';
+import 'package:mentormatch_apps/mentor/screen/bottom_mentor_screen.dart';
 import 'package:mentormatch_apps/widget/button.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -48,13 +49,24 @@ class _LoginScreenState extends State<LoginScreen> {
 
           // Cek data yang disimpan di SharedPreferences
           Map<String, String?> userData = await AuthService.getUserData();
-          // print("Data yang disimpan:");
-          // print(
-          //     "UserID: ${userData['userId']}, Token: ${userData['token']}, Name: ${userData['name']}, Email: ${userData['email']}, Photo URL: ${userData['photoUrl']}, User Type: ${userData['userType']}");
 
-          // Navigasi ke halaman lain setelah login berhasil
-          Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (context) => ChooseRoleScreen()));
+          // Tentukan navigasi berdasarkan userType
+          String? userType = userData['userType'];
+          if (userType == null) {
+            // Jika userType belum ada atau null, navigasi ke ChooseRoleScreen
+            Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (context) => ChooseRoleScreen()));
+          } else {
+            // Jika userType ada, navigasi ke halaman yang sesuai berdasarkan userType
+            // Contoh:
+            if (userType == "Mentee") {
+              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                  builder: (context) => BottomNavbarMenteeScreen()));
+            } else if (userType == "Mentor") {
+              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                  builder: (context) => BottomNavbarMentorScreen()));
+            }
+          }
         }
       }
     } catch (e) {
