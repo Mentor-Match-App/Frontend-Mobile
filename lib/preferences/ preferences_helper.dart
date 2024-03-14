@@ -56,4 +56,11 @@ class UserPreferences {
     final token = getToken();
     return token != null && token.isNotEmpty;
   }
+
+  //// logout ///
+  // Di dalam class UserPreferences
+  static Future clearPreferences() async {
+    // clearkan semuanya
+    await _preferences.clear();
+  }
 }

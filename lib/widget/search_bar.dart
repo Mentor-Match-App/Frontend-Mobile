@@ -3,8 +3,11 @@ import 'package:flutter/material.dart';
 class SearchBarWidget extends StatefulWidget {
   final String title;
   final VoidCallback? onPressed;
+  final TextEditingController? controller;
 
-  SearchBarWidget({Key? key, required this.title, this.onPressed})
+  SearchBarWidget({Key? key, required this.title,
+  this.controller,
+   this.onPressed})
       : super(key: key);
 
   @override
@@ -12,7 +15,7 @@ class SearchBarWidget extends StatefulWidget {
 }
 
 class _SearchBarWidgetState extends State<SearchBarWidget> {
-  final TextEditingController _searchController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -22,7 +25,7 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
         // width: 200.0, // Ubah nilai lebar sesuai kebutuhan
         padding: const EdgeInsets.symmetric(horizontal: 6.0),
         child: TextField(
-          controller: _searchController,
+          controller: widget.controller,
           decoration: InputDecoration(
             hintText: 'Search by name,company, role ',
             prefixIcon: IconButton(

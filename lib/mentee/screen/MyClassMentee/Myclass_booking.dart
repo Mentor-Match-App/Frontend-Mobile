@@ -86,7 +86,7 @@ class _MyClassBookingMenteeState extends State<MyClassBookingMentee> {
           return Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
           return Center(child: Text('Error: ${snapshot.error}'));
-        } else if (snapshot.hasData) {
+        } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
           final List<TransactionMyClass> classBooking = snapshot.data!;
           return SingleChildScrollView(
             child: Column(
@@ -212,7 +212,7 @@ class _MyClassBookingMenteeState extends State<MyClassBookingMentee> {
             ),
           );
         } else {
-          return Center(child: Text('No data'));
+          return const Text('Kamu belum memiliki kelas saat ini');
         }
       },
     );

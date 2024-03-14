@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:mentormatch_apps/login-register/Login_screen.dart';
 import 'package:mentormatch_apps/mentee/model/profile_model.dart';
 import 'package:mentormatch_apps/mentee/screen/notification_mentee_screen.dart';
 import 'package:mentormatch_apps/mentee/screen/profile/edit_profile_mentee_screen.dart';
 import 'package:mentormatch_apps/mentee/screen/profile/service.dart';
+import 'package:mentormatch_apps/preferences/%20preferences_helper.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
 import 'package:mentormatch_apps/style/text.dart';
 import 'package:mentormatch_apps/widget/category_card.dart';
 import 'package:mentormatch_apps/widget/experience_widget.dart';
 import 'package:mentormatch_apps/widget/profile_avatar.dart';
+import 'package:mentormatch_apps/widget/show_dialog_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ProfileMenteeScreen extends StatefulWidget {
@@ -285,30 +288,34 @@ class _ProfileMenteeScreenState extends State<ProfileMenteeScreen> {
                                 ),
                               ],
                             ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                TitleProfile(
-                                  title: 'Experience',
-                                  color: ColorStyle().primaryColors,
-                                ),
-                                Column(
-                                  children: mentee.user!.experiences
-                                          ?.where((experience) =>
-                                              experience.isCurrentJob == false)
-                                          .map((experience) {
-                                        return ExperienceWidget(
-                                          role: experience.jobTitle ??
-                                              'No Job Title',
-                                          company: experience.company ??
-                                              'No Company',
-                                        );
-                                      }).toList() ??
-                                      [
-                                        Text('No experiences')
-                                      ], // Jika tidak ada pengalaman atau list kosong, tampilkan 'No experiences'
-                                )
-                              ],
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  TitleProfile(
+                                    title: 'Experience',
+                                    color: ColorStyle().primaryColors,
+                                  ),
+                                  Column(
+                                    children: mentee.user!.experiences
+                                            ?.where((experience) =>
+                                                experience.isCurrentJob ==
+                                                false)
+                                            .map((experience) {
+                                          return ExperienceWidget(
+                                            role: experience.jobTitle ??
+                                                'No Job Title',
+                                            company: experience.company ??
+                                                'No Company',
+                                          );
+                                        }).toList() ??
+                                        [
+                                          Text('No experiences')
+                                        ], // Jika tidak ada pengalaman atau list kosong, tampilkan 'No experiences'
+                                  )
+                                ],
+                              ),
                             ),
                             Align(
                               alignment: Alignment.centerLeft,
@@ -329,8 +336,47 @@ class _ProfileMenteeScreenState extends State<ProfileMenteeScreen> {
                                       [Text('No skills')]),
                             ),
                             const SizedBox(
-                              height: 12,
+                              height: 24,
                             ),
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: TextButton.icon(
+                                onPressed: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return CustomConfirmationDialog(
+                                        aksi: 'Keluar',
+                                        aksi2: 'Batal',
+                                        title: "Konfirmasi",
+                                        content:
+                                            "Apakah kamu yakin ingin keluar dari aplikasi MentorMatch?",
+                                        onConfirm: () async {
+                                          // Tulis logika logout Anda di sini
+                                          // Misalnya, membersihkan shared preferences dan navigasi ke halaman login
+                                          await UserPreferences
+                                              .clearPreferences();
+                                          Navigator.of(context)
+                                              .pushAndRemoveUntil(
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    LoginScreen()),
+                                            (Route<dynamic> route) => false,
+                                          );
+                                        },
+                                      );
+                                    },
+                                  );
+                                },
+                                icon: Icon(Icons.logout,
+                                    color: ColorStyle().secondaryColors),
+                                label: Text(
+                                  'Logout',
+                                  style: FontFamily().regularText.copyWith(
+                                      color: ColorStyle().secondaryColors),
+                                ),
+                              ),
+                            )
                           ],
                         ),
                       ),

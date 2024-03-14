@@ -4,22 +4,22 @@
 
 import 'dart:convert';
 
-MyClassModel myClassModelFromMap(String str) => MyClassModel.fromMap(json.decode(str));
+MyClassModelMentee myClassModelFromMap(String str) => MyClassModelMentee.fromMap(json.decode(str));
 
-String myClassModelToMap(MyClassModel data) => json.encode(data.toMap());
+String myClassModelToMap(MyClassModelMentee data) => json.encode(data.toMap());
 
-class MyClassModel {
+class MyClassModelMentee {
     bool? error;
     String? message;
     UserMyClass? user;
 
-    MyClassModel({
+    MyClassModelMentee({
         this.error,
         this.message,
         this.user,
     });
 
-    factory MyClassModel.fromMap(Map<String, dynamic> json) => MyClassModel(
+    factory MyClassModelMentee.fromMap(Map<String, dynamic> json) => MyClassModelMentee(
         error: json["error"],
         message: json["message"],
         user: json["user"] == null ? null : UserMyClass.fromMap(json["user"]),

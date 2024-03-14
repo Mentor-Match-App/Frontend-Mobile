@@ -1,14 +1,17 @@
+import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import 'package:mentormatch_apps/mentor/model/myClass_mentor_model.dart';
-import 'package:mentormatch_apps/mentor/screen/MyClassMentor/akses_materi_myClass.dart';
+
+import 'package:mentormatch_apps/mentor/screen/MyClassMentor/akses_materi_myClass_mentor.dart';
 import 'package:mentormatch_apps/mentor/screen/MyClassMentor/evaluasi/evaluasi_mentor_screen.dart';
 import 'package:mentormatch_apps/mentor/screen/notification_mentor_screen.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
 import 'package:mentormatch_apps/style/text.dart';
 import 'package:mentormatch_apps/widget/category_card.dart';
+import 'package:mentormatch_apps/widget/flushsBar_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DetailMyClassMentorScreen extends StatefulWidget {
@@ -16,7 +19,7 @@ class DetailMyClassMentorScreen extends StatefulWidget {
   final String addressMentoring;
   final int approvedTransactionsCount;
   final List<Transaction> transactions;
-  final List<LearningMaterial> learningMaterial;
+  final List<LearningMaterialMentor> learningMaterial;
   final List<Evaluation> evaluation;
   final DateTime endDate;
   final DateTime startDate;
@@ -322,14 +325,22 @@ class _DetailMyClassMentorScreenState extends State<DetailMyClassMentorScreen> {
                     child: Row(
                       children: [
                         CardMyClass(
-                            messsage:
-                                "Klik untuk melakukan meeting dengan mentor",
-                            title: "Meeting",
-                            icon:
-                                'assets/Handoff/icon/MyClass/meeting_icon.png',
-                            onTap: () {
-                              _launchURL(widget.linkZoom);
-                            }),
+                          messsage:
+                              "Klik untuk melakukan meeting dengan mentor",
+                          title: "Meeting",
+                          icon: 'assets/Handoff/icon/MyClass/meeting_icon.png',
+                          onTap: () {
+                            if (widget.linkZoom == null ||
+                                widget.linkZoom!.isEmpty) {
+                              showTopSnackBar(
+                                  context, "Link Zoom belum tersedia",
+                                  leftBarIndicatorColor:
+                                      ColorStyle().errorColors);
+                            } else {
+                              _launchURL(widget.linkZoom!);
+                            }
+                          },
+                        ),
                         const SizedBox(
                           width: 8,
                         ),
@@ -341,7 +352,10 @@ class _DetailMyClassMentorScreenState extends State<DetailMyClassMentorScreen> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => MateryClassMentor(),
+                                  builder: (context) => MyMateriMentor(
+                                    classId: widget.classid,
+                                    learningMaterial: widget.learningMaterial,
+                                  ),
                                 ),
                               );
                             }),
@@ -357,6 +371,7 @@ class _DetailMyClassMentorScreenState extends State<DetailMyClassMentorScreen> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) => EvaluasiMentorScreen(
+                                  learningMaterial: widget.learningMaterial,
                                   transactions: widget.transactions,
                                   evaluasi: widget.evaluation,
                                 ),

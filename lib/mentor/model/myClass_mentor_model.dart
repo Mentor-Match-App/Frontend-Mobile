@@ -238,7 +238,7 @@ class Class {
     int? maxParticipants;
     String? zoomLink;
     String? rejectReason;
-    List<LearningMaterial>? learningMaterial;
+    List<LearningMaterialMentor>? learningMaterial;
     List<Evaluation>? evaluations;
     List<Transaction>? transactions;
 
@@ -291,7 +291,7 @@ class Class {
         maxParticipants: json["maxParticipants"],
         zoomLink: json["zoomLink"],
         rejectReason: json["rejectReason"],
-        learningMaterial: json["learningMaterial"] == null ? [] : List<LearningMaterial>.from(json["learningMaterial"]!.map((x) => LearningMaterial.fromMap(x))),
+        learningMaterial: json["learningMaterial"] == null ? [] : List<LearningMaterialMentor>.from(json["learningMaterial"]!.map((x) => LearningMaterialMentor.fromMap(x))),
         evaluations: json["evaluations"] == null ? [] : List<Evaluation>.from(json["evaluations"]!.map((x) => Evaluation.fromMap(x))),
         transactions: json["transactions"] == null ? [] : List<Transaction>.from(json["transactions"]!.map((x) => Transaction.fromMap(x))),
     );
@@ -388,20 +388,20 @@ class Feedback {
     };
 }
 
-class LearningMaterial {
+class LearningMaterialMentor {
     String? id;
     String? classId;
     String? title;
     String? link;
 
-    LearningMaterial({
+    LearningMaterialMentor({
         this.id,
         this.classId,
         this.title,
         this.link,
     });
 
-    factory LearningMaterial.fromMap(Map<String, dynamic> json) => LearningMaterial(
+    factory LearningMaterialMentor.fromMap(Map<String, dynamic> json) => LearningMaterialMentor(
         id: json["id"],
         classId: json["classId"],
         title: json["title"],

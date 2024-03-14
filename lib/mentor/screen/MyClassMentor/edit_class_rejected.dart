@@ -1,3 +1,4 @@
+import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mentormatch_apps/mentor/model/myClass_mentor_model.dart';
@@ -7,6 +8,7 @@ import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
 import 'package:mentormatch_apps/style/text.dart';
 import 'package:mentormatch_apps/widget/button.dart';
+import 'package:mentormatch_apps/widget/flushsBar_widget.dart';
 import 'package:mentormatch_apps/widget/textField.dart';
 import 'package:mentormatch_apps/widget/textField_dropdown.dart';
 import 'package:mentormatch_apps/widget/timePicker_widget.dart';
@@ -241,30 +243,31 @@ class _EditRejectedClassState extends State<EditRejectedClass> {
       }
     }
   }
+
   void updateClass() async {
-  final service = ClassUpdateService();
-  String result = await service.updateClass(
-    classId: widget.classData.id.toString(),
-    educationLevel: selectedEducationLevel,
-    category: selectedField,
-    name: nameController.text,
-    description: descriptionCobtroller.text,
-    terms: termsController.map((e) => e.text).toList(),
-    targetLearning: targetLearningController.map((e) => e.text).toList(),
-    price: int.parse(priceController.text),
-    durationInDays: int.parse(durationInDaysController.text),
-    startDate: startDateController.text,
-    endDate: endDateController.text,
-    schedule: scheduleController.text,
-    address: addressController.text,
-    location: selectedLocation,
-    maxParticipants: int.parse(maxParticipantsController.text),
-  );
+    final service = ClassUpdateService();
+    String result = await service.updateClass(
+      classId: widget.classData.id.toString(),
+      educationLevel: selectedEducationLevel,
+      category: selectedField,
+      name: nameController.text,
+      description: descriptionCobtroller.text,
+      terms: termsController.map((e) => e.text).toList(),
+      targetLearning: targetLearningController.map((e) => e.text).toList(),
+      price: int.parse(priceController.text),
+      durationInDays: int.parse(durationInDaysController.text),
+      startDate: startDateController.text,
+      endDate: endDateController.text,
+      schedule: scheduleController.text,
+      address: addressController.text,
+      location: selectedLocation,
+      maxParticipants: int.parse(maxParticipantsController.text),
+    );
 
-  // Tampilkan snackbar dengan hasil
-  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(result)));
-}
-
+    // Tampilkan snackbar dengan hasil
+    showTopSnackBar(context, result,
+        leftBarIndicatorColor: ColorStyle().succesColors);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -652,4 +655,6 @@ class _EditRejectedClassState extends State<EditRejectedClass> {
     }
     return null;
   }
+
+  
 }

@@ -8,14 +8,14 @@ import 'package:mentormatch_apps/widget/button.dart';
 
 enum ClassStatus { active, inactive, scheduled }
 
-class MyClassCreate extends StatefulWidget {
-  MyClassCreate({Key? key}) : super(key: key);
+class MyClassCreateMentor extends StatefulWidget {
+  MyClassCreateMentor({Key? key}) : super(key: key);
 
   @override
-  State<MyClassCreate> createState() => _MyClassCreateState();
+  State<MyClassCreateMentor> createState() => _MyClassCreateMentorState();
 }
 
-class _MyClassCreateState extends State<MyClassCreate> {
+class _MyClassCreateMentorState extends State<MyClassCreateMentor> {
   late Future<MyClassMentorMondel> classData;
 
   @override
@@ -215,7 +215,7 @@ class _MyClassCreateState extends State<MyClassCreate> {
             ),
           );
         } else {
-          return Center(child: Text('No data'));
+          return Center(child: Text('Kamu belum memiliki kelas saat ini'));
         }
       },
     );

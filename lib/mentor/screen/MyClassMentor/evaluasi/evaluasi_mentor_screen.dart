@@ -10,9 +10,11 @@ import 'package:url_launcher/url_launcher.dart';
 class EvaluasiMentorScreen extends StatefulWidget {
   final List<Transaction> transactions;
   final List<Evaluation> evaluasi;
+  final List<LearningMaterialMentor> learningMaterial;
 
   EvaluasiMentorScreen({
     Key? key,
+    required this.learningMaterial,
     required this.evaluasi,
     required this.transactions,
   }) : super(key: key);
@@ -153,6 +155,7 @@ class _EvaluasiMentorScreenState extends State<EvaluasiMentorScreen> {
                                 MaterialPageRoute(
                                   builder: (context) =>
                                       DetailEvaluastionMenteeMentorScreen(
+                                        learningMaterial: widget.learningMaterial,
                                     transactions: widget.transactions,
                                     classId: widget.transactions[index].classId
                                         .toString(),

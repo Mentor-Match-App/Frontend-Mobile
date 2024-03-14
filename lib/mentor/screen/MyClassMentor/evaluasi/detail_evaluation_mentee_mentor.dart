@@ -9,18 +9,20 @@ import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
 import 'package:mentormatch_apps/style/text.dart';
 import 'package:mentormatch_apps/widget/button.dart';
+import 'package:mentormatch_apps/widget/flushsBar_widget.dart';
 import 'package:mentormatch_apps/widget/textField.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DetailEvaluastionMenteeMentorScreen extends StatefulWidget {
   final String menteeName;
-
   final List<Transaction> transactions;
   final String currentMenteeId;
   final List<Evaluation> evaluations;
   final String classId;
+  final List<LearningMaterialMentor> learningMaterial;
   DetailEvaluastionMenteeMentorScreen({
     Key? key,
+    required this.learningMaterial,
     required this.transactions,
     required this.menteeName,
     required this.currentMenteeId,
@@ -37,12 +39,17 @@ class _DetailEvaluastionMenteeMentorScreenState
     extends State<DetailEvaluastionMenteeMentorScreen> {
   List<String> listMateriEvaluasi = [];
   String?
-      selectedMateriEvaluasi; // Ini digunakan untuk menampilkan item yang dipilih di dropdown
-  String? selectedEvaluationId; // Menyimpan ID dari evaluasi yang dipilih
+selectedMateriFeedback;
+  String? selectedEvaluationId; 
+  String? selectedMateriEvaluasi;
+
+  
 
 ////// controller ///
-  final TextEditingController _materiEvaluasiController1 =
+  final TextEditingController _materiEvaluasiController =
       TextEditingController();
+  // final TextEditingController _materiEvaluasiController1 =
+  //     TextEditingController();
   final TextEditingController _materiEvaluasiController2 =
       TextEditingController();
   final TextEditingController _linkEvaluasiController = TextEditingController();
@@ -53,12 +60,14 @@ class _DetailEvaluastionMenteeMentorScreenState
   @override
   void initState() {
     super.initState();
+
     listMateriEvaluasi = widget.evaluations.map((e) => e.topic ?? "").toList();
   }
 
   @override
   void dispose() {
-    _materiEvaluasiController1.dispose();
+    _materiEvaluasiController.dispose();
+    // _materiEvaluasiController1.dispose();
     _materiEvaluasiController2.dispose();
     _linkEvaluasiController.dispose();
     _hasilEvaluasiController.dispose();
@@ -67,11 +76,11 @@ class _DetailEvaluastionMenteeMentorScreenState
   }
 
   void _sendEvaluation() async {
-    if (_materiEvaluasiController1.text.isEmpty ||
+    if (_materiEvaluasiController.text.isEmpty ||
         _linkEvaluasiController.text.isEmpty) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('Semua field harus diisi.')));
-      return;
+      // Tampilkan pesan error jika salah satu field kosong
+      showTopSnackBar(context, "Field tidak boleh kosong",
+          leftBarIndicatorColor: ColorStyle().errorColors);
     }
 
     setState(() => _isLoading = true);
@@ -81,7 +90,7 @@ class _DetailEvaluastionMenteeMentorScreenState
       // `sendEvaluationLink` sekarang mengembalikan String yang berisi pesan respons
       String responseMessage = await service.sendEvaluationLink(
         widget.classId,
-        _materiEvaluasiController1.text,
+        _materiEvaluasiController.text,
         _linkEvaluasiController.text,
       );
 
@@ -90,7 +99,7 @@ class _DetailEvaluastionMenteeMentorScreenState
       // ignore: use_build_context_synchronously
       showTopSnackBar(context, responseMessage,
           leftBarIndicatorColor: ColorStyle().succesColors);
-      _materiEvaluasiController1.clear();
+      _materiEvaluasiController.clear();
       _linkEvaluasiController.clear();
     } catch (e) {
       // ignore: use_build_context_synchronously
@@ -104,14 +113,14 @@ class _DetailEvaluastionMenteeMentorScreenState
   ///sendfeedback///
   Future<void> _sendFeedback() async {
     if (_hasilEvaluasiController.text.isEmpty || selectedEvaluationId == null) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(
-              'Semua field harus diisi dan topik evaluasi harus dipilih.')));
+      // Tampilkan pesan error jika salah satu field kosong
+      showTopSnackBar(context, "Field tidak boleh kosong",
+          leftBarIndicatorColor: ColorStyle().errorColors);
       return;
     }
 
     final String? errorMessage = await FeedbackService.sendFeedback(
-      selectedEvaluationId!,
+       selectedEvaluationId!,
       widget.currentMenteeId,
       _hasilEvaluasiController.text,
     );
@@ -124,7 +133,7 @@ class _DetailEvaluastionMenteeMentorScreenState
       // Bersihkan form setelah berhasil
       _hasilEvaluasiController.clear();
       setState(() {
-        selectedMateriEvaluasi = null;
+        selectedMateriFeedback = null;
         selectedEvaluationId = null;
       });
     } else {
@@ -252,10 +261,49 @@ class _DetailEvaluastionMenteeMentorScreenState
                           title: "Materi Evaluasi",
                           color: ColorStyle().secondaryColors,
                         ),
-                        TextFieldWidget(
-                          controller: _materiEvaluasiController1,
-                          hintText: "nama topik materi evaluasi",
+                        // TextFieldWidget(
+                        //   controller: _materiEvaluasiController,
+                        //   hintText: "nama topik materi evaluasi",
+                        // ),
+                        DropdownButtonFormField<String>(
+                          value: selectedMateriEvaluasi,
+                          decoration: InputDecoration(
+                            filled: true,
+                            fillColor: ColorStyle().tertiaryColors,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(4),
+                              borderSide: BorderSide.none,
+                            ),
+                            hintText: 'Pilih materi evaluasi',
+                            hintStyle: FontFamily().regularText.copyWith(
+                                  color: ColorStyle().disableColors,
+                                ),
+                          ),
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              selectedMateriEvaluasi = newValue;
+                              // Cari materi evaluasi yang sesuai dari list
+                              final selectedMaterial =
+                                  widget.learningMaterial.firstWhere(
+                                (material) => material.title == newValue,
+                                orElse: () =>
+                                    LearningMaterialMentor(title: "", link: ""),
+                              );
+                              // Perbarui controller dengan title dari materi yang dipilih
+                              _materiEvaluasiController.text =
+                                  selectedMaterial.title ?? "";
+                            });
+                          },
+                          items: widget.learningMaterial
+                              .map((LearningMaterialMentor material) {
+                            return DropdownMenuItem<String>(
+                              value: material.title,
+                              child: Text(material.title ?? ""),
+                            );
+                          }).toList(),
+                          isExpanded: true,
                         ),
+
                         TittleTextField(
                           title: "Link Evaluasi",
                           color: ColorStyle().secondaryColors,
@@ -313,44 +361,48 @@ class _DetailEvaluastionMenteeMentorScreenState
                               title: "Materi Evaluasi",
                               color: ColorStyle().secondaryColors,
                             ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 8.0),
-                              child: DropdownButtonFormField<String>(
-                                value: selectedMateriEvaluasi,
-                                decoration: InputDecoration(
-                                  filled: true,
-                                  fillColor: ColorStyle().tertiaryColors,
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(4),
-                                    borderSide: BorderSide.none,
-                                  ),
-                                  hintText: 'Pilih materi evaluasi',
-                                  hintStyle: FontFamily().regularText.copyWith(
-                                        color: ColorStyle().disableColors,
-                                      ),
+                            DropdownButtonFormField<String>(
+                              value: selectedMateriFeedback,
+                              decoration: InputDecoration(
+                                filled: true,
+                                fillColor: ColorStyle().tertiaryColors,
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(4),
+                                  borderSide: BorderSide.none,
                                 ),
-                                onChanged: (String? newValue) {
-                                  // Logika onChange
-                                },
-                                items: widget.evaluations
-                                    .map<DropdownMenuItem<String>>(
-                                  (Evaluation evaluation) {
-                                    return DropdownMenuItem<String>(
-                                      value: evaluation.topic,
-                                      child: Text(
-                                        evaluation.topic!,
-                                        // Style untuk teks di dalam dropdown item
-                                        style: TextStyle(
-                                          overflow: TextOverflow
-                                              .ellipsis, // Ini tidak berdampak pada DropdownMenuItem
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                ).toList(),
-                                isExpanded:
-                                    true, // Membuat dropdown menyesuaikan lebarnya dengan item terpanjang
+                                hintText: 'Pilih materi evaluasi',
+                                hintStyle: FontFamily().regularText.copyWith(
+                                      color: ColorStyle().disableColors,
+                                    ),
                               ),
+                              onChanged: (newValue) {
+                                setState(() {
+                                  selectedMateriFeedback = newValue;
+                                  // Temukan Evaluation yang sesuai dengan topic yang dipilih untuk mendapatkan ID-nya
+                                  final selectedEval =
+                                      widget.learningMaterial.firstWhere(
+                                    (learningMaterial) =>
+                                        learningMaterial.title == newValue,
+                                    orElse: () => (LearningMaterialMentor(
+                                      title: null,
+                                      link: null,
+                                      id: null,
+                                      classId: null,
+                                    )),
+                                  );
+                                   selectedEvaluationId = selectedEval.id;
+                                });
+                              },
+                              items: widget.learningMaterial.map(
+                                  (LearningMaterialMentor
+                                      learningMaterialMentor) {
+                                return DropdownMenuItem<String>(
+                                  value: learningMaterialMentor.title,
+                                  child:
+                                      Text(learningMaterialMentor.title ?? ""),
+                                );
+                              }).toList(),
+                              isExpanded: true,
                             ),
                             const SizedBox(height: 12),
                             TittleTextField(
@@ -397,23 +449,5 @@ class _DetailEvaluastionMenteeMentorScreenState
         ],
       ),
     );
-  }
-
-  void showTopSnackBar(BuildContext context, String message,
-      {Color leftBarIndicatorColor = Colors.blue}) {
-    Flushbar(
-      backgroundColor: ColorStyle().secondaryColors,
-      message: message,
-      icon: const Icon(
-        Icons.info_outline,
-        size: 28.0,
-        color: Colors.white, // Atur warna ikon menjadi putih
-      ),
-      duration: Duration(seconds: 3),
-      leftBarIndicatorColor: leftBarIndicatorColor,
-      margin: EdgeInsets.all(8),
-      borderRadius: BorderRadius.circular(8),
-      flushbarPosition: FlushbarPosition.TOP, // Menampilkan di bagian atas
-    ).show(context);
   }
 }

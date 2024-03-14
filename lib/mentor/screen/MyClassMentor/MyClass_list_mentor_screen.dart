@@ -152,12 +152,12 @@ class _MyClassMentorListScreenState extends State<MyClassMentorListScreen> {
               Column(
                 children: [
                   isClassActive
-                      ? MyClassCreate()
+                      ? MyClassCreateMentor()
                       : isSessionActive
                           ? MySessionCreate()
                           : isPremiumClassActive
                               ? MyPremiumClassMentorScreen()
-                              : MyClassCreate()
+                              : MyClassCreateMentor()
                 ],
               )
             ],

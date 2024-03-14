@@ -1,4 +1,5 @@
 // ignore: file_names
+import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mentormatch_apps/mentee/model/myClass_model.dart';
@@ -10,6 +11,8 @@ import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
 import 'package:mentormatch_apps/style/text.dart';
 import 'package:mentormatch_apps/widget/category_card.dart';
+import 'package:mentormatch_apps/widget/flushsBar_widget.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class DetailMyClassMenteeScreen extends StatefulWidget {
   final DateTime endDate;
@@ -57,6 +60,16 @@ class DetailMyClassMenteeScreen extends StatefulWidget {
 }
 
 class _DetailMyClassMenteeScreenState extends State<DetailMyClassMenteeScreen> {
+  _launchURL(String url) async {
+    // ignore: deprecated_member_use
+    if (await canLaunch(url)) {
+      // ignore: deprecated_member_use
+      await launch(url);
+    } else {
+      throw 'Tidak dapat membuka $url';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     String formattedStartDate =
@@ -312,12 +325,22 @@ class _DetailMyClassMenteeScreenState extends State<DetailMyClassMenteeScreen> {
                     child: Row(
                       children: [
                         CardMyClass(
-                            messsage:
-                                "Klik untuk melakukan meeting dengan mentor",
-                            title: "Meeting",
-                            icon:
-                                'assets/Handoff/icon/MyClass/meeting_icon.png',
-                            onTap: () {}),
+                          messsage:
+                              "Klik untuk melakukan meeting dengan mentor",
+                          title: "Meeting",
+                          icon: 'assets/Handoff/icon/MyClass/meeting_icon.png',
+                          onTap: () {
+                            if (widget.linkZoom == null ||
+                                widget.linkZoom!.isEmpty) {
+                              showTopSnackBar(
+                                  context, "Link Zoom belum tersedia",
+                                  leftBarIndicatorColor:
+                                      ColorStyle().errorColors);
+                            } else {
+                              _launchURL(widget.linkZoom!);
+                            }
+                          },
+                        ),
                         const SizedBox(
                           width: 8,
                         ),
@@ -387,4 +410,6 @@ class _DetailMyClassMenteeScreenState extends State<DetailMyClassMenteeScreen> {
       ),
     );
   }
+
+  
 }

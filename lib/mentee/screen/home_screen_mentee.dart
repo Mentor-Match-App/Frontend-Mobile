@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mentormatch_apps/mentee/screen/Session/all_session_screen.dart';
 import 'package:mentormatch_apps/mentee/screen/Session/detail_session_mentor.dart';
 import 'package:mentormatch_apps/mentee/screen/detail_mentor_class_screen.dart';
 import 'package:mentormatch_apps/mentee/screen/premiumClass/Karier/Karier_screen.dart';
@@ -7,6 +8,7 @@ import 'package:mentormatch_apps/mentee/screen/premiumClass/Kuliah/Kuliah_screen
 import 'package:mentormatch_apps/mentee/screen/premiumClass/SD/sd_screen.dart';
 import 'package:mentormatch_apps/mentee/screen/premiumClass/SMA/SMA_screen.dart';
 import 'package:mentormatch_apps/mentee/screen/premiumClass/SMP/SMP_screen.dart';
+import 'package:mentormatch_apps/mentee/screen/premiumClass/premium_class_screen.dart';
 import 'package:mentormatch_apps/mentee/service/session_mentor_service.dart';
 import 'package:mentormatch_apps/mentor/model/mentor_model.dart';
 import 'package:mentormatch_apps/mentor/model/session_model.dart';
@@ -28,18 +30,25 @@ class HomeMenteeScreen extends StatefulWidget {
 
 class _HomeMenteeScreenState extends State<HomeMenteeScreen> {
   late Future<List<dynamic>> _futureData;
-
   // Membuat instance dari kedua service
   final SessionServices _sessionServices = SessionServices();
   final MentorService _mentorService = MentorService();
+  TextEditingController searchController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
+
     _futureData = Future.wait([
       _sessionServices.getSessionData(),
       _mentorService.fetchFilteredMentors(),
     ]);
+  }
+
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
   }
 
   @override
@@ -75,7 +84,12 @@ class _HomeMenteeScreenState extends State<HomeMenteeScreen> {
                               fontSize: 14,
                             ),
                       ),
-                      SearchBarWidget(title: "Search Mentor"),
+                      SearchBarWidget(
+                          controller: searchController,
+                          title: "Search Mentor",
+                          onPressed: () {
+                            // searchMentor(searchController.text);
+                          }),
                       const SizedBox(height: 8.0),
                       TittleTextField(
                         title: "Premium Class",
@@ -156,7 +170,14 @@ class _HomeMenteeScreenState extends State<HomeMenteeScreen> {
                             color: ColorStyle().secondaryColors,
                           ),
                           TextButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => PremiumClassScreen(),
+                                ),
+                              );
+                            },
                             child: Text(
                               "See All",
                               style: FontFamily().regularText.copyWith(
@@ -203,7 +224,7 @@ class _HomeMenteeScreenState extends State<HomeMenteeScreen> {
                                       MaterialPageRoute(
                                         builder: (context) =>
                                             DetailMentorClassAllScreen(
-                                              reviews: mentor.mentorReviews ?? [],
+                                          reviews: mentor.mentorReviews ?? [],
                                           experiences: mentor.experiences ?? [],
                                           email: mentor.email ?? '',
                                           classes: mentor.mentorClass ?? [],
@@ -240,7 +261,14 @@ class _HomeMenteeScreenState extends State<HomeMenteeScreen> {
                             color: ColorStyle().secondaryColors,
                           ),
                           TextButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => AllSessionScreen(),
+                                ),
+                              );
+                            },
                             child: Text(
                               "See All",
                               style: FontFamily().regularText.copyWith(
@@ -259,130 +287,143 @@ class _HomeMenteeScreenState extends State<HomeMenteeScreen> {
                           scrollDirection: Axis.horizontal,
                           child: Row(
                             children: List.generate(
-                                mentorSessionData.mentors!.length, (index) {
-                              final mentor = mentorSessionData.mentors![index];
-                              final currentExperience =
-                                  mentor.experiences!.firstWhere(
-                                (experience) =>
-                                    experience.isCurrentJob ?? false,
-                                orElse: () =>
-                                    Experience(), // Menyediakan default Experience jika tidak ditemukan
-                              );
-                              ////// session active///////
+                              mentorSessionData.mentors!.length,
+                              (index) {
+                                final mentor =
+                                    mentorSessionData.mentors![index];
+                                final currentExperience =
+                                    mentor.experiences!.firstWhere(
+                                  (experience) =>
+                                      experience.isCurrentJob ?? false,
+                                  orElse: () =>
+                                      Experience(), // Menyediakan default Experience jika tidak ditemukan
+                                );
+                                ////// session active///////
 
-                              var firstActiveSession =
-                                  mentor.session?.firstWhere(
-                                (s) => s.isActive == true,
-                                orElse: () =>
-                                    SessionElement(), // Provide a default session element if no active session is found
-                              );
-                              ////// session full///////
-                              var isSessionFull = (firstActiveSession
-                                          ?.participant?.length ??
-                                      0) >=
-                                  (firstActiveSession?.maxParticipants ?? 0);
-                              var numberOfParticipants =
-                                  firstActiveSession!.participant?.length ?? 0;
-                              ////// name session///////
-                              var activeSessionName =
-                                  firstActiveSession.title ??
-                                      "No active session";
-                              ////// date time session///////
-                              var activeSessionDateTime =
-                                  firstActiveSession.dateTime ??
-                                      "No date/time provided";
-                              ////// description session///////
-                              var activeSessionDescription =
-                                  firstActiveSession.description ??
-                                      "No description provided";
-                              ////// button color is full //////
-                              final Color buttonColor = isSessionFull
-                                  ? ColorStyle().disableColors
-                                  : ColorStyle().primaryColors;
-                              ////// slot///////
-                              SessionElement sessionElement =
-                                  mentor.session!.first;
-                              int maxParticipants =
-                                  sessionElement.maxParticipants ?? 0;
-                              int currentParticipants =
-                                  sessionElement.participant?.length ?? 0;
-                              int availableSlots =
-                                  maxParticipants - currentParticipants;
-                              return Container(
-                                margin: const EdgeInsets.only(right: 8.0),
-                                height: 250,
-                                width: 150,
-                                child: CardItemMentor(
-                                  color: buttonColor,
-                                  onPressesd: isSessionFull
-                                      ? () {}
-                                      : () {
-                                          // Logika untuk navigasi ketika sesi belum penuh
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  DetailMentorSessionsNew(
-                                                availableSlots: availableSlots,
-                                                sessionsid: mentor.session!
-                                                        .firstWhere((s) =>
-                                                            s.isActive == true)
-                                                        .id ??
-                                                    "",
+                                var firstActiveSession =
+                                    mentor.session?.firstWhere(
+                                  (s) => s.isActive == true,
+                                  orElse: () =>
+                                      SessionElement(), // Provide a default session element if no active session is found
+                                );
+                                ////// session full///////
+                                var isSessionFull = (firstActiveSession
+                                            ?.participant?.length ??
+                                        0) >=
+                                    (firstActiveSession?.maxParticipants ?? 0);
+                                var numberOfParticipants =
+                                    firstActiveSession!.participant?.length ??
+                                        0;
+                                ////// name session///////
+                                var activeSessionName =
+                                    firstActiveSession.title ??
+                                        "No active session";
+                                ////// date time session///////
+                                var activeSessionDateTime =
+                                    firstActiveSession.dateTime ??
+                                        "No date/time provided";
+                                ////// description session///////
+                                var activeSessionDescription =
+                                    firstActiveSession.description ??
+                                        "No description provided";
+                                ////// button color is full //////
+                                final Color buttonColor = isSessionFull
+                                    ? ColorStyle().disableColors
+                                    : ColorStyle().primaryColors;
+                                ////// slot///////
+                                SessionElement sessionElement =
+                                    mentor.session!.first;
+                                int maxParticipants =
+                                    sessionElement.maxParticipants ?? 0;
+                                int currentParticipants =
+                                    sessionElement.participant?.length ?? 0;
+                                int availableSlots =
+                                    maxParticipants - currentParticipants;
+                                return Container(
+                                  margin: const EdgeInsets.only(right: 8.0),
+                                  height: 250,
+                                  width: 150,
+                                  child: CardItemMentor(
+                                    color: buttonColor,
+                                    onPressesd: isSessionFull
+                                        ? () {}
+                                        : () {
+                                            // Logika untuk navigasi ketika sesi belum penuh
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    DetailMentorSessionsNew(
+                                                  availableSlots:
+                                                      availableSlots,
+                                                  sessionsid: mentor.session!
+                                                          .firstWhere((s) =>
+                                                              s.isActive ==
+                                                              true)
+                                                          .id ??
+                                                      "",
 
-                                                participants:
-                                                    numberOfParticipants,
-                                                about: mentor.about ?? "",
-                                                namaMentor: mentor.name ?? "",
-                                                photoUrl: mentor.photoUrl ?? "",
-                                                job: mentor.experiences
-                                                        ?.firstWhere(
-                                                          (exp) =>
-                                                              exp.isCurrentJob ==
-                                                              true,
-                                                          orElse: () =>
-                                                              Experience(
-                                                                  jobTitle: "",
-                                                                  company: ""),
-                                                        )
-                                                        .jobTitle ??
-                                                    "",
-                                                company: mentor.experiences
-                                                        ?.firstWhere(
-                                                          (exp) =>
-                                                              exp.isCurrentJob ==
-                                                              true,
-                                                          orElse: () =>
-                                                              Experience(
-                                                                  jobTitle: "",
-                                                                  company: ""),
-                                                        )
-                                                        .company ??
-                                                    "",
-                                                email: mentor.email ?? "",
-                                                linkedin: mentor.linkedin ?? "",
-                                                skills: mentor.skills ?? [],
-                                                location: mentor.location ?? "",
-                                                mentor: mentor,
-                                                namaSessios:
-                                                    activeSessionName, // Session name
-                                                jadwal:
-                                                    activeSessionDateTime, // Session date/time
-                                                description:
-                                                    activeSessionDescription, // Session description
+                                                  participants:
+                                                      numberOfParticipants,
+                                                  about: mentor.about ?? "",
+                                                  namaMentor: mentor.name ?? "",
+                                                  photoUrl:
+                                                      mentor.photoUrl ?? "",
+                                                  job: mentor.experiences
+                                                          ?.firstWhere(
+                                                            (exp) =>
+                                                                exp.isCurrentJob ==
+                                                                true,
+                                                            orElse: () =>
+                                                                Experience(
+                                                                    jobTitle:
+                                                                        "",
+                                                                    company:
+                                                                        ""),
+                                                          )
+                                                          .jobTitle ??
+                                                      "",
+                                                  company: mentor.experiences
+                                                          ?.firstWhere(
+                                                            (exp) =>
+                                                                exp.isCurrentJob ==
+                                                                true,
+                                                            orElse: () =>
+                                                                Experience(
+                                                                    jobTitle:
+                                                                        "",
+                                                                    company:
+                                                                        ""),
+                                                          )
+                                                          .company ??
+                                                      "",
+                                                  email: mentor.email ?? "",
+                                                  linkedin:
+                                                      mentor.linkedin ?? "",
+                                                  skills: mentor.skills ?? [],
+                                                  location:
+                                                      mentor.location ?? "",
+                                                  mentor: mentor,
+                                                  namaSessios:
+                                                      activeSessionName, // Session name
+                                                  jadwal:
+                                                      activeSessionDateTime, // Session date/time
+                                                  description:
+                                                      activeSessionDescription, // Session description
+                                                ),
                                               ),
-                                            ),
-                                          );
-                                        },
-                                  imagePath: mentor.photoUrl ??
-                                      'assets/Handoff/ilustrator/profile.png',
-                                  name: mentor.name ?? 'No Name',
-                                  job: currentExperience.jobTitle ?? '',
-                                  company: currentExperience.company ??
-                                      'Placeholder Company',
-                                ),
-                              );
-                            }),
+                                            );
+                                          },
+                                    imagePath: mentor.photoUrl ??
+                                        'assets/Handoff/ilustrator/profile.png',
+                                    name: mentor.name ?? 'No Name',
+                                    job: currentExperience.jobTitle ?? '',
+                                    company: currentExperience.company ??
+                                        'Placeholder Company',
+                                  ),
+                                );
+                              },
+                            ),
                           ),
                         ),
                       ),

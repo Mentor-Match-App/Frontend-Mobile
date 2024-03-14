@@ -4,6 +4,7 @@ import 'package:mentormatch_apps/mentor/screen/profile_mentor/service.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
 import 'package:mentormatch_apps/widget/button.dart';
+import 'package:mentormatch_apps/widget/flushsBar_widget.dart';
 import 'package:mentormatch_apps/widget/profile_avatar.dart';
 import 'package:mentormatch_apps/widget/textField.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -366,19 +367,14 @@ class _EditProfileMentorScreenState extends State<EditProfileMentorScreen> {
         onPressed: () {
           // Validate if any skills have been added to the chips (i.e., the _skills list is not empty)
           if (_skills.isEmpty) {
-            // If no skills have been added to chips, show a SnackBar prompting the user to add at least one skill
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(
-                    "Please add at least one skill using the 'Add Skill' button."),
-                backgroundColor: Colors.red,
-              ),
-            );
+            showTopSnackBar(context, 'Please add at least one skill',
+                leftBarIndicatorColor: ColorStyle().errorColors);
           } else if (_formKey.currentState!.validate()) {
             // If there are one or more skills added and the form is valid, proceed to update the profile
             _formKey.currentState!.save();
             _updateUserProfile();
-
+            showTopSnackBar(context, 'Profile updated successfully',
+                leftBarIndicatorColor: ColorStyle().succesColors);
             Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(builder: (context) => MentorProfileScreen()),

@@ -7,6 +7,7 @@ import 'package:mentormatch_apps/mentee/screen/premiumClass/premium_class_screen
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
 import 'package:mentormatch_apps/widget/button.dart';
+import 'package:mentormatch_apps/widget/flushsBar_widget.dart';
 
 class DetailBookingClass extends StatefulWidget {
   final int uniqueCode;
@@ -245,21 +246,6 @@ class _DetailBookingClassState extends State<DetailBookingClass> {
     );
   }
 
-  /// creta topsnackbar after copy to clipboard
-  void showTopSnackBar(BuildContext context, String message) {
-    Flushbar(
-      backgroundColor: ColorStyle().secondaryColors,
-      message: 'Teks telah disalin',
-      icon: Icon(
-        Icons.copy_outlined,
-        size: 28.0,
-        color: ColorStyle().whiteColors,
-      ),
-      duration: Duration(seconds: 3),
-      leftBarIndicatorColor: ColorStyle().succesColors,
-      margin: EdgeInsets.all(8),
-      borderRadius: BorderRadius.circular(8),
-      flushbarPosition: FlushbarPosition.TOP, // Menampilkan di bagian atas
-    ).show(context);
-  }
+  
+ 
 }
