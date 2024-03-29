@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mentormatch_apps/mentor/provider/create_class_provider.dart';
-import 'package:mentormatch_apps/mentor/screen/createClass_Session/contoh_premium_class.dart';
+import 'package:mentormatch_apps/mentor/screen/create_Class_dan_Session/contoh_premium_class.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
-import 'package:mentormatch_apps/mentor/screen/createClass_Session/succes_create_class.dart';
+import 'package:mentormatch_apps/mentor/screen/create_Class_dan_Session/succes_create_class.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
 import 'package:mentormatch_apps/style/text.dart';
@@ -190,17 +190,19 @@ class _FormCreatePremiumClassScreenState
         (Route<dynamic> route) => false,
       );
     } else {
+      String errorMessage =
+          Provider.of<CreateClassProvider>(context, listen: false).errorMessage;
       // Tampilkan error message
       // ignore: use_build_context_synchronously
       showDialog(
         context: context,
-        builder: (BuildContext context) {
+        builder: (context) {
           return AlertDialog(
             title: const Text("Error"),
-            content: const Text("Failed to create class."),
-            actions: [
+            content: Text(errorMessage),
+            actions: <Widget>[
               TextButton(
-                child: const Text("OK"),
+                child: const Text('OK'),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },

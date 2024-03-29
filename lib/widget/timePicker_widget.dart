@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:intl/intl.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
@@ -7,11 +6,12 @@ import 'package:mentormatch_apps/style/font_style.dart';
 class TimePickerWidget extends StatefulWidget {
   final String title;
   final TextEditingController controller;
+  final void Function(DateTime time) onTimeSelected;
 
   TimePickerWidget(
       {Key? key,
       required this.controller,
-      required Null Function(dynamic time) onTimeSelected,
+      required this.onTimeSelected,
       required this.title})
       : super(key: key);
 
@@ -27,10 +27,15 @@ class _TimePickerWidgetState extends State<TimePickerWidget> {
     );
     if (picked != null) {
       final now = DateTime.now();
-      final dt =
-          DateTime(now.year, now.month, now.day, picked.hour, picked.minute);
-      final formattedTime = DateFormat('HH:mm').format(dt); // Format 24 jam
-      widget.controller.text = formattedTime;
+      final selectedDateTime = DateTime(
+        now.year,
+        now.month,
+        now.day, // Tidak termasuk tanggal saat ini
+        picked.hour,
+        picked.minute,
+      );
+      widget.controller.text = DateFormat.Hm().format(selectedDateTime);
+      widget.onTimeSelected(selectedDateTime);
     }
   }
 
@@ -68,7 +73,10 @@ class DatePickerWidget extends StatefulWidget {
   final Function(DateTime) onDateSelected;
   final TextEditingController controller;
 
-  DatePickerWidget({required this.onDateSelected, required this.controller, this.labelText = "Pilih Tanggal"});
+  DatePickerWidget(
+      {required this.onDateSelected,
+      required this.controller,
+      this.labelText = "Pilih Tanggal"});
 
   @override
   _DatePickerWidgetState createState() => _DatePickerWidgetState();
@@ -76,20 +84,19 @@ class DatePickerWidget extends StatefulWidget {
 
 class _DatePickerWidgetState extends State<DatePickerWidget> {
   final TextEditingController selecDateController = TextEditingController();
+
   DateTime selectedDate = DateTime.now();
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: selectedDate,
-      firstDate: DateTime(2000),
+      firstDate: DateTime(2024),
       lastDate: DateTime(2025),
     );
-    if (picked != null && picked != selectedDate) {
-      setState(() {
-        selectedDate = picked;
-      });
-      widget.onDateSelected(selectedDate);
+    if (picked != null) {
+      widget.controller.text = DateFormat('dd-MM-yyyy').format(picked);
+      widget.onDateSelected(picked);
     }
   }
 

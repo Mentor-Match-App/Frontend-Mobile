@@ -1,26 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:mentormatch_apps/mentor/screen/createClass_Session/form_create_class.dart';
-import 'package:mentormatch_apps/mentor/screen/daftar_mentor/syaratketentuan_daftar_mentor/persetujuan_rekening.dart';
+import 'package:mentormatch_apps/mentor/screen/create_Class_dan_Session/form_create_class.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
 import 'package:mentormatch_apps/style/text.dart';
 
-class PersetujuanTahapanPremiumClassMentor extends StatefulWidget {
-  PersetujuanTahapanPremiumClassMentor({Key? key}) : super(key: key);
+class PersetujuanPremiClassMentor extends StatefulWidget {
+  PersetujuanPremiClassMentor({Key? key}) : super(key: key);
 
   @override
-  State<PersetujuanTahapanPremiumClassMentor> createState() =>
-      _PersetujuanTahapanPremiumClassMentorState();
+  State<PersetujuanPremiClassMentor> createState() =>
+      _PersetujuanPremiClassMentorState();
 }
 
-class _PersetujuanTahapanPremiumClassMentorState extends State<PersetujuanTahapanPremiumClassMentor> {
+class _PersetujuanPremiClassMentorState
+    extends State<PersetujuanPremiClassMentor> {
   bool _isSelected = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Persetujuan Premium Class',
+          'Syarat & Ketentuan',
           style: FontFamily().titleText.copyWith(
                 color: ColorStyle().primaryColors,
               ),
@@ -41,9 +41,159 @@ class _PersetujuanTahapanPremiumClassMentorState extends State<PersetujuanTahapa
                   height: 8,
                 ),
                 const TittleTextField(
-                  title: 'Syarat & Ketentuan',
+                  title: 'Premium Class',
                 ),
                 Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text('\u2022'),
+                    const SizedBox(
+                      width: 6,
+                    ),
+                    Expanded(
+                      child: Text(
+                        'Mentor wajib berkomitmen untuk membuat kelas dengan kualitas yang tinggi dan memenuhi janji waktu yang telah ditetapkan.',
+                        style: FontFamily().regularText,
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text('\u2022'),
+                    const SizedBox(
+                      width: 6,
+                    ),
+                    Expanded(
+                      child: Text(
+                        'Mentor harus memiliki materi dan topik yang relevan, bermanfaat, dan menarik bagi peserta kelas.',
+                        style: FontFamily().regularText,
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text('\u2022'),
+                    const SizedBox(
+                      width: 6,
+                    ),
+                    Expanded(
+                      child: Text(
+                        'Mentor berhak menetapkan harga kelas sesuai dengan standar dan nilai dari materi yang diajarkan.',
+                        style: FontFamily().regularText,
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text('\u2022'),
+                    const SizedBox(
+                      width: 6,
+                    ),
+                    Expanded(
+                      child: Text(
+                        'Mentor akan menerima 70% dari harga yang telah ditetapkan sebagai gaji, yang akan ditransfer ke rekening bank yang telah didaftarkan.',
+                        style: FontFamily().regularText,
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text('\u2022'),
+                    const SizedBox(
+                      width: 6,
+                    ),
+                    Expanded(
+                      child: Text(
+                        'Apabila mentor tidak memenuhi kewajibannya atau tidak bertanggung jawab, maka gaji atau pembayaran tidak akan diberikan.',
+                        style: FontFamily().regularText,
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text('\u2022'),
+                    const SizedBox(
+                      width: 6,
+                    ),
+                    Expanded(
+                      child: Text(
+                        'Mentor yang tidak bertanggung jawab akan di-blacklist dan tidak diizinkan untuk mengajar di platform kami untuk periode waktu yang tidak ditentukan.',
+                        style: FontFamily().regularText,
+                      ),
+                    ),
+                  ],
+                ),
+                 Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text('\u2022'),
+                    const SizedBox(
+                      width: 6,
+                    ),
+                    Expanded(
+                      child: Text(
+                        'Setiap premium class harus memiliki materi atau bab-bab yang disusun oleh mentor.',
+                        style: FontFamily().regularText,
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text('\u2022'),
+                    const SizedBox(
+                      width: 6,
+                    ),
+                    Expanded(
+                      child: Text(
+                        'Bab-bab ini dapat terdiri dari topik-topik yang relevan dan berkaitan dengan tujuan pembelajaran kelas.',
+                        style: FontFamily().regularText,
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text('\u2022'),
+                    const SizedBox(
+                      width: 6,
+                    ),
+                    Expanded(
+                      child: Text(
+                        'Setiap bab atau chapter yang dibuat oleh mentor harus memiliki modul yang dapat diakses oleh mentee.',
+                        style: FontFamily().regularText,
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text('\u2022'),
+                    const SizedBox(
+                      width: 6,
+                    ),
+                    Expanded(
+                      child: Text(
+                        'Modul ini dapat berupa dokumen, presentasi, video, atau sumber belajar lainnya yang mendukung pemahaman materi.',
+                        style: FontFamily().regularText,
+                      ),
+                    ),
+                  ],
+                ),
+                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text('\u2022'),
@@ -191,6 +341,7 @@ class _PersetujuanTahapanPremiumClassMentorState extends State<PersetujuanTahapa
                             Navigator.of(context).pushReplacement(
                                 MaterialPageRoute(
                                     builder: (context) =>
+                                        // ignore: prefer_const_constructors
                                         FormCreatePremiumClassScreen()));
                           }
                         : null, // Tidak mengizinkan klik jika radio button belum dicentang
@@ -209,6 +360,7 @@ class _PersetujuanTahapanPremiumClassMentorState extends State<PersetujuanTahapa
               ],
             ),
           ),
+         
         ],
       ),
     );

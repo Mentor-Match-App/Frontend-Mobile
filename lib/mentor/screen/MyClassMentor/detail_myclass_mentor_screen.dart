@@ -169,6 +169,20 @@ class _DetailMyClassMentorScreenState extends State<DetailMyClassMentorScreen> {
                     Padding(
                       padding: const EdgeInsets.only(top: 2.0),
                       child: Text(
+                        '${widget.maxParticipants} Orang',
+                        style: FontFamily().regularText,
+                      ),
+                    )
+                  ],
+                ),
+                const SizedBox(height: 12),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    TittleTextField(title: 'Jumlah Mentee terdaftar'),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 2.0),
+                      child: Text(
                         '${widget.approvedTransactionsCount} Orang ',
                         style: FontFamily().regularText,
                       ),
@@ -371,6 +385,7 @@ class _DetailMyClassMentorScreenState extends State<DetailMyClassMentorScreen> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) => EvaluasiMentorScreen(
+                                  classId: widget.classid,
                                   learningMaterial: widget.learningMaterial,
                                   transactions: widget.transactions,
                                   evaluasi: widget.evaluation,

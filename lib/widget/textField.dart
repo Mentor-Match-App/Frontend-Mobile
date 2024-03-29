@@ -58,13 +58,16 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
                 borderSide: BorderSide.none,
               ),
               hintText: widget.hintText,
-              
+
               hintStyle: FontFamily().regularText.copyWith(
                     color: ColorStyle().disableColors,
                   ),
               errorText: widget.errorText, // Set error text
+              contentPadding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0), // Add padding
             ),
             onTap: widget.ontap,
+            maxLines: null, // Allow multiple lines
+            textAlignVertical: TextAlignVertical.center,
           ),
         ),
       ),

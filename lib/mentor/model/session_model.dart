@@ -44,7 +44,7 @@ class MentorSession {
     String? portofolio;
     String? photoUrl;
     String? about;
-    List<SessionElement>? session;
+    List<SessionData>? session;
     List<Experience>? experiences;
 
     MentorSession({
@@ -75,7 +75,7 @@ class MentorSession {
         portofolio: json["portofolio"],
         photoUrl: json["photoUrl"],
         about: json["about"],
-        session: json["session"] == null ? [] : List<SessionElement>.from(json["session"]!.map((x) => SessionElement.fromMap(x))),
+        session: json["session"] == null ? [] : List<SessionData>.from(json["session"]!.map((x) => SessionData.fromMap(x))),
         experiences: json["experiences"] == null ? [] : List<Experience>.from(json["experiences"]!.map((x) => Experience.fromMap(x))),
     );
 
@@ -128,7 +128,7 @@ class Experience {
     };
 }
 
-class SessionElement {
+class SessionData {
     String? id;
     String? mentorId;
     String? title;
@@ -142,7 +142,7 @@ class SessionElement {
     dynamic zoomLink;
     List<dynamic>? participant;
 
-    SessionElement({
+    SessionData({
         this.id,
         this.mentorId,
         this.title,
@@ -157,7 +157,7 @@ class SessionElement {
         this.participant,
     });
 
-    factory SessionElement.fromMap(Map<String, dynamic> json) => SessionElement(
+    factory SessionData.fromMap(Map<String, dynamic> json) => SessionData(
         id: json["id"],
         mentorId: json["mentorId"],
         title: json["title"],

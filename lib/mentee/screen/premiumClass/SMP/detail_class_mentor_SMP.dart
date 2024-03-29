@@ -259,6 +259,26 @@ class _DetailClassMentorSMPState extends State<DetailClassMentorSMP> {
                       ],
                     ),
                   ),
+                   Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      TittleTextField(title: 'Lokasi Kelas'),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 2.0),
+                        child: Text(
+                          widget.locationMentoring,
+                          style: FontFamily().regularText,
+                        ),
+                      ),
+                      Text(
+                        "Lokasi : ${widget.address == null || widget.address!.isEmpty ? "Meeting Zoom" : widget.address}",
+                        style: FontFamily().regularText,
+                      )
+                    ],
+                  ),
+                ),
                  Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Column(

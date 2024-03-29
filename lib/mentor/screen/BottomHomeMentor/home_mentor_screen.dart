@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mentormatch_apps/mentee/screen/notification_mentee_screen.dart';
-import 'package:mentormatch_apps/mentor/screen/createClass_Session/form_create_class.dart';
-import 'package:mentormatch_apps/mentor/screen/createClass_Session/form_create_session.dart';
-import 'package:mentormatch_apps/mentor/screen/daftar_mentor/syaratketentuan_daftar_mentor/persetujuan_premium_class_mentor.dart';
+import 'package:mentormatch_apps/mentor/screen/create_Class_dan_Session/form_create_class.dart';
+import 'package:mentormatch_apps/mentor/screen/create_Class_dan_Session/form_create_session.dart';
+import 'package:mentormatch_apps/mentor/screen/daftar_mentor/syaratketentuan_daftar_mentor/persetujuan_1.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
 import 'package:mentormatch_apps/widget/button.dart';

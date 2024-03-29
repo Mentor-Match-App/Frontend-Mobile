@@ -6,6 +6,9 @@ import 'package:mentormatch_apps/preferences/%20preferences_helper.dart';
 class CreateClassProvider with ChangeNotifier {
   List<TextEditingController> controllers = [];
   final CreateClassService _createClassService = CreateClassService();
+  String _errorMessage = ''; // Field untuk menyimpan pesan kesalahan
+
+  String get errorMessage => _errorMessage; // Getter untuk mengakses pesan kesalahan
 
   Future<bool> submitClass({
     required String address,
@@ -24,10 +27,10 @@ class CreateClassProvider with ChangeNotifier {
     required int durationInDays,
   }) async {
     // Ambil mentorId dari shared preferences atau sumber lain
-    String? mentorId = await UserPreferences
-        .getUserId(); // Sesuaikan dengan implementasi sebenarnya
+    String? mentorId = await UserPreferences.getUserId();
     if (mentorId == null) {
-      print('Error: No mentorId found');
+      _errorMessage = 'Error: No mentorId found'; // Set pesan kesalahan
+      print(_errorMessage);
       return false;
     }
 
@@ -51,6 +54,12 @@ class CreateClassProvider with ChangeNotifier {
 
     // Mengirim data ke server menggunakan CreateClassService
     bool success = await _createClassService.createClass(classModel, mentorId);
+
+    if (!success) {
+      // Jika gagal, ambil pesan kesalahan dari CreateClassService
+      _errorMessage = _createClassService.errorMessage;
+      print(_errorMessage);
+    }
 
     // Notifikasi listener jika diperlukan, misalnya untuk update UI
     notifyListeners();

@@ -49,49 +49,67 @@ class _AllSDScreenState extends State<AllSDScreen> {
                 orElse: () => ExperienceSD(),
               );
 
-              /// if all class is active ///
-              bool areAllClassesActive(List<ClassMentorSD>? classes) {
-                if (classes == null || classes.isEmpty) {
-                  return false;
-                }
-                // Mengembalikan true jika semua kelas memiliki isActive == true
-                return classes
-                    .every((classMentor) => classMentor.isActive == true);
+              // Fungsi untuk mendapatkan slot yang tersedia
+              int getAvailableSlotCount(ClassMentorSD kelas) {
+                int approvedCount = kelas.transactions
+                        ?.where((t) => t.paymentStatus == "Approved")
+                        .length ??
+                    0;
+
+                int pendingCount = kelas.transactions
+                        ?.where((t) => t.paymentStatus == "Pending")
+                        .length ??
+                    0;
+
+                int totalApprovedAndPendingCount = approvedCount + pendingCount;
+
+                // Jumlah slot yang tersedia adalah maksimum partisipan dikurangi dengan total transaksi yang telah disetujui dan sedang diproses
+                int availableSlots =
+                    (kelas.maxParticipants ?? 0) - totalApprovedAndPendingCount;
+                // Pastikan slot yang tersedia tidak negatif
+                return availableSlots > 0 ? availableSlots : 0;
               }
 
-              bool allClassesActive = areAllClassesActive(mentor.mentorClass);
-              Color buttonColor = allClassesActive
+// Fungsi untuk menentukan apakah semua kelas dalam daftar mentor dianggap penuh
+              bool allClassesFull = mentor.mentorClass!.every((classMentor) {
+                int availableSlotCount = getAvailableSlotCount(classMentor);
+                return availableSlotCount <= 0;
+              });
+
+              String availabilityStatus = allClassesFull ? 'Full' : 'Available';
+              Color buttonColor = allClassesFull
                   ? ColorStyle().disableColors
                   : ColorStyle().primaryColors;
+
               String company = currentJob?.company ?? 'Placeholder Company';
               String jobTitle = currentJob?.jobTitle ?? 'Placeholder Job';
               return Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: CardItemMentor(
+                  title: availabilityStatus,
                   color: buttonColor,
-                 onPressesd: allClassesActive ?() {} : (){
-                  Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => DetailMentorSDScreen(
-                            
-                            experiences: mentor.experiences ?? [],
-                            email: mentor.email ?? '',
-                            classes: mentor.mentorClass ?? [],
-                            about: mentor.about ?? '',
-                            name: mentor.name ?? 'No Name',
-                            photoUrl: mentor.photoUrl ?? '',
-                            skills: mentor.skills ?? [],
-                            classid: mentor.id.toString(),
-                            company: company,
-                            job: jobTitle,
-                            linkedin: mentor.linkedin ?? '',
-                            mentor: mentor,
-                            location: mentor.location ?? '',
-                          ),
+                  onPressesd: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => DetailMentorSDScreen(
+                          experiences: mentor.experiences ?? [],
+                          email: mentor.email ?? '',
+                          classes: mentor.mentorClass ?? [],
+                          about: mentor.about ?? '',
+                          name: mentor.name ?? 'No Name',
+                          photoUrl: mentor.photoUrl ?? '',
+                          skills: mentor.skills ?? [],
+                          classid: mentor.id.toString(),
+                          company: company,
+                          job: jobTitle,
+                          linkedin: mentor.linkedin ?? '',
+                          mentor: mentor,
+                          location: mentor.location ?? '',
                         ),
-                      );
-                    } , // Jika semua kelas aktif, tidak melakukan apa-apa
+                      ),
+                    );
+                  }, // Jika semua kelas aktif, tidak melakukan apa-apa
                   imagePath: mentor.photoUrl.toString(),
                   name: mentor.name ?? 'No Name',
                   job: jobTitle,
@@ -99,6 +117,7 @@ class _AllSDScreenState extends State<AllSDScreen> {
                 ),
               );
             },
+
             shrinkWrap: true,
             physics:
                 ScrollPhysics(), // Allows scrolling within a SingleChildScrollView

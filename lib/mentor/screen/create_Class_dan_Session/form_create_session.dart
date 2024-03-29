@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mentormatch_apps/mentor/provider/create_session_provider.dart';
-import 'package:mentormatch_apps/mentor/screen/createClass_Session/succes_create_session.dart';
+import 'package:mentormatch_apps/mentor/screen/create_Class_dan_Session/succes_create_session.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
 import 'package:mentormatch_apps/style/text.dart';
@@ -63,41 +63,44 @@ class _FormCreateSessionScreenState extends State<FormCreateSessionScreen> {
       return;
     }
 
-    DateTime startTime = DateTime(date.year, date.month, date.day);
-    DateTime endTime = DateTime(date.year, date.month, date.day);
-
+    DateTime startTime;
+    DateTime endTime;
     try {
-      final startTimeStr = startTimeController.text.split(':');
-      final endTimeStr = endTimeController.text.split(':');
-      startTime = DateTime(date.year, date.month, date.day,
-          int.parse(startTimeStr[0]), int.parse(startTimeStr[1]));
-      endTime = DateTime(date.year, date.month, date.day,
-          int.parse(endTimeStr[0]), int.parse(endTimeStr[1]));
+      // Parse String time from startTimeController and endTimeController into DateTime objects
+      DateTime selectedDate =
+          DateFormat('yyyy-MM-dd').parse(dateController.text);
+      DateTime startTimeParsed =
+          DateFormat.Hm().parse(startTimeController.text);
+      DateTime endTimeParsed = DateFormat.Hm().parse(endTimeController.text);
+
+      // Combine selectedDate with parsed times to get the full DateTime objects
+      startTime = DateTime(selectedDate.year, selectedDate.month,
+          selectedDate.day, startTimeParsed.hour, startTimeParsed.minute);
+      endTime = DateTime(selectedDate.year, selectedDate.month,
+          selectedDate.day, endTimeParsed.hour, endTimeParsed.minute);
     } catch (e) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('Format waktu tidak valid')));
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Format waktu tidak valid')));
       return;
     }
 
     bool success =
         await Provider.of<CreateSessionProvider>(context, listen: false)
             .submitSession(
-      category: categoryController
-          .text, // Pastikan ini adalah nilai kategori yang benar, bukan deskripsi
+      category: categoryController.text,
       date: date,
-      startTime: startTime, // Langsung berikan objek DateTime startTime
-      endTime: endTime, // Langsung berikan objek DateTime endTime
+      startTime: startTime,
+      endTime: endTime,
       maxParticipants: int.tryParse(capacityController.text) ?? 0,
       description: descriptionController.text,
       title: topicController.text,
     );
-    if (!mounted) return; // Cek apakah widget masih terpasang
+    if (!mounted) return;
     if (success) {
       Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(
-            builder: (context) => SuccesCreateSessionScreen(),
-          ),
-          (route) => false);
+        MaterialPageRoute(builder: (context) => SuccesCreateSessionScreen()),
+        (route) => false,
+      );
     } else {
       ScaffoldMessenger.of(context)
           .showSnackBar(const SnackBar(content: Text('Gagal membuat sesi')));
@@ -214,7 +217,7 @@ class _FormCreateSessionScreenState extends State<FormCreateSessionScreen> {
                 DatePickerWidget(
                   controller: dateController,
                   onDateSelected: (date) {
-                    dateController.text = date.toIso8601String();
+                    dateController.text = DateFormat('yyyy-MM-dd').format(date);
                   },
                 ),
                 Padding(
@@ -227,17 +230,21 @@ class _FormCreateSessionScreenState extends State<FormCreateSessionScreen> {
                 Row(
                   children: [
                     TimePickerWidget(
-                        title: "Start Time",
-                        onTimeSelected: (time) {
-                          startTimeController.text = time.format(context);
-                        },
-                        controller: startTimeController),
+                      title: "Start Time",
+                      onTimeSelected: (time) {
+                        print(time); // Pastikan bahwa ini adalah objek DateTime
+                        startTimeController.text = DateFormat.Hm().format(time);
+                      },
+                      controller: startTimeController,
+                    ),
                     TimePickerWidget(
-                        title: "End Time",
-                        onTimeSelected: (time) {
-                          endTimeController.text = time.format(context);
-                        },
-                        controller: endTimeController),
+                      title: "End Time",
+                      onTimeSelected: (time) {
+                        print(time); // Pastikan bahwa ini adalah objek DateTime
+                        endTimeController.text = DateFormat.Hm().format(time);
+                      },
+                      controller: endTimeController,
+                    ),
                   ],
                 ),
                 Padding(

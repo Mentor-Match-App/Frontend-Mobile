@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:mentormatch_apps/mentee/model/myClass_model.dart';
 import 'package:mentormatch_apps/mentee/service/myClassService/myClass_service.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
@@ -46,9 +47,29 @@ class _MySessionBookingState extends State<MySessionBooking> {
             child: Column(
               children: participants.map((participant) {
                 final session = participant.session!;
+                                final timeZoneOffset = Duration(hours: 7);
+                DateTime parsedJadwal =
+                    DateTime.parse(session.dateTime!).add(timeZoneOffset);
+                String formattedJadwal =
+                    DateFormat('dd MMMM yyyy').format(parsedJadwal);
+
+                final DateFormat formatOutput = DateFormat("HH:mm");
+                final String formattedStartTime =
+                    formatOutput.format(DateTime.parse(session.startTime!));
+                final String formattedEndTime =
+                    formatOutput.format(DateTime.parse(session.endTime!));
+
+                // Konversi waktu UTC ke zona waktu Indonesia (WIB)
+                final startTimeInWIB =
+                    DateTime.parse(session.startTime!).add(timeZoneOffset);
+                final endTimeInWIB =
+                    DateTime.parse(session.endTime!).add(timeZoneOffset);
+                final formattedStartTimeWIB =
+                    formatOutput.format(startTimeInWIB);
+                final formattedEndTimeWIB = formatOutput.format(endTimeInWIB);
                 return Padding(
                   padding: const EdgeInsets.all(12.0),
-                  child:Container(
+                  child: Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
                       border: Border.all(
@@ -92,7 +113,11 @@ class _MySessionBookingState extends State<MySessionBooking> {
                                       style: FontFamily().regularText,
                                     ),
                                     Text(
-                                      'Jadwal: ${session.dateTime}',
+                                      'Jadwal : ${formattedJadwal}',
+                                      style: FontFamily().regularText,
+                                    ),
+                                    Text(
+                                      'Jam : ${formattedStartTimeWIB} - ${formattedEndTimeWIB}',
                                       style: FontFamily().regularText,
                                     ),
                                   ],
@@ -100,9 +125,8 @@ class _MySessionBookingState extends State<MySessionBooking> {
                               ),
                             ],
                           ),
-                          const SizedBox(height: 12),
                           const SizedBox(
-                            width: 12,
+                            width: 24,
                           ),
                           Padding(
                             padding:

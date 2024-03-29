@@ -61,8 +61,7 @@ class DetailClassMentorSD extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<DetailClassMentorSD> createState() =>
-      _DetailClassMentorSDState();
+  State<DetailClassMentorSD> createState() => _DetailClassMentorSDState();
 }
 
 class _DetailClassMentorSDState extends State<DetailClassMentorSD> {
@@ -262,7 +261,7 @@ class _DetailClassMentorSDState extends State<DetailClassMentorSD> {
                     ],
                   ),
                 ),
-              Padding(
+                Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -435,11 +434,9 @@ class _DetailClassMentorSDState extends State<DetailClassMentorSD> {
                             await bookClass(widget.classId!, userId);
 
                         if (result.isSuccess) {
-                          // If booking succeeds, navigate to the next screen
                           int? uniqueCode =
                               result.uniqueCode; // Here you get the uniqueCode
-                          // ignore: use_build_context_synchronously
-                          //creta pushremoveuntil
+
                           Navigator.of(context).pushAndRemoveUntil(
                             MaterialPageRoute(
                               builder: (context) => DetailBookingClass(

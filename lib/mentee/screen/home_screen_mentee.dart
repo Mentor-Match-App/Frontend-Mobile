@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:mentormatch_apps/mentee/screen/Session/all_session_screen.dart';
 import 'package:mentormatch_apps/mentee/screen/Session/detail_session_mentor.dart';
+import 'package:mentormatch_apps/mentee/screen/Session/session_screen.dart';
 import 'package:mentormatch_apps/mentee/screen/detail_mentor_class_screen.dart';
 import 'package:mentormatch_apps/mentee/screen/premiumClass/Karier/Karier_screen.dart';
-import 'package:mentormatch_apps/mentee/screen/premiumClass/Karier/all_karier_screen.dart';
 import 'package:mentormatch_apps/mentee/screen/premiumClass/Kuliah/Kuliah_screen.dart';
 import 'package:mentormatch_apps/mentee/screen/premiumClass/SD/sd_screen.dart';
 import 'package:mentormatch_apps/mentee/screen/premiumClass/SMA/SMA_screen.dart';
@@ -65,6 +64,7 @@ class _HomeMenteeScreenState extends State<HomeMenteeScreen> {
           } else if (!snapshot.hasData) {
             return const Center(child: Text('Tidak ada data'));
           } else {
+            // mentor session yang di tampilkan hanya yang isActive == true
             var mentorSessionData = snapshot.data![0] as Session;
             var mentorClassData = snapshot.data![1] as MentorClassModel;
 
@@ -198,13 +198,48 @@ class _HomeMenteeScreenState extends State<HomeMenteeScreen> {
                           scrollDirection: Axis.horizontal,
                           child: Row(
                             children: List.generate(
-                                mentorSessionData.mentors!.length, (index) {
+                                ////yang ditampilkan hanya 6 aja
+                                mentorClassData.mentors!.length > 6
+                                    ? 6
+                                    : mentorClassData.mentors!.length, (index) {
                               final mentor = mentorClassData.mentors![index];
                               ExperienceClassAll? currentJob =
                                   mentor.experiences?.firstWhere(
                                 (exp) => exp.isCurrentJob ?? false,
                                 orElse: () => ExperienceClassAll(),
                               );
+                              // Fungsi untuk mendapatkan slot yang tersedia
+                              int getAvailableSlotCount(ClassAll kelas) {
+                                int approvedCount = kelas.transactions
+                                        ?.where((t) =>
+                                            t.paymentStatus == "Approved")
+                                        .length ??
+                                    0;
+
+                                int pendingCount = kelas.transactions
+                                        ?.where(
+                                            (t) => t.paymentStatus == "Pending")
+                                        .length ??
+                                    0;
+
+                                int totalApprovedAndPendingCount =
+                                    approvedCount + pendingCount;
+
+                                // Jumlah slot yang tersedia adalah maksimum partisipan dikurangi dengan total transaksi yang telah disetujui dan sedang diproses
+                                int availableSlots =
+                                    (kelas.maxParticipants ?? 0) -
+                                        totalApprovedAndPendingCount;
+                                // Pastikan slot yang tersedia tidak negatif
+                                return availableSlots > 0 ? availableSlots : 0;
+                              }
+
+// Fungsi untuk menentukan apakah semua kelas dalam daftar mentor dianggap penuh
+                              bool allClassesFull =
+                                  mentor.mentorClass!.every((classMentor) {
+                                int availableSlotCount =
+                                    getAvailableSlotCount(classMentor);
+                                return availableSlotCount <= 0;
+                              });
 
                               String company =
                                   currentJob?.company ?? 'Placeholder Company';
@@ -265,7 +300,7 @@ class _HomeMenteeScreenState extends State<HomeMenteeScreen> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => AllSessionScreen(),
+                                  builder: (context) => SessionScreen(),
                                 ),
                               );
                             },
@@ -287,10 +322,24 @@ class _HomeMenteeScreenState extends State<HomeMenteeScreen> {
                           scrollDirection: Axis.horizontal,
                           child: Row(
                             children: List.generate(
-                              mentorSessionData.mentors!.length,
+                              mentorSessionData.mentors!
+                                          .where((mentor) => mentor.session!
+                                              .any((session) =>
+                                                  session.isActive == true))
+                                          .length >
+                                      6
+                                  ? 6
+                                  : mentorSessionData.mentors!
+                                      .where((mentor) => mentor.session!.any(
+                                          (session) =>
+                                              session.isActive == true))
+                                      .length,
                               (index) {
-                                final mentor =
-                                    mentorSessionData.mentors![index];
+                                final mentor = mentorSessionData.mentors!
+                                    .where((mentor) => mentor.session!.any(
+                                        (session) => session.isActive == true))
+                                    .toList()[index];
+
                                 final currentExperience =
                                     mentor.experiences!.firstWhere(
                                   (experience) =>
@@ -298,40 +347,29 @@ class _HomeMenteeScreenState extends State<HomeMenteeScreen> {
                                   orElse: () =>
                                       Experience(), // Menyediakan default Experience jika tidak ditemukan
                                 );
-                                ////// session active///////
 
-                                var firstActiveSession =
-                                    mentor.session?.firstWhere(
-                                  (s) => s.isActive == true,
-                                  orElse: () =>
-                                      SessionElement(), // Provide a default session element if no active session is found
-                                );
-                                ////// session full///////
-                                var isSessionFull = (firstActiveSession
-                                            ?.participant?.length ??
-                                        0) >=
-                                    (firstActiveSession?.maxParticipants ?? 0);
-                                var numberOfParticipants =
-                                    firstActiveSession!.participant?.length ??
-                                        0;
-                                ////// name session///////
-                                var activeSessionName =
-                                    firstActiveSession.title ??
-                                        "No active session";
-                                ////// date time session///////
-                                var activeSessionDateTime =
-                                    firstActiveSession.dateTime ??
-                                        "No date/time provided";
-                                ////// description session///////
-                                var activeSessionDescription =
-                                    firstActiveSession.description ??
-                                        "No description provided";
+                                //buat session active ketika isActive = true
+                                final activeSessions = mentor.session!
+                                    .where((s) => s.isActive == true)
+                                    .toList();
+                                //// buat session full apabila jumlah participant sudah mencapai maxParticipants
+                                final isSessionFull =
+                                    activeSessions.isNotEmpty &&
+                                        activeSessions.any((session) =>
+                                            session.participant!.length >=
+                                            session.maxParticipants!);
+
+                                ///numberOfParticipants = jumlah participant yang sudah join
+                                final numberOfParticipants = activeSessions
+                                        .isNotEmpty
+                                    ? activeSessions.first.participant!.length
+                                    : 0;
                                 ////// button color is full //////
                                 final Color buttonColor = isSessionFull
                                     ? ColorStyle().disableColors
                                     : ColorStyle().primaryColors;
                                 ////// slot///////
-                                SessionElement sessionElement =
+                                SessionData sessionElement =
                                     mentor.session!.first;
                                 int maxParticipants =
                                     sessionElement.maxParticipants ?? 0;
@@ -344,76 +382,25 @@ class _HomeMenteeScreenState extends State<HomeMenteeScreen> {
                                   height: 250,
                                   width: 150,
                                   child: CardItemMentor(
+                                    // apabila session penuh maka tiitlenya " session full" , tetapi apabila tidak full maka " available"
+                                    title: isSessionFull
+                                        ? "Full Booked"
+                                        : "Available",
                                     color: buttonColor,
-                                    onPressesd: isSessionFull
-                                        ? () {}
-                                        : () {
-                                            // Logika untuk navigasi ketika sesi belum penuh
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    DetailMentorSessionsNew(
-                                                  availableSlots:
-                                                      availableSlots,
-                                                  sessionsid: mentor.session!
-                                                          .firstWhere((s) =>
-                                                              s.isActive ==
-                                                              true)
-                                                          .id ??
-                                                      "",
-
-                                                  participants:
-                                                      numberOfParticipants,
-                                                  about: mentor.about ?? "",
-                                                  namaMentor: mentor.name ?? "",
-                                                  photoUrl:
-                                                      mentor.photoUrl ?? "",
-                                                  job: mentor.experiences
-                                                          ?.firstWhere(
-                                                            (exp) =>
-                                                                exp.isCurrentJob ==
-                                                                true,
-                                                            orElse: () =>
-                                                                Experience(
-                                                                    jobTitle:
-                                                                        "",
-                                                                    company:
-                                                                        ""),
-                                                          )
-                                                          .jobTitle ??
-                                                      "",
-                                                  company: mentor.experiences
-                                                          ?.firstWhere(
-                                                            (exp) =>
-                                                                exp.isCurrentJob ==
-                                                                true,
-                                                            orElse: () =>
-                                                                Experience(
-                                                                    jobTitle:
-                                                                        "",
-                                                                    company:
-                                                                        ""),
-                                                          )
-                                                          .company ??
-                                                      "",
-                                                  email: mentor.email ?? "",
-                                                  linkedin:
-                                                      mentor.linkedin ?? "",
-                                                  skills: mentor.skills ?? [],
-                                                  location:
-                                                      mentor.location ?? "",
-                                                  mentor: mentor,
-                                                  namaSessios:
-                                                      activeSessionName, // Session name
-                                                  jadwal:
-                                                      activeSessionDateTime, // Session date/time
-                                                  description:
-                                                      activeSessionDescription, // Session description
-                                                ),
-                                              ),
-                                            );
-                                          },
+                                    onPressesd: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              DetailMentorSessionsNew(
+                                            availableSlots: availableSlots,
+                                            detailmentor: mentor,
+                                            totalParticipants:
+                                                numberOfParticipants,
+                                          ),
+                                        ),
+                                      );
+                                    },
                                     imagePath: mentor.photoUrl ??
                                         'assets/Handoff/ilustrator/profile.png',
                                     name: mentor.name ?? 'No Name',

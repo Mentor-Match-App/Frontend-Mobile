@@ -2,18 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:mentormatch_apps/mentee/screen/notification_mentee_screen.dart';
 import 'package:mentormatch_apps/mentor/model/myClass_mentor_model.dart';
 import 'package:mentormatch_apps/mentor/screen/MyClassMentor/evaluasi/detail_evaluation_mentee_mentor.dart';
+import 'package:mentormatch_apps/mentor/service/sent_evaluasi_service.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
+import 'package:mentormatch_apps/style/text.dart';
 import 'package:mentormatch_apps/widget/button.dart';
+import 'package:mentormatch_apps/widget/flushsBar_widget.dart';
+import 'package:mentormatch_apps/widget/textField.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class EvaluasiMentorScreen extends StatefulWidget {
+  final String classId;
   final List<Transaction> transactions;
   final List<Evaluation> evaluasi;
   final List<LearningMaterialMentor> learningMaterial;
 
   EvaluasiMentorScreen({
     Key? key,
+    required this.classId,
     required this.learningMaterial,
     required this.evaluasi,
     required this.transactions,
@@ -24,6 +30,64 @@ class EvaluasiMentorScreen extends StatefulWidget {
 }
 
 class _EvaluasiMentorScreenState extends State<EvaluasiMentorScreen> {
+  String? selectedEvaluationId;
+  String? selectedMateriEvaluasi;
+
+  bool _isLoading = false;
+  final TextEditingController _materiEvaluasiController =
+      TextEditingController();
+  final TextEditingController _linkEvaluasiController = TextEditingController();
+
+  @override
+  void dispose() {
+    _materiEvaluasiController.dispose();
+    _linkEvaluasiController.dispose();
+
+    super.dispose();
+  }
+
+  void _sendEvaluation() async {
+    if (_materiEvaluasiController.text.isEmpty ||
+        _linkEvaluasiController.text.isEmpty) {
+      // Tampilkan pesan error jika salah satu field kosong
+      showTopSnackBar(context, "Field tidak boleh kosong",
+          leftBarIndicatorColor: ColorStyle().errorColors);
+      return;
+    }
+
+    setState(() => _isLoading = true);
+
+    try {
+      final service = SendEvaluasiService();
+      String responseMessage = await service.sendEvaluationLink(
+        widget.classId,
+        _materiEvaluasiController.text,
+        _linkEvaluasiController.text,
+      );
+
+      if (responseMessage.contains("berhasil")) {
+        // Tampilkan snackbar dengan warna hijau untuk pesan sukses dari server
+        showTopSnackBar(context, responseMessage,
+            leftBarIndicatorColor: ColorStyle().succesColors);
+        // Bersihkan form setelah berhasil
+        setState(() {
+          _materiEvaluasiController.clear();
+          _linkEvaluasiController.clear();
+        });
+      } else {
+        // Tampilkan snackbar dengan warna merah untuk pesan error dari server
+        showTopSnackBar(context, responseMessage,
+            leftBarIndicatorColor: ColorStyle().errorColors);
+      }
+    } catch (e) {
+      // Tangkap error yang terjadi pada sisi Flutter
+      showTopSnackBar(context, "Terjadi kesalahan saat mengirim evaluasi",
+          leftBarIndicatorColor: ColorStyle().errorColors);
+    } finally {
+      setState(() => _isLoading = false);
+    }
+  }
+
   _launchURL(String url) async {
     // ignore: deprecated_member_use
     if (await canLaunch(url)) {
@@ -135,6 +199,102 @@ class _EvaluasiMentorScreenState extends State<EvaluasiMentorScreen> {
                   ),
                 ),
                 const SizedBox(height: 12),
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.all(
+                      Radius.circular(4),
+                    ),
+                    border: Border.all(
+                        color: ColorStyle().tertiaryColors, width: 2),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(top: 12, bottom: 12),
+                          child: Text(
+                            "Kirim Evaluasi Mentee",
+                            style: FontFamily().boldText.copyWith(
+                                color: ColorStyle().primaryColors,
+                                fontSize: 16),
+                          ),
+                        ),
+                        TittleTextField(
+                          title: "Materi Evaluasi",
+                          color: ColorStyle().secondaryColors,
+                        ),
+                        // TextFieldWidget(
+                        //   controller: _materiEvaluasiController,
+                        //   hintText: "nama topik materi evaluasi",
+                        // ),
+                        DropdownButtonFormField<String>(
+                          value: selectedMateriEvaluasi,
+                          decoration: InputDecoration(
+                            filled: true,
+                            fillColor: ColorStyle().tertiaryColors,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(4),
+                              borderSide: BorderSide.none,
+                            ),
+                            hintText: 'Pilih materi evaluasi',
+                            hintStyle: FontFamily().regularText.copyWith(
+                                  color: ColorStyle().disableColors,
+                                ),
+                          ),
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              selectedMateriEvaluasi = newValue;
+                              // Cari materi evaluasi yang sesuai dari list
+                              final selectedMaterial =
+                                  widget.learningMaterial.firstWhere(
+                                (material) => material.title == newValue,
+                                orElse: () =>
+                                    LearningMaterialMentor(title: "", link: ""),
+                              );
+                              // Perbarui controller dengan title dari materi yang dipilih
+                              _materiEvaluasiController.text =
+                                  selectedMaterial.title ?? "";
+                            });
+                          },
+                          items: widget.learningMaterial
+                              .map((LearningMaterialMentor material) {
+                            return DropdownMenuItem<String>(
+                              value: material.title,
+                              child: Text(material.title ?? ""),
+                            );
+                          }).toList(),
+                          isExpanded: true,
+                        ),
+
+                        TittleTextField(
+                          title: "Link Evaluasi",
+                          color: ColorStyle().secondaryColors,
+                        ),
+                        TextFieldWidget(
+                          controller: _linkEvaluasiController,
+                          hintText: "masukkan link evaluasi",
+                        ),
+                        SizedBox(height: 12),
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: SmallElevatedButton(
+                            onPressed: _sendEvaluation,
+                            height: 40,
+                            width: 118,
+                            title: "Kirim",
+                            style: FontFamily().buttonText.copyWith(
+                                  fontSize: 12,
+                                  color: ColorStyle().whiteColors,
+                                ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 12),
                 Text(
                   "List Mentee di Kelas Anda",
                   style: FontFamily().boldText.copyWith(
@@ -155,7 +315,7 @@ class _EvaluasiMentorScreenState extends State<EvaluasiMentorScreen> {
                                 MaterialPageRoute(
                                   builder: (context) =>
                                       DetailEvaluastionMenteeMentorScreen(
-                                        learningMaterial: widget.learningMaterial,
+                                    learningMaterial: widget.learningMaterial,
                                     transactions: widget.transactions,
                                     classId: widget.transactions[index].classId
                                         .toString(),

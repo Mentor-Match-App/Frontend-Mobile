@@ -2,7 +2,7 @@ import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mentormatch_apps/mentor/model/myClass_mentor_model.dart';
-import 'package:mentormatch_apps/mentor/screen/createClass_Session/contoh_premium_class.dart';
+import 'package:mentormatch_apps/mentor/screen/create_Class_dan_Session/contoh_premium_class.dart';
 import 'package:mentormatch_apps/mentor/service/edit_pengajuan_class_service_.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
@@ -293,8 +293,10 @@ class _EditRejectedClassState extends State<EditRejectedClass> {
                   style: FontFamily().regularText,
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(12.0),
+                  padding: const EdgeInsets.all(8.0),
                   child: Container(
+                    height: 100,
+                    width: double.infinity,
                     margin: const EdgeInsets.all(8.0),
                     padding: const EdgeInsets.all(12.0),
                     decoration: BoxDecoration(
@@ -306,7 +308,7 @@ class _EditRejectedClassState extends State<EditRejectedClass> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "Evaluasi :",
+                          "Rejected :",
                           style: FontFamily().boldText.copyWith(
                               fontSize: 14, color: ColorStyle().errorColors),
                         ),
@@ -314,7 +316,7 @@ class _EditRejectedClassState extends State<EditRejectedClass> {
                           height: 8,
                         ),
                         Text(
-                          "Permintaan Anda untuk pengajuan kelas telah ditolak karena kurang jelas dan tidak sesuai dengan syarat serta ketentuan yang berlaku. Untuk melanjutkan, mohon perbaiki dan berikan penjelasan lebih rinci mengenai syarat dan aturan yang relevan. Terima kasih.",
+                       widget.classData.rejectReason.toString(),
                           style: FontFamily().regularText,
                         ),
                       ],

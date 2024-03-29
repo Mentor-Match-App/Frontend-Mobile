@@ -37,6 +37,11 @@ class _MyMateriMentorState extends State<MyMateriMentor> {
     }
   }
 
+  // @override
+  // void initState() {
+  //   super.initState();
+  // }
+
   @override
   void dispose() {
     _materiPembelajaranController.dispose();
@@ -73,12 +78,18 @@ class _MyMateriMentorState extends State<MyMateriMentor> {
       showTopSnackBar(context, responseMessage,
           leftBarIndicatorColor: ColorStyle().succesColors);
 
+      // Tambahkan materi yang baru saja dikirim ke daftar materi yang ditampilkan
+      setState(() {
+        widget.learningMaterial
+            .add(LearningMaterialMentor(title: title, link: link));
+      });
+
       // Bersihkan field setelah pengiriman berhasil
       _materiPembelajaranController.clear();
       _linkMateriPembelajaranController.clear();
     } catch (e) {
       // Tampilkan pesan error
-      showTopSnackBar(context, e.toString(),  
+      showTopSnackBar(context, e.toString(),
           leftBarIndicatorColor: ColorStyle().errorColors);
     } finally {
       setState(() {
@@ -94,7 +105,8 @@ class _MyMateriMentorState extends State<MyMateriMentor> {
         title: Text(
           "Materi Pembelajaran",
           style: FontFamily().boldText.copyWith(
-                color: ColorStyle().primaryColors, fontSize: 16,
+                color: ColorStyle().primaryColors,
+                fontSize: 16,
               ),
         ),
       ),
@@ -243,6 +255,4 @@ class _MyMateriMentorState extends State<MyMateriMentor> {
       ),
     );
   }
-
- 
 }

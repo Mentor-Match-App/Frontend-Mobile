@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mentormatch_apps/mentor/model/myClass_mentor_model.dart';
-
 import 'package:mentormatch_apps/mentor/service/myClassCreate_Mentor_service.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
@@ -30,7 +29,7 @@ class _MySessionCreateState extends State<MySessionCreate> {
   @override
   void initState() {
     super.initState();
-    // Initialize the future without passing userId
+
     _sessionsFuture = ListClassMentor().fetchSessionsForCurrentUser();
   }
 
@@ -49,16 +48,28 @@ class _MySessionCreateState extends State<MySessionCreate> {
           return SingleChildScrollView(
             child: Column(
               children: snapshot.data!.map((session) {
-                /////// format tanggal dan waktu///////
-                DateTime parsedJadwal = DateTime.parse(session.dateTime!);
+                final timeZoneOffset = Duration(hours: 7);
+
+                DateTime parsedJadwal =
+                    DateTime.parse(session.dateTime!).add(timeZoneOffset);
                 String formattedJadwal =
-                    DateFormat('dd MMMM yyyy HH:mm').format(parsedJadwal);
+                    DateFormat('dd MMMM yyyy').format(parsedJadwal);
 
                 final DateFormat formatOutput = DateFormat("HH:mm");
                 final String formattedStartTime =
                     formatOutput.format(DateTime.parse(session.startTime!));
                 final String formattedEndTime =
                     formatOutput.format(DateTime.parse(session.endTime!));
+
+                // Konversi waktu UTC ke zona waktu Indonesia (WIB)
+                final startTimeInWIB =
+                    DateTime.parse(session.startTime!).add(timeZoneOffset);
+                final endTimeInWIB =
+                    DateTime.parse(session.endTime!).add(timeZoneOffset);
+                final formattedStartTimeWIB =
+                    formatOutput.format(startTimeInWIB);
+                final formattedEndTimeWIB = formatOutput.format(endTimeInWIB);
+
                 return Padding(
                   padding: const EdgeInsets.all(12.0),
                   child: Container(
@@ -88,7 +99,7 @@ class _MySessionCreateState extends State<MySessionCreate> {
                               style: FontFamily().regularText,
                             ),
                             Text(
-                              'Jam : ${formattedStartTime } - ${formattedEndTime}',
+                              'Jam : ${formattedStartTimeWIB} - ${formattedEndTimeWIB}',
                               style: FontFamily().regularText,
                             ),
                             Text(
@@ -101,8 +112,8 @@ class _MySessionCreateState extends State<MySessionCreate> {
                               child: Align(
                                 alignment: Alignment.centerRight,
                                 child: Container(
-                                 width: 150,
-                                height: 48,
+                                  width: 150,
+                                  height: 48,
                                   decoration: BoxDecoration(
                                     color: ColorStyle().primaryColors,
                                     borderRadius: BorderRadius.circular(12),

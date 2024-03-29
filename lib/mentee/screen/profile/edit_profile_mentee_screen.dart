@@ -354,27 +354,29 @@ class _EditProfileMenteeScreenState extends State<EditProfileMenteeScreen> {
     );
   }
 
-  Widget _saveButton(BuildContext context) {
-    return ElevatedButtonWidget(
-        title: "Save",
-        onPressed: () {
-          // Validate if any skills have been added to the chips (i.e., the _skills list is not empty)
-          if (_skills.isEmpty) {
-            // If no skills have been added to chips, show a SnackBar prompting the user to add at least one skill
-            showTopSnackBar(context, 'Please add at least one skill',
-                leftBarIndicatorColor: ColorStyle().errorColors);
-          } else if (_formKey.currentState!.validate()) {
-            // If there are one or more skills added and the form is valid, proceed to update the profile
-            _formKey.currentState!.save();
-            _updateUserProfile();
-            showTopSnackBar(context, 'Profile updated successfully',
-                leftBarIndicatorColor: ColorStyle().succesColors);
-            Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => BottomNavbarMenteeScreen()),
-                (route) => false);
-          }
-        });
-  }
+ Widget _saveButton(BuildContext context) {
+  return ElevatedButtonWidget(
+    title: "Save",
+    onPressed: () {
+      if (_skills.isEmpty) {
+        showTopSnackBar(context, 'Please add at least one skill',
+            leftBarIndicatorColor: ColorStyle().errorColors);
+      } else if (_formKey.currentState!.validate()) {
+        _formKey.currentState!.save();
+        _updateUserProfile(); // Memanggil _updateUserProfile() tanpa await
+        showTopSnackBar(context, 'Profile updated successfully',
+            leftBarIndicatorColor: ColorStyle().succesColors);
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const BottomNavbarMenteeScreen(
+              activeScreen: 3,
+            ),
+          ),
+          (route) => false,
+        );
+      }
+    },
+  );
+}
 }

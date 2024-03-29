@@ -4,15 +4,16 @@ import 'package:mentormatch_apps/style/font_style.dart';
 import 'package:mentormatch_apps/widget/button.dart';
 
 class CardItemMentor extends StatefulWidget {
-  
+  final String title;
   final VoidCallback onPressesd;
   final String imagePath;
   final String name;
   final String job;
   final String company;
-  final Color color; 
+  final Color color;
   CardItemMentor({
     Key? key,
+    this.title = 'available',
     required this.onPressesd,
     required this.imagePath,
     required this.name,
@@ -95,14 +96,17 @@ class _CardItemMentorState extends State<CardItemMentor> {
             ),
             // Tombol hanya ditampilkan sekali di bagian bawah
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
               child: SmallElevatedButton(
                 color: widget.color,
-                style: FontFamily().regularText.copyWith(
-                    color: ColorStyle().whiteColors, fontSize: 10),
+                style: FontFamily()
+                    .regularText
+                    .copyWith(color: ColorStyle().whiteColors, fontSize: 10),
                 height: 28,
-                width: double.infinity, // Menyesuaikan lebar tombol dengan container
-                title: "Available",
+                width: double
+                    .infinity, // Menyesuaikan lebar tombol dengan container
+                title: widget.title,
                 onPressed: widget.onPressesd,
               ),
             ),

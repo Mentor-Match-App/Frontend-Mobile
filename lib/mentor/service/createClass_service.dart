@@ -12,7 +12,9 @@ class CreateClassService {
     };
   }
 
-  Future<bool> createClass(CreateClassModels classModel, String mentorId) async {
+  String get errorMessage => errorMessage;
+
+  Future<dynamic> createClass(CreateClassModels classModel, String mentorId) async {
     try {
       final response = await _dio.post(
         '$_baseUrl/mentor/$mentorId/class',
@@ -20,20 +22,25 @@ class CreateClassService {
       );
 
       if (response.statusCode == 200) {
-        print('Class created successfully: ${response.data}');
+        // Feedback berhasil dikirim
         return true;
       } else {
-        print('Failed to create class: ${response.statusCode}');
-        return false;
+        // Gagal mengirim feedback, baca dan kembalikan pesan error dari backend
+        return response.data['message'] ??
+            'Terjadi kesalahan yang tidak diketahui.';
       }
     } on DioError catch (e) {
-      print('Error creating class: ${e.message}');
       if (e.response != null) {
-        print('Error response data: ${e.response!.data}');
+        // Gagal karena respons dari server, baca dan kembalikan pesan error dari backend
+        return e.response!.data['message'] ??
+            'Terjadi kesalahan yang tidak diketahui.';
+      } else {
+        // Gagal karena alasan lain, seperti kesalahan jaringan atau konfigurasi
+        return 'Gagal mengirim feedback: ${e.message}';
       }
-      return false;
+    } catch (e) {
+      // Tangkap exception lain dan kembalikan sebagai pesan error
+      return 'Gagal mengirim feedback: ${e}';
     }
   }
 }
-
-

@@ -51,27 +51,45 @@ class _BahasaSMPScreenState extends State<BahasaSMPScreen> {
                 orElse: () => ExperienceSMP(),
               );
 
-                              /// if all class is active ///
-              bool areAllClassesActive(List<ClassMentorSMP>? classes) {
-                if (classes == null || classes.isEmpty) {
-                  return false;
-                }
-                // Mengembalikan true jika semua kelas memiliki isActive == true
-                return classes
-                    .every((classMentor) => classMentor.isActive == true);
+                         // Fungsi untuk mendapatkan slot yang tersedia
+              int getAvailableSlotCount(ClassMentorSMP kelas) {
+                int approvedCount = kelas.transactions
+                        ?.where((t) => t.paymentStatus == "Approved")
+                        .length ??
+                    0;
+
+                int pendingCount = kelas.transactions
+                        ?.where((t) => t.paymentStatus == "Pending")
+                        .length ??
+                    0;
+
+                int totalApprovedAndPendingCount = approvedCount + pendingCount;
+
+                // Jumlah slot yang tersedia adalah maksimum partisipan dikurangi dengan total transaksi yang telah disetujui dan sedang diproses
+                int availableSlots =
+                    (kelas.maxParticipants ?? 0) - totalApprovedAndPendingCount;
+                // Pastikan slot yang tersedia tidak negatif
+                return availableSlots > 0 ? availableSlots : 0;
               }
 
-              bool allClassesActive = areAllClassesActive(mentor.mentorClass);
-              Color buttonColor = allClassesActive
+// Fungsi untuk menentukan apakah semua kelas dalam daftar mentor dianggap penuh
+              bool allClassesFull = mentor.mentorClass!.every((classMentor) {
+                int availableSlotCount = getAvailableSlotCount(classMentor);
+                return availableSlotCount <= 0;
+              });
+
+              String availabilityStatus = allClassesFull ? 'Full' : 'Available';
+              Color buttonColor = allClassesFull
                   ? ColorStyle().disableColors
                   : ColorStyle().primaryColors;
+
               String company = currentJob?.company ?? 'Placeholder Company';
               String jobTitle = currentJob?.jobTitle ?? 'Placeholder Job';
               return Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: CardItemMentor(
-                  color:
-                      buttonColor,
+                  title: availabilityStatus,
+                  color: buttonColor,
                   onPressesd: () {
                     Navigator.push(
                       context,

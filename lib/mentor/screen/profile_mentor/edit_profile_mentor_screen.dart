@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mentormatch_apps/mentor/screen/bottom_mentor_screen.dart';
 import 'package:mentormatch_apps/mentor/screen/profile_mentor/mentor_profile_screen.dart';
 import 'package:mentormatch_apps/mentor/screen/profile_mentor/service.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
@@ -377,7 +378,10 @@ class _EditProfileMentorScreenState extends State<EditProfileMentorScreen> {
                 leftBarIndicatorColor: ColorStyle().succesColors);
             Navigator.pushAndRemoveUntil(
                 context,
-                MaterialPageRoute(builder: (context) => MentorProfileScreen()),
+                MaterialPageRoute(
+                    builder: (context) =>  BottomNavbarMentorScreen(
+                          activeScreen: 3,
+                        )),
                 (route) => false);
           }
         });

@@ -76,8 +76,7 @@ class _DetailMentorSDScreenState extends State<DetailMentorSDScreen> {
       appBar: AppBar(
           backgroundColor: ColorStyle().tertiaryColors,
           title: AppBarLogoNotif()),
-      body:
-       ListView(
+      body: ListView(
         children: [
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -211,91 +210,105 @@ class _DetailMentorSDScreenState extends State<DetailMentorSDScreen> {
                       ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          children: widget.classes?.map((kelas) {
-                                int getApprovedTransactionCount(
-                                    ClassMentorSD kelas) {
-                                  int count = kelas.transactions
-                                          ?.where((t) =>
-                                              t.paymentStatus == "Approved")
-                                          .length ??
-                                      0;
-                                  print(
-                                      "Kelas: ${kelas.name}, Transaksi Approved: $count");
-                                  return count;
-                                }
+                        child: widget.classes != null &&
+                                widget.classes!.isNotEmpty
+                            ? Column(
+                                children: widget.classes!.map((kelas) {
+                                  int getApprovedTransactionCount(
+                                      ClassMentorSD kelas) {
+                                    int count = kelas.transactions
+                                            ?.where((t) =>
+                                                t.paymentStatus == "Approved")
+                                            .length ??
+                                        0;
 
-                                int approvedTransactions =
-                                    getApprovedTransactionCount(kelas);
-                                int availableSlots = kelas.maxParticipants! -
-                                    approvedTransactions;
+                                    return count;
+                                  }
 
-                                // Mengubah logika warna berdasarkan availableSlots
-                                Color buttonColor = availableSlots > 0
-                                    ? ColorStyle()
-                                        .primaryColors // Jika masih ada slot, gunakan warna primer
-                                    : ColorStyle()
-                                        .disableColors; // Jika slot penuh, gunakan warna disable
+                                  int getPendingTransactionCount(
+                                      ClassMentorSD kelas) {
+                                    int count = kelas.transactions
+                                            ?.where((t) =>
+                                                t.paymentStatus == "Pending")
+                                            .length ??
+                                        0;
 
-                                return Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: ElevetadButtonWithIcon(
-                                    // Asumsi typo telah diperbaiki
-                                    color: buttonColor, // Terapkan warna tombol
-                                    onPressed: availableSlots > 0
-                                        ? () {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    DetailClassMentorSD(
-                                                   addressMentoring:
-                                                      kelas.address ?? "",
-                                                  locationMentoring:
-                                                      kelas.location ?? "",
-                                                  mentorName: widget.name,
-                                                  transaction:
-                                                      kelas.transactions ?? [],
-                                                  mentorData: widget.mentor,
-                                                  classId: kelas.id,
-                                                  classname: kelas.name ??
-                                                      'No Class Name',
-                                                  classprice: kelas.price ?? 0,
-                                                  classduration:
-                                                      kelas.durationInDays ?? 0,
-                                                  maxParticipants:
-                                                      kelas.maxParticipants ??
-                                                          0,
-                                                  endDate: DateTime.parse(
-                                                      kelas.endDate ?? ''),
-                                                  startDate: DateTime.parse(
-                                                      kelas.startDate ?? ''),
-                                                  schedule: kelas.schedule ??
-                                                      'No Schedule',
-                                                  classDescription:
-                                                      kelas.description ??
-                                                          'No Description',
-                                                  targetLearning:
-                                                      kelas.targetLearning,
-                                                  terms: kelas.terms,
-                                                  durationInDays:
-                                                      kelas.durationInDays,
-                                                  price: kelas.price ?? 0,
-                                                  location: kelas.location,
-                                                  address: kelas.address,
-                                                  // Lanjutkan dengan parameter lainnya...
-                                                ),
-                                              ),
-                                            );
-                                          }
-                                        : null, // Menonaktifkan tombol jika slot penuh
+                                    return count;
+                                  }
 
-                                    title: kelas.name ?? 'No Class Name',
-                                  ),
-                                );
-                              }).toList() ??
-                              [Center(child: Text('No classes available'))],
-                        ),
+                                  ///jika jumlah  getApprovedTransactionCount + getPendingTransactionCount == maxParticipants maka warna buttonya grey///
+                                  Color buttonColor =
+                                      getApprovedTransactionCount(kelas) +
+                                                  getPendingTransactionCount(
+                                                      kelas) ==
+                                              kelas.maxParticipants
+                                          ? Colors.grey
+                                          : ColorStyle().primaryColors;
+
+                                  ///availableSlots//
+
+                                  return Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: ElevetadButtonWithIcon(
+                                      // Asumsi typo telah diperbaiki
+                                      color:
+                                          buttonColor, // Terapkan warna tombol
+                                      onPressed: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                DetailClassMentorSD(
+                                              addressMentoring:
+                                                  kelas.address ?? "",
+                                              locationMentoring:
+                                                  kelas.location ?? "",
+                                              mentorName: widget.name,
+                                              transaction:
+                                                  kelas.transactions ?? [],
+                                              mentorData: widget.mentor,
+                                              classId: kelas.id,
+                                              classname:
+                                                  kelas.name ?? 'No Class Name',
+                                              classprice: kelas.price ?? 0,
+                                              classduration:
+                                                  kelas.durationInDays ?? 0,
+                                              maxParticipants:
+                                                  kelas.maxParticipants ?? 0,
+                                              endDate: DateTime.parse(
+                                                  kelas.endDate ?? ''),
+                                              startDate: DateTime.parse(
+                                                  kelas.startDate ?? ''),
+                                              schedule: kelas.schedule ??
+                                                  'No Schedule',
+                                              classDescription:
+                                                  kelas.description ??
+                                                      'No Description',
+                                              targetLearning:
+                                                  kelas.targetLearning,
+                                              terms: kelas.terms,
+                                              durationInDays:
+                                                  kelas.durationInDays,
+                                              price: kelas.price ?? 0,
+                                              location: kelas.location,
+                                              address: kelas.address,
+                                              // Lanjutkan dengan parameter lainnya...
+                                            ),
+                                          ),
+                                        );
+                                      },
+
+                                      title: kelas.name ?? 'No Class Name',
+                                    ),
+                                  );
+                                }).toList(),
+                              )
+                            : Center(
+                                child: Text(
+                                  'Belum ada program',
+                                  style: FontFamily().regularText,
+                                ),
+                              ),
                       ),
                       const SizedBox(
                         height: 12,
@@ -339,8 +352,10 @@ class _DetailMentorSDScreenState extends State<DetailMentorSDScreen> {
       return Center(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Text("Belum ada review",
-              style: TextStyle(fontWeight: FontWeight.bold)),
+          child: Text(
+            "Belum ada review",
+            style: FontFamily().regularText,
+          ),
         ),
       );
     }

@@ -18,12 +18,117 @@ class MyPremiumClassMentorScreen extends StatefulWidget {
 class _MyPremiumClassMentorScreenState
     extends State<MyPremiumClassMentorScreen> {
   late Future<MyClassMentorMondel> classData;
+  int _getPriority(Class userClass) {
+    DateTime now = DateTime.now();
+    DateTime startDate = DateTime.parse(
+        userClass.startDate.toString()); // Asumsi startDate tidak null
+    DateTime endDate = DateTime.parse(
+        userClass.endDate.toString()); // Asumsi endDate tidak null
+    
+    int getAvailableSlotCount(Class userClass){
+      int approvedCount = userClass.transactions
+          ?.where((t) => t.paymentStatus == "Approved")
+          .length ??
+          0;
+      int pendingCount = userClass.transactions
+          ?.where((t) => t.paymentStatus == "Pending")
+          .length ??
+          0;
+      int totalApprovedAndPendingCount = approvedCount + pendingCount;
+      return totalApprovedAndPendingCount;
+    }
+
+    int totalApprovedAndPendingCount = getAvailableSlotCount(userClass);
+
+    bool isVerified = userClass.isVerified!;
+    bool isActive = userClass.isActive!;
+    bool isAvailable = userClass.isAvailable!;
+    int maxParticipants = userClass.maxParticipants!;
+    Color buttonColor = ColorStyle().primaryColors;
+    String buttonText = "Available";
+    bool isRejected = userClass.rejectReason != null;
+
+    // Tentukan warna tombol dan teks berdasarkan kondisi status kelas
+
+    if (isAvailable && totalApprovedAndPendingCount < maxParticipants) {
+      buttonColor = ColorStyle().secondaryColors;
+      buttonText = "Available";
+    } else if (!isAvailable && !isVerified && !isActive && isRejected) {
+      // Kondisi untuk "Rejected"
+      buttonColor = ColorStyle().errorColors; // Warna untuk status "Rejected"
+      buttonText = "Rejected";
+    } else if (!isAvailable && !isVerified && !isActive) {
+      buttonColor = ColorStyle().pendingColors;
+      buttonText = "Pending";
+    } else if (totalApprovedAndPendingCount >= maxParticipants && !isActive) {
+      buttonColor = ColorStyle().fullbookedColors;
+      buttonText = "Full";
+    } else if (isActive && now.isAfter(startDate) && now.isBefore(endDate)) {
+      buttonColor = ColorStyle().succesColors;
+      buttonText = "Active";
+    } else if (totalApprovedAndPendingCount > 0 && now.isAfter(endDate)) {
+      buttonColor = ColorStyle().disableColors;
+      buttonText = "Completed";
+    } else if (totalApprovedAndPendingCount == 0 && now.isAfter(startDate)) {
+      buttonColor = ColorStyle().blackColors;
+      buttonText = "Expired";
+    } else {
+      // Penanganan default jika ada, untuk kasus yang tidak tertangani oleh kondisi di atas
+      buttonColor = ColorStyle().primaryColors; // Asumsi warna default
+      buttonText = "Unavailable"; // Teks default
+    }
+    // Kembalikan prioritas yang dihitung
+    return _calculatePriority(buttonText);
+  }
+
+  int _calculatePriority(String buttonText) {
+    // Lakukan perhitungan prioritas berdasarkan teks tombol
+    switch (buttonText) {
+      case "Rejected":
+        return 1;
+      case "Pending":
+        return 2;
+      case "Full":
+        return 3;
+      case "Active":
+        return 4;
+      case "Completed":
+        return 5;
+      case "Expired":
+        return 6;
+      case "Unavailable":
+        return 7;
+      default:
+        return 8;
+    }
+  }
+
+  Widget createStatusButton(String title, Color color) {
+    return Align(
+      alignment: Alignment.centerRight,
+      child: SmallElevatedButton(
+        color: color,
+        onPressed: () {}, // Define the action
+        height: 28,
+        width: 124,
+        title: title,
+        style: FontFamily().buttonText,
+      ),
+    );
+  }
 
   @override
   void initState() {
     super.initState();
     // Initialize the future without passing userId
     classData = ListClassMentor().fetchClassData();
+
+    /// mebuat sort sesuai dengan prioritas status
+    classData.then((value) {
+      value.user?.userClass?.sort((a, b) {
+        return _getPriority(a).compareTo(_getPriority(b));
+      });
+    });
   }
 
   @override
@@ -41,197 +146,141 @@ class _MyPremiumClassMentorScreenState
             child: Padding(
               padding: const EdgeInsets.all(12.0),
               child: Column(
-                children: userClass.map((classData) {
-                  DateTime now = DateTime.now();
-                  DateTime startDate = DateTime.parse(
-                      classData.startDate!); // Asumsi startDate tidak null
-                  DateTime endDate = DateTime.parse(
-                      classData.endDate!); // Asumsi endDate tidak null
-                  int approvedTransactionsCount = classData.transactions
+                children: userClass.map((data) {
+                  int approvedTransactionsCount = data.transactions
                           ?.where((transaction) =>
                               transaction.paymentStatus == "Approved")
                           .length ??
                       0;
-                  bool isVerified = classData.isVerified!;
-                  bool isActive = classData.isActive!;
-                  bool isAvailable = classData.isAvailable!;
-                  int maxParticipants = classData.maxParticipants!;
-                  Color buttonColor = ColorStyle().primaryColors;
-                  String buttonText = "Available";
-                  bool isRejected = classData.rejectReason != null;
 
-                  // Widget trailingIcon = SizedBox();
-
-                  if (isAvailable &&
-                      approvedTransactionsCount < maxParticipants) {
-                    buttonColor = ColorStyle().secondaryColors;
-                    buttonText = "Available";
-                  } else if (!isAvailable &&
-                      !isVerified &&
-                      !isActive &&
-                      isRejected) {
-                    // Kondisi untuk "Rejected"
-                    buttonColor = ColorStyle()
-                        .errorColors; // Warna untuk status "Rejected"
-                    buttonText = "Rejected";
-                  } else if (!isAvailable && !isVerified && !isActive) {
-                    buttonColor = ColorStyle().pendingColors;
-                    buttonText = "Pending";
-                  } else if (approvedTransactionsCount >= maxParticipants &&
-                      !isActive) {
-                    buttonColor = ColorStyle().fullbookedColors;
-                    buttonText = "Full";
-                  } else if (isActive &&
-                      now.isAfter(startDate) &&
-                      now.isBefore(endDate)) {
-                    buttonColor = ColorStyle().succesColors;
-                    buttonText = "Active";
-                  } else if (approvedTransactionsCount > 0 &&
-                      now.isAfter(endDate)) {
-                    buttonColor = ColorStyle().disableColors;
-                    buttonText = "Completed";
-                  } else if (approvedTransactionsCount == 0 &&
-                      now.isAfter(startDate)) {
-                    buttonColor = ColorStyle().blackColors;
-                    buttonText = "Expired";
-                  } else {
-                    // Penanganan default jika ada, untuk kasus yang tidak tertangani oleh kondisi di atas
-                    buttonColor =
-                        ColorStyle().primaryColors; // Asumsi warna default
-                    buttonText = "Unavailable"; // Teks default
-                  }
-                  String menteeNames = classData.transactions!
-                      .map((transaction) => transaction.user!.name
-                          as String) // Extracting the name from each transaction.
-                      .join(
-                          ', '); // Joining all names with a comma and space for readability.
-
+                  int statusButton = _getPriority(data);
                   return Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(
-                          color: ColorStyle().tertiaryColors,
-                          width: 2,
+                      padding: const EdgeInsets.all(12.0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(
+                            color: ColorStyle().tertiaryColors,
+                            width: 2,
+                          ),
+                          color: Colors.transparent,
                         ),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(12.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                //buat agar tidak overflow text gunakan expanded atau flexible
-                                Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.all(12.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              if (statusButton == 1)
+                                createStatusButton(
+                                    "Rejected", ColorStyle().errorColors),
+                              if (statusButton == 2)
+                                createStatusButton(
+                                    "Pending", ColorStyle().pendingColors),
+                              if (statusButton == 3)
+                                createStatusButton(
+                                    "Full", ColorStyle().fullbookedColors),
+                              if (statusButton == 4)
+                                createStatusButton(
+                                    "Active", ColorStyle().succesColors),
+                              if (statusButton == 5)
+                                createStatusButton(
+                                    "Completed", ColorStyle().disableColors),
+                              if (statusButton == 6)
+                                createStatusButton(
+                                    "Expired", ColorStyle().blackColors),
+                              if (statusButton == 7)
+                                createStatusButton(
+                                    "Unavailable", ColorStyle().primaryColors),
+                              if (statusButton == 8)
+                                createStatusButton(
+                                    "Available", ColorStyle().secondaryColors),
+                              SizedBox(height: 12),
+                              Text(
+                                  //nama kelas
+                                  data.name ?? '',
+                                  style: FontFamily().titleText.copyWith(
+                                        color: ColorStyle().secondaryColors,
+                                      )),
+                              SizedBox(height: 12),
+                              Text(
+                                'Jumlah mentee terdaftar : ${approvedTransactionsCount}',
+                                style: FontFamily().regularText,
+                              ),
+
+                              const SizedBox(height: 12),
+                              Text(
+                                //durationIndays
+                                'Durasi kelas : ${data.durationInDays} hari',
+                                style: FontFamily().regularText,
+                              ),
+                              // buat align text button di kanan menuju DetailMyclass namun aoabila statusnya rejected maka ke editrejectedClaas
+                              Align(
+                                alignment: Alignment.centerRight,
+                                child: TextButton(
+                                  onPressed: () {
+                                    if (statusButton == 1) {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              EditRejectedClass(
+                                            classData: data,
+                                          ),
+                                        ),
+                                      );
+                                    } else {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              DetailMyClassMentorScreen(
+                                            addressMentoring:
+                                                data.address ?? 'Meeting Zoom',
+                                            locationMentoring:
+                                                data.location ?? '',
+                                            approvedTransactionsCount:
+                                                approvedTransactionsCount,
+                                            transactions:
+                                                data.transactions ?? [],
+                                            evaluation: data.evaluations ?? [],
+                                            learningMaterial:
+                                                data.learningMaterial ?? [],
+                                            userClass: data,
+                                            aksesLinkZoom: data.zoomLink ?? '',
+                                            deskripsiKelas:
+                                                data.description.toString(),
+                                            classid: data.id.toString(),
+                                            durationInDays:
+                                                data.durationInDays ?? 0,
+                                            endDate: DateTime.parse(
+                                                data.endDate ?? ''),
+                                            startDate: DateTime.parse(
+                                                data.startDate ?? ''),
+                                            term: data.terms ?? [],
+                                            maxParticipants:
+                                                data.maxParticipants ?? 0,
+                                            schedule: data.schedule ?? '',
+                                            targetLearning:
+                                                data.targetLearning ?? [],
+                                            linkZoom: data.zoomLink ?? '',
+                                            namaKelas: data.name ?? '',
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                  },
                                   child: Text(
-                                    overflow: TextOverflow.ellipsis,
-                                    classData.name ?? '',
-                                    style: FontFamily().boldText.copyWith(
-                                        fontSize: 14,
-                                        color: ColorStyle().primaryColors),
-                                  ),
-                                ),
-                                Align(
-                                  alignment: Alignment.centerRight,
-                                  child: SmallElevatedButton(
-                                    color: buttonColor,
-                                    onPressed: () {},
-                                    height: 30,
-                                    width: 124,
-                                    title: buttonText,
-                                    style: FontFamily().buttonText,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 12),
-                            Text(
-                              'Jumlah mentee terdaftar : ${approvedTransactionsCount}',
-                              style: TextStyle(/* Your TextStyle here */),
-                            ),
-                            const SizedBox(height: 12),
-                            // You need to adjust how you access transaction names here. Assuming each classData has transactions that is a list
-                            Text(
-                              'Durasi : ${classData.durationInDays} Hari',
-                              style: FontFamily().regularText,
-                            ),
-                            Align(
-                              alignment: Alignment.centerRight,
-                              child: TextButton(
-                                onPressed: () {
-                                  if (!isAvailable &&
-                                      !isVerified &&
-                                      !isActive &&
-                                      isRejected) {
-                                    // Jika kelas ditolak, arahkan ke halaman EditRejectedClass
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => EditRejectedClass(
-                                          classData: classData,
+                                    'Lihat Kelas',
+                                    style: FontFamily().buttonText.copyWith(
+                                          color: ColorStyle().secondaryColors,
                                         ),
-                                      ),
-                                    );
-                                  } else {
-                                    // Untuk kondisi lain, arahkan ke halaman DetailMyClassMentorScreen
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            DetailMyClassMentorScreen(
-                                          addressMentoring: classData.address ??
-                                              'Meeting Zoom',
-                                          locationMentoring:
-                                              classData.location ?? '',
-                                          approvedTransactionsCount:
-                                              approvedTransactionsCount,
-                                          transactions:
-                                              classData.transactions ?? [],
-                                          evaluation:
-                                              classData.evaluations ?? [],
-                                          learningMaterial:
-                                              classData.learningMaterial ?? [],
-                                          userClass: classData,
-                                          aksesLinkZoom:
-                                              classData.zoomLink ?? '',
-                                          deskripsiKelas:
-                                              classData.description.toString(),
-                                          classid: classData.id.toString(),
-                                          durationInDays:
-                                              classData.durationInDays ?? 0,
-                                          endDate: DateTime.parse(
-                                              classData.endDate ?? ''),
-                                          startDate: DateTime.parse(
-                                              classData.startDate ?? ''),
-                                          term: classData.terms ?? [],
-                                          maxParticipants:
-                                              classData.maxParticipants ?? 0,
-                                          schedule: classData.schedule ?? '',
-                                          targetLearning:
-                                              classData.targetLearning ?? [],
-                                          linkZoom: classData.zoomLink ?? '',
-                                          namaKelas: classData.name ?? '',
-                                        ),
-                                      ),
-                                    );
-                                  }
-                                },
-                                child: Text(
-                                  'Lihat Detail',
-                                  style: FontFamily().boldText.copyWith(
-                                      color: ColorStyle().secondaryColors,
-                                      fontSize: 14),
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                    ),
-                  );
+                      ));
                 }).toList(),
               ),
             ),

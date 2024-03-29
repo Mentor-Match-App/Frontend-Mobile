@@ -6,7 +6,9 @@ import 'package:mentormatch_apps/mentee/screen/profile/mentee_profile_screen.dar
 import 'package:mentormatch_apps/widget/bottom_nav.dart';
 
 class BottomNavbarMenteeScreen extends StatefulWidget {
-  const BottomNavbarMenteeScreen({Key? key}) : super(key: key);
+  final int? activeScreen;
+  const BottomNavbarMenteeScreen({Key? key, this.activeScreen})
+      : super(key: key);
 
   @override
   State<BottomNavbarMenteeScreen> createState() =>
@@ -15,6 +17,15 @@ class BottomNavbarMenteeScreen extends StatefulWidget {
 
 class _BottomNavbarMenteeScreenState extends State<BottomNavbarMenteeScreen> {
   int _selectedNavbar = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    // Jika activeScreen disetel, gunakan nilainya sebagai layar aktif
+    if (widget.activeScreen != null) {
+      _selectedNavbar = widget.activeScreen!;
+    }
+  }
 
   void _changeSelectedNavbar(int index) {
     setState(() {

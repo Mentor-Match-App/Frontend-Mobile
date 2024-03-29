@@ -1,18 +1,14 @@
-import 'dart:convert';
-
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SendEvaluasiService {
   Dio _dio = Dio();
-  String _baseUrl =
-      "https://hwx70h6x-8000.asse.devtunnels.ms"; // Sesuaikan dengan URL server Anda
+  String _baseUrl = "https://hwx70h6x-8000.asse.devtunnels.ms";
 
   Future<String> sendEvaluationLink(
       String classId, String topic, String link) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? token = prefs
-        .getString('token'); // Asumsikan token disimpan dengan kunci 'token'
+    String? token = prefs.getString('token');
 
     if (token == null) {
       print("Token tidak ditemukan");
@@ -30,29 +26,32 @@ class SendEvaluasiService {
         options: Options(
           headers: {
             "Content-Type": "application/json",
-            "Authorization": "Bearer $token", // Sertakan token di sini
+            "Authorization": "Bearer $token",
           },
         ),
       );
 
-      if (response.statusCode == 200) {
-        // Langsung mengakses response.data karena Dio secara otomatis menguraikan JSON
-        return response.data['message'] ?? 'Evaluasi berhasil dikirim.';
+       if (response.statusCode == 200) {
+        // Feedback berhasil dikirim maka tampilkan messege
+        return "Evaluasi berhasil dikirim.";
       } else {
-        print(
-            "Gagal mengirim data evaluasi, status code: ${response.statusCode}.");
-        // Langsung mengakses response.data karena Dio secara otomatis menguraikan JSON
+        // Gagal mengirim feedback, baca dan kembalikan pesan error dari backend
         return response.data['message'] ??
-            'Terjadi kesalahan saat mengirim evaluasi.';
+            'Terjadi kesalahan yang tidak diketahui.';
       }
+    // ignore: deprecated_member_use
     } on DioError catch (e) {
       if (e.response != null) {
-        // Langsung mengakses e.response.data karena Dio secara otomatis menguraikan JSON
+        // Gagal karena respons dari server, baca dan kembalikan pesan error dari backend
         return e.response!.data['message'] ??
             'Terjadi kesalahan yang tidak diketahui.';
       } else {
-        return "Terjadi kesalahan saat mengirim data evaluasi: $e";
+        // Gagal karena alasan lain, seperti kesalahan jaringan atau konfigurasi
+        return 'Gagal mengirim feedback: ${e.message}';
       }
+    } catch (e) {
+      // Tangkap exception lain dan kembalikan sebagai pesan error
+      return 'Gagal mengirim feedback: ${e.toString()}';
     }
   }
 }

@@ -213,9 +213,11 @@ class _DetailMentorSMPScreenState extends State<DetailMentorSMPScreen> {
                         ),
                       ),
                       Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                            children: widget.classes?.map((kelas) {
+                        padding: const EdgeInsets.all(8.0),
+                        child: widget.classes != null &&
+                                widget.classes!.isNotEmpty
+                            ? Column(
+                                children: widget.classes!.map((kelas) {
                                   int getApprovedTransactionCount(
                                       ClassMentorSMP kelas) {
                                     int count = kelas.transactions
@@ -253,40 +255,43 @@ class _DetailMentorSMPScreenState extends State<DetailMentorSMPScreen> {
                                                 MaterialPageRoute(
                                                   builder: (context) =>
                                                       DetailClassMentorSMP(
-                                                   addressMentoring:
-                                                      kelas.address ?? "",
-                                                  locationMentoring:
-                                                      kelas.location ?? "",
-                                                  mentorName: widget.name,
-                                                  transaction:
-                                                      kelas.transactions ?? [],
-                                                  mentorData: widget.mentor,
-                                                  classId: kelas.id,
-                                                  classname: kelas.name ??
-                                                      'No Class Name',
-                                                  classprice: kelas.price ?? 0,
-                                                  classduration:
-                                                      kelas.durationInDays ?? 0,
-                                                  maxParticipants:
-                                                      kelas.maxParticipants ??
-                                                          0,
-                                                  endDate: DateTime.parse(
-                                                      kelas.endDate ?? ''),
-                                                  startDate: DateTime.parse(
-                                                      kelas.startDate ?? ''),
-                                                  schedule: kelas.schedule ??
-                                                      'No Schedule',
-                                                  classDescription:
-                                                      kelas.description ??
-                                                          'No Description',
-                                                  targetLearning:
-                                                      kelas.targetLearning,
-                                                  terms: kelas.terms,
-                                                  durationInDays:
-                                                      kelas.durationInDays,
-                                                  price: kelas.price ?? 0,
-                                                  location: kelas.location,
-                                                  address: kelas.address,
+                                                    addressMentoring:
+                                                        kelas.address ?? "",
+                                                    locationMentoring:
+                                                        kelas.location ?? "",
+                                                    mentorName: widget.name,
+                                                    transaction:
+                                                        kelas.transactions ??
+                                                            [],
+                                                    mentorData: widget.mentor,
+                                                    classId: kelas.id,
+                                                    classname: kelas.name ??
+                                                        'No Class Name',
+                                                    classprice:
+                                                        kelas.price ?? 0,
+                                                    classduration:
+                                                        kelas.durationInDays ??
+                                                            0,
+                                                    maxParticipants:
+                                                        kelas.maxParticipants ??
+                                                            0,
+                                                    endDate: DateTime.parse(
+                                                        kelas.endDate ?? ''),
+                                                    startDate: DateTime.parse(
+                                                        kelas.startDate ?? ''),
+                                                    schedule: kelas.schedule ??
+                                                        'No Schedule',
+                                                    classDescription:
+                                                        kelas.description ??
+                                                            'No Description',
+                                                    targetLearning:
+                                                        kelas.targetLearning,
+                                                    terms: kelas.terms,
+                                                    durationInDays:
+                                                        kelas.durationInDays,
+                                                    price: kelas.price ?? 0,
+                                                    location: kelas.location,
+                                                    address: kelas.address,
                                                     // Lanjutkan dengan parameter lainnya...
                                                   ),
                                                 ),
@@ -297,9 +302,15 @@ class _DetailMentorSMPScreenState extends State<DetailMentorSMPScreen> {
                                       title: kelas.name ?? 'No Class Name',
                                     ),
                                   );
-                                }).toList() ??
-                                [Center(child: Text('No classes available'))],
-                          )),
+                                }).toList(),
+                              )
+                            : Center(
+                                child: Text(
+                                  'Belum ada program',
+                                  style: FontFamily().regularText,
+                                ),
+                              ),
+                      ),
                       const SizedBox(
                         height: 12,
                       ),
@@ -342,8 +353,10 @@ class _DetailMentorSMPScreenState extends State<DetailMentorSMPScreen> {
       return Center(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Text("Belum ada review",
-              style: TextStyle(fontWeight: FontWeight.bold)),
+          child: Text(
+            "Belum ada review",
+            style: FontFamily().regularText,
+          ),
         ),
       );
     }

@@ -1,9 +1,7 @@
-import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mentormatch_apps/mentee/screen/MyClassMentee/MyClass_list_mentee_screen.dart';
-import 'package:mentormatch_apps/mentee/screen/home_screen_mentee.dart';
-import 'package:mentormatch_apps/mentee/service/bookSessionService/ui_savebook.dart';
+import 'package:mentormatch_apps/mentee/screen/bottom_mentee_screen.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
 import 'package:mentormatch_apps/widget/button.dart';
@@ -140,7 +138,9 @@ class _DetailBookingSessionState extends State<DetailBookingSession> {
                     Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => MyClassMenteeListScreen()),
+                          builder: (context) => const BottomNavbarMenteeScreen(
+                                activeScreen: 2,
+                              )),
                       (Route<dynamic> route) =>
                           false, // Remove all routes until the new route
                     );

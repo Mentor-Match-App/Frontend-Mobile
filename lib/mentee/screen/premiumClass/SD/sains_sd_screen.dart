@@ -43,37 +43,54 @@ class _SainsSDScreenState extends State<SainsSDScreen> {
               crossAxisSpacing: 2,
               mainAxisSpacing: 2,
             ),
-            itemCount: mentorsWithLanguageCategory.length,
+           itemCount: mentorsWithLanguageCategory.length,
             itemBuilder: (context, index) {
               final mentor = mentorsWithLanguageCategory[index];
-              // Logika untuk menentukan currentExperience sama seperti sebelumnya
+              // create for experience is current job true or false
               ExperienceSD? currentJob = mentor.experiences?.firstWhere(
                 (exp) => exp.isCurrentJob ?? false,
                 orElse: () => ExperienceSD(),
               );
 
-              /// if all class is active ///
-              bool areAllClassesActive(List<ClassMentorSD>? classes) {
-                if (classes == null || classes.isEmpty) {
-                  return false;
-                }
-                // Mengembalikan true jika semua kelas memiliki isActive == true
-                return classes
-                    .every((classMentor) => classMentor.isActive == true);
+              // Fungsi untuk mendapatkan slot yang tersedia
+              int getAvailableSlotCount(ClassMentorSD kelas) {
+                int approvedCount = kelas.transactions
+                        ?.where((t) => t.paymentStatus == "Approved")
+                        .length ??
+                    0;
+
+                int pendingCount = kelas.transactions
+                        ?.where((t) => t.paymentStatus == "Pending")
+                        .length ??
+                    0;
+
+                int totalApprovedAndPendingCount = approvedCount + pendingCount;
+
+                // Jumlah slot yang tersedia adalah maksimum partisipan dikurangi dengan total transaksi yang telah disetujui dan sedang diproses
+                int availableSlots =
+                    (kelas.maxParticipants ?? 0) - totalApprovedAndPendingCount;
+                // Pastikan slot yang tersedia tidak negatif
+                return availableSlots > 0 ? availableSlots : 0;
               }
 
-              bool allClassesActive = areAllClassesActive(mentor.mentorClass);
-              Color buttonColor = allClassesActive
+// Fungsi untuk menentukan apakah semua kelas dalam daftar mentor dianggap penuh
+              bool allClassesFull = mentor.mentorClass!.every((classMentor) {
+                int availableSlotCount = getAvailableSlotCount(classMentor);
+                return availableSlotCount <= 0;
+              });
+
+              String availabilityStatus = allClassesFull ? 'Full' : 'Available';
+              Color buttonColor = allClassesFull
                   ? ColorStyle().disableColors
                   : ColorStyle().primaryColors;
+
               String company = currentJob?.company ?? 'Placeholder Company';
               String jobTitle = currentJob?.jobTitle ?? 'Placeholder Job';
               return Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: CardItemMentor(
-                  color:
-                      buttonColor, 
-                  //// Use the determined color based on class availability
+                  title: availabilityStatus,
+                  color: buttonColor,
                   onPressesd: () {
                     Navigator.push(
                       context,
@@ -95,7 +112,7 @@ class _SainsSDScreenState extends State<SainsSDScreen> {
                         ),
                       ),
                     );
-                  },
+                  }, // Jika semua kelas aktif, tidak melakukan apa-apa
                   imagePath: mentor.photoUrl.toString(),
                   name: mentor.name ?? 'No Name',
                   job: jobTitle,
@@ -103,9 +120,10 @@ class _SainsSDScreenState extends State<SainsSDScreen> {
                 ),
               );
             },
+
             shrinkWrap: true,
             physics:
-                ScrollPhysics(), // Mengizinkan scroll jika di dalam SingleChildScrollView
+                ScrollPhysics(), // Allows scrolling within a SingleChildScrollView
           );
         } else {
           return Center(child: Text("No data available"));
@@ -114,3 +132,4 @@ class _SainsSDScreenState extends State<SainsSDScreen> {
     );
   }
 }
+

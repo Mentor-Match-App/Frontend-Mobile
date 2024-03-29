@@ -210,91 +210,102 @@ class _DetailMentorKarierScreenState extends State<DetailMentorKarierScreen> {
                       ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          children: widget.classes?.map((kelas) {
-                                int getApprovedTransactionCount(
-                                    ClassMentorKarier kelas) {
-                                  int count = kelas.transactions
-                                          ?.where((t) =>
-                                              t.paymentStatus == "Approved")
-                                          .length ??
-                                      0;
-                                  print(
-                                      "Kelas: ${kelas.name}, Transaksi Approved: $count");
-                                  return count;
-                                }
+                        child: widget.classes != null &&
+                                widget.classes!.isNotEmpty
+                            ? Column(
+                                children: widget.classes!.map((kelas) {
+                                  int getApprovedTransactionCount(
+                                      ClassMentorKarier kelas) {
+                                    int count = kelas.transactions
+                                            ?.where((t) =>
+                                                t.paymentStatus == "Approved")
+                                            .length ??
+                                        0;
+                                    print(
+                                        "Kelas: ${kelas.name}, Transaksi Approved: $count");
+                                    return count;
+                                  }
 
-                                int approvedTransactions =
-                                    getApprovedTransactionCount(kelas);
-                                int availableSlots = kelas.maxParticipants! -
-                                    approvedTransactions;
+                                  int approvedTransactions =
+                                      getApprovedTransactionCount(kelas);
+                                  int availableSlots = kelas.maxParticipants! -
+                                      approvedTransactions;
 
-                                // Mengubah logika warna berdasarkan availableSlots
-                                Color buttonColor = availableSlots > 0
-                                    ? ColorStyle()
-                                        .primaryColors // Jika masih ada slot, gunakan warna primer
-                                    : ColorStyle()
-                                        .disableColors; // Jika slot penuh, gunakan warna disable
+                                  // Mengubah logika warna berdasarkan availableSlots
+                                  Color buttonColor = availableSlots > 0
+                                      ? ColorStyle()
+                                          .primaryColors // Jika masih ada slot, gunakan warna primer
+                                      : ColorStyle()
+                                          .disableColors; // Jika slot penuh, gunakan warna disable
 
-                                return Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: ElevetadButtonWithIcon(
-                                    // Asumsi typo telah diperbaiki
-                                    color: buttonColor, // Terapkan warna tombol
-                                    onPressed: availableSlots > 0
-                                        ? () {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    DetailClassMentorKarier(
-                                                  addressMentoring:
-                                                      kelas.address ?? "",
-                                                  locationMentoring:
-                                                      kelas.location ?? "",
-                                                  mentorName: widget.name,
-                                                  transaction:
-                                                      kelas.transactions ?? [],
-                                                  mentorData: widget.mentor,
-                                                  classId: kelas.id,
-                                                  classname: kelas.name ??
-                                                      'No Class Name',
-                                                  classprice: kelas.price ?? 0,
-                                                  classduration:
-                                                      kelas.durationInDays ?? 0,
-                                                  maxParticipants:
-                                                      kelas.maxParticipants ??
-                                                          0,
-                                                  endDate: DateTime.parse(
-                                                      kelas.endDate ?? ''),
-                                                  startDate: DateTime.parse(
-                                                      kelas.startDate ?? ''),
-                                                  schedule: kelas.schedule ??
-                                                      'No Schedule',
-                                                  classDescription:
-                                                      kelas.description ??
-                                                          'No Description',
-                                                  targetLearning:
-                                                      kelas.targetLearning,
-                                                  terms: kelas.terms,
-                                                  durationInDays:
-                                                      kelas.durationInDays,
-                                                  price: kelas.price ?? 0,
-                                                  location: kelas.location,
-                                                  address: kelas.address,
-                                                  // Lanjutkan dengan parameter lainnya...
+                                  return Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: ElevetadButtonWithIcon(
+                                      // Asumsi typo telah diperbaiki
+                                      color:
+                                          buttonColor, // Terapkan warna tombol
+                                      onPressed: availableSlots > 0
+                                          ? () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      DetailClassMentorKarier(
+                                                    addressMentoring:
+                                                        kelas.address ?? "",
+                                                    locationMentoring:
+                                                        kelas.location ?? "",
+                                                    mentorName: widget.name,
+                                                    transaction:
+                                                        kelas.transactions ??
+                                                            [],
+                                                    mentorData: widget.mentor,
+                                                    classId: kelas.id,
+                                                    classname: kelas.name ??
+                                                        'No Class Name',
+                                                    classprice:
+                                                        kelas.price ?? 0,
+                                                    classduration:
+                                                        kelas.durationInDays ??
+                                                            0,
+                                                    maxParticipants:
+                                                        kelas.maxParticipants ??
+                                                            0,
+                                                    endDate: DateTime.parse(
+                                                        kelas.endDate ?? ''),
+                                                    startDate: DateTime.parse(
+                                                        kelas.startDate ?? ''),
+                                                    schedule: kelas.schedule ??
+                                                        'No Schedule',
+                                                    classDescription:
+                                                        kelas.description ??
+                                                            'No Description',
+                                                    targetLearning:
+                                                        kelas.targetLearning,
+                                                    terms: kelas.terms,
+                                                    durationInDays:
+                                                        kelas.durationInDays,
+                                                    price: kelas.price ?? 0,
+                                                    location: kelas.location,
+                                                    address: kelas.address,
+                                                    // Lanjutkan dengan parameter lainnya...
+                                                  ),
                                                 ),
-                                              ),
-                                            );
-                                          }
-                                        : null, // Menonaktifkan tombol jika slot penuh
+                                              );
+                                            }
+                                          : null, // Menonaktifkan tombol jika slot penuh
 
-                                    title: kelas.name ?? 'No Class Name',
-                                  ),
-                                );
-                              }).toList() ??
-                              [Center(child: Text('No classes available'))],
-                        ),
+                                      title: kelas.name ?? 'No Class Name',
+                                    ),
+                                  );
+                                }).toList(),
+                              )
+                            : Center(
+                                child: Text(
+                                  'Belum ada program',
+                                  style: FontFamily().regularText,
+                                ),
+                              ),
                       ),
                       const SizedBox(
                         height: 12,
@@ -339,7 +350,7 @@ class _DetailMentorKarierScreenState extends State<DetailMentorKarierScreen> {
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Text("Belum ada review",
-              style: TextStyle(fontWeight: FontWeight.bold)),
+               style: FontFamily().regularText,),
         ),
       );
     }

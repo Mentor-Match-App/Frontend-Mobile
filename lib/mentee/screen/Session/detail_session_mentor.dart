@@ -1,4 +1,4 @@
-// ignore_for_file: deprecated_member_use
+// ignore_for_file: deprecated_member_use, use_build_context_synchronously
 
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
@@ -19,40 +19,16 @@ import 'package:mentormatch_apps/widget/profile_avatar.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DetailMentorSessionsNew extends StatefulWidget {
+  // final String sessionsid;
+  final MentorSession detailmentor;
   final int availableSlots;
-  final String sessionsid;
-  final int participants;
-  final String namaSessios;
-  final String about;
-  final String photoUrl;
-  final String namaMentor;
-  final String company;
-  final String job;
-  final String email;
-  final String linkedin;
-  final List<String> skills;
-  final String location;
-  final String description;
-  final MentorSession mentor;
-  final String jadwal;
+  final int totalParticipants;
   DetailMentorSessionsNew({
     Key? key,
-    required this.namaSessios,
-    required this.about,
-    required this.photoUrl,
-    required this.namaMentor,
-    required this.company,
-    required this.job,
-    required this.email,
-    required this.linkedin,
-    required this.skills,
-    required this.location,
-    required this.description,
-    required this.mentor,
-    required this.jadwal,
-    required this.participants,
-    required this.sessionsid,
+    // required this.sessionsid,
+    required this.totalParticipants,
     required this.availableSlots,
+    required this.detailmentor,
   }) : super(key: key);
   @override
   State<DetailMentorSessionsNew> createState() =>
@@ -71,9 +47,20 @@ class _DetailMentorSessionsNewState extends State<DetailMentorSessionsNew> {
 
   @override
   Widget build(BuildContext context) {
-    DateTime parsedJadwal = DateTime.parse(widget.jadwal);
-    String formattedJadwal =
-        DateFormat('dd MMMM yyyy HH:mm').format(parsedJadwal);
+    final mentorDetail = widget.detailmentor;
+
+    // Ambil tanggal waktu pertama dari session (anda mungkin perlu mempertimbangkan bagaimana mengelola lebih dari satu sesi)
+    DateTime? parsedJadwal;
+    if (mentorDetail.session != null && mentorDetail.session!.isNotEmpty) {
+      parsedJadwal = DateTime.parse(mentorDetail.session!.first.dateTime!);
+    }
+
+// Ubah format tanggal waktu ke format yang diinginkan
+    String formattedJadwal = parsedJadwal != null
+        ? DateFormat('dd MMMM yyyy HH:mm').format(parsedJadwal)
+        : "No scheduled session";
+
+// Gunakan formattedJadwal sesuai kebutuhan Anda
 
     return Scaffold(
       appBar: AppBar(
@@ -82,214 +69,243 @@ class _DetailMentorSessionsNewState extends State<DetailMentorSessionsNew> {
       body: ListView(
         children: [
           Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Container(
-                width: double.infinity,
-                height: MediaQuery.of(context).size.height * 0.20,
-                decoration: BoxDecoration(
-                    color: ColorStyle()
-                        .tertiaryColors // Warna latar belakang yang diinginkan
-                    ),
-              ),
-              Transform.translate(
-                offset: const Offset(0.0, -120 / 2.0),
-                child: Center(
-                  child: Column(
-                    children: [
-                      ProfileAvatar(
-                        imageUrl: widget.photoUrl,
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        widget.namaMentor,
-                        style: FontFamily().boldText.copyWith(
-                              fontSize: 16,
-                            ),
-                      ),
-                      TextButton.icon(
-                        onPressed: () {},
-                        icon: Icon(
-                          Icons.location_on,
-                          color: ColorStyle().primaryColors,
-                        ),
-                        label: Text(
-                          widget.location,
-                          style: FontFamily().regularText,
-                        ),
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          TitleProfile(
-                            title: 'About',
-                            color: ColorStyle().primaryColors,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 12.0),
-                            child: Text(
-                              widget.about,
-                              style: FontFamily().regularText,
-                            ),
-                          ),
-                          Padding(
-                            padding:
-                                const EdgeInsets.only(right: 12.0, top: 8.0),
-                            child: Align(
-                              alignment: Alignment.centerRight,
-                              child: Container(
-                                width: 120,
-                                height: 40,
-                                decoration: BoxDecoration(
-                                  color: ColorStyle().primaryColors,
-                                  borderRadius: BorderRadius.circular(4),
-                                ),
-                                child: TextButton.icon(
-                                  style: TextButton.styleFrom(
-                                    primary: ColorStyle().whiteColors,
-                                  ),
-                                  onPressed: () {
-                                    final linkedlnlink = widget.linkedin;
-                                    _launchURL(linkedlnlink);
-                                  },
-                                  icon: const Icon(Icons.link),
-                                  label: Text('Linkedln',
-                                      style: FontFamily().regularText.copyWith(
-                                            color: ColorStyle().whiteColors,
-                                          )),
-                                ),
+            children: mentorDetail.session != null
+                ? widget.detailmentor.session!.map((session) {
+                    return Column(
+                      children: [
+                        Container(
+                          width: double.infinity,
+                          height: MediaQuery.of(context).size.height * 0.20,
+                          decoration: BoxDecoration(
+                              color: ColorStyle()
+                                  .tertiaryColors // Warna latar belakang yang diinginkan
                               ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          TitleProfile(
-                            title: 'Experience',
-                            color: ColorStyle().primaryColors,
-                          ),
-                          Column(
-                            children: widget.mentor.experiences
-                                    ?.map((experience) {
-                                  return ExperienceWidget(
-                                    role: experience.jobTitle ?? 'No Job Title',
-                                    company: experience.company ?? 'No Company',
-                                  );
-                                }).toList() ??
-                                [const Text('No experiences')],
-                          )
-                        ],
-                      ),
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: TitleProfile(
-                          title: 'Skills',
-                          color: ColorStyle().primaryColors,
                         ),
-                      ),
-                      SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: widget.skills
-                              .map((skill) => SkillCard(skill: skill))
-                              .toList(),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 12,
-                      ),
-                      Container(
-                        width: double.infinity,
-                        constraints: BoxConstraints(
-                          minHeight: MediaQuery.of(context).size.height,
-                        ),
-                        decoration: BoxDecoration(
-                          color: ColorStyle().tertiaryColors,
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(90),
-                          ),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  top: 24.0,
-                                  left: 24,
-                                  bottom: 12.0,
-                                  right: 12.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Align(
-                                    alignment: Alignment.centerRight,
-                                    child: Text(
-                                      "Jadwal Session",
-                                      style: FontFamily().titleText.copyWith(
+                        Transform.translate(
+                          offset: const Offset(0.0, -120 / 2.0),
+                          child: Center(
+                            child: Column(
+                              children: [
+                                ProfileAvatar(
+                                  imageUrl: widget.detailmentor.photoUrl,
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                Text(
+                                  widget.detailmentor.name.toString(),
+                                  style: FontFamily().boldText.copyWith(
+                                        fontSize: 16,
+                                      ),
+                                ),
+                                TextButton.icon(
+                                  onPressed: () {},
+                                  icon: Icon(
+                                    Icons.location_on,
+                                    color: ColorStyle().primaryColors,
+                                  ),
+                                  label: Text(
+                                    widget.detailmentor.location ??
+                                        'No Location',
+                                    style: FontFamily().regularText,
+                                  ),
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    TitleProfile(
+                                      title: 'About',
+                                      color: ColorStyle().primaryColors,
+                                    ),
+                                    Padding(
+                                      padding:
+                                          const EdgeInsets.only(left: 12.0),
+                                      child: Text(
+                                        widget.detailmentor.about ?? 'No About',
+                                        style: FontFamily().regularText,
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          right: 12.0, top: 8.0),
+                                      child: Align(
+                                        alignment: Alignment.centerRight,
+                                        child: Container(
+                                          width: 120,
+                                          height: 40,
+                                          decoration: BoxDecoration(
                                             color: ColorStyle().primaryColors,
+                                            borderRadius:
+                                                BorderRadius.circular(4),
                                           ),
+                                          child: TextButton.icon(
+                                            style: TextButton.styleFrom(
+                                              primary: ColorStyle().whiteColors,
+                                            ),
+                                            onPressed: () {
+                                              final linkedlnlink =
+                                                  widget.detailmentor.linkedin;
+                                              _launchURL(
+                                                  linkedlnlink.toString());
+                                            },
+                                            icon: const Icon(Icons.link),
+                                            label: Text('Linkedln',
+                                                style: FontFamily()
+                                                    .regularText
+                                                    .copyWith(
+                                                      color: ColorStyle()
+                                                          .whiteColors,
+                                                    )),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    TitleProfile(
+                                      title: 'Experience',
+                                      color: ColorStyle().primaryColors,
+                                    ),
+                                    Column(
+                                      children: widget.detailmentor.experiences
+                                              ?.map((experience) {
+                                            return ExperienceWidget(
+                                              role: experience.jobTitle ??
+                                                  'No Job Title',
+                                              company: experience.company ??
+                                                  'No Company',
+                                            );
+                                          }).toList() ??
+                                          [const Text('No experiences')],
+                                    )
+                                  ],
+                                ),
+                                Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: TitleProfile(
+                                    title: 'Skills',
+                                    color: ColorStyle().primaryColors,
+                                  ),
+                                ),
+                                SingleChildScrollView(
+                                  scrollDirection: Axis.horizontal,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: widget.detailmentor.skills!
+                                        .map((skill) => SkillCard(skill: skill))
+                                        .toList(),
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 12,
+                                ),
+                                Container(
+                                  width: double.infinity,
+                                  constraints: BoxConstraints(
+                                    minHeight:
+                                        MediaQuery.of(context).size.height,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: ColorStyle().tertiaryColors,
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(90),
                                     ),
                                   ),
-                                  JadwalSessionWidget(
-                                    icon: Icons.comment,
-                                    title1: "topic",
-                                    title2: widget.namaSessios,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            top: 24.0,
+                                            left: 24,
+                                            bottom: 12.0,
+                                            right: 12.0),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Align(
+                                              alignment: Alignment.centerRight,
+                                              child: Text(
+                                                "Jadwal Session",
+                                                style: FontFamily()
+                                                    .titleText
+                                                    .copyWith(
+                                                      color: ColorStyle()
+                                                          .primaryColors,
+                                                    ),
+                                              ),
+                                            ),
+                                            JadwalSessionWidget(
+                                              icon: Icons.comment,
+                                              title1: "topic",
+                                              title2: widget.detailmentor
+                                                      .session!.first.title ??
+                                                  "No Topic",
+                                            ),
+                                            JadwalSessionWidget(
+                                              icon: Icons.access_time_outlined,
+                                              title1: "time",
+                                              // title2: widget.jadwal,
+                                              title2: formattedJadwal,
+                                            ),
+                                            const JadwalSessionWidget(
+                                                icon:
+                                                    Icons.location_on_outlined,
+                                                title1: "location",
+                                                title2: "Meeting Zoom"),
+                                            JadwalSessionWidget(
+                                                icon: Icons.people_alt_outlined,
+                                                title1: "Total Participants",
+                                                title2: widget.totalParticipants
+                                                    .toString()),
+                                            JadwalSessionWidget(
+                                              icon: Icons.chair_alt,
+                                              title1: "Available Slots",
+                                              title2: widget.availableSlots
+                                                  .toString(),
+                                            ),
+                                            const SizedBox(height: 24),
+                                            ElevatedButtonWidget(
+                                              title: "Booking Session",
+                                              onPressed: () {
+                                                _showDialog(context);
+                                              },
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                  JadwalSessionWidget(
-                                    icon: Icons.access_time_outlined,
-                                    title1: "time",
-                                    // title2: widget.jadwal,
-                                    title2: formattedJadwal,
-                                  ),
-                                  const JadwalSessionWidget(
-                                      icon: Icons.location_on_outlined,
-                                      title1: "location",
-                                      title2: "Meeting Zoom"),
-                                  JadwalSessionWidget(
-                                    icon: Icons.people_alt_outlined,
-                                    title1: "Total Participants",
-                                    title2: widget.participants.toString(),
-                                  ),
-                                  JadwalSessionWidget(
-                                    icon: Icons.chair_alt,
-                                    title1: "Available Slots",
-                                    title2: widget.availableSlots.toString(),
-                                  ),
-                                  const SizedBox(height: 24),
-                                  ElevatedButtonWidget(
-                                    title: "Booking Session",
-                                    onPressed: () {
-                                      _showDialog(context);
-                                    },
-                                  ),
-                                ],
-                              ),
+                                )
+                              ],
                             ),
-                          ],
+                          ),
                         ),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
+                      ],
+                    );
+                  }).toList()
+                : [Text("No sessions")],
+          )
         ],
+
+        // children: [
       ),
     );
   }
 
   /// booking class ////
   void _showDialog(BuildContext context) {
-    DateTime parsedJadwal = DateTime.parse(widget.jadwal);
-    String formattedJadwal =
-        DateFormat('dd MMMM yyyy HH:mm').format(parsedJadwal);
+    DateTime? parsedJadwal;
+    if (widget.detailmentor.session != null &&
+        widget.detailmentor.session!.isNotEmpty) {
+      parsedJadwal =
+          DateTime.parse(widget.detailmentor.session!.first.dateTime!);
+    }
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -339,18 +355,24 @@ class _DetailMentorSessionsNewState extends State<DetailMentorSessionsNew> {
                 try {
                   String? userId = await UserPreferences.getUserId();
                   if (userId != null) {
-                    var result = await bookSession(widget.sessionsid, userId);
+                    var result = await bookSession(
+                        widget.detailmentor.session!
+                            .map((session) => session.id)
+                            .join(","),
+                        userId);
                     if (result.isSuccess) {
                       // Jika booking sukses, lakukan navigasi
                       Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => DetailBookingSession(
-                            nama_mentor: widget.namaMentor,
-                            nama_session: widget.namaSessios,
-                            jadwal_session: formattedJadwal,
-                          ),
-                        ),
+                            builder: (context) => DetailBookingSession(
+                                  nama_mentor:
+                                      widget.detailmentor.name.toString(),
+                                  nama_session: widget.detailmentor.session!
+                                      .map((session) => session.title)
+                                      .join(", "),
+                                  jadwal_session: parsedJadwal.toString(),
+                                )),
                         (Route<dynamic> route) => false,
                       );
                     } else {

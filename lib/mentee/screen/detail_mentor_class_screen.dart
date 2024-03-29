@@ -215,9 +215,11 @@ class _DetailMentorClassAllScreenState
                         ),
                       ),
                       Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                            children: widget.classes?.map((kelas) {
+                        padding: const EdgeInsets.all(8.0),
+                        child: widget.classes != null &&
+                                widget.classes!.isNotEmpty
+                            ? Column(
+                                children: widget.classes!.map((kelas) {
                                   int getApprovedTransactionCount(
                                       ClassAll kelas) {
                                     int count = kelas.transactions
@@ -255,6 +257,8 @@ class _DetailMentorClassAllScreenState
                                                 MaterialPageRoute(
                                                   builder: (context) =>
                                                       DetailClassMentorAll(
+                                                  
+                                                       
                                                     mentorName: widget.name,
                                                     transaction:
                                                         kelas.transactions ??
@@ -298,9 +302,15 @@ class _DetailMentorClassAllScreenState
                                       title: kelas.name ?? 'No Class Name',
                                     ),
                                   );
-                                }).toList() ??
-                                [Center(child: Text('No classes available'))],
-                          )),
+                                }).toList(),
+                              )
+                            : Center(
+                                child: Text(
+                                  'Belum ada program',
+                                  style: FontFamily().regularText,
+                                ),
+                              ),
+                      ),
                       const SizedBox(
                         height: 12,
                       ),
@@ -349,7 +359,7 @@ class _DetailMentorClassAllScreenState
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Text("Belum ada review",
-              style: TextStyle(fontWeight: FontWeight.bold)),
+              style: FontFamily().regularText,),
         ),
       );
     }

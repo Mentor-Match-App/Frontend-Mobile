@@ -50,7 +50,8 @@ class DetailClassMentorAll extends StatefulWidget {
     required this.price,
     required this.location,
     required this.address,
-    required this.transaction, required this.mentorName,
+    required this.transaction,
+    required this.mentorName,
     // required this.currentParticipant
   }) : super(key: key);
 
@@ -260,6 +261,28 @@ class _DetailClassMentorAllState extends State<DetailClassMentorAll> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        TittleTextField(title: 'Lokasi Kelas'),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 2.0),
+                          child: Text(
+                            widget.address == null || widget.address!.isEmpty
+                                ? "Meeting Zoom"
+                                : widget.address!,
+                            style: FontFamily().regularText,
+                          ),
+                        ),
+                        Text(
+                          "Lokasi : ${widget.address == null || widget.address!.isEmpty ? "Meeting Zoom" : widget.address}",
+                          style: FontFamily().regularText,
+                        )
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
                         TittleTextField(title: 'Syarat & Ketentuan Kelas'),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
@@ -331,19 +354,19 @@ class _DetailClassMentorAllState extends State<DetailClassMentorAll> {
                       ],
                     ),
                   ),
-                    ElevatedButtonWidget(
-                  onPressed: () {
-                    _showDialog(context);
-                  },
-                  title: 'Pesan kelas',
-                ),
+                  ElevatedButtonWidget(
+                    onPressed: () {
+                      _showDialog(context);
+                    },
+                    title: 'Pesan kelas',
+                  ),
                 ],
               ),
             )
           ],
         ));
   }
-  
+
   void _showDialog(BuildContext context) {
     showDialog(
       context: context,

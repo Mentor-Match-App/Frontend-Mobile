@@ -2,6 +2,7 @@ import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:mentormatch_apps/mentee/screen/bottom_mentee_screen.dart';
 import 'package:mentormatch_apps/mentee/screen/home_screen_mentee.dart';
 import 'package:mentormatch_apps/mentee/screen/premiumClass/premium_class_screen.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
@@ -229,7 +230,9 @@ class _DetailBookingClassState extends State<DetailBookingClass> {
                     Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => HomeMenteeScreen()),
+                          builder: (context) => const BottomNavbarMenteeScreen(
+                                activeScreen: 0,
+                              )),
                       (Route<dynamic> route) =>
                           false, // Remove all routes until the new route
                     );
@@ -245,7 +248,4 @@ class _DetailBookingClassState extends State<DetailBookingClass> {
       ),
     );
   }
-
-  
- 
 }
