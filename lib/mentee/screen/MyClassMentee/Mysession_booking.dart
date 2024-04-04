@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:mentormatch_apps/mentee/model/myClass_model.dart';
 import 'package:mentormatch_apps/mentee/service/myClassService/myClass_service.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
-import 'package:mentormatch_apps/widget/profile_avatar.dart';
+import 'package:mentormatch_apps/widget/button.dart';
+
 import 'package:url_launcher/url_launcher.dart';
 
 class MySessionBooking extends StatefulWidget {
@@ -16,10 +16,59 @@ class MySessionBooking extends StatefulWidget {
 class _MySessionBookingState extends State<MySessionBooking> {
   Future<List<ParticipantMyClass>>? _userData;
 
+  int _getPriority(SessionMyClass userSessions) {
+    String buttonText = "Available";
+    // buttonCollor scheduled ketika isActive bernilai true + startTimenya belum mulai
+    if (userSessions.isActive == true &&
+        DateTime.parse(userSessions.startTime!).isAfter(DateTime.now())) {
+      buttonText = "Scheduled";
+    } else if (userSessions.isActive == false &&
+        DateTime.now().isBefore(DateTime.parse(userSessions.endTime!))) {
+      buttonText = "Active";
+    } else if (userSessions.isActive == false &&
+        DateTime.now().isAfter(DateTime.parse(userSessions.endTime!))) {
+      buttonText = "Finished";
+    }
+
+    return _calculatePriority(buttonText);
+  }
+
+  int _calculatePriority(String buttonText) {
+    if (buttonText == "Active") {
+      return 1;
+    } else if (buttonText == "Scheduled") {
+      return 2;
+    } else if (buttonText == "Finished") {
+      return 3;
+    } else {
+      return 0;
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     _userData = BookingService().fetchUserSessions();
+
+    _userData!.then((value) {
+      value.sort((a, b) {
+        return _getPriority(a.session!).compareTo(_getPriority(b.session!));
+      });
+    });
+  }
+
+  createStatusButton(String title, Color color) {
+    return Align(
+      alignment: Alignment.centerRight,
+      child: SmallElevatedButton(
+        color: color,
+        onPressed: () {}, // Tentukan tindakan yang diinginkan
+        height: 28,
+        width: 124,
+        title: title,
+        style: FontFamily().buttonText,
+      ),
+    );
   }
 
 //// link zoom akses///
@@ -47,9 +96,9 @@ class _MySessionBookingState extends State<MySessionBooking> {
             child: Column(
               children: participants.map((participant) {
                 final session = participant.session!;
-                                final timeZoneOffset = Duration(hours: 7);
-                DateTime parsedJadwal =
-                    DateTime.parse(session.dateTime!).add(timeZoneOffset);
+                int statusButton = _getPriority(session);
+
+                DateTime parsedJadwal = DateTime.parse(session.dateTime!);
                 String formattedJadwal =
                     DateFormat('dd MMMM yyyy').format(parsedJadwal);
 
@@ -59,14 +108,6 @@ class _MySessionBookingState extends State<MySessionBooking> {
                 final String formattedEndTime =
                     formatOutput.format(DateTime.parse(session.endTime!));
 
-                // Konversi waktu UTC ke zona waktu Indonesia (WIB)
-                final startTimeInWIB =
-                    DateTime.parse(session.startTime!).add(timeZoneOffset);
-                final endTimeInWIB =
-                    DateTime.parse(session.endTime!).add(timeZoneOffset);
-                final formattedStartTimeWIB =
-                    formatOutput.format(startTimeInWIB);
-                final formattedEndTimeWIB = formatOutput.format(endTimeInWIB);
                 return Padding(
                   padding: const EdgeInsets.all(12.0),
                   child: Container(
@@ -83,6 +124,16 @@ class _MySessionBookingState extends State<MySessionBooking> {
                       padding: const EdgeInsets.all(12.0),
                       child: Column(
                         children: [
+                          if (statusButton == 1)
+                            createStatusButton(
+                                "Active", ColorStyle().succesColors)
+                          else if (statusButton == 2)
+                            createStatusButton(
+                                "Scheduled", ColorStyle().secondaryColors)
+                          else if (statusButton == 3)
+                            createStatusButton(
+                                "Finished", ColorStyle().disableColors),
+                          const SizedBox(height: 12),
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -117,7 +168,7 @@ class _MySessionBookingState extends State<MySessionBooking> {
                                       style: FontFamily().regularText,
                                     ),
                                     Text(
-                                      'Jam : ${formattedStartTimeWIB} - ${formattedEndTimeWIB}',
+                                      'Jam : ${formattedStartTime} - ${formattedEndTime}',
                                       style: FontFamily().regularText,
                                     ),
                                   ],
@@ -165,8 +216,8 @@ class _MySessionBookingState extends State<MySessionBooking> {
               }).toList(),
             ),
           );
-        } else {
-          return Center(child: Text('No data'));
+         } else {
+          return const Text('Kamu belum memiliki session saat ini');
         }
       },
     );

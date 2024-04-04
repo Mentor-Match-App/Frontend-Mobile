@@ -3,7 +3,7 @@ import 'package:mentormatch_apps/preferences/%20preferences_helper.dart';
 
 class ClassUpdateService {
   Dio dio = Dio();
-  final baseUrl = "https://hwx70h6x-8000.asse.devtunnels.ms"; // Sesuaikan dengan URL API Anda
+  final baseUrl = "https://shy-lime-bream-cuff.cyclic.app"; // Sesuaikan dengan URL API Anda
 
   Future<String> updateClass({
     required String classId,

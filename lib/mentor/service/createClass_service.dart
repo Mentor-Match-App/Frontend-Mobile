@@ -3,7 +3,7 @@ import 'package:mentormatch_apps/mentor/model/create_class_models.dart';
 
 class CreateClassService {
   Dio _dio = Dio();
-  final String _baseUrl = 'https://hwx70h6x-8000.asse.devtunnels.ms';
+  final String _baseUrl = 'https://shy-lime-bream-cuff.cyclic.app';
 
   CreateClassService() {
     _dio.options.headers = {
@@ -12,9 +12,8 @@ class CreateClassService {
     };
   }
 
-  String get errorMessage => errorMessage;
-
-  Future<dynamic> createClass(CreateClassModels classModel, String mentorId) async {
+  Future<Response<dynamic>> createClass(
+      CreateClassModels classModel, String mentorId) async {
     try {
       final response = await _dio.post(
         '$_baseUrl/mentor/$mentorId/class',
@@ -22,25 +21,22 @@ class CreateClassService {
       );
 
       if (response.statusCode == 200) {
-        // Feedback berhasil dikirim
-        return true;
+        print('Class created successfully: ${response.data}');
+        return response;
       } else {
-        // Gagal mengirim feedback, baca dan kembalikan pesan error dari backend
-        return response.data['message'] ??
-            'Terjadi kesalahan yang tidak diketahui.';
+        String errorMessage = 'Failed to create class';
+        if (response.data != null && response.data['message'] != null) {
+          errorMessage += ': ${response.data['message']}';
+        }
+        print(errorMessage);
+        throw Exception(errorMessage);
       }
     } on DioError catch (e) {
-      if (e.response != null) {
-        // Gagal karena respons dari server, baca dan kembalikan pesan error dari backend
-        return e.response!.data['message'] ??
-            'Terjadi kesalahan yang tidak diketahui.';
-      } else {
-        // Gagal karena alasan lain, seperti kesalahan jaringan atau konfigurasi
-        return 'Gagal mengirim feedback: ${e.message}';
+      print('Error creating class: ${e.message}');
+      if (e.response != null && e.response!.data != null && e.response!.data['message'] != null) {
+        return e.response!;
       }
-    } catch (e) {
-      // Tangkap exception lain dan kembalikan sebagai pesan error
-      return 'Gagal mengirim feedback: ${e}';
+      throw Exception('Failed to create class');
     }
   }
 }

@@ -24,15 +24,15 @@ class _MyPremiumClassMentorScreenState
         userClass.startDate.toString()); // Asumsi startDate tidak null
     DateTime endDate = DateTime.parse(
         userClass.endDate.toString()); // Asumsi endDate tidak null
-    
-    int getAvailableSlotCount(Class userClass){
+
+    int getAvailableSlotCount(Class userClass) {
       int approvedCount = userClass.transactions
-          ?.where((t) => t.paymentStatus == "Approved")
-          .length ??
+              ?.where((t) => t.paymentStatus == "Approved")
+              .length ??
           0;
       int pendingCount = userClass.transactions
-          ?.where((t) => t.paymentStatus == "Pending")
-          .length ??
+              ?.where((t) => t.paymentStatus == "Pending")
+              .length ??
           0;
       int totalApprovedAndPendingCount = approvedCount + pendingCount;
       return totalApprovedAndPendingCount;
@@ -57,13 +57,18 @@ class _MyPremiumClassMentorScreenState
       // Kondisi untuk "Rejected"
       buttonColor = ColorStyle().errorColors; // Warna untuk status "Rejected"
       buttonText = "Rejected";
-    } else if (!isAvailable && !isVerified && !isActive) {
+      //kondisi pending
+    } else if (!isAvailable &&
+        !isVerified &&
+        !isActive &&
+        now.isBefore(startDate)) {
       buttonColor = ColorStyle().pendingColors;
       buttonText = "Pending";
     } else if (totalApprovedAndPendingCount >= maxParticipants && !isActive) {
       buttonColor = ColorStyle().fullbookedColors;
       buttonText = "Full";
-    } else if (isActive && now.isAfter(startDate) && now.isBefore(endDate)) {
+      // ketika startDate = now , dan now <+ endDate
+    } else if (isActive) {
       buttonColor = ColorStyle().succesColors;
       buttonText = "Active";
     } else if (totalApprovedAndPendingCount > 0 && now.isAfter(endDate)) {

@@ -11,7 +11,7 @@ class KarierServices {
 
   Future<Karier> getKarierData() async {
     try {
-      final response = await _dio.get('https://hwx70h6x-8000.asse.devtunnels.ms/class/filter-mentors?educationLevel=Karier&category');
+      final response = await _dio.get('https://shy-lime-bream-cuff.cyclic.app/class/filter-mentors?educationLevel=Karier&category');
       if (response.statusCode == 200) {
         return Karier.fromMap(response.data);
       } else {

@@ -68,21 +68,91 @@ class _TimePickerWidgetState extends State<TimePickerWidget> {
   }
 }
 
-class DatePickerWidget extends StatefulWidget {
+class DatePickerClassWidget extends StatefulWidget {
   final String labelText;
   final Function(DateTime) onDateSelected;
   final TextEditingController controller;
 
-  DatePickerWidget(
+  DatePickerClassWidget(
       {required this.onDateSelected,
       required this.controller,
       this.labelText = "Pilih Tanggal"});
 
   @override
-  _DatePickerWidgetState createState() => _DatePickerWidgetState();
+  _DatePickerClassWidgetState createState() => _DatePickerClassWidgetState();
 }
 
-class _DatePickerWidgetState extends State<DatePickerWidget> {
+class _DatePickerClassWidgetState extends State<DatePickerClassWidget> {
+  final TextEditingController selecDateController = TextEditingController();
+
+  DateTime selectedDate = DateTime.now();
+
+  Future<void> _selectDate(BuildContext context) async {
+  final DateTime now = DateTime.now();
+  final DateTime firstSelectableDate = now.add(Duration(days: 2));
+
+  final DateTime? picked = await showDatePicker(
+    context: context,
+    initialDate: selectedDate.isBefore(firstSelectableDate)
+        ? firstSelectableDate
+        : selectedDate,
+    firstDate: firstSelectableDate,
+    lastDate: DateTime(2050),
+  );
+
+  if (picked != null) {
+    widget.controller.text = DateFormat('dd-MM-yyyy').format(picked);
+    widget.onDateSelected(picked);
+  }
+}
+
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: TextField(
+          controller: widget.controller,
+          decoration: InputDecoration(
+              filled: true,
+              fillColor: ColorStyle().tertiaryColors,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(4),
+                borderSide: BorderSide.none,
+              ),
+              icon: Icon(
+                Icons.calendar_today,
+                color: ColorStyle().primaryColors,
+              ),
+              labelText: widget.labelText,
+              labelStyle: FontFamily().regularText),
+          readOnly: true,
+          onTap: () => _selectDate(context),
+        ));
+    // ElevatedButton(
+    //   onPressed: () => _selectDate(context),
+    //   child: Text('Pilih Tanggal'),
+    // );
+  }
+}
+
+
+
+class DatePickerSessionsWidget extends StatefulWidget {
+  final String labelText;
+  final Function(DateTime) onDateSelected;
+  final TextEditingController controller;
+
+  DatePickerSessionsWidget(
+      {required this.onDateSelected,
+      required this.controller,
+      this.labelText = "Pilih Tanggal"});
+
+  @override
+  _DatePickerSessionsWidgetState createState() => _DatePickerSessionsWidgetState();
+}
+
+class _DatePickerSessionsWidgetState extends State<DatePickerSessionsWidget> {
   final TextEditingController selecDateController = TextEditingController();
 
   DateTime selectedDate = DateTime.now();
@@ -100,29 +170,28 @@ class _DatePickerWidgetState extends State<DatePickerWidget> {
     }
   }
 
+
   @override
   Widget build(BuildContext context) {
     return Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Container(
-          child: TextField(
-            controller: widget.controller,
-            decoration: InputDecoration(
-                filled: true,
-                fillColor: ColorStyle().tertiaryColors,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(4),
-                  borderSide: BorderSide.none,
-                ),
-                icon: Icon(
-                  Icons.calendar_today,
-                  color: ColorStyle().primaryColors,
-                ),
-                labelText: widget.labelText,
-                labelStyle: FontFamily().regularText),
-            readOnly: true,
-            onTap: () => _selectDate(context),
-          ),
+        child: TextField(
+          controller: widget.controller,
+          decoration: InputDecoration(
+              filled: true,
+              fillColor: ColorStyle().tertiaryColors,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(4),
+                borderSide: BorderSide.none,
+              ),
+              icon: Icon(
+                Icons.calendar_today,
+                color: ColorStyle().primaryColors,
+              ),
+              labelText: widget.labelText,
+              labelStyle: FontFamily().regularText),
+          readOnly: true,
+          onTap: () => _selectDate(context),
         ));
     // ElevatedButton(
     //   onPressed: () => _selectDate(context),

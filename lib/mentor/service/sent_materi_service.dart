@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class LearningMaterialService {
   Dio _dio = Dio();
-  final String _baseUrl = "https://hwx70h6x-8000.asse.devtunnels.ms"; // Ganti dengan URL API Anda
+  final String _baseUrl = "https://shy-lime-bream-cuff.cyclic.app"; // Ganti dengan URL API Anda
 
   Future<String> createLearningMaterial(String classId, String title, String link) async {
     // Mendapatkan token dari SharedPreferences

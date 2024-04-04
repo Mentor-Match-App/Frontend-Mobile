@@ -3,7 +3,7 @@ import 'package:mentormatch_apps/mentee/model/myClass_model.dart';
 import 'package:mentormatch_apps/preferences/%20preferences_helper.dart';
 
 class BookingService {
-  static const String _baseUrl = 'https://hwx70h6x-8000.asse.devtunnels.ms';
+  static const String _baseUrl = 'https://shy-lime-bream-cuff.cyclic.app';
 
   final Dio _dio = Dio();
 

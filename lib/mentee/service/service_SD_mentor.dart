@@ -11,7 +11,7 @@ class SDServices {
 
   Future<SD> getSDData() async {
     try {
-      final response = await _dio.get('https://hwx70h6x-8000.asse.devtunnels.ms/class/filter-mentors?educationLevel=SD&category');
+      final response = await _dio.get('https://shy-lime-bream-cuff.cyclic.app/class/filter-mentors?educationLevel=SD&category');
       if (response.statusCode == 200) {
         return SD.fromMap(response.data);
       } else {

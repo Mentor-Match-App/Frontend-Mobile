@@ -11,7 +11,7 @@ class SMAServices {
 
   Future<SMA> getSMAData() async {
     try {
-      final response = await _dio.get('https://hwx70h6x-8000.asse.devtunnels.ms/class/filter-mentors?educationLevel=SMA&category');
+      final response = await _dio.get('https://shy-lime-bream-cuff.cyclic.app/class/filter-mentors?educationLevel=SMA&category');
       if (response.statusCode == 200) {
         return SMA.fromMap(response.data);
       } else {

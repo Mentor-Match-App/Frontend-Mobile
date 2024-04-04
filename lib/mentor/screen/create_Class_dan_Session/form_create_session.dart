@@ -214,7 +214,7 @@ class _FormCreateSessionScreenState extends State<FormCreateSessionScreen> {
                     color: ColorStyle().secondaryColors,
                   ),
                 ),
-                DatePickerWidget(
+                DatePickerSessionsWidget(
                   controller: dateController,
                   onDateSelected: (date) {
                     dateController.text = DateFormat('yyyy-MM-dd').format(date);

@@ -426,7 +426,7 @@ class _EditRejectedClassState extends State<EditRejectedClass> {
                   title: "Tanggal Mulai",
                   color: ColorStyle().secondaryColors,
                 ),
-                DatePickerWidget(
+                DatePickerClassWidget(
                   onDateSelected: (date) {
                     startDateController.text =
                         DateFormat('yyyy-MM-dd').format(date);
@@ -440,7 +440,7 @@ class _EditRejectedClassState extends State<EditRejectedClass> {
                   title: "Tanggal Selesai",
                   color: ColorStyle().secondaryColors,
                 ),
-                DatePickerWidget(
+                DatePickerClassWidget(
                   onDateSelected: (date) {
                     endDateController.text =
                         DateFormat('yyyy-MM-dd').format(date);

@@ -172,6 +172,21 @@ class _PersetujuanPremiClassMentorState
                     ),
                     Expanded(
                       child: Text(
+                        'Mentor dapat membuat jadwal minimal 2 hari setelah pengajuan kelas dilakukan',
+                        style: FontFamily().regularText,
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text('\u2022'),
+                    const SizedBox(
+                      width: 6,
+                    ),
+                    Expanded(
+                      child: Text(
                         'Setiap bab atau chapter yang dibuat oleh mentor harus memiliki modul yang dapat diakses oleh mentee.',
                         style: FontFamily().regularText,
                       ),

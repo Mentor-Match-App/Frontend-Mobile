@@ -3,7 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class RegisterMentorService {
   Dio dio = Dio(); // Create Dio instance
-  final String baseUrl = "https://hwx70h6x-8000.asse.devtunnels.ms";
+  final String baseUrl = "https://shy-lime-bream-cuff.cyclic.app";
 
   Future<void> registerMentor({
     required String gender,

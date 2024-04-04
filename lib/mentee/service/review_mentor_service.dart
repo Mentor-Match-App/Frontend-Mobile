@@ -4,7 +4,7 @@ class ReviewService {
   final Dio _dio = Dio();
 
   Future<String> sendReview(String content, String userId, String mentorId) async {
-    final String apiUrl = "https://hwx70h6x-8000.asse.devtunnels.ms/mentee/$userId/review";
+    final String apiUrl = "https://shy-lime-bream-cuff.cyclic.app/mentee/$userId/review";
 
     try {
       final response = await _dio.post(apiUrl, data: {

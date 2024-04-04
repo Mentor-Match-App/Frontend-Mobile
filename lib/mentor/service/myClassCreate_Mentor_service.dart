@@ -4,7 +4,7 @@ import 'package:mentormatch_apps/mentor/model/myClass_mentor_model.dart';
 import '../../preferences/ preferences_helper.dart';
 
 class ListClassMentor {
-  static const String _baseUrl = 'https://hwx70h6x-8000.asse.devtunnels.ms';
+  static const String _baseUrl = 'https://shy-lime-bream-cuff.cyclic.app';
 
   final Dio _dio = Dio();
 

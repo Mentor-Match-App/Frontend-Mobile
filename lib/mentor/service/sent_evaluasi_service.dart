@@ -3,7 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class SendEvaluasiService {
   Dio _dio = Dio();
-  String _baseUrl = "https://hwx70h6x-8000.asse.devtunnels.ms";
+  String _baseUrl = "https://shy-lime-bream-cuff.cyclic.app";
 
   Future<String> sendEvaluationLink(
       String classId, String topic, String link) async {

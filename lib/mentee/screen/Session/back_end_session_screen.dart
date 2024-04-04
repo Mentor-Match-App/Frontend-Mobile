@@ -46,6 +46,7 @@ class _BackEndSessionScreenState extends State<BackEndSessionScreen> {
             ),
             itemCount: mentors.length,
             itemBuilder: (context, index) {
+                 /// membawa data session category = "Back End" ke detail session
               final mentor = mentors[index];
               // Logika untuk menentukan currentExperience sama seperti sebelumnya
               final currentExperience = mentor.experiences!.firstWhere(
@@ -89,6 +90,7 @@ class _BackEndSessionScreenState extends State<BackEndSessionScreen> {
                       MaterialPageRoute(
                         builder: (context) => DetailMentorSessionsNew(
                           availableSlots: availableSlots,
+                          /// membawa data session category = "Back End" ke detail session
                           detailmentor: mentor,
                           totalParticipants: numberOfParticipants,
                         ),

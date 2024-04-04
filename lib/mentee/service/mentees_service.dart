@@ -6,7 +6,7 @@ class MenteeService {
   final Dio _dio = Dio();
 
   // Gunakan URL yang Anda berikan sebagai baseURL
-  final String baseUrl = "https://hwx70h6x-8000.asse.devtunnels.ms";
+  final String baseUrl = "https://shy-lime-bream-cuff.cyclic.app";
 
   Future<MenteeModel> fetchMentees() async {
     try {

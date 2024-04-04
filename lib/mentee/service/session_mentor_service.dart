@@ -11,7 +11,7 @@ class SessionServices {
 
   Future<Session> getSessionData() async {
     try {
-      final response = await _dio.get('https://hwx70h6x-8000.asse.devtunnels.ms/session/filter-mentors?category');
+      final response = await _dio.get('https://shy-lime-bream-cuff.cyclic.app/session/filter-mentors?category');
       if (response.statusCode == 200) {
         return Session.fromMap(response.data);
       } else {

@@ -1,9 +1,14 @@
+// ignore_for_file: use_build_context_synchronously
+
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+
 import 'package:mentormatch_apps/mentor/provider/create_class_provider.dart';
+
 import 'package:mentormatch_apps/mentor/screen/create_Class_dan_Session/contoh_premium_class.dart';
-import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:mentormatch_apps/mentor/screen/create_Class_dan_Session/succes_create_class.dart';
+import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
 import 'package:mentormatch_apps/style/text.dart';
@@ -12,6 +17,8 @@ import 'package:mentormatch_apps/widget/textField.dart';
 import 'package:mentormatch_apps/widget/textField_dropdown.dart';
 import 'package:mentormatch_apps/widget/timePicker_widget.dart';
 import 'package:provider/provider.dart';
+
+
 
 class FormCreatePremiumClassScreen extends StatefulWidget {
   const FormCreatePremiumClassScreen({Key? key}) : super(key: key);
@@ -162,55 +169,91 @@ class _FormCreatePremiumClassScreenState
   }
 
 //////////////////// onSubmit ///////////////////////
-  void onSubmit() async {
-    bool success =
-        await Provider.of<CreateClassProvider>(context, listen: false)
-            .submitClass(
-      address: addressController.text,
-      targetLearning: targetLearningController.map((e) => e.text).toList(),
-      schedule: scheduleController.text,
-      location: selectedLocation,
-      endDate: DateTime.parse(endDateController.text),
-      startDate: DateTime.parse(startDateController.text),
-      capacitymentee: int.tryParse(maxParticipantsController.text) ?? 0,
-      educationLevel: selectedEducationLevel,
-      category: selectedField,
-      name: nameController.text,
-      description: descriptionCobtroller.text,
-      terms: termsController.map((e) => e.text).toList(),
-      price: int.tryParse(priceController.text) ?? 0,
-      durationInDays: int.tryParse(durationInDaysController.text) ?? 0,
-    );
+  void onSubmit(BuildContext context) async {
+    try {
+      int capacitymentee = 0;
+      if (maxParticipantsController.text.isNotEmpty) {
+        capacitymentee = int.parse(maxParticipantsController.text);
+      }
 
-    if (success) {
-      // ignore: use_build_context_synchronously
-      Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (context) => SuccesCreateClassScreen()),
-        (Route<dynamic> route) => false,
-      );
-    } else {
-      String errorMessage =
-          Provider.of<CreateClassProvider>(context, listen: false).errorMessage;
-      // Tampilkan error message
-      // ignore: use_build_context_synchronously
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: const Text("Error"),
-            content: Text(errorMessage),
-            actions: <Widget>[
-              TextButton(
-                child: const Text('OK'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
+      /// Check if all required fields are filled
+      if (selectedEducationLevel.isEmpty ||
+          selectedField.isEmpty ||
+          nameController.text.isEmpty ||
+          priceController.text.isEmpty ||
+          durationInDaysController.text.isEmpty ||
+          descriptionCobtroller.text.isEmpty ||
+          selectedDays.isEmpty ||
+          (selectedLocation == 'Offline' && addressController.text.isEmpty) ||
+          capacitymentee == 0 ||
+          startDateController.text.isEmpty ||
+          endDateController.text.isEmpty ||
+          targetLearningController
+              .any((controller) => controller.text.isEmpty) ||
+          termsController.any((controller) => controller.text.isEmpty)) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text(
+                "Error",
+                style: FontFamily().boldText.copyWith(
+                      color: ColorStyle().primaryColors,
+                      fontSize: 16,
+                    ),
               ),
-            ],
-          );
-        },
+              content: Text(
+                "Semua field harus diisi",
+                style: FontFamily().regularText,
+                textAlign: TextAlign.center,
+              ),
+              actions: [
+                TextButton(
+                  child: const Text("OK"),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+        return;
+      }
+
+      // Using Provider to call submitClass method from CreateClassProvider dan final errorMessage = createClassProvider.getErrorMessage, 200
+      final createClassProvider =
+          Provider.of<CreateClassProvider>(context, listen: false);
+      final isSubmitted = await createClassProvider.submitClass(
+        context: context,
+        address: addressController.text,
+        targetLearning: targetLearningController
+            .map((controller) => controller.text)
+            .toList(),
+        schedule: scheduleController.text,
+        location: selectedLocation,
+        endDate: DateFormat('yyyy-MM-dd').parse(endDateController.text),
+        startDate: DateFormat('yyyy-MM-dd').parse(startDateController.text),
+        capacitymentee: capacitymentee,
+        educationLevel: selectedEducationLevel,
+        category: selectedField,
+        name: nameController.text,
+        description: descriptionCobtroller.text,
+        terms: termsController.map((controller) => controller.text).toList(),
+        price: int.parse(priceController.text),
+        durationInDays: int.parse(durationInDaysController.text),
       );
+
+      /// ketika isSubmitted true maka akan diarahkan ke halaman succes create class kalau gagal maka tampilkan error message final errorMessage = createClassProvider.getErrorMessage//
+      if (isSubmitted) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => SuccesCreateClassScreen()),
+        );
+      }
+      //// jika gagal maka tampilkan error message ///
+    } catch (error) {
+      print('Error: $error');
     }
   }
 
@@ -392,7 +435,7 @@ class _FormCreatePremiumClassScreenState
                   title: "Tanggal Mulai",
                   color: ColorStyle().secondaryColors,
                 ),
-                DatePickerWidget(
+                DatePickerClassWidget(
                   onDateSelected: (date) {
                     startDateController.text =
                         DateFormat('yyyy-MM-dd').format(date);
@@ -406,7 +449,7 @@ class _FormCreatePremiumClassScreenState
                   title: "Tanggal Selesai",
                   color: ColorStyle().secondaryColors,
                 ),
-                DatePickerWidget(
+                DatePickerClassWidget(
                   onDateSelected: (date) {
                     endDateController.text =
                         DateFormat('yyyy-MM-dd').format(date);
@@ -520,6 +563,14 @@ class _FormCreatePremiumClassScreenState
                             padding:
                                 const EdgeInsets.only(top: 8.0, bottom: 24),
                             child: TextFieldWidget(
+                              validator: (value) {
+                                // Periksa apakah field kosong
+                                if (value == null || value.isEmpty) {
+                                  return 'Field ini tidak boleh kosong';
+                                }
+
+                                return null;
+                              },
                               controller: targetLearningController[i],
                               hintText: "input target pembelajaran",
                             ),
@@ -568,6 +619,14 @@ class _FormCreatePremiumClassScreenState
                             padding:
                                 const EdgeInsets.only(top: 8.0, bottom: 24),
                             child: TextFieldWidget(
+                              validator: (value) {
+                                // Periksa apakah field kosong
+                                if (value == null || value.isEmpty) {
+                                  return 'Field ini tidak boleh kosong';
+                                }
+
+                                return null;
+                              },
                               controller: termsController[i],
                               hintText: "input syarat & ketentuan",
                             ),
@@ -601,7 +660,9 @@ class _FormCreatePremiumClassScreenState
                 ),
                 ElevatedButtonWidget(
                   onPressed: () {
-                    onSubmit();
+                    onSubmit(
+                      context,
+                    );
                   },
                   title: "Kirim",
                 ),

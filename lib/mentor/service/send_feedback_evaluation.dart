@@ -5,7 +5,7 @@ class FeedbackService {
   static Future<String?> sendFeedback(
       String evaluationId, String menteeId, String content) async {
     Dio dio = Dio();
-    String baseUrl = "https://hwx70h6x-8000.asse.devtunnels.ms/feedback";
+    String baseUrl = "https://shy-lime-bream-cuff.cyclic.app/feedback";
 
     // Dapatkan token dari SharedPreferences, jika autentikasi diperlukan
     SharedPreferences prefs = await SharedPreferences.getInstance();

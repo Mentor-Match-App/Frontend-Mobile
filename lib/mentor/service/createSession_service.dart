@@ -3,7 +3,7 @@ import 'package:mentormatch_apps/mentor/model/create_session_model.dart';
 
 class CreateSessionService{
   Dio _dio = Dio();
-  final String _baseUrl = 'https://hwx70h6x-8000.asse.devtunnels.ms';
+  final String _baseUrl = 'https://shy-lime-bream-cuff.cyclic.app';
 
   CreateSessionsService(){
     _dio.options.headers = {

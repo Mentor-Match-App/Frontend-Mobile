@@ -3,7 +3,7 @@ import 'package:mentormatch_apps/mentee/service/bookingClassService/bookclass_mo
 
 
 Future<BookingResultClass> bookSession(String sessionId, String userId) async {
-  const String baseUrl = "https://hwx70h6x-8000.asse.devtunnels.ms"; // Ganti dengan URL server Anda
+  const String baseUrl = "https://shy-lime-bream-cuff.cyclic.app"; // Ganti dengan URL server Anda
   var dio = Dio();
 
   try {

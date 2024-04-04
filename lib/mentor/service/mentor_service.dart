@@ -5,7 +5,7 @@ class MentorService {
   final Dio _dio = Dio();
 
   // URL yang sudah disesuaikan dengan endpoint baru
-  final String baseUrl = "https://hwx70h6x-8000.asse.devtunnels.ms/class/filter-mentors";
+  final String baseUrl = "https://shy-lime-bream-cuff.cyclic.app/class/filter-mentors";
 
   Future<MentorClassModel> fetchFilteredMentors() async {
     try {
