@@ -6,6 +6,7 @@ import 'package:mentormatch_apps/login-register/choose_role_screen.dart';
 import 'package:mentormatch_apps/login-register/login_service.dart';
 import 'package:mentormatch_apps/mentee/screen/bottom_mentee_screen.dart';
 import 'package:mentormatch_apps/mentor/screen/bottom_mentor_screen.dart';
+import 'package:mentormatch_apps/mentor/screen/daftar_mentor/verification_regist.dart';
 import 'package:mentormatch_apps/widget/button.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -65,6 +66,10 @@ class _LoginScreenState extends State<LoginScreen> {
             } else if (userType == "Mentor") {
               Navigator.of(context).pushReplacement(MaterialPageRoute(
                   builder: (context) => BottomNavbarMentorScreen()));
+            } else if (userType == "PendingMentor") {
+              // Navigasi ke halaman verifikasi mentor
+              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                  builder: (context) => VerificationFormRegistScreen()));
             }
           }
         }

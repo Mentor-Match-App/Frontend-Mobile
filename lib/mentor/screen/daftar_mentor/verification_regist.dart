@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mentormatch_apps/mentee/screen/bottom_mentee_screen.dart';
+import 'package:mentormatch_apps/mentor/screen/bottom_mentor_screen.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
 
@@ -44,7 +45,7 @@ class _VerificationFormRegistScreenState
                               context,
                               MaterialPageRoute(
                                 builder: (context) =>
-                                    const BottomNavbarMenteeScreen(),
+                                    const BottomNavbarMentorScreen(),
                               ),
                               (route) => false,
                             );

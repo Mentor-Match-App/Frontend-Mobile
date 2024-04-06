@@ -7,6 +7,7 @@ import 'package:mentormatch_apps/mentee/screen/bottom_mentee_screen.dart';
 import 'package:mentormatch_apps/mentor/provider/create_class_provider.dart';
 import 'package:mentormatch_apps/mentor/provider/create_session_provider.dart';
 import 'package:mentormatch_apps/mentor/screen/bottom_mentor_screen.dart';
+import 'package:mentormatch_apps/mentor/screen/daftar_mentor/verification_regist.dart';
 import 'package:mentormatch_apps/preferences/%20preferences_helper.dart';
 import 'package:provider/provider.dart';
 
@@ -44,6 +45,9 @@ class MyApp extends StatelessWidget {
           break;
         case 'Mentor':
           homeScreen = BottomNavbarMentorScreen(); // Layar awal untuk mentor
+          break;
+        case 'PendingMentor':
+          homeScreen = VerificationFormRegistScreen(); // Layar awal untuk admin
           break;
         default:
           homeScreen = ChooseRoleScreen(); // Jika userType tidak dikenali
