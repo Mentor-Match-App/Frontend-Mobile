@@ -72,12 +72,12 @@ class _ProfileMenteeScreenState extends State<ProfileMenteeScreen> {
             location: mentee.user!.location ?? '',
             currentJob: mentee.user!.experiences
                     ?.firstWhere((element) => element.isCurrentJob == true,
-                        orElse: () => Experience())
+                        orElse: () => ExperienceMentee())
                     .jobTitle ??
                 '',
             currentCompany: mentee.user!.experiences
                     ?.firstWhere((element) => element.isCurrentJob == true,
-                        orElse: () => Experience())
+                        orElse: () => ExperienceMentee())
                     .company ??
                 '',
             experiences: experiencesMaps,

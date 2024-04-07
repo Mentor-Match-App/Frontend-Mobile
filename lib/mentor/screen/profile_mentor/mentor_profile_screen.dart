@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mentormatch_apps/login-register/Login_screen.dart';
 import 'package:mentormatch_apps/mentor/screen/profile_mentor/edit_profile_mentor_screen.dart';
-import 'package:mentormatch_apps/mentor/screen/profile_mentor/service.dart';
+import 'package:mentormatch_apps/mentor/service/profile_service.dart';
+
 import 'package:mentormatch_apps/preferences/%20preferences_helper.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
@@ -73,12 +74,12 @@ class _MentorProfileScreenState extends State<MentorProfileScreen> {
             location: mentor.user!.location ?? '',
             currentJob: mentor.user!.experiences
                     ?.firstWhere((element) => element.isCurrentJob == true,
-                        orElse: () => Experience())
+                        orElse: () => ExperienceMentor())
                     .jobTitle ??
                 '',
             currentCompany: mentor.user!.experiences
                     ?.firstWhere((element) => element.isCurrentJob == true,
-                        orElse: () => Experience())
+                        orElse: () => ExperienceMentor())
                     .company ??
                 '',
             experiences: experiencesMaps,

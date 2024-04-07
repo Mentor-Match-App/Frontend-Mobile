@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:mentormatch_apps/mentor/screen/MyClassMentor/MyClass_list_mentor_screen.dart';
+import 'package:mentormatch_apps/mentor/screen/MyClassMentor/MyClass_mentor_screen.dart';
 import 'package:mentormatch_apps/mentor/screen/bottom_mentor_screen.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
@@ -41,12 +43,12 @@ class _SuccesCreateClassScreenState extends State<SuccesCreateClassScreen> {
                   height: 20,
                 ),
                 ElevatedButtonWidget(
-                  title: 'Kembali ke Beranda',
+                  title: 'Lihat status pengajuan',
                   onPressed: () {
                     Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => BottomNavbarMentorScreen()),
+                            builder: (context) => MyClassMentorListScreen()),
                         (route) => false);
                   },
                 )

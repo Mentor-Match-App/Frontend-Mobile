@@ -1,22 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:mentormatch_apps/mentor/model/profile_model.dart';
 import 'package:mentormatch_apps/mentor/screen/daftar_mentor/verification_regist.dart';
-import 'package:mentormatch_apps/mentor/service/register_mentor_service.dart';
+import 'package:mentormatch_apps/mentor/service/profile_service.dart';
+
+import 'package:mentormatch_apps/mentor/service/reregistration_mentor_service.dart';
+import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
 import 'package:mentormatch_apps/style/text.dart';
 import 'package:mentormatch_apps/widget/button.dart';
+import 'package:mentormatch_apps/widget/flushsBar_widget.dart';
 import 'package:mentormatch_apps/widget/textField.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../style/color_style.dart';
-
-class RegisterMentorScreen extends StatefulWidget {
-  const RegisterMentorScreen({Key? key}) : super(key: key);
+class RegisterUlangMentorScreen extends StatefulWidget {
+  RegisterUlangMentorScreen({
+    Key? key,
+  }) : super(key: key);
 
   @override
-  State<RegisterMentorScreen> createState() => _RegisterMentorScreenState();
+  State<RegisterUlangMentorScreen> createState() =>
+      _RegisterUlangMentorScreenState();
 }
 
-class _RegisterMentorScreenState extends State<RegisterMentorScreen> {
+class _RegisterUlangMentorScreenState extends State<RegisterUlangMentorScreen> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _genderController = TextEditingController();
   final TextEditingController _jobController = TextEditingController();
@@ -34,6 +39,7 @@ class _RegisterMentorScreenState extends State<RegisterMentorScreen> {
   final TextEditingController _accountNumberController =
       TextEditingController();
   final TextEditingController _accountNameController = TextEditingController();
+  String _mentorid = "";
 
   String _name = "";
   String _selectedGender = '';
@@ -49,6 +55,9 @@ class _RegisterMentorScreenState extends State<RegisterMentorScreen> {
   // list experience with role and experienceCompany
   List<Map<String, String>> experience = [];
 
+  /// ambil data profile
+  final ProfileService mentorService = ProfileService();
+
   @override
   void initState() {
     super.initState();
@@ -61,15 +70,10 @@ class _RegisterMentorScreenState extends State<RegisterMentorScreen> {
     _portofolioController.text = portofolio;
     _accountNumberController.text = accountNumber;
     _accountNameController.text = accountName;
+    _genderController.text = _selectedGender;
   }
 
-  Future<void> _loadProfileData() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      _name = prefs.getString('name') ?? "";
-    });
-  }
-
+  //  //// dispose controller ///
   @override
   void dispose() {
     _genderController.dispose();
@@ -81,7 +85,45 @@ class _RegisterMentorScreenState extends State<RegisterMentorScreen> {
     _portofolioController.dispose();
     _accountNameController.dispose();
     _accountNumberController.dispose();
+    _skillController.dispose();
+    _roleController.dispose();
+    _experienceCompanyController.dispose();
+    _mentorid = "";
+
     super.dispose();
+  }
+
+  void _loadProfileData() async {
+    final profileData = await mentorService.getMentorProfile();
+    setState(() {
+      //id mentor
+      _mentorid = profileData.user!.id!;
+      //gender
+      _selectedGender = profileData.user!.gender ?? '';
+      _jobController.text = profileData.user!.experiences
+              ?.firstWhere((element) => element.isCurrentJob == true,
+                  orElse: () => ExperienceMentor())
+              .jobTitle ??
+          '';
+      _companyController.text = profileData.user!.experiences
+              ?.firstWhere((element) => element.isCurrentJob == true,
+                  orElse: () => ExperienceMentor())
+              .company ??
+          '';
+      _locationController.text = profileData.user?.location ?? '';
+      _linkedinController.text = profileData.user?.linkedin ?? '';
+      _aboutController.text = profileData.user?.about ?? '';
+      _portofolioController.text = profileData.user?.portofolio ?? '';
+      _accountNumberController.text = profileData.user?.accountNumber ?? '';
+      _accountNameController.text = profileData.user?.accountName ?? '';
+      _skills.addAll(
+          profileData.user?.skills?.map((skill) => {'skill': skill}) ?? []);
+      experience.addAll(profileData.user?.experiences?.map((exp) => {
+                'role': exp.jobTitle ?? '',
+                'experienceCompany': exp.company ?? ''
+              }) ??
+          []);
+    });
   }
 
   void _addSkill() {
@@ -106,25 +148,41 @@ class _RegisterMentorScreenState extends State<RegisterMentorScreen> {
     }
   }
 
-  void _registerMentor() async {
-    skills = _skills.map((skill) => skill['skill']!).toList();
+  ///bua fungsi untuk reregistration mentor dari service MentorUpdateService
+void _updateMentor() async {
+  if (_formKey.currentState!.validate()) {
+    try {
+      await MentorUpdateService().updateMentor(
+        accountNumber: _accountNumberController.text,
+        accountName: _accountNameController.text,
+        gender: _genderController.text,
+        mentorId: _mentorid,
+        portfolio: _portofolioController.text,
+        job: _jobController.text,
+        company: _companyController.text,
+        location: _locationController.text,
+        skills: [], // Add skills if needed
+        about: _aboutController.text,
+        linkedin: _linkedinController.text,
+        experiences: [], // Add experiences if needed
+      );
 
-    // Instance of ProfileService
-    RegisterMentorService registerMentorService = RegisterMentorService();
-    await registerMentorService.registerMentor(
-      gender: _genderController.text,
-      job: _jobController.text,
-      company: _companyController.text,
-      skills: skills,
-      location: _locationController.text,
-      about: _aboutController.text,
-      linkedin: _linkedinController.text,
-      portofolio: _portofolioController.text,
-      experience: experience,
-      accountName: _accountNameController.text,
-      accountNumber: _accountNumberController.text,
-    );
+      // Check if the widget is still mounted before showing the SnackBar
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Mentor profile updated successfully'),
+            backgroundColor: ColorStyle().succesColors,
+          ),
+        );
+      }
+    } catch (error) {
+      print('Error updating mentor profile: $error');
+      // Handle error updating mentor profile
+    }
   }
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -246,8 +304,6 @@ class _RegisterMentorScreenState extends State<RegisterMentorScreen> {
             linkedin = value;
           });
         }),
-
-
 
         _textFieldWithTitle("About", _aboutController, "Enter Your About",
             onChanged: (value) {
@@ -438,7 +494,7 @@ class _RegisterMentorScreenState extends State<RegisterMentorScreen> {
       child: ElevatedButtonWidget(
         onPressed: () {
           if (_formKey.currentState!.validate()) {
-            _registerMentor();
+            _updateMentor();
             Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(

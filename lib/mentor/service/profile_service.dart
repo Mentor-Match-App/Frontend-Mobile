@@ -66,7 +66,7 @@ class ProfileService {
       final response = await dio.get("$baseUrl/mentors/$userId/profile");
       return MentorProfile.fromMap(response.data);
     } catch (error) {
-      throw Exception("Failed to fetch Mentee: $error");
+      throw Exception("Failed to fetch Mentor: $error");
     }
   }
 }

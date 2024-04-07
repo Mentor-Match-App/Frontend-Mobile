@@ -47,7 +47,7 @@ class User {
   String? about;
   dynamic accountNumber;
   dynamic accountName;
-  List<Experience>? experiences;
+  List<ExperienceMentee>? experiences;
 
   User({
     this.id,
@@ -84,8 +84,8 @@ class User {
         accountName: json["accountName"],
         experiences: json["experiences"] == null
             ? []
-            : List<Experience>.from(
-                json["experiences"]!.map((x) => Experience.fromMap(x))),
+            : List<ExperienceMentee>.from(
+                json["experiences"]!.map((x) => ExperienceMentee.fromMap(x))),
       );
 
   Map<String, dynamic> toMap() => {
@@ -109,14 +109,14 @@ class User {
       };
 }
 
-class Experience {
+class ExperienceMentee {
   String? id;
   String? userId;
   bool? isCurrentJob;
   String? company;
   String? jobTitle;
 
-  Experience({
+  ExperienceMentee({
     this.id,
     this.userId,
     this.isCurrentJob,
@@ -124,7 +124,7 @@ class Experience {
     this.jobTitle,
   });
 
-  factory Experience.fromMap(Map<String, dynamic> json) => Experience(
+  factory ExperienceMentee.fromMap(Map<String, dynamic> json) => ExperienceMentee(
         id: json["id"],
         userId: json["userId"],
         isCurrentJob: json["isCurrentJob"],

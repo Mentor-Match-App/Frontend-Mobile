@@ -46,7 +46,7 @@ class MyApp extends StatelessWidget {
         case 'Mentor':
           homeScreen = BottomNavbarMentorScreen(); // Layar awal untuk mentor
           break;
-        case 'PendingMentor':
+        case 'PendingMentor' || 'RejectedMentor':
           homeScreen = VerificationFormRegistScreen(); // Layar awal untuk admin
           break;
         default:

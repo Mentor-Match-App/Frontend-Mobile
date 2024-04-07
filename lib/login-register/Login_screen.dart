@@ -66,7 +66,9 @@ class _LoginScreenState extends State<LoginScreen> {
             } else if (userType == "Mentor") {
               Navigator.of(context).pushReplacement(MaterialPageRoute(
                   builder: (context) => BottomNavbarMentorScreen()));
-            } else if (userType == "PendingMentor") {
+              // Tambahkan kondisi untuk userType PendingMentor atau RejectedMentor
+            } else if (userType == "PendingMentor" ||
+                userType == "RejectedMentor") {
               // Navigasi ke halaman verifikasi mentor
               Navigator.of(context).pushReplacement(MaterialPageRoute(
                   builder: (context) => VerificationFormRegistScreen()));
