@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mentormatch_apps/mentor/screen/bottom_mentor_screen.dart';
 import 'package:mentormatch_apps/mentor/service/profile_service.dart';
-
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
 import 'package:mentormatch_apps/widget/button.dart';
@@ -286,23 +285,22 @@ class _EditProfileMentorScreenState extends State<EditProfileMentorScreen> {
 
   Widget _skillField() {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            TittleTextField(
-                title: "Skill", color: ColorStyle().secondaryColors),
-            TextButton.icon(
-              onPressed: _addSkill,
-              icon: const Icon(Icons.add, size: 16),
-              label: Text("Add Skill", style: FontFamily().regularText),
-            ),
-          ],
-        ),
+        TittleTextField(title: "Skill", color: ColorStyle().secondaryColors),
         TextFieldWidget(
           controller: _skillController,
           hintText: "Skill",
           formKey: _formKey,
+        ),
+        const SizedBox(height: 12),
+        Align(
+          alignment: Alignment.centerRight,
+          child: TextButton.icon(
+            onPressed: _addSkill,
+            icon: const Icon(Icons.add, size: 16),
+            label: Text("Add Skill", style: FontFamily().regularText),
+          ),
         ),
       ],
     );
@@ -310,19 +308,10 @@ class _EditProfileMentorScreenState extends State<EditProfileMentorScreen> {
 
   Widget _experienceField() {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            TittleTextField(
-                title: "Experience", color: ColorStyle().secondaryColors),
-            TextButton.icon(
-              onPressed: _addExperience,
-              icon: const Icon(Icons.add, size: 16),
-              label: Text("Add Experience", style: FontFamily().regularText),
-            ),
-          ],
-        ),
+        TittleTextField(
+            title: "Experience", color: ColorStyle().secondaryColors),
         TextFieldWidget(
           controller: _roleController,
           hintText: "Role",
@@ -332,6 +321,16 @@ class _EditProfileMentorScreenState extends State<EditProfileMentorScreen> {
           controller: _experienceCompanyController,
           hintText: "Company",
         ),
+        const SizedBox(height: 12),
+        Align(
+          alignment: Alignment.centerRight,
+          child: TextButton.icon(
+            onPressed: _addExperience,
+            icon: const Icon(Icons.add, size: 16),
+            label: Text("Add Experience", style: FontFamily().regularText),
+          ),
+        ),
+        const SizedBox(height: 12),
       ],
     );
   }
@@ -379,7 +378,7 @@ class _EditProfileMentorScreenState extends State<EditProfileMentorScreen> {
             Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(
-                    builder: (context) =>  BottomNavbarMentorScreen(
+                    builder: (context) => BottomNavbarMentorScreen(
                           activeScreen: 3,
                         )),
                 (route) => false);

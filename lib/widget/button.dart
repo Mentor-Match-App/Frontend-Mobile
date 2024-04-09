@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
 
-/////////////////////////////////////// BIG BUTTON /////////////////////////
 
-//// Elevated Button ////
 class ElevatedButtonWidget extends StatelessWidget {
   final Function()? onPressed;
   final String? title;
@@ -40,7 +38,7 @@ class ElevatedButtonWidget extends StatelessWidget {
   }
 }
 
-//// Elevated Button ////
+
 
 class OutlineButtonWidget extends StatelessWidget {
   final Function()? onPressed;
