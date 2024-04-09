@@ -1,9 +1,9 @@
 import 'package:dio/dio.dart';
+import 'package:mentormatch_apps/style/baseURl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ChooseRoleService {
   Dio dio = Dio();
-  final String baseUrl = "https://shy-lime-bream-cuff.cyclic.app";
 
   Future<void> chooseRole(String selectedRole) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();

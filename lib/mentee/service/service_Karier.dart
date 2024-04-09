@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:mentormatch_apps/mentor/model/category_Karier_model.dart';
+import 'package:mentormatch_apps/style/baseURl.dart';
 
 class KarierServices {
   final Dio _dio = Dio();
@@ -11,7 +12,7 @@ class KarierServices {
 
   Future<Karier> getKarierData() async {
     try {
-      final response = await _dio.get('https://shy-lime-bream-cuff.cyclic.app/class/filter-mentors?educationLevel=Karier&category');
+      final response = await _dio.get('$baseUrl/class/filter-mentors?educationLevel=Karier&category');
       if (response.statusCode == 200) {
         return Karier.fromMap(response.data);
       } else {

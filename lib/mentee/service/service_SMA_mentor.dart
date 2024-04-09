@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:mentormatch_apps/mentor/model/category_SMA_model.dart';
+import 'package:mentormatch_apps/style/baseURl.dart';
 
 class SMAServices {
   final Dio _dio = Dio();
@@ -11,7 +12,7 @@ class SMAServices {
 
   Future<SMA> getSMAData() async {
     try {
-      final response = await _dio.get('https://shy-lime-bream-cuff.cyclic.app/class/filter-mentors?educationLevel=SMA&category');
+      final response = await _dio.get('$baseUrl/class/filter-mentors?educationLevel=SMA&category');
       if (response.statusCode == 200) {
         return SMA.fromMap(response.data);
       } else {

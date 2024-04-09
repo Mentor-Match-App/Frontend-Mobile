@@ -1,9 +1,10 @@
 import 'package:dio/dio.dart';
 import 'package:mentormatch_apps/mentee/model/myClass_model.dart';
 import 'package:mentormatch_apps/preferences/%20preferences_helper.dart';
+import 'package:mentormatch_apps/style/baseURl.dart';
 
 class BookingService {
-  static const String _baseUrl = 'https://shy-lime-bream-cuff.cyclic.app';
+
 
   final Dio _dio = Dio();
 
@@ -11,7 +12,7 @@ class BookingService {
     try {
       final userId = UserPreferences.getUserId();
       if (userId != null) {
-        final response = await _dio.get('$_baseUrl/users/$userId/my-class');
+        final response = await _dio.get('$baseUrl/users/$userId/my-class');
         if (response.statusCode == 200) {
           final List<dynamic> sessionDataList =
               response.data['user']['participant'];
@@ -33,7 +34,7 @@ class BookingService {
     try {
       final userId = UserPreferences.getUserId();
       if (userId != null) {
-        final response = await _dio.get('$_baseUrl/users/$userId/my-class');
+        final response = await _dio.get('$baseUrl/users/$userId/my-class');
         if (response.statusCode == 200) {
           final List<dynamic> transactionDataList =
               response.data['user']['transactions'];

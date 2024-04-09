@@ -1,13 +1,14 @@
 import 'package:dio/dio.dart';
+import 'package:mentormatch_apps/style/baseURl.dart';
 
 class ReviewService {
   final Dio _dio = Dio();
 
   Future<String> sendReview(String content, String userId, String mentorId) async {
-    final String apiUrl = "https://shy-lime-bream-cuff.cyclic.app/mentee/$userId/review";
+
 
     try {
-      final response = await _dio.post(apiUrl, data: {
+      final response = await _dio.post(baseUrl, data: {
         "mentorId": mentorId,
         "userId": userId, // Pastikan konsistensi nama kunci sesuai dengan backend
         "content": content,

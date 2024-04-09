@@ -1,10 +1,10 @@
 import 'package:dio/dio.dart';
+import 'package:mentormatch_apps/style/baseURl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthService {
   Dio dio = Dio();
-  final String baseUrl =
-      "https://shy-lime-bream-cuff.cyclic.app"; // Ganti dengan URL server Anda
+
 
   Future<void> loginUser(String idToken) async {
     try {

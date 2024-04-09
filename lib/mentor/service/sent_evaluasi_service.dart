@@ -1,9 +1,9 @@
 import 'package:dio/dio.dart';
+import 'package:mentormatch_apps/style/baseURl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SendEvaluasiService {
   Dio _dio = Dio();
-  String _baseUrl = "https://shy-lime-bream-cuff.cyclic.app";
 
   Future<String> sendEvaluationLink(
       String classId, String topic, String link) async {
@@ -15,7 +15,7 @@ class SendEvaluasiService {
       return "Token tidak ditemukan. Silakan login kembali.";
     }
 
-    String url = "$_baseUrl/class/$classId/evaluation";
+    String url = "$baseUrl/class/$classId/evaluation";
     try {
       final response = await _dio.post(
         url,

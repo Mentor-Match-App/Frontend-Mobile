@@ -1,9 +1,10 @@
 import 'package:dio/dio.dart';
 import 'package:mentormatch_apps/mentor/model/create_class_models.dart';
+import 'package:mentormatch_apps/style/baseURl.dart';
 
 class CreateClassService {
   Dio _dio = Dio();
-  final String _baseUrl = 'https://shy-lime-bream-cuff.cyclic.app';
+  
 
   CreateClassService() {
     _dio.options.headers = {
@@ -16,7 +17,7 @@ class CreateClassService {
       CreateClassModels classModel, String mentorId) async {
     try {
       final response = await _dio.post(
-        '$_baseUrl/mentor/$mentorId/class',
+        '$baseUrl/mentor/$mentorId/class',
         data: classModel.toJson(),
       );
 

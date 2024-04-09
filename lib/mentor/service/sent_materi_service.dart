@@ -1,10 +1,11 @@
 
 import 'package:dio/dio.dart';
+import 'package:mentormatch_apps/style/baseURl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LearningMaterialService {
   Dio _dio = Dio();
-  final String _baseUrl = "https://shy-lime-bream-cuff.cyclic.app"; // Ganti dengan URL API Anda
+
 
   Future<String> createLearningMaterial(String classId, String title, String link) async {
     // Mendapatkan token dari SharedPreferences
@@ -17,7 +18,7 @@ class LearningMaterialService {
     }
     
     // Endpoint untuk create learning material
-    String url = "$_baseUrl/class/$classId/learning-material";
+    String url = "$baseUrl/class/$classId/learning-material";
 
     try {
       final response = await _dio.post(url,

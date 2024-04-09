@@ -1,17 +1,18 @@
 import 'package:dio/dio.dart';
 import 'package:mentormatch_apps/mentor/model/myClass_mentor_model.dart';
+import 'package:mentormatch_apps/style/baseURl.dart';
 
 import '../../preferences/ preferences_helper.dart';
 
 class ListClassMentor {
-  static const String _baseUrl = 'https://shy-lime-bream-cuff.cyclic.app';
+
 
   final Dio _dio = Dio();
 
   Future<List<Session>> fetchSessionsForCurrentUser() async {
     final userId = UserPreferences.getUserId();
     try {
-      final response = await _dio.get('$_baseUrl/users/$userId/my-class');
+      final response = await _dio.get('$baseUrl/users/$userId/my-class');
       if (response.statusCode == 200) {
         // Deserialize JSON ke MyClassMentorModel
         MyClassMentorMondel model = MyClassMentorMondel.fromMap(response.data);
@@ -36,7 +37,7 @@ class ListClassMentor {
     // Here we get the userId directly inside the service method
     final userId = UserPreferences.getUserId();
     try {
-      final response = await _dio.get('$_baseUrl/users/$userId/my-class');
+      final response = await _dio.get('$baseUrl/users/$userId/my-class');
       if (response.statusCode == 200) {
         return MyClassMentorMondel.fromMap(response.data);
       } else {

@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:mentormatch_apps/mentor/model/category_SMP_model.dart';
+import 'package:mentormatch_apps/style/baseURl.dart';
 
 class SMPServices {
   final Dio _dio = Dio();
@@ -11,7 +12,7 @@ class SMPServices {
 
   Future<SMP> getSMPData() async {
     try {
-      final response = await _dio.get('https://shy-lime-bream-cuff.cyclic.app/class/filter-mentors?educationLevel=SMP&category');
+      final response = await _dio.get('$baseUrl/class/filter-mentors?educationLevel=SMP&category');
       if (response.statusCode == 200) {
         return SMP.fromMap(response.data);
       } else {

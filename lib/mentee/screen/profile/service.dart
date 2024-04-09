@@ -1,10 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:mentormatch_apps/mentee/model/profile_model.dart';
+import 'package:mentormatch_apps/style/baseURl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileService {
   Dio dio = Dio(); // Create Dio instance
-  final String baseUrl = "https://shy-lime-bream-cuff.cyclic.app";
+  
 
   Future<void> updateProfile({
     required String job,

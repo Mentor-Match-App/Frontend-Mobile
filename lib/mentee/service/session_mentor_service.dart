@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:mentormatch_apps/mentor/model/session_model.dart';
+import 'package:mentormatch_apps/style/baseURl.dart';
 
 class SessionServices {
   final Dio _dio = Dio();
@@ -11,7 +12,7 @@ class SessionServices {
 
   Future<Session> getSessionData() async {
     try {
-      final response = await _dio.get('https://shy-lime-bream-cuff.cyclic.app/session/filter-mentors?category');
+      final response = await _dio.get('$baseUrl/session/filter-mentors?category');
       if (response.statusCode == 200) {
         return Session.fromMap(response.data);
       } else {

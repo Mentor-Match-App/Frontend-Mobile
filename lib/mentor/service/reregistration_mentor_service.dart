@@ -1,9 +1,9 @@
 import 'package:dio/dio.dart';
+import 'package:mentormatch_apps/style/baseURl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MentorUpdateService {
   Dio dio = Dio();
-  final baseUrl = "https://shy-lime-bream-cuff.cyclic.app";
 
   Future<void> updateMentor({
     required String mentorId,
@@ -57,7 +57,7 @@ class MentorUpdateService {
       if (e.response != null) {
         print("Dio error: ${e.response?.statusCode} - ${e.response?.data}");
       } else {
-        print("Dio error without response: ${e.message}");
+        print("Dio error without response: ${e.response}");
       }
     } catch (e) {
       print("Unexpected error: $e");

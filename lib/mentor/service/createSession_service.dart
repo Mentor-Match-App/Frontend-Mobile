@@ -1,9 +1,10 @@
 import 'package:dio/dio.dart';
 import 'package:mentormatch_apps/mentor/model/create_session_model.dart';
+import 'package:mentormatch_apps/style/baseURl.dart';
 
 class CreateSessionService{
   Dio _dio = Dio();
-  final String _baseUrl = 'https://shy-lime-bream-cuff.cyclic.app';
+
 
   CreateSessionsService(){
     _dio.options.headers = {
@@ -15,7 +16,7 @@ class CreateSessionService{
   Future<bool> createSession(CreateSessionModels sessionModel, String mentorId) async {
     try {
       final response = await _dio.post(
-        '$_baseUrl/mentor/$mentorId/session',
+        '$baseUrl/mentor/$mentorId/session',
         data: sessionModel.toJson(),
       );
 

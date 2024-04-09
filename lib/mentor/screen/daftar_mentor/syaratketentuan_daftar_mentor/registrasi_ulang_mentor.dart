@@ -148,41 +148,68 @@ class _RegisterUlangMentorScreenState extends State<RegisterUlangMentorScreen> {
     }
   }
 
-  ///bua fungsi untuk reregistration mentor dari service MentorUpdateService
-void _updateMentor() async {
-  if (_formKey.currentState!.validate()) {
-    try {
-      await MentorUpdateService().updateMentor(
-        accountNumber: _accountNumberController.text,
-        accountName: _accountNameController.text,
-        gender: _genderController.text,
-        mentorId: _mentorid,
-        portfolio: _portofolioController.text,
-        job: _jobController.text,
-        company: _companyController.text,
-        location: _locationController.text,
-        skills: [], // Add skills if needed
-        about: _aboutController.text,
-        linkedin: _linkedinController.text,
-        experiences: [], // Add experiences if needed
-      );
+  void _updateMentor() async {
+    if (_formKey.currentState!.validate()) {
+      final profileData = await mentorService.getMentorProfile();
+      try {
+        await MentorUpdateService().updateMentor(
+          accountNumber: profileData.user?.accountName ?? '',
+          accountName: profileData.user?.accountNumber ?? '',
+          gender: profileData.user?.gender ?? '',
+          mentorId: profileData.user?.id ?? '',
+          portfolio: profileData.user?.portofolio ?? '',
+          job: profileData.user?.experiences
+                  ?.firstWhere((element) => element.isCurrentJob == true,
+                      orElse: () => ExperienceMentor())
+                  .jobTitle ??
+              '',
+          company: profileData.user?.experiences
+                  ?.firstWhere((element) => element.isCurrentJob == true,
+                      orElse: () => ExperienceMentor())
+                  .company ??
+              '',
+          location: profileData.user?.location ?? '',
+          skills: profileData.user?.skills ?? [],
+          about: profileData.user?.about ?? '',
+          linkedin: profileData.user?.linkedin ?? '',
+          experiences: profileData.user?.experiences
+                  ?.map((exp) => {
+                        'role': exp.jobTitle ?? '',
+                        'experienceCompany': exp.company ?? ''
+                      })
+                  .toList() ??
+              [],
+        );
 
-      // Check if the widget is still mounted before showing the SnackBar
-      if (mounted) {
+        // Tampilkan SnackBar jika pembaruan berhasil
+        if (mounted) {
+          showTopSnackBar(context, 'Profile updated successfully',
+        
+        leftBarIndicatorColor: ColorStyle().succesColors);
+        }
+
+        // Navigasi ke halaman verifikasi
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (context) => VerificationFormRegistScreen(),
+          ),
+          (route) => false,
+        );
+      } catch (error) {
+        // Menampilkan pesan kesalahan jika terjadi kesalahan saat pembaruan profil mentor
+        print('Error updating mentor profile: $error');
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Mentor profile updated successfully'),
-            backgroundColor: ColorStyle().succesColors,
+            content: Text(
+              'Failed to update mentor profile. Please try again later.',
+            ),
+            backgroundColor: Colors.red, // Warna merah untuk pesan kesalahan
           ),
         );
       }
-    } catch (error) {
-      print('Error updating mentor profile: $error');
-      // Handle error updating mentor profile
     }
   }
-}
-
 
   @override
   Widget build(BuildContext context) {
@@ -493,14 +520,7 @@ void _updateMentor() async {
     return Center(
       child: ElevatedButtonWidget(
         onPressed: () {
-          if (_formKey.currentState!.validate()) {
-            _updateMentor();
-            Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => VerificationFormRegistScreen()),
-                (route) => false);
-          }
+          _updateMentor();
         },
         title: "Apply",
       ),

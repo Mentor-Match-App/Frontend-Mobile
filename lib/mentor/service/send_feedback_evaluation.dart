@@ -1,11 +1,11 @@
 import 'package:dio/dio.dart';
+import 'package:mentormatch_apps/style/baseURl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class FeedbackService {
   static Future<String?> sendFeedback(
       String evaluationId, String menteeId, String content) async {
     Dio dio = Dio();
-    String baseUrl = "https://shy-lime-bream-cuff.cyclic.app/feedback";
 
     // Dapatkan token dari SharedPreferences, jika autentikasi diperlukan
     SharedPreferences prefs = await SharedPreferences.getInstance();

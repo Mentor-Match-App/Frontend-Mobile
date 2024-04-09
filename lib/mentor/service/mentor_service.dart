@@ -1,11 +1,12 @@
 import 'package:dio/dio.dart';
-import 'package:mentormatch_apps/mentor/model/mentor_model.dart'; // Pastikan path ini sesuai
+import 'package:mentormatch_apps/mentor/model/mentor_model.dart';
+import 'package:mentormatch_apps/style/baseURl.dart'; // Pastikan path ini sesuai
 
 class MentorService {
   final Dio _dio = Dio();
 
   // URL yang sudah disesuaikan dengan endpoint baru
-  final String baseUrl = "https://shy-lime-bream-cuff.cyclic.app/class/filter-mentors";
+
 
   Future<MentorClassModel> fetchFilteredMentors() async {
     try {
