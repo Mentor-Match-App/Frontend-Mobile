@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
-import 'package:mentormatch_apps/style/text.dart';
+
 
 class CategoriCardWidget extends StatefulWidget {
   final bool isActive;

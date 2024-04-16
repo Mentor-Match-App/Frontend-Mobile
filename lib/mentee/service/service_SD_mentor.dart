@@ -5,11 +5,6 @@ import 'package:mentormatch_apps/style/baseURl.dart';
 class SDServices {
   final Dio _dio = Dio();
 
-  // SDServices() {
-  //   // Menambahkan token ke header default untuk semua permintaan
-  //   _dio.options.headers['Authorization'] = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IkplcmVteWxld2lAZ21haWwuY29tIiwiaWF0IjoxNzA3MDQ5MzQxfQ.mEg7JJACQbYgaDxYpQaGDZfi92Ks_NmeQ-ZPvpOt3ks';
-  // }
-
   Future<SD> getSDData() async {
     try {
       final response = await _dio.get('$baseUrl/class/filter-mentors?educationLevel=SD&category');

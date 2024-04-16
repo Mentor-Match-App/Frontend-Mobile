@@ -1,10 +1,8 @@
-
 import 'package:flutter/material.dart';
 import 'package:mentormatch_apps/mentee/screen/notification_mentee_screen.dart';
 import 'package:mentormatch_apps/mentor/model/myClass_mentor_model.dart';
 import 'package:mentormatch_apps/mentor/screen/MyClassMentor/evaluasi/list_evaluasi_mentee.dart';
 import 'package:mentormatch_apps/mentor/service/send_feedback_evaluation.dart';
-import 'package:mentormatch_apps/mentor/service/sent_evaluasi_service.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
 import 'package:mentormatch_apps/style/text.dart';
@@ -46,6 +44,9 @@ class _DetailEvaluastionMenteeMentorScreenState
       TextEditingController();
   final TextEditingController _hasilEvaluasiController =
       TextEditingController();
+  final TextEditingController _nilaiEvaluasiController =
+      TextEditingController();
+
   // ignore: unused_field
   bool _isLoading = false;
   @override
@@ -59,13 +60,13 @@ class _DetailEvaluastionMenteeMentorScreenState
   void dispose() {
     _materiEvaluasiController2.dispose();
     _hasilEvaluasiController.dispose();
+    _nilaiEvaluasiController.dispose();
 
     super.dispose();
   }
 
-
   ///sendfeedback///
-  Future<void> _sendFeedback() async {
+  void _sendFeedback() async {
     if (_hasilEvaluasiController.text.isEmpty || selectedEvaluationId == null) {
       // Tampilkan pesan error jika salah satu field kosong
       showTopSnackBar(context, "Field tidak boleh kosong",
@@ -73,11 +74,11 @@ class _DetailEvaluastionMenteeMentorScreenState
       return;
     }
 
-    final String? errorMessage = await FeedbackService.sendFeedback(
-      selectedEvaluationId!,
-      widget.currentMenteeId,
-      _hasilEvaluasiController.text,
-    );
+    final errorMessage = await FeedbackService.sendFeedback(
+        selectedEvaluationId!,
+        widget.currentMenteeId,
+        _hasilEvaluasiController.text,
+        int.parse(_nilaiEvaluasiController.text));
 
     if (errorMessage == null) {
       // ignore: use_build_context_synchronously
@@ -86,6 +87,7 @@ class _DetailEvaluastionMenteeMentorScreenState
 
       // Bersihkan form setelah berhasil
       _hasilEvaluasiController.clear();
+      _nilaiEvaluasiController.clear();
       setState(() {
         selectedMateriFeedback = null;
         selectedEvaluationId = null;
@@ -274,6 +276,23 @@ class _DetailEvaluastionMenteeMentorScreenState
                                   ),
                                   hintText:
                                       "Masukan hasil dari evaluasi yang di kerjakan oleh mentee",
+                                  hintStyle: FontFamily().regularText.copyWith(
+                                      color: ColorStyle().disableColors)),
+                              maxLines: 5,
+                            ),
+                            const SizedBox(height: 12),
+                            TittleTextField(
+                              title: "Nilai Evaluasi",
+                              color: ColorStyle().secondaryColors,
+                            ),
+                            TextFormField(
+                              controller: _nilaiEvaluasiController,
+                              decoration: InputDecoration(
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  hintText:
+                                      "Masukan nilai dari evaluasi yang di kerjakan oleh mentee",
                                   hintStyle: FontFamily().regularText.copyWith(
                                       color: ColorStyle().disableColors)),
                               maxLines: 5,

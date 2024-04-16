@@ -3,8 +3,8 @@ import 'package:mentormatch_apps/style/baseURl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class FeedbackService {
-  static Future<String?> sendFeedback(
-      String evaluationId, String menteeId, String content) async {
+  static Future<dynamic> sendFeedback(
+      String evaluationId, String menteeId, String content, int result) async {
     Dio dio = Dio();
 
     // Dapatkan token dari SharedPreferences, jika autentikasi diperlukan
@@ -12,11 +12,12 @@ class FeedbackService {
     String? token = prefs.getString('token');
 
     try {
-      Response response = await dio.post(baseUrl,
+      final response = await dio.post("$baseUrl/feedback",
           data: {
             'evaluationId': evaluationId,
             'menteeId': menteeId,
             'content': content,
+            'result': result,
           },
           options: Options(
             headers: {
@@ -34,7 +35,7 @@ class FeedbackService {
         return response.data['message'] ??
             'Terjadi kesalahan yang tidak diketahui.';
       }
-    // ignore: deprecated_member_use
+      // ignore: deprecated_member_use
     } on DioError catch (e) {
       if (e.response != null) {
         // Gagal karena respons dari server, baca dan kembalikan pesan error dari backend
