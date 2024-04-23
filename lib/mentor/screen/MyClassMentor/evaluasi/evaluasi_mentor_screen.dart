@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mentormatch_apps/mentee/screen/notification_mentee_screen.dart';
 import 'package:mentormatch_apps/mentor/model/myClass_mentor_model.dart';
-import 'package:mentormatch_apps/mentor/screen/MyClassMentor/evaluasi/detail_evaluation_mentee_mentor.dart';
+import 'package:mentormatch_apps/mentor/screen/MyClassMentor/evaluasi/send_feedback_detail_evaluasi.dart';
 import 'package:mentormatch_apps/mentor/service/sent_evaluasi_service.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
@@ -12,6 +12,7 @@ import 'package:mentormatch_apps/widget/textField.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class EvaluasiMentorScreen extends StatefulWidget {
+  final List<FeedbackMyClassMentor> feedbacks;
   final String classId;
   final List<Transaction> transactions;
   final List<Evaluation> evaluasi;
@@ -19,6 +20,7 @@ class EvaluasiMentorScreen extends StatefulWidget {
 
   EvaluasiMentorScreen({
     Key? key,
+    required this.feedbacks,
     required this.classId,
     required this.learningMaterial,
     required this.evaluasi,
@@ -47,8 +49,9 @@ class _EvaluasiMentorScreenState extends State<EvaluasiMentorScreen> {
   }
 
   void _sendEvaluation() async {
-    if (_materiEvaluasiController.text.isEmpty ||
-        _linkEvaluasiController.text.isEmpty) {
+    String title = _materiEvaluasiController.text;
+    String link = _linkEvaluasiController.text;
+    if (title.isEmpty || link.isEmpty) {
       // Tampilkan pesan error jika salah satu field kosong
       showTopSnackBar(context, "Field tidak boleh kosong",
           leftBarIndicatorColor: ColorStyle().errorColors);
@@ -71,8 +74,9 @@ class _EvaluasiMentorScreenState extends State<EvaluasiMentorScreen> {
             leftBarIndicatorColor: ColorStyle().succesColors);
         // Bersihkan form setelah berhasil
         setState(() {
-          _materiEvaluasiController.clear();
-          _linkEvaluasiController.clear();
+          widget.evaluasi.add(
+            Evaluation(topic: title, link: link),
+          );
         });
       } else {
         // Tampilkan snackbar dengan warna merah untuk pesan error dari server
@@ -315,6 +319,8 @@ class _EvaluasiMentorScreenState extends State<EvaluasiMentorScreen> {
                                 MaterialPageRoute(
                                   builder: (context) =>
                                       DetailEvaluastionMenteeMentorScreen(
+                                      
+                                    feedbacks: widget.feedbacks,
                                     learningMaterial: widget.learningMaterial,
                                     transactions: widget.transactions,
                                     classId: widget.transactions[index].classId

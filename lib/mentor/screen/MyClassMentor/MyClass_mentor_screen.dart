@@ -163,6 +163,7 @@ class _MyClassCreateMentorState extends State<MyClassCreateMentor> {
                                     MaterialPageRoute(
                                       builder: (context) =>
                                           DetailMyClassMentorScreen(
+                                            feedbacks: classData.feedbacks ?? [],
                                         addressMentoring:
                                             classData.address ?? '',
                                         locationMentoring:

@@ -15,6 +15,7 @@ import 'package:mentormatch_apps/widget/flushsBar_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DetailMyClassMentorScreen extends StatefulWidget {
+  final List<FeedbackMyClassMentor> feedbacks;
   final String locationMentoring;
   final String addressMentoring;
   final int approvedTransactionsCount;
@@ -37,6 +38,7 @@ class DetailMyClassMentorScreen extends StatefulWidget {
 
   DetailMyClassMentorScreen({
     Key? key,
+    required this.feedbacks,
     required this.locationMentoring,
     required this.addressMentoring,
     required this.approvedTransactionsCount,
@@ -385,6 +387,7 @@ class _DetailMyClassMentorScreenState extends State<DetailMyClassMentorScreen> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) => EvaluasiMentorScreen(
+                                  feedbacks: widget.feedbacks,
                                   classId: widget.classid,
                                   learningMaterial: widget.learningMaterial,
                                   transactions: widget.transactions,

@@ -239,6 +239,7 @@ class _MyPremiumClassMentorScreenState
                                         MaterialPageRoute(
                                           builder: (context) =>
                                               DetailMyClassMentorScreen(
+                                            feedbacks: data.feedbacks ?? [],
                                             addressMentoring:
                                                 data.address ?? 'Meeting Zoom',
                                             locationMentoring:

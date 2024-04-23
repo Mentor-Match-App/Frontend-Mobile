@@ -55,6 +55,7 @@ class _MyMateriMentorState extends State<MyMateriMentor> {
   Future<void> _sendMaterial() async {
     String title = _materiPembelajaranController.text;
     String link = _linkMateriPembelajaranController.text;
+
     if (title.isEmpty || link.isEmpty) {
       // Tampilkan pesan error jika salah satu field kosong
       showTopSnackBar(context, "Field tidak boleh kosong",
@@ -65,6 +66,7 @@ class _MyMateriMentorState extends State<MyMateriMentor> {
     // Mendapatkan classId dari konteks (Misalnya, dari Navigator arguments atau state lain)
     String classId =
         widget.classId; // Asumsikan classId didapatkan dari parameter widget
+
     setState(() {
       _isLoading = true; // Menandai bahwa request sedang diproses
     });
@@ -74,9 +76,17 @@ class _MyMateriMentorState extends State<MyMateriMentor> {
       String responseMessage =
           await service.createLearningMaterial(classId, title, link);
 
-      // Tampilkan pesan sukses
-      showTopSnackBar(context, responseMessage,
-          leftBarIndicatorColor: ColorStyle().succesColors);
+      // Tampilkan pesan sukses jika response message sesuai
+      if (responseMessage == "Learning material created successfully") {
+        // ignore: use_build_context_synchronously
+        showTopSnackBar(context, responseMessage,
+            leftBarIndicatorColor: ColorStyle().succesColors);
+      } else {
+        // Tampilkan pesan error jika response message tidak sesuai
+        // ignore: use_build_context_synchronously
+        showTopSnackBar(context, responseMessage,
+            leftBarIndicatorColor: ColorStyle().errorColors);
+      }
 
       // Tambahkan materi yang baru saja dikirim ke daftar materi yang ditampilkan
       setState(() {

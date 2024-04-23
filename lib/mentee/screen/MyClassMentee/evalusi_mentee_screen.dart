@@ -54,130 +54,188 @@ class _EvaluasiMenteeScreenState extends State<EvaluasiMenteeScreen> {
           ),
         ],
       )),
-      body: ListView(
-        children: [
-          Padding(
-            padding: EdgeInsets.all(20.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Panduan Evaluasi",
-                  style: FontFamily().boldText.copyWith(
-                      color: ColorStyle().primaryColors, fontSize: 16),
-                ),
-                const SizedBox(height: 12),
-                Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+      body: ListView.builder(
+        itemCount: widget.evaluasi.length,
+        itemBuilder: (context, index) {
+          // Mendapatkan evaluasi saat ini
+          var evaluation = widget.evaluasi[index];
+          // Mendapatkan feedbacks untuk currentMenteeId
+
+          return Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Container(
+              margin: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(12.0),
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.all(Radius.circular(4)),
+                border:
+                    Border.all(color: ColorStyle().tertiaryColors, width: 2),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
                     children: [
-                      RichText(
-                        text: TextSpan(
-                          children: [
-                            TextSpan(
-                              text: '1. ',
-                              style: FontFamily().regularText,
-                            ),
-                            TextSpan(
-                              style: FontFamily().regularText,
-                              text:
-                                  'Evaluasi  dilakukan setiap satu topik dalam program dan layanan sebagai penilaian atau pemeriksaan sistematis untuk mengevaluasi efektivitas, efisiensi, dan dampak dari suatu topik yang telah di ajarkan dalam program atau layanan. \n',
-                            ),
-                            TextSpan(
-                              text: '2. ',
-                              style: FontFamily().regularText,
-                            ),
-                            TextSpan(
-                              style: FontFamily().regularText,
-                              text:
-                                  'Tujuan evaluasi ini adalah untuk mengukur sejauh mana mentee dalam pencapain pembelajaran, mengidentifikasi area perbaikan, dan memberikan umpan balik yang dapat digunakan untuk meningkatkan kualitas dan efisiensi pelaksanaan program atau layanan tersebut.\n',
-                            ),
-                            TextSpan(
-                              text: '3. ',
-                              style: FontFamily().regularText,
-                            ),
-                            TextSpan(
-                              style: FontFamily().regularText,
-                              text:
-                                  'Evaluasi akan di berikan oleh mentor yang membimbingan kelas dalam bentu form yang akan di kirim pada saat kegiatan menting berlangsung ( zoom meeting)\n',
-                            ),
-                            TextSpan(
-                              text: '4. ',
-                              style: FontFamily().regularText,
-                            ),
-                            TextSpan(
-                              style: FontFamily().regularText,
-                              text:
-                                  'Hasil dari evaluasi akan dikirim mentor pada halaman ini apabila mentee telah mengejakan dan mentor telah menilai dari jawaban yang mentee berikan.\n',
-                            ),
-                          ],
-                        ),
+                      Image.asset(
+                        'assets/Handoff/icon/MyClass/evaluasi_icon.png',
+                        width: 100,
+                        height: 100,
+                      ),
+                      const SizedBox(width: 8),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          //buat materi nya berurutan dari 1 dan akan bertambah 1
+                          Row(
+                            children: [
+                              Text(
+                                "Materi ${index + 1}",
+                                style: FontFamily().boldText.copyWith(
+                                    fontSize: 16,
+                                    color: ColorStyle().secondaryColors),
+                              ),
+                              const SizedBox(width: 180),
+                              // Periksa apakah evaluation.feedbacks tidak null dan index valid
+                              evaluation.feedbacks != null &&
+                                      index < evaluation.feedbacks!.length
+                                  ? Text(
+                                      "Nilai : ${evaluation.feedbacks![index].result}",
+                                      style: FontFamily().boldText.copyWith(
+                                          fontSize: 16,
+                                          color: ColorStyle().secondaryColors),
+                                    )
+                                  : Text(
+                                      "Nilai : -", // Tampilkan "-" jika kondisi tidak terpenuhi
+                                      style: FontFamily().boldText.copyWith(
+                                          fontSize: 16,
+                                          color: ColorStyle().secondaryColors),
+                                    ),
+                            ],
+                          ),
+
+                          const SizedBox(height: 8),
+                          Text(
+                            evaluation.topic ?? 'Tidak ada topik',
+                            style:
+                                FontFamily().regularText.copyWith(fontSize: 14),
+                          ),
+
+                          const SizedBox(height: 4),
+                          ...(evaluation.feedbacks != null &&
+                                  evaluation.feedbacks!.isNotEmpty)
+                              ? [
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        top: 8.0, bottom: 8.0),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: evaluation.feedbacks!
+                                          .map(
+                                            (feedback) => Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  "Feedback :",
+                                                  style: FontFamily()
+                                                      .boldText
+                                                      .copyWith(
+                                                          fontSize: 16,
+                                                          color: ColorStyle()
+                                                              .secondaryColors),
+                                                ),
+                                                const SizedBox(height: 8),
+                                                Text(
+                                                    'Feedback evaluasi: \n${feedback.content}',
+                                                    style: FontFamily()
+                                                        .regularText),
+                                              ],
+                                            ),
+                                          )
+                                          .toList(),
+                                    ),
+                                  ),
+                                ]
+                              : [
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        top: 8.0, bottom: 8.0),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          "Feedback :",
+                                          style: FontFamily().boldText.copyWith(
+                                              fontSize: 16,
+                                              color:
+                                                  ColorStyle().secondaryColors),
+                                        ),
+                                        const SizedBox(height: 8),
+                                        Text(
+                                          'Belum ada feedback',
+                                          style: FontFamily().regularText,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                        ],
                       ),
                     ],
                   ),
-                ),
-                const SizedBox(height: 24),
-                Text(
-                  "Evaluasi",
-                  style: FontFamily().boldText.copyWith(
-                      color: ColorStyle().primaryColors, fontSize: 16),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 8.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: List.generate(
-                      widget.evaluasi.length,
-                      (index) => Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: ElevatedButtonWidget(
-                              onPressed: () {
-                                final linkEvaluasi =
-                                    widget.evaluasi[index].link ?? '';
-                                _launchURL(linkEvaluasi);
-                              },
-                              title: widget.evaluasi[index].topic,
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              "FeedBack Evaluasi",
-                              style: FontFamily().regularText.copyWith(
-                                  color: ColorStyle().secondaryColors),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(12),
-                                color: ColorStyle().tertiaryColors,
+                  Align(
+                    alignment: Alignment.bottomRight,
+                    child: evaluation.feedbacks != null &&
+                            evaluation.feedbacks!.isNotEmpty
+                        ? SizedBox(
+                            height: 40,
+                            width: 160,
+                            child: TextButton(
+                              style: TextButton.styleFrom(
+                                backgroundColor: ColorStyle().disableColors,
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 12, vertical: 8),
                               ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  widget.evaluasi[index].feedback ??
-                                      "Belum ada feedback",
-                                  style: FontFamily().regularText.copyWith(
-                                      color: ColorStyle().primaryColors),
-                                ),
+                              onPressed: null, // Dinonaktifkan
+                              child: Text(
+                                'Selesai',
+                                style: FontFamily().buttonText.copyWith(
+                                      fontSize: 12,
+                                      color: ColorStyle().whiteColors,
+                                    ),
+                              ),
+                            ),
+                          )
+                        : SizedBox(
+                            height: 40,
+                            width: 160,
+                            child: TextButton.icon(
+                              style: TextButton.styleFrom(
+                                backgroundColor: ColorStyle().primaryColors,
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 12, vertical: 8),
+                              ),
+                              onPressed: () =>
+                                  _launchURL(evaluation.link ?? ''),
+                              icon: Icon(Icons.link,
+                                  color: ColorStyle().whiteColors),
+                              label: Text(
+                                'Buka Evaluasi',
+                                style: FontFamily().buttonText.copyWith(
+                                      fontSize: 12,
+                                      color: ColorStyle().whiteColors,
+                                    ),
                               ),
                             ),
                           ),
-                        ],
-                      ),
-                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
+          );
+        },
       ),
     );
   }

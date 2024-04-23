@@ -11,6 +11,7 @@ import 'package:mentormatch_apps/widget/flushsBar_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DetailEvaluastionMenteeMentorScreen extends StatefulWidget {
+  final List<FeedbackMyClassMentor> feedbacks;
   final String menteeName;
   final List<Transaction> transactions;
   final String currentMenteeId;
@@ -19,6 +20,7 @@ class DetailEvaluastionMenteeMentorScreen extends StatefulWidget {
   final List<LearningMaterialMentor> learningMaterial;
   DetailEvaluastionMenteeMentorScreen({
     Key? key,
+    required this.feedbacks,
     required this.learningMaterial,
     required this.transactions,
     required this.menteeName,
@@ -67,12 +69,19 @@ class _DetailEvaluastionMenteeMentorScreenState
 
   ///sendfeedback///
   void _sendFeedback() async {
-    if (_hasilEvaluasiController.text.isEmpty || selectedEvaluationId == null) {
+    if (
+        // ignore: unrelated_type_equality_checks
+        selectedMateriFeedback == null ||
+            _hasilEvaluasiController.text.isEmpty ||
+            _nilaiEvaluasiController.text.isEmpty) {
       // Tampilkan pesan error jika salah satu field kosong
       showTopSnackBar(context, "Field tidak boleh kosong",
           leftBarIndicatorColor: ColorStyle().errorColors);
       return;
     }
+    print('Selected Materi Feedback: $selectedMateriFeedback');
+    print('Hasil Evaluasi Controller Text: ${_hasilEvaluasiController.text}');
+    print('Nilai Evaluasi Controller Text: ${_nilaiEvaluasiController.text}');
 
     final errorMessage = await FeedbackService.sendFeedback(
         selectedEvaluationId!,
@@ -295,7 +304,6 @@ class _DetailEvaluastionMenteeMentorScreenState
                                       "Masukan nilai dari evaluasi yang di kerjakan oleh mentee",
                                   hintStyle: FontFamily().regularText.copyWith(
                                       color: ColorStyle().disableColors)),
-                              maxLines: 5,
                             ),
                             const SizedBox(height: 12),
                             Align(
