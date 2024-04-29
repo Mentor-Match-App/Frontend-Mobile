@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:mentormatch_apps/mentee/model/myClass_model.dart';
+import 'package:mentormatch_apps/mentee/model/my_class_model.dart';
 import 'package:mentormatch_apps/preferences/%20preferences_helper.dart';
 import 'package:mentormatch_apps/style/baseURl.dart';
 

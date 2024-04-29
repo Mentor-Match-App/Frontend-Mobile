@@ -3,7 +3,7 @@
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:mentormatch_apps/mentee/screen/Session/detail_booking_session_screen.dart';
+import 'package:mentormatch_apps/mentee/screen/session/detail_booking_session_screen.dart';
 import 'package:mentormatch_apps/mentee/service/bookSessionService/bookSesion.dart';
 import 'package:mentormatch_apps/mentor/model/session_model.dart';
 import 'package:mentormatch_apps/preferences/%20preferences_helper.dart';

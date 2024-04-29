@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mentormatch_apps/mentor/model/myClass_mentor_model.dart';
+import 'package:mentormatch_apps/mentor/service/myClassCreate_Mentor_service.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -7,11 +8,10 @@ import 'package:url_launcher/url_launcher.dart';
 class ListEvaluasiMentee extends StatefulWidget {
   final String nameMentee;
   final String currentMenteeId;
-  final List<Evaluation> evaluations;
+
   final String classId;
   ListEvaluasiMentee({
     Key? key,
-    required this.evaluations,
     required this.nameMentee,
     required this.classId,
     required this.currentMenteeId,
@@ -22,12 +22,12 @@ class ListEvaluasiMentee extends StatefulWidget {
 }
 
 class _ListEvaluasiMenteeState extends State<ListEvaluasiMentee> {
-  List<String> listMateriEvaluasi = [];
+  late Future<MyClassMentorMondel> classData;
+
   @override
   void initState() {
     super.initState();
-    listMateriEvaluasi = widget.evaluations.map((e) => e.topic ?? "").toList();
-    print(widget.evaluations);
+    classData = ListClassMentor().fetchClassData();
   }
 
   _launchURL(String url) async {
@@ -51,216 +51,232 @@ class _ListEvaluasiMenteeState extends State<ListEvaluasiMentee> {
               .copyWith(fontSize: 16, color: ColorStyle().primaryColors),
         ),
       ),
-      body: ListView.builder(
-        itemCount: widget.evaluations.length,
-        itemBuilder: (context, index) {
-          // Mendapatkan evaluasi terbaru
-          var evaluation = widget.evaluations[index];
+      body: FutureBuilder<MyClassMentorMondel>(
+        future: classData,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return CircularProgressIndicator();
+          } else if (snapshot.hasError) {
+            return Text("Error: ${snapshot.error}");
+          } else if (snapshot.hasData &&
+              snapshot.data!.user?.userClass != null) {
+            var userClass = snapshot.data!.user!.userClass!;
 
-          // Mendapatkan feedbacks untuk currentMenteeId
-          var feedbacksForCurrentMentee = evaluation.feedbacks
-                  ?.where(
-                      (feedback) => feedback.menteeId == widget.currentMenteeId)
-                  .toList() ??
-              [];
+            return ListView.builder(
+              itemCount: userClass.length,
+              itemBuilder: (context, index) {
+                var evaluations = userClass[index].evaluations ?? [];
 
-          return Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: Container(
-              constraints: BoxConstraints(
-                maxWidth: MediaQuery.of(context)
-                    .size
-                    .width, // Membatasi lebar maksimum Container
-              ),
-              margin: const EdgeInsets.all(8.0),
-              padding: const EdgeInsets.all(12.0),
-              decoration: BoxDecoration(
-                borderRadius: const BorderRadius.all(Radius.circular(4)),
-                border:
-                    Border.all(color: ColorStyle().tertiaryColors, width: 2),
-              ),
-              child: Column(
-                children: [
-                  Row(
-                    children: [
-                      Image.asset(
-                        'assets/Handoff/icon/MyClass/evaluasi_icon.png',
-                        width: 100,
-                        height: 100,
-                      ),
-                      const SizedBox(width: 8),
-                      Expanded(
+                return Column(
+                  children: evaluations.map((evaluation) {
+                    var feedbacksForCurrentMentee = evaluation.feedbacks
+                            ?.where((feedback) =>
+                                feedback.menteeId == widget.currentMenteeId)
+                            .toList() ??
+                        [];
+
+                    return Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: Container(
+                        constraints: BoxConstraints(
+                            maxWidth: MediaQuery.of(context).size.width),
+                        margin: const EdgeInsets.all(8.0),
+                        padding: const EdgeInsets.all(12.0),
+                        decoration: BoxDecoration(
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(4)),
+                          border: Border.all(
+                              color: ColorStyle().tertiaryColors, width: 2),
+                        ),
                         child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Row(
                               children: [
-                                Expanded(
-                                  child: Text(
-                                    "Materi ${index + 1}",
-                                    style: FontFamily().boldText.copyWith(
-                                          fontSize: 16,
-                                          color: ColorStyle().secondaryColors,
-                                        ),
-                                  ),
+                                Image.asset(
+                                  'assets/Handoff/icon/MyClass/evaluasi_icon.png',
+                                  width: 100,
+                                  height: 100,
                                 ),
-                                // Periksa apakah evaluation.feedbacks tidak null dan index valid
-                                Align(
-                                  alignment: Alignment.topRight,
+                                const SizedBox(width: 8),
+                                Expanded(
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
-                                    children: feedbacksForCurrentMentee.isEmpty
-                                        ? [
-                                            Text(
-                                              "Nilai :-",
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                            child: Text(
+                                              "Topik : ${evaluation.topic}",
                                               style: FontFamily()
                                                   .boldText
                                                   .copyWith(
-                                                    fontSize: 16,
-                                                    color: ColorStyle()
-                                                        .secondaryColors,
-                                                  ),
+                                                      fontSize: 16,
+                                                      color: ColorStyle()
+                                                          .secondaryColors),
                                             ),
-                                          ]
-                                        : feedbacksForCurrentMentee
-                                            .map((feedback) {
-                                            return Text(
-                                              "result : ${feedback.result}",
-                                              style: FontFamily()
-                                                  .boldText
-                                                  .copyWith(
-                                                    fontSize: 16,
-                                                    color: ColorStyle()
-                                                        .secondaryColors,
-                                                  ),
-                                            );
-                                          }).toList(),
+                                          ),
+                                          Align(
+                                            alignment: Alignment.topRight,
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: feedbacksForCurrentMentee
+                                                      .isEmpty
+                                                  ? [
+                                                      Text("Nilai :-",
+                                                          style: FontFamily()
+                                                              .boldText
+                                                              .copyWith(
+                                                                  fontSize: 16,
+                                                                  color: ColorStyle()
+                                                                      .secondaryColors))
+                                                    ]
+                                                  : feedbacksForCurrentMentee
+                                                      .map((feedback) {
+                                                      return Text(
+                                                        "result : ${feedback.result}",
+                                                        style: FontFamily()
+                                                            .boldText
+                                                            .copyWith(
+                                                                fontSize: 16,
+                                                                color: ColorStyle()
+                                                                    .secondaryColors),
+                                                      );
+                                                    }).toList(),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(height: 4),
+                                      ...(evaluation.feedbacks != null &&
+                                              evaluation.feedbacks!.isNotEmpty)
+                                          ? [
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    top: 8.0, bottom: 8.0),
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: evaluation
+                                                      .feedbacks!
+                                                      .map((feedback) {
+                                                    return Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Text("Feedback :",
+                                                            style: FontFamily()
+                                                                .boldText
+                                                                .copyWith(
+                                                                    fontSize:
+                                                                        16,
+                                                                    color: ColorStyle()
+                                                                        .secondaryColors)),
+                                                        const SizedBox(
+                                                            height: 8),
+                                                        Text(
+                                                            '${feedback.content}',
+                                                            style: FontFamily()
+                                                                .regularText),
+                                                      ],
+                                                    );
+                                                  }).toList(),
+                                                ),
+                                              ),
+                                            ]
+                                          : [
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    top: 8.0, bottom: 8.0),
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text("Feedback :",
+                                                        style: FontFamily()
+                                                            .boldText
+                                                            .copyWith(
+                                                                fontSize: 16,
+                                                                color: ColorStyle()
+                                                                    .secondaryColors)),
+                                                    const SizedBox(height: 8),
+                                                    Text('Belum ada feedback',
+                                                        style: FontFamily()
+                                                            .regularText),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                    ],
                                   ),
                                 ),
                               ],
                             ),
-                            Text(
-                              "Topik : ${evaluation.topic}",
-                              style: FontFamily().regularText,
+                            Align(
+                              alignment: Alignment.bottomRight,
+                              child: evaluation.feedbacks != null &&
+                                      evaluation.feedbacks!.isNotEmpty
+                                  ? SizedBox(
+                                      height: 40,
+                                      width: 160,
+                                      child: TextButton(
+                                        style: TextButton.styleFrom(
+                                          backgroundColor:
+                                              ColorStyle().disableColors,
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 12, vertical: 8),
+                                        ),
+                                        onPressed: null,
+                                        child: Text(
+                                          'Selesai',
+                                          style: FontFamily()
+                                              .buttonText
+                                              .copyWith(
+                                                  fontSize: 12,
+                                                  color:
+                                                      ColorStyle().whiteColors),
+                                        ),
+                                      ),
+                                    )
+                                  : SizedBox(
+                                      height: 40,
+                                      width: 160,
+                                      child: TextButton.icon(
+                                        style: TextButton.styleFrom(
+                                          backgroundColor:
+                                              ColorStyle().primaryColors,
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 12, vertical: 8),
+                                        ),
+                                        onPressed: () =>
+                                            _launchURL(evaluation.link ?? ''),
+                                        icon: Icon(Icons.link,
+                                            color: ColorStyle().whiteColors),
+                                        label: Text(
+                                          'Buka Evaluasi',
+                                          style: FontFamily()
+                                              .buttonText
+                                              .copyWith(
+                                                  fontSize: 12,
+                                                  color:
+                                                      ColorStyle().whiteColors),
+                                        ),
+                                      ),
+                                    ),
                             ),
-                            const SizedBox(height: 4),
-                            ...(evaluation.feedbacks != null &&
-                                    evaluation.feedbacks!.isNotEmpty)
-                                ? [
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                          top: 8.0, bottom: 8.0),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: evaluation.feedbacks!
-                                            .map(
-                                              (feedback) => Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(
-                                                    "Feedback :",
-                                                    style: FontFamily()
-                                                        .boldText
-                                                        .copyWith(
-                                                            fontSize: 16,
-                                                            color: ColorStyle()
-                                                                .secondaryColors),
-                                                  ),
-                                                  const SizedBox(height: 8),
-                                                  Text('${feedback.content}',
-                                                      style: FontFamily()
-                                                          .regularText),
-                                                ],
-                                              ),
-                                            )
-                                            .toList(),
-                                      ),
-                                    ),
-                                  ]
-                                : [
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                          top: 8.0, bottom: 8.0),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            "Feedback :",
-                                            style: FontFamily()
-                                                .boldText
-                                                .copyWith(
-                                                    fontSize: 16,
-                                                    color: ColorStyle()
-                                                        .secondaryColors),
-                                          ),
-                                          const SizedBox(height: 8),
-                                          Text(
-                                            'Belum ada feedback',
-                                            style: FontFamily().regularText,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
                           ],
                         ),
                       ),
-                    ],
-                  ),
-                  Align(
-                    alignment: Alignment.bottomRight,
-                    child: evaluation.feedbacks != null &&
-                            evaluation.feedbacks!.isNotEmpty
-                        ? SizedBox(
-                            height: 40,
-                            width: 160,
-                            child: TextButton(
-                              style: TextButton.styleFrom(
-                                backgroundColor: ColorStyle().disableColors,
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 12, vertical: 8),
-                              ),
-                              onPressed: null, // Dinonaktifkan
-                              child: Text(
-                                'Selesai',
-                                style: FontFamily().buttonText.copyWith(
-                                      fontSize: 12,
-                                      color: ColorStyle().whiteColors,
-                                    ),
-                              ),
-                            ),
-                          )
-                        : SizedBox(
-                            height: 40,
-                            width: 160,
-                            child: TextButton.icon(
-                              style: TextButton.styleFrom(
-                                backgroundColor: ColorStyle().primaryColors,
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 12, vertical: 8),
-                              ),
-                              onPressed: () =>
-                                  _launchURL(evaluation.link ?? ''),
-                              icon: Icon(Icons.link,
-                                  color: ColorStyle().whiteColors),
-                              label: Text(
-                                'Buka Evaluasi',
-                                style: FontFamily().buttonText.copyWith(
-                                      fontSize: 12,
-                                      color: ColorStyle().whiteColors,
-                                    ),
-                              ),
-                            ),
-                          ),
-                  ),
-                ],
-              ),
-            ),
-          );
+                    );
+                  }).toList(),
+                );
+              },
+            );
+          } else {
+            return Center(child: Text('Tidak ada data'));
+          }
         },
       ),
     );

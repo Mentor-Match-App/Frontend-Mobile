@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mentormatch_apps/mentee/screen/Session/detail_session_mentor.dart';
+import 'package:mentormatch_apps/mentee/screen/session/detail_session_mentor.dart';
 import 'package:mentormatch_apps/mentee/service/session_mentor_service.dart';
 import 'package:mentormatch_apps/mentor/model/session_model.dart';
 import 'package:mentormatch_apps/style/color_style.dart';

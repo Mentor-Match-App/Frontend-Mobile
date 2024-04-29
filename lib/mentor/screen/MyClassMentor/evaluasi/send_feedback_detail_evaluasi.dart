@@ -183,7 +183,6 @@ class _DetailEvaluastionMenteeMentorScreenState
                               nameMentee: widget.menteeName,
                               classId: widget.classId,
                               currentMenteeId: widget.currentMenteeId,
-                              evaluations: widget.evaluations,
                             ),
                           ),
                         );

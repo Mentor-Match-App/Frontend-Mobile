@@ -1,7 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:mentormatch_apps/login-register/Login_screen.dart';
-import 'package:mentormatch_apps/login-register/choose_role_screen.dart';
+import 'package:mentormatch_apps/login/login_screen.dart';
+import 'package:mentormatch_apps/login/choose_role_screen.dart';
 import 'package:mentormatch_apps/mentee/provider/review_mentor_provider.dart';
 import 'package:mentormatch_apps/mentee/screen/bottom_mentee_screen.dart';
 import 'package:mentormatch_apps/mentor/provider/create_class_provider.dart';

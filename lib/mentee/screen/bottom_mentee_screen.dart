@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mentormatch_apps/mentee/screen/MyClassMentee/MyClass_list_mentee_screen.dart';
-import 'package:mentormatch_apps/mentee/screen/community_mentee__screen.dart';
+import 'package:mentormatch_apps/mentee/screen/my_class_mentee/MyClass_list_mentee_screen.dart';
+import 'package:mentormatch_apps/mentee/screen/community_mentee_screen.dart';
 import 'package:mentormatch_apps/mentee/screen/home_screen_mentee.dart';
 import 'package:mentormatch_apps/mentee/screen/profile/mentee_profile_screen.dart';
 import 'package:mentormatch_apps/widget/bottom_nav.dart';
