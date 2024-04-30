@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:mentormatch_apps/mentee/screen/premium_class/Kuliah/all_kuliah_screen.dart';
-import 'package:mentormatch_apps/mentee/screen/premium_class/Kuliah/computerS_kuliah_screen.dart';
-import 'package:mentormatch_apps/mentee/screen/premium_class/Kuliah/design_kuliah_screen.dart';
-import 'package:mentormatch_apps/mentee/screen/premium_class/Kuliah/electro_kulaih_screem.dart';
-import 'package:mentormatch_apps/mentee/screen/premium_class/Kuliah/ilkom_kuliah_screen.dart';
-import 'package:mentormatch_apps/mentee/screen/premium_class/Kuliah/information_kuliah_screen.dart';
-import 'package:mentormatch_apps/mentee/screen/premium_class/Kuliah/manajemen_kuliah_screen.dart';
-import 'package:mentormatch_apps/mentee/screen/premium_class/Kuliah/psikolog_kuliah_screen.dart';
-import 'package:mentormatch_apps/mentee/screen/premium_class/Kuliah/teacher_kuliah_screen.dart';
+import 'package:mentormatch_apps/mentee/screen/premium_class/kuliah/all_kuliah_screen.dart';
+import 'package:mentormatch_apps/mentee/screen/premium_class/kuliah/computer_science_kuliah_screen.dart';
+import 'package:mentormatch_apps/mentee/screen/premium_class/kuliah/design_kuliah_screen.dart';
+import 'package:mentormatch_apps/mentee/screen/premium_class/kuliah/electro_kulaih_screem.dart';
+import 'package:mentormatch_apps/mentee/screen/premium_class/kuliah/ilkom_kuliah_screen.dart';
+import 'package:mentormatch_apps/mentee/screen/premium_class/kuliah/information_kuliah_screen.dart';
+import 'package:mentormatch_apps/mentee/screen/premium_class/kuliah/manajemen_kuliah_screen.dart';
+import 'package:mentormatch_apps/mentee/screen/premium_class/kuliah/psikolog_kuliah_screen.dart';
+import 'package:mentormatch_apps/mentee/screen/premium_class/kuliah/teacher_kuliah_screen.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
 import 'package:mentormatch_apps/widget/category_card.dart';
@@ -267,7 +267,7 @@ class _KuliahScreenState extends State<KuliahScreen> {
                                 : isDesignActive
                                     ? DesignKuliahScreen()
                                     : isElektroActive
-                                        ?  ElectroKuliahScreen()
+                                        ? ElectroKuliahScreen()
                                         : isInformationActive
                                             ? InformationKuliahScreen()
                                             : isManajemenActive

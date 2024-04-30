@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:mentormatch_apps/mentor/model/category_Karier_model.dart';
-import 'package:mentormatch_apps/style/baseURl.dart';
+import 'package:mentormatch_apps/style/base_url.dart';
 
 class KarierServices {
   final Dio _dio = Dio();

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:mentormatch_apps/mentee/screen/premium_class/SMA/detail_class_mentor_SMA.dart';
+import 'package:mentormatch_apps/mentee/screen/premium_class/sma/detail_class_mentor_SMA.dart';
 import 'package:mentormatch_apps/mentor/model/category_SMA_model.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';

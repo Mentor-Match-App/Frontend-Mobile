@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart'; // Import Dio package
 import 'package:mentormatch_apps/mentor/model/create_class_models.dart';
-import 'package:mentormatch_apps/mentor/service/createClass_service.dart';
+import 'package:mentormatch_apps/mentor/service/create_class_service.dart';
 import 'package:mentormatch_apps/preferences/%20preferences_helper.dart';
 
 

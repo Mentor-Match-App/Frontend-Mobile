@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mentormatch_apps/mentee/screen/premium_class/SD/detail_mentor_SD_screen.dart';
+import 'package:mentormatch_apps/mentee/screen/premium_class/sd/detail_mentor_SD_screen.dart';
 import 'package:mentormatch_apps/mentee/service/service_SD_mentor.dart';
 import 'package:mentormatch_apps/mentor/model/category_SD_model.dart';
 import 'package:mentormatch_apps/style/color_style.dart';

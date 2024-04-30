@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:mentormatch_apps/mentor/model/category_kuliah_model.dart';
-import 'package:mentormatch_apps/style/baseURl.dart';
+import 'package:mentormatch_apps/style/base_url.dart';
 
 class KuliahServices {
   final Dio _dio = Dio();

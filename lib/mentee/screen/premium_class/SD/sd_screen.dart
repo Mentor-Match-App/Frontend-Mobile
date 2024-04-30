@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:mentormatch_apps/mentee/screen/premium_class/SD/all_sd_screen.dart';
-import 'package:mentormatch_apps/mentee/screen/premium_class/SD/bahasa_sd_screen.dart';
-import 'package:mentormatch_apps/mentee/screen/premium_class/SD/math_sd_scree.dart';
-import 'package:mentormatch_apps/mentee/screen/premium_class/SD/sains_sd_screen.dart';
-import 'package:mentormatch_apps/mentee/screen/premium_class/SD/tech_sd_screen.dart';
+import 'package:mentormatch_apps/mentee/screen/premium_class/sd/all_sd_screen.dart';
+import 'package:mentormatch_apps/mentee/screen/premium_class/sd/bahasa_sd_screen.dart';
+import 'package:mentormatch_apps/mentee/screen/premium_class/sd/math_sd_scree.dart';
+import 'package:mentormatch_apps/mentee/screen/premium_class/sd/sains_sd_screen.dart';
+import 'package:mentormatch_apps/mentee/screen/premium_class/sd/tech_sd_screen.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
 import 'package:mentormatch_apps/widget/category_card.dart';

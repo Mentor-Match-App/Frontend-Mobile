@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mentormatch_apps/mentor/screen/bottom_mentor_screen.dart';
-import 'package:mentormatch_apps/mentor/screen/daftar_mentor/syaratketentuan_daftar_mentor/registrasi_ulang_mentor.dart';
+import 'package:mentormatch_apps/mentor/screen/daftar_mentor/syarat_ketentuan_daftar_mentor/registrasi_ulang_mentor.dart';
 import 'package:mentormatch_apps/mentor/service/profile_service.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
 

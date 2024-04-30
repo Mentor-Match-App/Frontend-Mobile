@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:mentormatch_apps/mentee/screen/premium_class/Karier/all_karier_screen.dart';
-import 'package:mentormatch_apps/mentee/screen/premium_class/Karier/back_end_karier_screen.dart';
-import 'package:mentormatch_apps/mentee/screen/premium_class/Karier/data_analys_karier_screen.dart';
-import 'package:mentormatch_apps/mentee/screen/premium_class/Karier/design_karier_screen.dart';
-import 'package:mentormatch_apps/mentee/screen/premium_class/Karier/finance_karier_screen.dart';
-import 'package:mentormatch_apps/mentee/screen/premium_class/Karier/front_end_karier_screen.dart';
-import 'package:mentormatch_apps/mentee/screen/premium_class/Karier/marketing_karier_screen.dart';
-import 'package:mentormatch_apps/mentee/screen/premium_class/Karier/qualityA_karier_screen.dart';
-import 'package:mentormatch_apps/mentee/screen/premium_class/Karier/security_engineer_karier_screen.dart';
+import 'package:mentormatch_apps/mentee/screen/premium_class/karier/all_karier_screen.dart';
+import 'package:mentormatch_apps/mentee/screen/premium_class/karier/back_end_karier_screen.dart';
+import 'package:mentormatch_apps/mentee/screen/premium_class/karier/data_analyst_karier_screen.dart';
+import 'package:mentormatch_apps/mentee/screen/premium_class/karier/design_karier_screen.dart';
+import 'package:mentormatch_apps/mentee/screen/premium_class/karier/finance_karier_screen.dart';
+import 'package:mentormatch_apps/mentee/screen/premium_class/karier/front_end_karier_screen.dart';
+import 'package:mentormatch_apps/mentee/screen/premium_class/karier/marketing_karier_screen.dart';
+import 'package:mentormatch_apps/mentee/screen/premium_class/karier/quality_assurance_karier_screen.dart';
+
+import 'package:mentormatch_apps/mentee/screen/premium_class/karier/security_engineer_karier_screen.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
 import 'package:mentormatch_apps/widget/category_card.dart';

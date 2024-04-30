@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mentormatch_apps/mentee/screen/premium_class/SMP/detail_class_mentor_SMP.dart';
+import 'package:mentormatch_apps/mentee/screen/premium_class/smp/detail_class_mentor_SMP.dart';
 import 'package:mentormatch_apps/mentor/model/category_SMP_model.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';

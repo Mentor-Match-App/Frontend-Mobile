@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mentormatch_apps/mentor/model/create_session_model.dart';
-import 'package:mentormatch_apps/mentor/service/createSession_service.dart';
+import 'package:mentormatch_apps/mentor/service/create_session_service.dart';
 import 'package:mentormatch_apps/preferences/%20preferences_helper.dart';
 
 class CreateSessionProvider with ChangeNotifier {

@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:mentormatch_apps/mentee/service/bookingClassService/bookclass_model.dart';
-import 'package:mentormatch_apps/style/baseURl.dart';
+import 'package:mentormatch_apps/style/base_url.dart';
 
 Future<BookingResultClass> bookClass(String classId, String userId) async {
 

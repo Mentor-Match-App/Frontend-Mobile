@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:mentormatch_apps/mentee/model/mentee_person.dart';
-import 'package:mentormatch_apps/style/baseURl.dart';
+import 'package:mentormatch_apps/style/base_url.dart';
 
 
 class MenteeService {

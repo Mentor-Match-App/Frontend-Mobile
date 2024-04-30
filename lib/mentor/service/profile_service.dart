@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:mentormatch_apps/mentor/model/profile_model.dart';
-import 'package:mentormatch_apps/style/baseURl.dart';
+import 'package:mentormatch_apps/style/base_url.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileService {

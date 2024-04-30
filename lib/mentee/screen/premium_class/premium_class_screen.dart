@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:mentormatch_apps/mentee/screen/premium_class/Karier/Karier_screen.dart';
-import 'package:mentormatch_apps/mentee/screen/premium_class/Kuliah/Kuliah_screen.dart';
-import 'package:mentormatch_apps/mentee/screen/premium_class/SD/sd_screen.dart';
-import 'package:mentormatch_apps/mentee/screen/premium_class/SMA/SMA_screen.dart';
-import 'package:mentormatch_apps/mentee/screen/premium_class/SMP/SMP_screen.dart';
+import 'package:mentormatch_apps/mentee/screen/premium_class/karier/karier_screen.dart';
+import 'package:mentormatch_apps/mentee/screen/premium_class/kuliah/kuliah_screen.dart';
+import 'package:mentormatch_apps/mentee/screen/premium_class/sd/sd_screen.dart';
+import 'package:mentormatch_apps/mentee/screen/premium_class/sma/SMA_screen.dart';
+import 'package:mentormatch_apps/mentee/screen/premium_class/smp/SMP_screen.dart';
 import 'package:mentormatch_apps/widget/card_premium_class.dart';
 import 'package:mentormatch_apps/widget/navbar.dart';
 

@@ -8,7 +8,7 @@ import 'package:mentormatch_apps/mentee/screen/premium_class/premium_class_scree
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
 import 'package:mentormatch_apps/widget/button.dart';
-import 'package:mentormatch_apps/widget/flushsBar_widget.dart';
+import 'package:mentormatch_apps/widget/flushs_bar_widget.dart';
 
 class DetailBookingClass extends StatefulWidget {
   final int uniqueCode;

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mentormatch_apps/mentee/screen/premium_class/Karier/detail_mentor_karier_screen.dart';
+import 'package:mentormatch_apps/mentee/screen/premium_class/karier/detail_mentor_karier_screen.dart';
 import 'package:mentormatch_apps/mentee/screen/premium_class/Kuliah/detail_mentor_kuliah_screen.dart';
 import 'package:mentormatch_apps/mentee/service/service_Karier.dart';
 import 'package:mentormatch_apps/mentor/model/category_Karier_model.dart';
