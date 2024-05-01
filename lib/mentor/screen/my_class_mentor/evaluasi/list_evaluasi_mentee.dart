@@ -67,8 +67,27 @@ class _ListEvaluasiMenteeState extends State<ListEvaluasiMentee> {
               itemBuilder: (context, index) {
                 var evaluations = userClass[index].evaluations ?? [];
 
+                // Filter evaluasi yang memiliki feedback
+                var evaluationsWithFeedback = evaluations
+                    .where((evaluation) =>
+                        evaluation.feedbacks != null &&
+                        evaluation.feedbacks!.isNotEmpty)
+                    .toList();
+                // Filter evaluasi yang tidak memiliki feedback
+                var evaluationsWithoutFeedback = evaluations
+                    .where((evaluation) =>
+                        evaluation.feedbacks == null ||
+                        evaluation.feedbacks!.isEmpty)
+                    .toList();
+
+                // Gabungkan kembali evaluasi dengan feedback di atas
+                var sortedEvaluations = [
+                  ...evaluationsWithFeedback,
+                  ...evaluationsWithoutFeedback
+                ];
+
                 return Column(
-                  children: evaluations.map((evaluation) {
+                  children: sortedEvaluations.map((evaluation) {
                     var feedbacksForCurrentMentee = evaluation.feedbacks
                             ?.where((feedback) =>
                                 feedback.menteeId == widget.currentMenteeId)
