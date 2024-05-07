@@ -63,7 +63,6 @@ class _DetailMentorSessionsNewState extends State<DetailMentorSessionsNew> {
         ? DateFormat('dd MMMM yyyy').format(parsedJadwal)
         : "No scheduled session";
 
-// Gunakan formattedJadwal sesuai kebutuhan Anda
 
     return Scaffold(
       appBar: AppBar(
@@ -187,6 +186,9 @@ class _DetailMentorSessionsNewState extends State<DetailMentorSessionsNew> {
                               color: ColorStyle().primaryColors,
                             ),
                           ),
+                          SizedBox(
+                            height: 8,
+                          ),
                           SingleChildScrollView(
                             scrollDirection: Axis.horizontal,
                             child: Row(
@@ -197,7 +199,7 @@ class _DetailMentorSessionsNewState extends State<DetailMentorSessionsNew> {
                             ),
                           ),
                           const SizedBox(
-                            height: 12,
+                            height: 24,
                           ),
                           Container(
                             width: double.infinity,

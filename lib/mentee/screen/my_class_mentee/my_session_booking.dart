@@ -5,7 +5,6 @@ import 'package:mentormatch_apps/mentor/service/my_class_service.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
 import 'package:mentormatch_apps/widget/button.dart';
-
 import 'package:url_launcher/url_launcher.dart';
 
 class MySessionBooking extends StatefulWidget {
@@ -90,7 +89,7 @@ class _MySessionBookingState extends State<MySessionBooking> {
           return Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
           return Center(child: Text('Error: ${snapshot.error}'));
-        } else if (snapshot.hasData) {
+        } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
           final List<ParticipantMyClass> participants = snapshot.data!;
           return SingleChildScrollView(
             child: Column(
@@ -216,8 +215,15 @@ class _MySessionBookingState extends State<MySessionBooking> {
               }).toList(),
             ),
           );
-         } else {
-          return const Text('Kamu belum memiliki session saat ini');
+        } else {
+          return Container(
+              width: double.infinity,
+              height: MediaQuery.of(context).size.height / 2.0,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child:
+                    Center(child: Text('Kamu belum memiliki session saat ini')),
+              ));
         }
       },
     );

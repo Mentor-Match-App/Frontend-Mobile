@@ -20,6 +20,7 @@ class FormCreateSessionScreen extends StatefulWidget {
 }
 
 class _FormCreateSessionScreenState extends State<FormCreateSessionScreen> {
+  bool _isLoading = false;
   TextEditingController topicController = TextEditingController();
   TextEditingController dateController = TextEditingController();
   TextEditingController startTimeController = TextEditingController();
@@ -55,17 +56,17 @@ class _FormCreateSessionScreenState extends State<FormCreateSessionScreen> {
 
   void submitSession() async {
     DateTime? date;
-    try {
-      date = DateFormat('yyyy-MM-dd').parse(dateController.text);
-    } catch (e) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('Format tanggal tidak valid')));
-      return;
-    }
-
     DateTime startTime;
     DateTime endTime;
+
     try {
+      setState(() {
+        _isLoading = true;
+      });
+
+      // Parse date from the dateController
+      date = DateFormat('yyyy-MM-dd').parse(dateController.text);
+
       // Parse String time from startTimeController and endTimeController into DateTime objects
       DateTime selectedDate =
           DateFormat('yyyy-MM-dd').parse(dateController.text);
@@ -79,14 +80,38 @@ class _FormCreateSessionScreenState extends State<FormCreateSessionScreen> {
       endTime = DateTime(selectedDate.year, selectedDate.month,
           selectedDate.day, endTimeParsed.hour, endTimeParsed.minute);
     } catch (e) {
+      // Stop showing CircularProgressIndicator and show Snackbar for required fields
+      setState(() {
+        _isLoading = false;
+      });
       ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Format waktu tidak valid')));
+          const SnackBar(content: Text('Semua field harus diisi')));
+      return;
+    }
+
+    // Check if all text fields are filled
+    if (categoryController.text.isEmpty ||
+        descriptionController.text.isEmpty ||
+        topicController.text.isEmpty ||
+        dateController.text.isEmpty ||
+        startTimeController.text.isEmpty ||
+        endTimeController.text.isEmpty) {
+      // If any text field is empty, show top snackbar with the message
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Semua field harus diisi'),
+        behavior: SnackBarBehavior.floating,
+      ));
+      // Stop showing CircularProgressIndicator
+      setState(() {
+        _isLoading = false;
+      });
       return;
     }
 
     bool success =
         await Provider.of<CreateSessionProvider>(context, listen: false)
             .submitSession(
+      context: context,
       category: categoryController.text,
       date: date,
       startTime: startTime,
@@ -95,19 +120,22 @@ class _FormCreateSessionScreenState extends State<FormCreateSessionScreen> {
       description: descriptionController.text,
       title: topicController.text,
     );
-    if (!mounted) return;
-    if (success) {
+
+    // Check if success and if there was no error already handled by provider
+    if (success && context != null && ScaffoldMessenger.of(context).mounted) {
+      // Navigation is only done if context is available and still mounted
+      // ignore: use_build_context_synchronously
       Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (context) => SuccesCreateSessionScreen()),
         (route) => false,
       );
     } else {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('Gagal membuat sesi')));
+      // Stop showing CircularProgressIndicator
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
-
-  //
 
   @override
   Widget build(BuildContext context) {
@@ -262,11 +290,15 @@ class _FormCreateSessionScreenState extends State<FormCreateSessionScreen> {
                 const SizedBox(
                   height: 24,
                 ),
-                ElevatedButtonWidget(
-                  onPressed: () {
-                    submitSession();
-                  },
-                  title: "Kirim",
+                SizedBox(
+                  child: _isLoading
+                      ? const CircularProgressIndicator()
+                      : ElevatedButtonWidget(
+                          onPressed: () {
+                            submitSession();
+                          },
+                          title: "Kirim",
+                        ),
                 ),
               ],
             ),

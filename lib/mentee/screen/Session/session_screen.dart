@@ -138,12 +138,15 @@ class _SessionScreenState extends State<SessionScreen> {
         actions: [
           AppBarPremiumClass(),
         ],
-        title: Text(
-          'Session',
-          style: FontFamily().boldText.copyWith(
-                color: ColorStyle().primaryColors,
-                fontSize: 14.0,
-              ),
+        title: Align(
+          alignment: Alignment.centerLeft,
+          child: Text(
+            'Session',
+            style: FontFamily().boldText.copyWith(
+                  color: ColorStyle().primaryColors,
+                  fontSize: 14.0,
+                ),
+          ),
         ),
       ),
       body: ListView(

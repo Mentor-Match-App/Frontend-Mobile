@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mentormatch_apps/mentee/model/my_class_model.dart';
 import 'package:mentormatch_apps/mentee/screen/my_class_mentee/akses_materi_my_class.dart';
-import 'package:mentormatch_apps/mentee/screen/my_class_mentee/evalusi_mentee_screen.dart';
+import 'package:mentormatch_apps/mentee/screen/my_class_mentee/evaluasi_mentee_screen.dart';
 import 'package:mentormatch_apps/mentee/screen/my_class_mentee/review_mentor_screen.dart';
 import 'package:mentormatch_apps/mentee/screen/notification_mentee_screen.dart';
 import 'package:mentormatch_apps/style/color_style.dart';

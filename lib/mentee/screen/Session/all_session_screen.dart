@@ -77,7 +77,7 @@ class _AllSessionScreenState extends State<AllSessionScreen> {
               int currentParticipants = sessionElement.participant?.length ?? 0;
               int availableSlots = maxParticipants - currentParticipants;
               return Container(
-                margin: const EdgeInsets.only(right: 8.0),
+                margin: const EdgeInsets.only(right: 8.0, bottom: 16),
                 height: 250,
                 width: 150,
                 child: CardItemMentor(

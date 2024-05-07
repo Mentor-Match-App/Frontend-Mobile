@@ -1,7 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:mentormatch_apps/login/login_screen.dart';
 import 'package:mentormatch_apps/login/choose_role_screen.dart';
+import 'package:mentormatch_apps/login/login_screen.dart';
 import 'package:mentormatch_apps/mentee/provider/review_mentor_provider.dart';
 import 'package:mentormatch_apps/mentee/screen/bottom_mentee_screen.dart';
 import 'package:mentormatch_apps/mentor/provider/create_class_provider.dart';
@@ -61,6 +61,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => ReviewProvider()),
       ],
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),

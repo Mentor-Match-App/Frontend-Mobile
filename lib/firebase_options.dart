@@ -70,7 +70,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '121006467880',
     projectId: 'mentor-match-412713',
     storageBucket: 'mentor-match-412713.appspot.com',
-    androidClientId: '121006467880-u9h5rr2d8a6sgmf6hihs9gmpvcb37eqa.apps.googleusercontent.com',
+    androidClientId: '121006467880-h8c87puf5phhsem47thknqdasudpuc4s.apps.googleusercontent.com',
     iosClientId: '121006467880-f6ir9ufdr3if5k426hqhi2b4gr7d94tr.apps.googleusercontent.com',
     iosBundleId: 'com.example.mentormatchApps',
   );

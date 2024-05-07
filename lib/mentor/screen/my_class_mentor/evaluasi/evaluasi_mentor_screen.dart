@@ -49,6 +49,7 @@ class _EvaluasiMentorScreenState extends State<EvaluasiMentorScreen> {
   }
 
   void _sendEvaluation() async {
+    await Future.delayed(Duration(seconds: 1));
     String title = _materiEvaluasiController.text;
     String link = _linkEvaluasiController.text;
     if (title.isEmpty || link.isEmpty) {
@@ -73,7 +74,11 @@ class _EvaluasiMentorScreenState extends State<EvaluasiMentorScreen> {
         showTopSnackBar(context, responseMessage,
             leftBarIndicatorColor: ColorStyle().succesColors);
         // Bersihkan form setelah berhasil
+
+        _linkEvaluasiController.clear(); // Mengosongkan nilai controller
         setState(() {
+          selectedMateriEvaluasi = null;
+
           widget.evaluasi.add(
             Evaluation(topic: title, link: link),
           );
@@ -283,16 +288,26 @@ class _EvaluasiMentorScreenState extends State<EvaluasiMentorScreen> {
                         SizedBox(height: 12),
                         Align(
                           alignment: Alignment.centerRight,
-                          child: SmallElevatedButton(
-                            onPressed: _sendEvaluation,
-                            height: 40,
-                            width: 118,
-                            title: "Kirim",
-                            style: FontFamily().buttonText.copyWith(
-                                  fontSize: 12,
-                                  color: ColorStyle().whiteColors,
+                          child: _isLoading
+                              ? CircularProgressIndicator() // Tampilkan indikator loading jika sedang loading
+                              : SmallElevatedButton(
+                                  onPressed: () async {
+                                    setState(() {
+                                      _isLoading = true;
+                                    });
+                                    _sendEvaluation();
+                                    setState(() {
+                                      _isLoading = false;
+                                    });
+                                  },
+                                  height: 40,
+                                  width: 118,
+                                  title: "Kirim",
+                                  style: FontFamily().buttonText.copyWith(
+                                        fontSize: 12,
+                                        color: ColorStyle().whiteColors,
+                                      ),
                                 ),
-                          ),
                         ),
                       ],
                     ),
@@ -319,7 +334,6 @@ class _EvaluasiMentorScreenState extends State<EvaluasiMentorScreen> {
                                 MaterialPageRoute(
                                   builder: (context) =>
                                       DetailEvaluastionMenteeMentorScreen(
-                                      
                                     feedbacks: widget.feedbacks,
                                     learningMaterial: widget.learningMaterial,
                                     transactions: widget.transactions,

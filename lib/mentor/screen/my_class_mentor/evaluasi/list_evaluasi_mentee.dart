@@ -95,11 +95,15 @@ class _ListEvaluasiMenteeState extends State<ListEvaluasiMentee> {
                         [];
 
                     return Padding(
-                      padding: const EdgeInsets.all(12.0),
+                      padding: const EdgeInsets.only(
+                          left: 24.0, right: 24.0, bottom: 24.0),
                       child: Container(
+                        margin: const EdgeInsets.only(
+                          right: 4.0,
+                          left: 4.0,
+                        ),
                         constraints: BoxConstraints(
                             maxWidth: MediaQuery.of(context).size.width),
-                        margin: const EdgeInsets.all(8.0),
                         padding: const EdgeInsets.all(12.0),
                         decoration: BoxDecoration(
                           borderRadius:
@@ -113,10 +117,10 @@ class _ListEvaluasiMenteeState extends State<ListEvaluasiMentee> {
                               children: [
                                 Image.asset(
                                   'assets/Handoff/icon/MyClass/evaluasi_icon.png',
-                                  width: 100,
-                                  height: 100,
+                                  width: 80,
+                                  height: 80,
                                 ),
-                                const SizedBox(width: 8),
+                                const SizedBox(width: 4),
                                 Expanded(
                                   child: Column(
                                     crossAxisAlignment:
@@ -126,7 +130,7 @@ class _ListEvaluasiMenteeState extends State<ListEvaluasiMentee> {
                                         children: [
                                           Expanded(
                                             child: Text(
-                                              "Topik : ${evaluation.topic}",
+                                              "${evaluation.topic}",
                                               style: FontFamily()
                                                   .boldText
                                                   .copyWith(

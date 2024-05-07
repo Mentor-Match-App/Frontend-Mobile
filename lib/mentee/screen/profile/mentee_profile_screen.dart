@@ -146,8 +146,9 @@ class _ProfileMenteeScreenState extends State<ProfileMenteeScreen> {
                         child: Column(
                           children: [
                             ProfileAvatar(
-                              imageUrl: mentee?.user!.photoUrl ?? '',
-                            ),
+                                // user placeholder image if user does not have a photo
+                                imageUrl: mentee?.user?.photoUrl ??
+                                    'https://via.placeholder.com/150'),
                             SizedBox(
                               height:
                                   40, // Adjust the height to ensure enough space for the Stack

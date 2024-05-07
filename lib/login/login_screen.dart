@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:mentormatch_apps/login/choose_role_screen.dart';
-import 'package:mentormatch_apps/mentor/service/login_service.dart';
 import 'package:mentormatch_apps/mentee/screen/bottom_mentee_screen.dart';
 import 'package:mentormatch_apps/mentor/screen/bottom_mentor_screen.dart';
 import 'package:mentormatch_apps/mentor/screen/daftar_mentor/verification_regist.dart';
+import 'package:mentormatch_apps/mentor/service/login_service.dart';
 import 'package:mentormatch_apps/widget/button.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -90,82 +90,64 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  @override
+@override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Image.asset('assets/Handoff/logo/LogoMobile.png'),
+        title: Align(
+          alignment: Alignment.centerLeft,
+          child: Image.asset('assets/Handoff/logo/LogoMobile.png'),
+        ),
       ),
-      body: ListView(
-        children: [
-          // Widget UI Login
-          Padding(
-            padding: const EdgeInsets.all(20),
-            child: loginUI(),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget loginUI() {
-    return Center(
-      child: Column(
-        children: [
-          Image.asset('assets/Handoff/ilustrator/first screen.png'),
-          Padding(
-            padding: const EdgeInsets.all(20),
+      body: Center(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                // Widget UI teks dan tombol login
-                welcomeText(),
-                loginButton(),
+                Image.asset('assets/Handoff/ilustrator/first screen.png'),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'Selamat Datang di Aplikasi Mentor Terbaik',
+                    style: GoogleFonts.poppins(
+                      fontWeight: FontWeight.w500,
+                      color: Color(0xff0A1737),
+                      fontSize: 20,
+                    ),
+                    textAlign: TextAlign.left,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  'Dengan Mentormatch, Anda dapat terhubung dengan mentor yang berpengalaman dan inspiratif di berbagai bidang.',
+                  style: GoogleFonts.poppins(
+                    fontWeight: FontWeight.w300,
+                    color: Colors.black,
+                    fontSize: 14,
+                  ),
+                  textAlign: TextAlign.left,
+                ),
+                const SizedBox(height: 20),
+                ElevatedButtonWidget(
+                  onPressed: _isLoggingIn
+                      ? null
+                      : () async {
+                          await signInWithGoogle();
+                        },
+                  title: "Login with Google Account",
+                ),
+                SizedBox(
+                  height: 80,
+                ),
               ],
             ),
           ),
-        ],
+        ),
       ),
     );
   }
 
-  Widget welcomeText() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const SizedBox(height: 24),
-        Text(
-          'Selamat Datang di Aplikasi Mentor Terbaik',
-          style: GoogleFonts.poppins(
-            fontWeight: FontWeight.w500,
-            color: Color(0xff0A1737),
-            fontSize: 20,
-          ),
-          textAlign: TextAlign.left,
-        ),
-        const SizedBox(height: 12),
-        Text(
-          'Dengan Mentormatch, Anda dapat terhubung dengan mentor yang berpengalaman dan inspiratif di berbagai bidang.',
-          style: GoogleFonts.poppins(
-            fontWeight: FontWeight.w300,
-            color: Colors.black,
-            fontSize: 12,
-          ),
-          textAlign: TextAlign.left,
-        ),
-        const SizedBox(height: 20),
-      ],
-    );
-  }
-
-  Widget loginButton() {
-    return ElevatedButtonWidget(
-      onPressed: _isLoggingIn
-          ? null
-          : () async {
-              await signInWithGoogle();
-            },
-      title: "Login with Google Account",
-    );
-  }
 }

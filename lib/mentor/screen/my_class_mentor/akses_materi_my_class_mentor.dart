@@ -1,4 +1,3 @@
-import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:mentormatch_apps/mentor/model/my_class_mentor_model.dart';
 import 'package:mentormatch_apps/mentor/service/sent_materi_service.dart';
@@ -126,12 +125,11 @@ class _MyMateriMentorState extends State<MyMateriMentor> {
             child: _buildFormSection(),
           ),
           SliverGrid(
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              childAspectRatio: 3 / 3.5,
-              crossAxisSpacing: 2,
-              mainAxisSpacing: 2,
-            ),
+            gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                crossAxisSpacing: 4, //lebar
+                mainAxisSpacing: 10, //tinggi
+                mainAxisExtent: 180,
+                maxCrossAxisExtent: 200),
             delegate: SliverChildBuilderDelegate(
               (BuildContext context, int index) {
                 return _buildGridItem(index);
@@ -146,58 +144,76 @@ class _MyMateriMentorState extends State<MyMateriMentor> {
 
   Widget _buildFormSection() {
     // Kode untuk membangun bagian form
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: const BorderRadius.all(
-          Radius.circular(4),
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 24, left: 12, right: 12, top: 0),
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: const BorderRadius.all(
+            Radius.circular(4),
+          ),
+          border: Border.all(color: ColorStyle().tertiaryColors, width: 2),
         ),
-        border: Border.all(color: ColorStyle().tertiaryColors, width: 2),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 12, bottom: 12),
-              child: Text(
-                "Kirim Materi Pembelajaran",
-                style: FontFamily()
-                    .boldText
-                    .copyWith(color: ColorStyle().primaryColors, fontSize: 16),
+        child: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 12, bottom: 12),
+                child: Text(
+                  "Kirim Materi Pembelajaran",
+                  style: FontFamily().boldText.copyWith(
+                      color: ColorStyle().primaryColors, fontSize: 16),
+                ),
               ),
-            ),
-            TittleTextField(
-              title: "Materi Pembelajaran",
-              color: ColorStyle().secondaryColors,
-            ),
-            TextFieldWidget(
-              controller: _materiPembelajaranController,
-              hintText: "nama topik materi evaluasi",
-            ),
-            TittleTextField(
-              title: "Link Evaluasi",
-              color: ColorStyle().secondaryColors,
-            ),
-            TextFieldWidget(
-              controller: _linkMateriPembelajaranController,
-              hintText: "masukkan link evaluasi",
-            ),
-            SizedBox(height: 12),
-            Align(
-              alignment: Alignment.centerRight,
-              child: SmallElevatedButton(
-                onPressed: _isLoading ? null : _sendMaterial,
-                height: 40,
-                width: 118,
-                title: "Kirim",
-                style: FontFamily().buttonText.copyWith(
-                      fontSize: 12,
-                      color: ColorStyle().whiteColors,
-                    ),
+              TittleTextField(
+                title: "Materi Pembelajaran",
+                color: ColorStyle().secondaryColors,
               ),
-            ),
-          ],
+              TextFieldWidget(
+                controller: _materiPembelajaranController,
+                hintText: "nama topik materi evaluasi",
+              ),
+              TittleTextField(
+                title: "Link Evaluasi",
+                color: ColorStyle().secondaryColors,
+              ),
+              TextFieldWidget(
+                controller: _linkMateriPembelajaranController,
+                hintText: "masukkan link evaluasi",
+              ),
+              SizedBox(height: 12),
+              Align(
+                alignment: Alignment.centerRight,
+                child: _isLoading
+                    ? CircularProgressIndicator() // Tampilkan indikator loading jika sedang loading
+                    : SmallElevatedButton(
+                        onPressed: _isLoading
+                            ? null
+                            : () {
+                                // Ketika tombol ditekan, atur _isLoading menjadi true
+                                setState(() {
+                                  _isLoading = true;
+                                });
+                                // Lakukan aksi yang diperlukan (contoh: _sendMaterial)
+                                _sendMaterial().then((_) {
+                                  // Ketika aksi selesai, atur _isLoading menjadi false
+                                  setState(() {
+                                    _isLoading = false;
+                                  });
+                                });
+                              },
+                        height: 40,
+                        width: 118,
+                        title: "Kirim",
+                        style: FontFamily().buttonText.copyWith(
+                              fontSize: 12,
+                              color: ColorStyle().whiteColors,
+                            ),
+                      ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -207,7 +223,7 @@ class _MyMateriMentorState extends State<MyMateriMentor> {
     // Kode untuk membangun tiap item di grid
     final material = widget.learningMaterial[materialIndex];
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.only(left: 12, right: 12, bottom: 8),
       child: Container(
         height: 200,
         width: 200,
@@ -227,14 +243,6 @@ class _MyMateriMentorState extends State<MyMateriMentor> {
           padding: const EdgeInsets.all(8.0),
           child: Column(
             children: [
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text("Materi ${materialIndex + 1}",
-                    style: FontFamily().boldText),
-              ),
-              const SizedBox(
-                height: 8,
-              ),
               Image.asset('assets/Handoff/icon/MyClass/materi_icon.png'),
               const SizedBox(
                 height: 8,

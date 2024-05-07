@@ -26,12 +26,7 @@ class _CommunityMenteeScreenState extends State<CommunityMenteeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Image.asset('assets/Handoff/logo/LogoMobile.png'),
-        actions: [
-          PopMenuButtonWidget(),
-        ],
-      ),
+         appBar: AppBar(title: AppBarHomePage()),
       body: FutureBuilder<CommunityModels>(
         future: communityService.fetchCommunities(),
         builder: (context, snapshot) {

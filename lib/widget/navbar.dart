@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:mentormatch_apps/mentee/screen/session/session_screen.dart';
 import 'package:mentormatch_apps/mentee/screen/notification_mentee_screen.dart';
 import 'package:mentormatch_apps/mentee/screen/premium_class/premium_class_screen.dart';
+import 'package:mentormatch_apps/mentee/screen/session/session_screen.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
 
@@ -18,6 +18,7 @@ class _PopMenuButtonWidgetState extends State<PopMenuButtonWidget> {
     return PopupMenuButton<int>(
       // add icon, by default "3 dot" icon
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Icon(Icons.arrow_drop_down_outlined),
           Text(
@@ -185,8 +186,11 @@ class _AppBarHomePageState extends State<AppBarHomePage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Image.asset('assets/Handoff/logo/LogoMobile.png',
-            width: 120, height:120,),
+        Image.asset(
+          'assets/Handoff/logo/LogoMobile.png',
+          width: 120,
+          height: 120,
+        ),
         // SizedBox(
         //   width: 20,
         // ),

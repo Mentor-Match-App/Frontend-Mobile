@@ -29,7 +29,6 @@ class _MyClassMenteeListScreenState extends State<MyClassMenteeListScreen> {
       }
     });
   }
-  
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +37,11 @@ class _MyClassMenteeListScreenState extends State<MyClassMenteeListScreen> {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Image.asset('assets/Handoff/logo/LogoMobile.png'),
+            Image.asset(
+              'assets/Handoff/logo/LogoMobile.png',
+              width: 120,
+              height: 120,
+            ),
             IconButton(
               onPressed: () {
                 Navigator.push(

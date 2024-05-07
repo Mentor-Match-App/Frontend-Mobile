@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
 
-
 class CategoriCardWidget extends StatefulWidget {
   final bool isActive;
   final String img;
@@ -109,13 +108,6 @@ class _CardMyClassState extends State<CardMyClass> {
         width: 89,
         height: 89,
         decoration: BoxDecoration(
-          boxShadow: [
-            BoxShadow(
-              color: ColorStyle().disableColors,
-              blurRadius: 10,
-              offset: const Offset(2, 4),
-            ),
-          ],
           borderRadius: BorderRadius.circular(12),
           color: ColorStyle().primaryColors,
         ),
@@ -181,4 +173,3 @@ class _InterestCardMentorState extends State<InterestCardMentor> {
     );
   }
 }
-

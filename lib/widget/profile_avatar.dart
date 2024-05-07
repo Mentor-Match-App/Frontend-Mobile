@@ -42,9 +42,26 @@ class _ProfileAvatarState extends State<ProfileAvatar> {
             fit: BoxFit.cover,
             width: 120,
             height: 120,
+            errorBuilder: (BuildContext context, Object exception,
+                StackTrace? stackTrace) {
+              // Penanganan kesalahan: Tampilkan gambar placeholder jika terjadi kesalahan
+              return PlaceholderImageWidget();
+            },
           ),
         ),
       ),
+    );
+  }
+}
+
+class PlaceholderImageWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Image.asset(
+      'https://via.placeholder.com/150',
+      fit: BoxFit.cover, // Sesuaikan dengan kebutuhan
+      width: 120, // Atur lebar sesuai kebutuhan
+      height: 120, // Atur tinggi sesuai kebutuhan
     );
   }
 }

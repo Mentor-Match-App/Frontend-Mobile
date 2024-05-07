@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:mentormatch_apps/mentee/screen/notification_mentee_screen.dart';
 import 'package:mentormatch_apps/mentor/model/my_class_mentor_model.dart';
 import 'package:mentormatch_apps/mentor/screen/my_class_mentor/evaluasi/list_evaluasi_mentee.dart';
+import 'package:mentormatch_apps/mentor/screen/notification_mentor_screen.dart';
 import 'package:mentormatch_apps/mentor/service/send_feedback_evaluation.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
@@ -69,11 +69,17 @@ class _DetailEvaluastionMenteeMentorScreenState
 
   ///sendfeedback///
   void _sendFeedback() async {
+    setState(() {
+      _isLoading = true;
+    });
     if (
         // ignore: unrelated_type_equality_checks
         selectedMateriFeedback == null ||
             _hasilEvaluasiController.text.isEmpty ||
             _nilaiEvaluasiController.text.isEmpty) {
+      setState(() {
+        _isLoading = false;
+      });
       // Tampilkan pesan error jika salah satu field kosong
       showTopSnackBar(context, "Field tidak boleh kosong",
           leftBarIndicatorColor: ColorStyle().errorColors);
@@ -88,6 +94,10 @@ class _DetailEvaluastionMenteeMentorScreenState
         widget.currentMenteeId,
         _hasilEvaluasiController.text,
         int.parse(_nilaiEvaluasiController.text));
+
+    setState(() {
+      _isLoading = false;
+    });
 
     if (errorMessage == null) {
       // ignore: use_build_context_synchronously
@@ -134,11 +144,9 @@ class _DetailEvaluastionMenteeMentorScreenState
           IconButton(
             onPressed: () {
               Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => NotificationMenteeScreen(),
-                ),
-              );
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => NotificationMentorScreen()));
             },
             icon: Icon(
               Icons.notifications_none_outlined,
@@ -307,18 +315,20 @@ class _DetailEvaluastionMenteeMentorScreenState
                             const SizedBox(height: 12),
                             Align(
                               alignment: Alignment.centerRight,
-                              child: SmallElevatedButton(
-                                onPressed: () {
-                                  _sendFeedback();
-                                },
-                                height: 40,
-                                width: 118,
-                                title: "Kirim",
-                                style: FontFamily().buttonText.copyWith(
-                                      fontSize: 12,
-                                      color: ColorStyle().whiteColors,
+                              child: _isLoading
+                                  ? CircularProgressIndicator() // Show loading indicator
+                                  : SmallElevatedButton(
+                                      onPressed: () {
+                                        _sendFeedback();
+                                      },
+                                      height: 40,
+                                      width: 118,
+                                      title: "Kirim",
+                                      style: FontFamily().buttonText.copyWith(
+                                            fontSize: 12,
+                                            color: ColorStyle().whiteColors,
+                                          ),
                                     ),
-                              ),
                             ),
                           ],
                         ),
