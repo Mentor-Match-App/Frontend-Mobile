@@ -9,11 +9,13 @@ class ComputerScinceKuliahScreen extends StatefulWidget {
   ComputerScinceKuliahScreen({Key? key}) : super(key: key);
 
   @override
-  State<ComputerScinceKuliahScreen> createState() => _ComputerScinceKuliahScreenState();
+  State<ComputerScinceKuliahScreen> createState() =>
+      _ComputerScinceKuliahScreenState();
 }
 
-class _ComputerScinceKuliahScreenState extends State<ComputerScinceKuliahScreen> {
-late Future<KuliahNew> futureKuliahData;
+class _ComputerScinceKuliahScreenState
+    extends State<ComputerScinceKuliahScreen> {
+  late Future<KuliahNew> futureKuliahData;
 
   @override
   void initState() {
@@ -23,19 +25,21 @@ late Future<KuliahNew> futureKuliahData;
 
   @override
   Widget build(BuildContext context) {
-       return FutureBuilder<KuliahNew>(
+    return FutureBuilder<KuliahNew>(
       future: futureKuliahData,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
+          return Container(
+              height: MediaQuery.of(context).size.height / 2.0,
+              child: Center(child: CircularProgressIndicator()));
         } else if (snapshot.hasError) {
           return Center(child: Text('Error: ${snapshot.error}'));
         } else if (snapshot.hasData) {
-        final mentorsWithLanguageCategory = snapshot.data!.mentors!
-              .where((mentor) => mentor.mentorClass!
-                  .any((mentorClass) => mentorClass.category == 'Computer Science'))
+          final mentorsWithLanguageCategory = snapshot.data!.mentors!
+              .where((mentor) => mentor.mentorClass!.any(
+                  (mentorClass) => mentorClass.category == 'Computer Science'))
               .toList();
-           return GridView.builder(
+          return GridView.builder(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               childAspectRatio: 3 / 5,
@@ -51,7 +55,7 @@ late Future<KuliahNew> futureKuliahData;
                 orElse: () => ExperienceKuliah(),
               );
 
-          // Fungsi untuk mendapatkan slot yang tersedia
+              // Fungsi untuk mendapatkan slot yang tersedia
               int getAvailableSlotCount(ClassMentorKuliah kelas) {
                 int approvedCount = kelas.transactions
                         ?.where((t) => t.paymentStatus == "Approved")

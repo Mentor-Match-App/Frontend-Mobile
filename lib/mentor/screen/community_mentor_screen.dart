@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:mentormatch_apps/mentee/model/community_model.dart';
 import 'package:mentormatch_apps/mentee/service/community_service.dart';
 import 'package:mentormatch_apps/widget/card_community.dart';
-import 'package:mentormatch_apps/widget/navbar.dart';
 import 'package:mentormatch_apps/widget/search_bar.dart';
 import 'package:url_launcher/url_launcher.dart';
 

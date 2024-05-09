@@ -1,5 +1,3 @@
-// ignore: file_names
-import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mentormatch_apps/mentee/model/my_class_model.dart';
@@ -410,6 +408,4 @@ class _DetailMyClassMenteeScreenState extends State<DetailMyClassMenteeScreen> {
       ),
     );
   }
-
-  
 }

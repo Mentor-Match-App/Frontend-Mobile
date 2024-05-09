@@ -5,6 +5,7 @@ import 'package:mentormatch_apps/mentor/service/my_class_create_mentor_service.d
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
 import 'package:mentormatch_apps/widget/button.dart';
+import 'package:mentormatch_apps/widget/flushs_bar_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class MySessionCreate extends StatefulWidget {
@@ -118,7 +119,9 @@ class _MySessionCreateState extends State<MySessionCreate> {
           _sessionsFuture, // Asumsi ini adalah Future yang Anda panggil untuk mendapatkan data
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator();
+          return Container(
+              height: MediaQuery.of(context).size.height / 2.0,
+              child: Center(child: CircularProgressIndicator()));
         } else if (snapshot.hasError) {
           return Text("Error: ${snapshot.error}");
         } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
@@ -216,8 +219,17 @@ class _MySessionCreateState extends State<MySessionCreate> {
                                       primary: ColorStyle().whiteColors,
                                     ),
                                     onPressed: () {
-                                      final zommLink = session.zoomLink ?? '';
-                                      _launchURL(zommLink);
+                                      // final zommLink = session.zoomLink ?? '';
+                                      // _launchURL(zommLink);
+                                      if (session.zoomLink == null ||
+                                          session.zoomLink!.isEmpty) {
+                                        showTopSnackBar(
+                                            context, "Link Zoom belum tersedia",
+                                            leftBarIndicatorColor:
+                                                ColorStyle().errorColors);
+                                      } else {
+                                        _launchURL(session.zoomLink!);
+                                      }
                                     },
                                     icon: Icon(Icons.link),
                                     label: Text('Join Session',

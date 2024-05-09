@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:mentormatch_apps/mentee/screen/notification_mentee_screen.dart';
-import 'package:mentormatch_apps/mentor/screen/create_class_and_session/form_create_class.dart';
 import 'package:mentormatch_apps/mentor/screen/create_class_and_session/form_create_session.dart';
 import 'package:mentormatch_apps/mentor/screen/daftar_mentor/syarat_ketentuan_daftar_mentor/persetujuan_1.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
@@ -104,45 +103,6 @@ class _HomeMentorScreenState extends State<HomeMentorScreen> {
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  "Field and Interest",
-                  style: FontFamily().boldText.copyWith(
-                        fontSize: 14,
-                        color: ColorStyle().secondaryColors,
-                      ),
-                ),
-              ),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      InterestCardMentor(
-                          title: 'Technology',
-                          icon: 'assets/Handoff/icon/categoryIcon/SD/tech.png'),
-                      InterestCardMentor(
-                          title: 'Engineering',
-                          icon:
-                              'assets/Handoff/icon/categoryIcon/Kuliah/electro.png'),
-                      InterestCardMentor(
-                          title: 'Sains',
-                          icon:
-                              'assets/Handoff/icon/categoryIcon/SD/Pengetahuan.jpg'),
-                      InterestCardMentor(
-                          title: 'Business',
-                          icon:
-                              'assets/Handoff/icon/categoryIcon/Karier/finance.png'),
-                      InterestCardMentor(
-                          title: 'Math',
-                          icon: 'assets/Handoff/icon/categoryIcon/SD/math.png'),
-                    ],
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
                 child: Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
@@ -177,7 +137,7 @@ class _HomeMentorScreenState extends State<HomeMentorScreen> {
                               width: 150,
                               height: 38,
                               title: 'Buat Kelas',
-                              style:  FontFamily().buttonText,
+                              style: FontFamily().buttonText,
                               onPressed: () {
                                 Navigator.push(
                                   context,
@@ -242,7 +202,7 @@ class _HomeMentorScreenState extends State<HomeMentorScreen> {
                               width: 150,
                               height: 38,
                               title: 'Buat session',
-                              style:  FontFamily().buttonText,
+                              style: FontFamily().buttonText,
                               onPressed: () {
                                 Navigator.push(
                                   context,

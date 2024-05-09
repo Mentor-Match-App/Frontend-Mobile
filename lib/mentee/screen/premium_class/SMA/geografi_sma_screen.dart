@@ -13,7 +13,7 @@ class GeografiSMAScreen extends StatefulWidget {
 }
 
 class _GeografiSMAScreenState extends State<GeografiSMAScreen> {
-late Future<SMA> futureSMAData;
+  late Future<SMA> futureSMAData;
 
   @override
   void initState() {
@@ -27,7 +27,9 @@ late Future<SMA> futureSMAData;
       future: futureSMAData,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
+          return Container(
+              height: MediaQuery.of(context).size.height / 2.0,
+              child: Center(child: CircularProgressIndicator()));
         } else if (snapshot.hasError) {
           return Center(child: Text('Error: ${snapshot.error}'));
         } else if (snapshot.hasData) {
@@ -51,7 +53,8 @@ late Future<SMA> futureSMAData;
                 (exp) => exp.isCurrentJob ?? false,
                 orElse: () => ExperienceSMA(),
               );
-                 /// if all class is active ///
+
+              /// if all class is active ///
               // Fungsi untuk mendapatkan slot yang tersedia
               int getAvailableSlotCount(ClassMentorSMA kelas) {
                 int approvedCount = kelas.transactions

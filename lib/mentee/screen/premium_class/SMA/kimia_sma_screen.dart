@@ -13,7 +13,7 @@ class KimiaSMAScreen extends StatefulWidget {
 }
 
 class _KimiaSMAScreenState extends State<KimiaSMAScreen> {
-late Future<SMA> futureSMAData;
+  late Future<SMA> futureSMAData;
 
   @override
   void initState() {
@@ -27,11 +27,13 @@ late Future<SMA> futureSMAData;
       future: futureSMAData,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
+          return Container(
+              height: MediaQuery.of(context).size.height / 2.0,
+              child: Center(child: CircularProgressIndicator()));
         } else if (snapshot.hasError) {
           return Center(child: Text('Error: ${snapshot.error}'));
         } else if (snapshot.hasData) {
-           final mentorsWithLanguageCategory = snapshot.data!.mentors!
+          final mentorsWithLanguageCategory = snapshot.data!.mentors!
               .where((mentor) => mentor.mentorClass!
                   .any((mentorClass) => mentorClass.category == 'Kimia'))
               .toList();

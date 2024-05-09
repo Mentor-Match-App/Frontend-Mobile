@@ -27,86 +27,100 @@ class _AllSessionScreenState extends State<AllSessionScreen> {
       future: _sessionFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
+          return Container(
+              height: MediaQuery.of(context).size.height / 2.0,
+              child: Center(child: CircularProgressIndicator()));
         } else if (snapshot.hasError) {
           return Center(child: Text('Error: ${snapshot.error}'));
         } else if (snapshot.hasData) {
           /// menampilkan mentor yang isActive == true
-          final mentors = snapshot.data!.mentors!
-              .where((mentor) => mentor.session!
-                  .any((sessionElement) => sessionElement.isActive == true))
-              .toList();
+          final mentors = snapshot.data!.mentors ?? [];
+
+          // Set untuk menyimpan ID mentor yang sudah ditampilkan
+          Set<String> displayedMentorIds = Set();
 
           return GridView.builder(
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              childAspectRatio: 3 / 5,
-              crossAxisSpacing: 2,
-              mainAxisSpacing: 2,
-            ),
-
+            gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
+                mainAxisExtent: 350,
+                maxCrossAxisExtent: 250),
             itemCount: mentors.length,
             itemBuilder: (context, index) {
               final mentor = mentors[index];
-              // Logika untuk menentukan currentExperience sama seperti sebelumnya
-              final currentExperience = mentor.experiences!.firstWhere(
-                (experience) => experience.isCurrentJob ?? false,
-                orElse: () =>
-                    Experience(), // Menyediakan default Experience jika tidak ditemukan
-              );
+              final mentorId = mentor.id ?? "";
 
-              ////// session active///////
-              final activeSessions =
-                  mentor.session!.where((s) => s.isActive == true).toList();
-              //// buat session full apabila jumlah participant sudah mencapai maxParticipants
-              final isSessionFull = activeSessions.isNotEmpty &&
-                  activeSessions.any((session) =>
-                      session.participant!.length >= session.maxParticipants!);
+              // Periksa apakah ID mentor sudah ditampilkan sebelumnya
+              if (displayedMentorIds.contains(mentorId)) {
+                // Jika sudah ditampilkan, maka jangan tampilkan lagi
+                return SizedBox.shrink();
+              } else {
+                // Jika belum ditampilkan, tambahkan ID mentor ke Set
+                displayedMentorIds.add(mentorId);
 
-              ///numberOfParticipants = jumlah participant yang sudah join
-              final numberOfParticipants = activeSessions.isNotEmpty
-                  ? activeSessions.first.participant!.length
-                  : 0;
-              ////// button color is full //////
-              final Color buttonColor = isSessionFull
-                  ? ColorStyle().disableColors
-                  : ColorStyle().primaryColors;
-              ////// slot///////
-              SessionData sessionElement = mentor.session!.first;
-              int maxParticipants = sessionElement.maxParticipants ?? 0;
-              int currentParticipants = sessionElement.participant?.length ?? 0;
-              int availableSlots = maxParticipants - currentParticipants;
-              return Container(
-                margin: const EdgeInsets.only(right: 8.0, bottom: 16),
-                height: 250,
-                width: 150,
-                child: CardItemMentor(
-                  // apabila session penuh maka tiitlenya " session full" , tetapi apabila tidak full maka " available"
-                  title: isSessionFull ? "Full Booked" : "Available",
-                  color: buttonColor,
-                  onPressesd: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => DetailMentorSessionsNew(
-                          availableSlots: availableSlots,
-                          detailmentor: mentor,
-                          totalParticipants: numberOfParticipants,
+                // Mengambil semua sesi aktif dari mentor
+                final activeSessions = mentor.session
+                        ?.where((session) => session.isActive == true)
+                        .toList() ??
+                    [];
+
+                // Mendapatkan pengalaman kerja terkini mentor
+                final currentExperience = mentor.experiences?.firstWhere(
+                  (experience) => experience.isCurrentJob ?? false,
+                  orElse: () => Experience(),
+                );
+
+                // Mendapatkan status ketersediaan sesi
+                final isSessionFull = activeSessions.isNotEmpty &&
+                    activeSessions.any((session) =>
+                        session.participant?.length == session.maxParticipants);
+
+                // Mendapatkan jumlah peserta sesi
+                final numberOfParticipants = activeSessions.isNotEmpty
+                    ? activeSessions.first.participant?.length ?? 0
+                    : 0;
+
+                // Mendapatkan warna tombol sesuai dengan status ketersediaan sesi
+                final Color buttonColor = isSessionFull
+                    ? ColorStyle().disableColors
+                    : ColorStyle().primaryColors;
+
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: CardItemMentor(
+                    title: isSessionFull ? "Full Booked" : "Available",
+                    color: buttonColor,
+                    onPressesd: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => DetailMentorSessionsNew(
+                            session: mentor.session,
+                            availableSlots: mentor.session!.isEmpty
+                                ? 0
+                                : mentor.session!.first.maxParticipants! -
+                                    (mentor.session!.first.participant
+                                            ?.length ??
+                                        0),
+                            detailmentor: mentor,
+                            totalParticipants: numberOfParticipants,
+                            mentorReviews: mentor.mentorReviews ?? [],
+                          ),
                         ),
-                      ),
-                    );
-                  },
-                  imagePath: mentor.photoUrl ??
-                      'assets/Handoff/ilustrator/profile.png',
-                  name: mentor.name ?? 'No Name',
-                  job: currentExperience.jobTitle ?? '',
-                  company: currentExperience.company ?? 'Placeholder Company',
-                ),
-              );
+                      );
+                    },
+                    imagePath: mentor.photoUrl ??
+                        'assets/Handoff/ilustrator/profile.png',
+                    name: mentor.name ?? 'No Name',
+                    job: currentExperience?.jobTitle ?? '',
+                    company:
+                        currentExperience?.company ?? 'Placeholder Company',
+                  ),
+                );
+              }
             },
             shrinkWrap: true,
-            physics:
-                ScrollPhysics(), // Mengizinkan scroll jika di dalam SingleChildScrollView
+            physics: ScrollPhysics(),
           );
         } else {
           return Center(child: Text("No data available"));

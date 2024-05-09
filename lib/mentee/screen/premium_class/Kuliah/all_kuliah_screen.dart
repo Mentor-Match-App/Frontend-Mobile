@@ -14,7 +14,7 @@ class AllKuliahScreen extends StatefulWidget {
 }
 
 class _AllKuliahScreenState extends State<AllKuliahScreen> {
-late Future<KuliahNew> futureKuliahData;
+  late Future<KuliahNew> futureKuliahData;
 
   @override
   void initState() {
@@ -28,11 +28,13 @@ late Future<KuliahNew> futureKuliahData;
       future: futureKuliahData,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
+          return Container(
+              height: MediaQuery.of(context).size.height / 2.0,
+              child: Center(child: CircularProgressIndicator()));
         } else if (snapshot.hasError) {
           return Center(child: Text('Error: ${snapshot.error}'));
         } else if (snapshot.hasData) {
-           final mentors = snapshot.data!.mentors!;
+          final mentors = snapshot.data!.mentors!;
 
           return GridView.builder(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -45,7 +47,7 @@ late Future<KuliahNew> futureKuliahData;
             itemBuilder: (context, index) {
               final mentor = mentors[index];
               // create for experience is current job true or false
-               ExperienceKuliah? currentJob = mentor.experiences?.firstWhere(
+              ExperienceKuliah? currentJob = mentor.experiences?.firstWhere(
                 (exp) => exp.isCurrentJob ?? false,
                 orElse: () => ExperienceKuliah(),
               );

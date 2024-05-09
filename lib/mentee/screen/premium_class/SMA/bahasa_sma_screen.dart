@@ -27,15 +27,17 @@ class _BahasaSMAScreenState extends State<BahasaSMAScreen> {
       future: futureSMAData,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
+          return Container(
+              height: MediaQuery.of(context).size.height / 2.0,
+              child: Center(child: CircularProgressIndicator()));
         } else if (snapshot.hasError) {
           return Center(child: Text('Error: ${snapshot.error}'));
         } else if (snapshot.hasData) {
-        final mentorsWithLanguageCategory = snapshot.data!.mentors!
+          final mentorsWithLanguageCategory = snapshot.data!.mentors!
               .where((mentor) => mentor.mentorClass!
                   .any((mentorClass) => mentorClass.category == 'Bahasa'))
               .toList();
-           return GridView.builder(
+          return GridView.builder(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               childAspectRatio: 3 / 5,
@@ -51,7 +53,7 @@ class _BahasaSMAScreenState extends State<BahasaSMAScreen> {
                 orElse: () => ExperienceSMA(),
               );
 
-               // Fungsi untuk mendapatkan slot yang tersedia
+              // Fungsi untuk mendapatkan slot yang tersedia
               int getAvailableSlotCount(ClassMentorSMA kelas) {
                 int approvedCount = kelas.transactions
                         ?.where((t) => t.paymentStatus == "Approved")

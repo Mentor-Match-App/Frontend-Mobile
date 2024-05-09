@@ -29,17 +29,29 @@ class _SecurityEngineerSessionScreenState
       future: futureSessionData,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
+          return Container(
+              height: MediaQuery.of(context).size.height / 2.0,
+              child: Center(child: CircularProgressIndicator()));
         } else if (snapshot.hasError) {
           return Center(child: Text('Error: ${snapshot.error}'));
-        } else if (snapshot.hasData) {
-         final mentors = snapshot.data!.mentors!
-              .where(
-                (mentor) => mentor.session!.any((sessionElement) =>
-                    sessionElement.isActive == true &&
-                    sessionElement.category == "Security Engineer"),
-              )
+        } else if (snapshot.hasData && snapshot.data!.mentors!.isNotEmpty) {
+          final mentors = snapshot.data!.mentors!
+              .where((mentor) => mentor.session!.any((sessionElement) =>
+                  sessionElement.isActive == true &&
+                  sessionElement.category == "Security Engineer"))
               .toList();
+          if (mentors.isEmpty) {
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                  width: double.infinity,
+                  height: MediaQuery.of(context).size.height / 2,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Center(child: Text('No mentors available')),
+                  )),
+            );
+          }
           return GridView.builder(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
@@ -90,12 +102,19 @@ class _SecurityEngineerSessionScreenState
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => DetailMentorSessionsNew(
-                          availableSlots: availableSlots,
-                          detailmentor: mentor,
-                          totalParticipants: numberOfParticipants,
+                          builder: (context) => DetailMentorSessionsNew(
+                            session: mentor.session,
+                            availableSlots: mentor.session!.isEmpty
+                                ? 0
+                                : mentor.session!.first.maxParticipants! -
+                                    (mentor.session!.first.participant
+                                            ?.length ??
+                                        0),
+                            detailmentor: mentor,
+                            totalParticipants: numberOfParticipants,
+                            mentorReviews: mentor.mentorReviews ?? [],
+                          ),
                         ),
-                      ),
                     );
                   },
                   imagePath: mentor.photoUrl ??

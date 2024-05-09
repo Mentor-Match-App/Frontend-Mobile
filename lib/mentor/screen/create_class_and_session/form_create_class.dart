@@ -1,14 +1,10 @@
 // ignore_for_file: use_build_context_synchronously
 
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
 import 'package:mentormatch_apps/mentor/provider/create_class_provider.dart';
-
 import 'package:mentormatch_apps/mentor/screen/create_class_and_session/contoh_premium_class.dart';
 import 'package:mentormatch_apps/mentor/screen/create_class_and_session/success_create_class.dart';
-import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
 import 'package:mentormatch_apps/style/text.dart';
@@ -16,9 +12,8 @@ import 'package:mentormatch_apps/widget/button.dart';
 import 'package:mentormatch_apps/widget/textField.dart';
 import 'package:mentormatch_apps/widget/text_field_dropdown.dart';
 import 'package:mentormatch_apps/widget/time_picker_widget.dart';
+import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:provider/provider.dart';
-
-
 
 class FormCreatePremiumClassScreen extends StatefulWidget {
   const FormCreatePremiumClassScreen({Key? key}) : super(key: key);
@@ -30,6 +25,8 @@ class FormCreatePremiumClassScreen extends StatefulWidget {
 
 class _FormCreatePremiumClassScreenState
     extends State<FormCreatePremiumClassScreen> {
+  bool _isLoading = false;
+
   String selectedLocation = 'Offline';
   /////////////////////// Dropdown Widget ///////////////////////
   String selectedEducationLevel = 'SD';
@@ -168,9 +165,13 @@ class _FormCreatePremiumClassScreenState
     });
   }
 
-//////////////////// onSubmit ///////////////////////
   void onSubmit(BuildContext context) async {
     try {
+      // Set isLoading to true to show loading indicator
+      setState(() {
+        _isLoading = true;
+      });
+
       int capacitymentee = 0;
       if (maxParticipantsController.text.isNotEmpty) {
         capacitymentee = int.parse(maxParticipantsController.text);
@@ -254,6 +255,11 @@ class _FormCreatePremiumClassScreenState
       //// jika gagal maka tampilkan error message ///
     } catch (error) {
       print('Error: $error');
+    } finally {
+      // Set isLoading to false after submit process finished
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 
@@ -386,20 +392,17 @@ class _FormCreatePremiumClassScreenState
                   title: "Nama Kelas",
                   color: ColorStyle().secondaryColors,
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 8.0),
-                  child: TextFieldWidget(
-                    controller: nameController,
-                    hintText: "input nama kelas",
-                    validator: (value) {
-                      // Periksa apakah field kosong
-                      if (value == null || value.isEmpty) {
-                        return 'Field ini tidak boleh kosong';
-                      }
+                TextFieldWidget(
+                  controller: nameController,
+                  hintText: "input nama kelas",
+                  validator: (value) {
+                    // Periksa apakah field kosong
+                    if (value == null || value.isEmpty) {
+                      return 'Field ini tidak boleh kosong';
+                    }
 
-                      return null;
-                    },
-                  ),
+                    return null;
+                  },
                 ),
 
                 ///// harga ////
@@ -407,13 +410,10 @@ class _FormCreatePremiumClassScreenState
                   title: "Harga",
                   color: ColorStyle().secondaryColors,
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 8.0),
-                  child: TextFieldWidget(
-                    controller: priceController,
-                    hintText: "input harga",
-                    validator: validatorCapacity,
-                  ),
+                TextFieldWidget(
+                  controller: priceController,
+                  hintText: "input harga",
+                  validator: validatorCapacity,
                 ),
 
                 ///kapasitas mentee///
@@ -421,13 +421,10 @@ class _FormCreatePremiumClassScreenState
                   title: "Kapasitas Mentee",
                   color: ColorStyle().secondaryColors,
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 8.0),
-                  child: TextFieldWidget(
-                    controller: maxParticipantsController,
-                    hintText: " input kapasitas mentee",
-                    validator: validatorCapacity,
-                  ),
+                TextFieldWidget(
+                  controller: maxParticipantsController,
+                  hintText: " input kapasitas mentee",
+                  validator: validatorCapacity,
                 ),
 
                 //startDate///
@@ -462,35 +459,29 @@ class _FormCreatePremiumClassScreenState
                   title: "Periode Kegiatan",
                   color: ColorStyle().secondaryColors,
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 8.0),
-                  child: TextFieldWidget(
-                    controller: durationInDaysController,
-                    hintText: 'Periode kelas',
-                    readOnly: true,
-                  ),
+                TextFieldWidget(
+                  controller: durationInDaysController,
+                  hintText: 'Periode kelas',
+                  readOnly: true,
                 ),
                 //hari ///
                 TittleTextField(
                   title: "Jadwal Hari",
                   color: ColorStyle().secondaryColors,
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 8.0),
-                  child: TextFieldWidget(
-                    controller: scheduleController,
-                    hintText: " input jadwal hari",
-                    suffixIcon: const Icon(Icons.arrow_drop_down),
-                    ontap: () => showMultiSelect(context),
-                    validator: (value) {
-                      // Periksa apakah field kosong
-                      if (value == null || value.isEmpty) {
-                        return 'Field ini tidak boleh kosong';
-                      }
+                TextFieldWidget(
+                  controller: scheduleController,
+                  hintText: " input jadwal hari",
+                  suffixIcon: const Icon(Icons.arrow_drop_down),
+                  ontap: () => showMultiSelect(context),
+                  validator: (value) {
+                    // Periksa apakah field kosong
+                    if (value == null || value.isEmpty) {
+                      return 'Field ini tidak boleh kosong';
+                    }
 
-                      return null;
-                    },
-                  ),
+                    return null;
+                  },
                 ),
 
                 ////rician kegiatan///
@@ -534,12 +525,9 @@ class _FormCreatePremiumClassScreenState
                         title: "Alamat",
                         color: ColorStyle().secondaryColors,
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 8.0),
-                        child: TextFieldWidget(
-                          controller: addressController,
-                          hintText: "input alamat ",
-                        ),
+                      TextFieldWidget(
+                        controller: addressController,
+                        hintText: "input alamat ",
                       ),
                     ],
                   ],
@@ -550,57 +538,51 @@ class _FormCreatePremiumClassScreenState
                   title: "Target Pembelajaran",
                   color: ColorStyle().secondaryColors,
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        for (int i = 0;
-                            i < targetLearningController.length;
-                            i++)
-                          Padding(
-                            padding:
-                                const EdgeInsets.only(top: 8.0, bottom: 24),
-                            child: TextFieldWidget(
-                              validator: (value) {
-                                // Periksa apakah field kosong
-                                if (value == null || value.isEmpty) {
-                                  return 'Field ini tidak boleh kosong';
-                                }
+                SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      for (int i = 0; i < targetLearningController.length; i++)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8.0, bottom: 24),
+                          child: TextFieldWidget(
+                            validator: (value) {
+                              // Periksa apakah field kosong
+                              if (value == null || value.isEmpty) {
+                                return 'Field ini tidak boleh kosong';
+                              }
 
-                                return null;
-                              },
-                              controller: targetLearningController[i],
-                              hintText: "input target pembelajaran",
-                            ),
-                          ),
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Row(
-                            children: [
-                              IconButton(
-                                icon: Icon(
-                                  Icons.remove,
-                                  color: ColorStyle().primaryColors,
-                                ),
-                                onPressed: () => deleteTextField(
-                                    targetLearningController,
-                                    targetLearningController.length - 1),
-                              ),
-                              IconButton(
-                                icon: Icon(
-                                  Icons.add,
-                                  color: ColorStyle().primaryColors,
-                                ),
-                                onPressed: () =>
-                                    addTextField(targetLearningController),
-                              ),
-                            ],
+                              return null;
+                            },
+                            controller: targetLearningController[i],
+                            hintText: "input target pembelajaran",
                           ),
                         ),
-                      ],
-                    ),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: Row(
+                          children: [
+                            IconButton(
+                              icon: Icon(
+                                Icons.remove,
+                                color: ColorStyle().primaryColors,
+                              ),
+                              onPressed: () => deleteTextField(
+                                  targetLearningController,
+                                  targetLearningController.length - 1),
+                            ),
+                            IconButton(
+                              icon: Icon(
+                                Icons.add,
+                                color: ColorStyle().primaryColors,
+                              ),
+                              onPressed: () =>
+                                  addTextField(targetLearningController),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
                 ),
                 ////syarat ketentuan///
@@ -608,64 +590,63 @@ class _FormCreatePremiumClassScreenState
                   title: "Syarat & Ketentuan",
                   color: ColorStyle().secondaryColors,
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        for (int i = 0; i < termsController.length; i++)
-                          Padding(
-                            padding:
-                                const EdgeInsets.only(top: 8.0, bottom: 24),
-                            child: TextFieldWidget(
-                              validator: (value) {
-                                // Periksa apakah field kosong
-                                if (value == null || value.isEmpty) {
-                                  return 'Field ini tidak boleh kosong';
-                                }
+                SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      for (int i = 0; i < termsController.length; i++)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8.0, bottom: 24),
+                          child: TextFieldWidget(
+                            validator: (value) {
+                              // Periksa apakah field kosong
+                              if (value == null || value.isEmpty) {
+                                return 'Field ini tidak boleh kosong';
+                              }
 
-                                return null;
-                              },
-                              controller: termsController[i],
-                              hintText: "input syarat & ketentuan",
-                            ),
-                          ),
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Row(
-                            children: [
-                              IconButton(
-                                icon: Icon(
-                                  Icons.remove,
-                                  color: ColorStyle().primaryColors,
-                                ),
-                                onPressed: () => deleteTextField(
-                                    termsController,
-                                    termsController.length - 1),
-                              ),
-                              IconButton(
-                                icon: Icon(
-                                  Icons.add,
-                                  color: ColorStyle().primaryColors,
-                                ),
-                                onPressed: () => addTextField(termsController),
-                              ),
-                            ],
+                              return null;
+                            },
+                            controller: termsController[i],
+                            hintText: "input syarat & ketentuan",
                           ),
                         ),
-                      ],
-                    ),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: Row(
+                          children: [
+                            IconButton(
+                              icon: Icon(
+                                Icons.remove,
+                                color: ColorStyle().primaryColors,
+                              ),
+                              onPressed: () => deleteTextField(
+                                  termsController, termsController.length - 1),
+                            ),
+                            IconButton(
+                              icon: Icon(
+                                Icons.add,
+                                color: ColorStyle().primaryColors,
+                              ),
+                              onPressed: () => addTextField(termsController),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                ElevatedButtonWidget(
-                  onPressed: () {
-                    onSubmit(
-                      context,
-                    );
-                  },
-                  title: "Kirim",
-                ),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: _isLoading
+                      ? Center(
+                          child: CircularProgressIndicator(
+                              color: ColorStyle().secondaryColors),
+                        ) // Tampilkan CircularProgressIndicator jika isLoading true
+                      : ElevatedButtonWidget(
+                          onPressed: () => onSubmit(context),
+                          title: "Kirim Pengajuan",
+                        ),
+                )
               ],
             ),
           )

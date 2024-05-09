@@ -3,7 +3,6 @@ import 'package:mentormatch_apps/mentee/screen/premium_class/kuliah/detail_mento
 import 'package:mentormatch_apps/mentee/service/service_Kuliah.dart';
 import 'package:mentormatch_apps/mentor/model/category_kuliah_model.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
-
 import 'package:mentormatch_apps/widget/card_mentor.dart';
 
 class ManajemenKuliahScreen extends StatefulWidget {
@@ -14,7 +13,7 @@ class ManajemenKuliahScreen extends StatefulWidget {
 }
 
 class _ManajemenKuliahScreenState extends State<ManajemenKuliahScreen> {
-late Future<KuliahNew> futureKuliahData;
+  late Future<KuliahNew> futureKuliahData;
 
   @override
   void initState() {
@@ -24,19 +23,21 @@ late Future<KuliahNew> futureKuliahData;
 
   @override
   Widget build(BuildContext context) {
-       return FutureBuilder<KuliahNew>(
+    return FutureBuilder<KuliahNew>(
       future: futureKuliahData,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
+          return Container(
+              height: MediaQuery.of(context).size.height / 2.0,
+              child: Center(child: CircularProgressIndicator()));
         } else if (snapshot.hasError) {
           return Center(child: Text('Error: ${snapshot.error}'));
         } else if (snapshot.hasData) {
-        final mentorsWithLanguageCategory = snapshot.data!.mentors!
+          final mentorsWithLanguageCategory = snapshot.data!.mentors!
               .where((mentor) => mentor.mentorClass!
                   .any((mentorClass) => mentorClass.category == 'Manajemen'))
               .toList();
-           return GridView.builder(
+          return GridView.builder(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               childAspectRatio: 3 / 5,

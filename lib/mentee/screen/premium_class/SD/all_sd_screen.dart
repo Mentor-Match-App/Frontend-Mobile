@@ -27,14 +27,15 @@ class _AllSDScreenState extends State<AllSDScreen> {
       future: futureSDData,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
+          return Container(
+              height: MediaQuery.of(context).size.height / 2.0,
+              child: Center(child: CircularProgressIndicator()));
         } else if (snapshot.hasError) {
           return Center(child: Text('Error: ${snapshot.error}'));
         } else if (snapshot.hasData) {
           final mentors = snapshot.data!.mentors!;
 
-          return 
-          GridView.builder(
+          return GridView.builder(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               childAspectRatio: 3 / 5,
@@ -123,7 +124,6 @@ class _AllSDScreenState extends State<AllSDScreen> {
             physics:
                 ScrollPhysics(), // Allows scrolling within a SingleChildScrollView
           );
-        
         } else {
           return Center(child: Text("No data available"));
         }

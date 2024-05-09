@@ -238,43 +238,46 @@ class _EvaluasiMentorScreenState extends State<EvaluasiMentorScreen> {
                         //   controller: _materiEvaluasiController,
                         //   hintText: "nama topik materi evaluasi",
                         // ),
-                        DropdownButtonFormField<String>(
-                          value: selectedMateriEvaluasi,
-                          decoration: InputDecoration(
-                            filled: true,
-                            fillColor: ColorStyle().tertiaryColors,
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(4),
-                              borderSide: BorderSide.none,
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8.0),
+                          child: DropdownButtonFormField<String>(
+                            value: selectedMateriEvaluasi,
+                            decoration: InputDecoration(
+                              filled: true,
+                              fillColor: ColorStyle().tertiaryColors,
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(4),
+                                borderSide: BorderSide.none,
+                              ),
+                              hintText: 'Pilih materi evaluasi',
+                              hintStyle: FontFamily().regularText.copyWith(
+                                    color: ColorStyle().disableColors,
+                                  ),
                             ),
-                            hintText: 'Pilih materi evaluasi',
-                            hintStyle: FontFamily().regularText.copyWith(
-                                  color: ColorStyle().disableColors,
-                                ),
-                          ),
-                          onChanged: (String? newValue) {
-                            setState(() {
-                              selectedMateriEvaluasi = newValue;
-                              // Cari materi evaluasi yang sesuai dari list
-                              final selectedMaterial =
-                                  widget.learningMaterial.firstWhere(
-                                (material) => material.title == newValue,
-                                orElse: () =>
-                                    LearningMaterialMentor(title: "", link: ""),
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                selectedMateriEvaluasi = newValue;
+                                // Cari materi evaluasi yang sesuai dari list
+                                final selectedMaterial =
+                                    widget.learningMaterial.firstWhere(
+                                  (material) => material.title == newValue,
+                                  orElse: () => LearningMaterialMentor(
+                                      title: "", link: ""),
+                                );
+                                // Perbarui controller dengan title dari materi yang dipilih
+                                _materiEvaluasiController.text =
+                                    selectedMaterial.title ?? "";
+                              });
+                            },
+                            items: widget.learningMaterial
+                                .map((LearningMaterialMentor material) {
+                              return DropdownMenuItem<String>(
+                                value: material.title,
+                                child: Text(material.title ?? ""),
                               );
-                              // Perbarui controller dengan title dari materi yang dipilih
-                              _materiEvaluasiController.text =
-                                  selectedMaterial.title ?? "";
-                            });
-                          },
-                          items: widget.learningMaterial
-                              .map((LearningMaterialMentor material) {
-                            return DropdownMenuItem<String>(
-                              value: material.title,
-                              child: Text(material.title ?? ""),
-                            );
-                          }).toList(),
-                          isExpanded: true,
+                            }).toList(),
+                            isExpanded: true,
+                          ),
                         ),
 
                         TittleTextField(

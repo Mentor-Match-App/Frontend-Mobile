@@ -13,7 +13,7 @@ class KimiaSMPScreen extends StatefulWidget {
 }
 
 class _KimiaSMPScreenState extends State<KimiaSMPScreen> {
-   late Future<SMP> futureSMPData;
+  late Future<SMP> futureSMPData;
 
   @override
   void initState() {
@@ -27,7 +27,9 @@ class _KimiaSMPScreenState extends State<KimiaSMPScreen> {
       future: futureSMPData,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
+          return Container(
+              height: MediaQuery.of(context).size.height / 2.0,
+              child: Center(child: CircularProgressIndicator()));
         } else if (snapshot.hasError) {
           return Center(child: Text('Error: ${snapshot.error}'));
         } else if (snapshot.hasData) {
@@ -35,7 +37,7 @@ class _KimiaSMPScreenState extends State<KimiaSMPScreen> {
               .where((mentor) => mentor.mentorClass!
                   .any((mentorClass) => mentorClass.category == 'Kimia'))
               .toList();
-           return GridView.builder(
+          return GridView.builder(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               childAspectRatio: 3 / 5,
@@ -51,7 +53,7 @@ class _KimiaSMPScreenState extends State<KimiaSMPScreen> {
                 orElse: () => ExperienceSMP(),
               );
 
-                         // Fungsi untuk mendapatkan slot yang tersedia
+              // Fungsi untuk mendapatkan slot yang tersedia
               int getAvailableSlotCount(ClassMentorSMP kelas) {
                 int approvedCount = kelas.transactions
                         ?.where((t) => t.paymentStatus == "Approved")

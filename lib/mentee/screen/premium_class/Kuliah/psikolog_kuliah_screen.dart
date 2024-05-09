@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mentormatch_apps/mentee/screen/premium_class/kuliah/detail_mentor_kuliah_screen.dart';
 import 'package:mentormatch_apps/mentee/service/service_Kuliah.dart';
 import 'package:mentormatch_apps/mentor/model/category_kuliah_model.dart';
-
 import 'package:mentormatch_apps/style/color_style.dart';
-
 import 'package:mentormatch_apps/widget/card_mentor.dart';
 
 class PsikologKuliahScreen extends StatefulWidget {
@@ -15,7 +13,7 @@ class PsikologKuliahScreen extends StatefulWidget {
 }
 
 class _PsikologKuliahScreenState extends State<PsikologKuliahScreen> {
-late Future<KuliahNew> futureKuliahData;
+  late Future<KuliahNew> futureKuliahData;
 
   @override
   void initState() {
@@ -25,19 +23,21 @@ late Future<KuliahNew> futureKuliahData;
 
   @override
   Widget build(BuildContext context) {
-       return FutureBuilder<KuliahNew>(
+    return FutureBuilder<KuliahNew>(
       future: futureKuliahData,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
+          return Container(
+              height: MediaQuery.of(context).size.height / 2.0,
+              child: Center(child: CircularProgressIndicator()));
         } else if (snapshot.hasError) {
           return Center(child: Text('Error: ${snapshot.error}'));
         } else if (snapshot.hasData) {
-        final mentorsWithLanguageCategory = snapshot.data!.mentors!
+          final mentorsWithLanguageCategory = snapshot.data!.mentors!
               .where((mentor) => mentor.mentorClass!
                   .any((mentorClass) => mentorClass.category == 'Psikologi'))
               .toList();
-           return GridView.builder(
+          return GridView.builder(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               childAspectRatio: 3 / 5,
@@ -53,7 +53,7 @@ late Future<KuliahNew> futureKuliahData;
                 orElse: () => ExperienceKuliah(),
               );
 
-          // Fungsi untuk mendapatkan slot yang tersedia
+              // Fungsi untuk mendapatkan slot yang tersedia
               int getAvailableSlotCount(ClassMentorKuliah kelas) {
                 int approvedCount = kelas.transactions
                         ?.where((t) => t.paymentStatus == "Approved")

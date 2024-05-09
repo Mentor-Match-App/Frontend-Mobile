@@ -14,7 +14,7 @@ class QualityAKarierScreen extends StatefulWidget {
 }
 
 class _QualityAKarierScreenState extends State<QualityAKarierScreen> {
- late Future<Karier> futureKarierData;
+  late Future<Karier> futureKarierData;
 
   @override
   void initState() {
@@ -28,15 +28,17 @@ class _QualityAKarierScreenState extends State<QualityAKarierScreen> {
       future: futureKarierData,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
+          return Container(
+              height: MediaQuery.of(context).size.height / 2.0,
+              child: Center(child: CircularProgressIndicator()));
         } else if (snapshot.hasError) {
           return Center(child: Text('Error: ${snapshot.error}'));
         } else if (snapshot.hasData) {
-        final mentorsWithLanguageCategory = snapshot.data!.mentors!
-              .where((mentor) => mentor.mentorClass!
-                  .any((mentorClass) => mentorClass.category == 'Quality Assurance'))
+          final mentorsWithLanguageCategory = snapshot.data!.mentors!
+              .where((mentor) => mentor.mentorClass!.any(
+                  (mentorClass) => mentorClass.category == 'Quality Assurance'))
               .toList();
-           return GridView.builder(
+          return GridView.builder(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               childAspectRatio: 3 / 5,
@@ -52,7 +54,7 @@ class _QualityAKarierScreenState extends State<QualityAKarierScreen> {
                 orElse: () => ExperienceKarier(),
               );
 
-       // Fungsi untuk mendapatkan slot yang tersedia
+              // Fungsi untuk mendapatkan slot yang tersedia
               int getAvailableSlotCount(ClassMentorKarier kelas) {
                 int approvedCount = kelas.transactions
                         ?.where((t) => t.paymentStatus == "Approved")

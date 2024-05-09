@@ -19,15 +19,19 @@ import 'package:url_launcher/url_launcher.dart';
 
 class DetailMentorSessionsNew extends StatefulWidget {
   // final String sessionsid;
+  final List<SessionData>? session;
+
   final MentorSession detailmentor;
   final int availableSlots;
   final int totalParticipants;
+  final List<MentorReview> mentorReviews;
   DetailMentorSessionsNew({
     Key? key,
-    // required this.sessionsid,
+    required this.session,
     required this.totalParticipants,
     required this.availableSlots,
     required this.detailmentor,
+    required this.mentorReviews,
   }) : super(key: key);
   @override
   State<DetailMentorSessionsNew> createState() =>
@@ -62,7 +66,6 @@ class _DetailMentorSessionsNewState extends State<DetailMentorSessionsNew> {
     String formattedJadwal = parsedJadwal != null
         ? DateFormat('dd MMMM yyyy').format(parsedJadwal)
         : "No scheduled session";
-
 
     return Scaffold(
       appBar: AppBar(
@@ -202,86 +205,172 @@ class _DetailMentorSessionsNewState extends State<DetailMentorSessionsNew> {
                             height: 24,
                           ),
                           Container(
+                            color: Colors.white,
                             width: double.infinity,
                             constraints: BoxConstraints(
                               minHeight: MediaQuery.of(context).size.height,
                             ),
-                            decoration: BoxDecoration(
-                              color: ColorStyle().tertiaryColors,
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(90),
-                              ),
-                            ),
+                            padding: EdgeInsets.all(25),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Padding(
-                                  padding: const EdgeInsets.only(
-                                      top: 24.0,
-                                      left: 24,
-                                      bottom: 12.0,
-                                      right: 12.0),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Align(
-                                        alignment: Alignment.centerRight,
-                                        child: Text(
-                                          "Jadwal Session",
-                                          style: FontFamily()
-                                              .titleText
-                                              .copyWith(
-                                                color:
-                                                    ColorStyle().primaryColors,
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: mentorDetail.session != null &&
+                                          mentorDetail.session!.isNotEmpty
+                                      ? ListView.builder(
+                                          shrinkWrap: true,
+                                          physics:
+                                              NeverScrollableScrollPhysics(),
+                                          itemCount:
+                                              mentorDetail.session!.length,
+                                          itemBuilder: (context, index) {
+                                            final session =
+                                                mentorDetail.session![index];
+
+                                            String formattedJadwal = DateFormat(
+                                                    'dd MMM yyyy')
+                                                .format(DateTime.parse(
+                                                    session.dateTime ?? ""));
+                                            String formattedStartTime =
+                                                DateFormat('HH:mm').format(
+                                                    DateTime.parse(
+                                                        session.startTime ??
+                                                            ""));
+                                            String formattedEndTime =
+                                                DateFormat('HH:mm').format(
+                                                    DateTime.parse(
+                                                        session.endTime ?? ""));
+
+                                            return Padding(
+                                              padding: const EdgeInsets.only(
+                                                  bottom: 40),
+                                              child: Container(
+                                                decoration: BoxDecoration(
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                      color: ColorStyle()
+                                                          .tertiaryColors,
+                                                      blurRadius: 4,
+                                                      spreadRadius: 4,
+                                                      offset: Offset(0, 4),
+                                                    ),
+                                                  ],
+                                                  color: Colors.white,
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                          Radius.circular(5)),
+                                                ),
+                                                child: Padding(
+                                                  padding: const EdgeInsets.all(
+                                                      32.0),
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .only(
+                                                                top: 24.0,
+                                                                left: 24,
+                                                                bottom: 12.0,
+                                                                right: 12.0),
+                                                        child: Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Align(
+                                                              alignment: Alignment
+                                                                  .centerRight,
+                                                              child: Text(
+                                                                "Jadwal Session",
+                                                                style: FontFamily()
+                                                                    .titleText
+                                                                    .copyWith(
+                                                                      color: ColorStyle()
+                                                                          .primaryColors,
+                                                                    ),
+                                                              ),
+                                                            ),
+                                                            JadwalSessionWidget(
+                                                              icon:
+                                                                  Icons.comment,
+                                                              title1: "topic",
+                                                              title2: widget
+                                                                      .detailmentor
+                                                                      .session!
+                                                                      .first
+                                                                      .title ??
+                                                                  "No Topic",
+                                                            ),
+                                                            JadwalSessionWidget(
+                                                              icon: Icons
+                                                                  .access_time_outlined,
+                                                              title1: "time",
+                                                              // title2: widget.jadwal + startTime + endTime,
+                                                              title2: formattedJadwal +
+                                                                  " " +
+                                                                  formattedStartTime +
+                                                                  " - " +
+                                                                  formattedEndTime,
+                                                            ),
+                                                            const JadwalSessionWidget(
+                                                                icon: Icons
+                                                                    .location_on_outlined,
+                                                                title1:
+                                                                    "location",
+                                                                title2:
+                                                                    "Meeting Zoom"),
+                                                            JadwalSessionWidget(
+                                                                icon: Icons
+                                                                    .people_alt_outlined,
+                                                                title1:
+                                                                    "Total Participants",
+                                                                title2: widget
+                                                                    .totalParticipants
+                                                                    .toString()),
+                                                            JadwalSessionWidget(
+                                                              icon: Icons
+                                                                  .chair_alt,
+                                                              title1:
+                                                                  "Available Slots",
+                                                              title2: widget
+                                                                  .availableSlots
+                                                                  .toString(),
+                                                            ),
+                                                            const SizedBox(
+                                                                height: 24),
+                                                            ElevatedButtonWidget(
+                                                              title:
+                                                                  "Booking Session",
+                                                              onPressed: () {
+                                                                _showDialog(
+                                                                    context);
+                                                              },
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
                                               ),
+                                            );
+                                          },
+                                        )
+                                      : Center(
+                                          child: Text(
+                                            'Belum ada program',
+                                            style: FontFamily().regularText,
+                                          ),
                                         ),
-                                      ),
-                                      JadwalSessionWidget(
-                                        icon: Icons.comment,
-                                        title1: "topic",
-                                        title2: widget.detailmentor.session!
-                                                .first.title ??
-                                            "No Topic",
-                                      ),
-                                      JadwalSessionWidget(
-                                        icon: Icons.access_time_outlined,
-                                        title1: "time",
-                                        // title2: widget.jadwal + startTime + endTime,
-                                        title2: formattedJadwal +
-                                            " " +
-                                            formattedStartTime +
-                                            " - " +
-                                            formattedEndTime,
-                                      ),
-                                      const JadwalSessionWidget(
-                                          icon: Icons.location_on_outlined,
-                                          title1: "location",
-                                          title2: "Meeting Zoom"),
-                                      JadwalSessionWidget(
-                                          icon: Icons.people_alt_outlined,
-                                          title1: "Total Participants",
-                                          title2: widget.totalParticipants
-                                              .toString()),
-                                      JadwalSessionWidget(
-                                        icon: Icons.chair_alt,
-                                        title1: "Available Slots",
-                                        title2:
-                                            widget.availableSlots.toString(),
-                                      ),
-                                      const SizedBox(height: 24),
-                                      ElevatedButtonWidget(
-                                        title: "Booking Session",
-                                        onPressed: () {
-                                          _showDialog(context);
-                                        },
-                                      ),
-                                    ],
-                                  ),
                                 ),
                               ],
                             ),
-                          )
+                          ),
                         ],
                       ),
                     ),

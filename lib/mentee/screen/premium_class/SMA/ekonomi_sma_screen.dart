@@ -13,7 +13,7 @@ class EkonomiSMAScreen extends StatefulWidget {
 }
 
 class _EkonomiSMAScreenState extends State<EkonomiSMAScreen> {
-late Future<SMA> futureSMAData;
+  late Future<SMA> futureSMAData;
 
   @override
   void initState() {
@@ -27,7 +27,9 @@ late Future<SMA> futureSMAData;
       future: futureSMAData,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
+          return Container(
+              height: MediaQuery.of(context).size.height / 2.0,
+              child: Center(child: CircularProgressIndicator()));
         } else if (snapshot.hasError) {
           return Center(child: Text('Error: ${snapshot.error}'));
         } else if (snapshot.hasData) {
@@ -36,7 +38,7 @@ late Future<SMA> futureSMAData;
                   .any((mentorClass) => mentorClass.category == 'Ekonomi'))
               .toList();
 
-         return GridView.builder(
+          return GridView.builder(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               childAspectRatio: 3 / 5,
@@ -51,8 +53,9 @@ late Future<SMA> futureSMAData;
                 (exp) => exp.isCurrentJob ?? false,
                 orElse: () => ExperienceSMA(),
               );
-                 /// if all class is active ///
-               // Fungsi untuk mendapatkan slot yang tersedia
+
+              /// if all class is active ///
+              // Fungsi untuk mendapatkan slot yang tersedia
               int getAvailableSlotCount(ClassMentorSMA kelas) {
                 int approvedCount = kelas.transactions
                         ?.where((t) => t.paymentStatus == "Approved")

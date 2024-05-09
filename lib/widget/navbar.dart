@@ -18,7 +18,7 @@ class _PopMenuButtonWidgetState extends State<PopMenuButtonWidget> {
     return PopupMenuButton<int>(
       // add icon, by default "3 dot" icon
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           const Icon(Icons.arrow_drop_down_outlined),
           Text(

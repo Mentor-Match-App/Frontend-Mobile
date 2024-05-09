@@ -363,7 +363,7 @@ class _EditProfileMentorScreenState extends State<EditProfileMentorScreen> {
 
   Widget _saveButton(BuildContext context) {
     return ElevatedButtonWidget(
-        title: "Save",
+        title: "Simpan",
         onPressed: () {
           // Validate if any skills have been added to the chips (i.e., the _skills list is not empty)
           if (_skills.isEmpty) {

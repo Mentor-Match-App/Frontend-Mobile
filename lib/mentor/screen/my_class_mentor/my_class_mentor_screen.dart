@@ -66,7 +66,9 @@ class _MyClassCreateMentorState extends State<MyClassCreateMentor> {
       future: classData,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator();
+          return Container(
+              height: MediaQuery.of(context).size.height / 2.0,
+              child: Center(child: CircularProgressIndicator()));
         } else if (snapshot.hasError) {
           return Text("Error: ${snapshot.error}");
         } else if (snapshot.hasData && snapshot.data!.user?.userClass != null) {
@@ -163,7 +165,7 @@ class _MyClassCreateMentorState extends State<MyClassCreateMentor> {
                                     MaterialPageRoute(
                                       builder: (context) =>
                                           DetailMyClassMentorScreen(
-                                            feedbacks: classData.feedbacks ?? [],
+                                        feedbacks: classData.feedbacks ?? [],
                                         addressMentoring:
                                             classData.address ?? '',
                                         locationMentoring:

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:mentormatch_apps/mentee/screen/session/detail_session_mentor.dart';
-import 'package:mentormatch_apps/mentee/screen/session/session_screen.dart';
 import 'package:mentormatch_apps/mentee/screen/detail_mentor_class_screen.dart';
 import 'package:mentormatch_apps/mentee/screen/premium_class/karier/karier_screen.dart';
 import 'package:mentormatch_apps/mentee/screen/premium_class/kuliah/kuliah_screen.dart';
+import 'package:mentormatch_apps/mentee/screen/premium_class/premium_class_screen.dart';
 import 'package:mentormatch_apps/mentee/screen/premium_class/sd/sd_screen.dart';
 import 'package:mentormatch_apps/mentee/screen/premium_class/sma/SMA_screen.dart';
 import 'package:mentormatch_apps/mentee/screen/premium_class/smp/SMP_screen.dart';
-import 'package:mentormatch_apps/mentee/screen/premium_class/premium_class_screen.dart';
+import 'package:mentormatch_apps/mentee/screen/session/detail_session_mentor.dart';
+import 'package:mentormatch_apps/mentee/screen/session/session_screen.dart';
 import 'package:mentormatch_apps/mentee/service/session_mentor_service.dart';
 import 'package:mentormatch_apps/mentor/model/mentor_model.dart';
 import 'package:mentormatch_apps/mentor/model/session_model.dart';
@@ -393,10 +393,23 @@ class _HomeMenteeScreenState extends State<HomeMenteeScreen> {
                                         MaterialPageRoute(
                                           builder: (context) =>
                                               DetailMentorSessionsNew(
-                                            availableSlots: availableSlots,
+                                            session: mentor.session,
+                                            availableSlots:
+                                                mentor.session!.isEmpty
+                                                    ? 0
+                                                    : mentor.session!.first
+                                                            .maxParticipants! -
+                                                        (mentor
+                                                                .session!
+                                                                .first
+                                                                .participant
+                                                                ?.length ??
+                                                            0),
                                             detailmentor: mentor,
                                             totalParticipants:
                                                 numberOfParticipants,
+                                            mentorReviews:
+                                                mentor.mentorReviews ?? [],
                                           ),
                                         ),
                                       );

@@ -126,10 +126,10 @@ class _MyMateriMentorState extends State<MyMateriMentor> {
           ),
           SliverGrid(
             gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                crossAxisSpacing: 4, //lebar
+                crossAxisSpacing: 3, //lebar
                 mainAxisSpacing: 10, //tinggi
                 mainAxisExtent: 180,
-                maxCrossAxisExtent: 200),
+                maxCrossAxisExtent: 220),
             delegate: SliverChildBuilderDelegate(
               (BuildContext context, int index) {
                 return _buildGridItem(index);
