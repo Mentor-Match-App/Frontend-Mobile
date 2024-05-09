@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mentormatch_apps/mentee/screen/bottom_mentee_screen.dart';
 import 'package:mentormatch_apps/mentee/screen/notification_mentee_screen.dart';
 import 'package:mentormatch_apps/mentee/screen/premium_class/premium_class_screen.dart';
 import 'package:mentormatch_apps/mentee/screen/session/session_screen.dart';
@@ -155,7 +156,16 @@ class _AppBarLogoNotifState extends State<AppBarLogoNotif> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Image.asset('assets/Handoff/logo/LogoMobile.png'),
+        GestureDetector(
+  onTap: () {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => BottomNavbarMenteeScreen()),
+    );
+  },
+  child: Image.asset('assets/Handoff/logo/LogoMobile.png'),
+)
+,
         IconButton(
           onPressed: () {
             Navigator.push(

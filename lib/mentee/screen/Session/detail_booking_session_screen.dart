@@ -139,7 +139,7 @@ class _DetailBookingSessionState extends State<DetailBookingSession> {
                       context,
                       MaterialPageRoute(
                           builder: (context) => const BottomNavbarMenteeScreen(
-                                activeScreen: 2,
+                                activeScreen: 1,
                               )),
                       (Route<dynamic> route) =>
                           false, // Remove all routes until the new route

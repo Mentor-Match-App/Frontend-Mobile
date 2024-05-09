@@ -15,6 +15,7 @@ import 'package:mentormatch_apps/widget/category_card.dart';
 import 'package:mentormatch_apps/widget/experience_widget.dart';
 import 'package:mentormatch_apps/widget/navbar.dart';
 import 'package:mentormatch_apps/widget/profile_avatar.dart';
+import 'package:mentormatch_apps/widget/review_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DetailMentorSessionsNew extends StatefulWidget {
@@ -348,7 +349,7 @@ class _DetailMentorSessionsNewState extends State<DetailMentorSessionsNew> {
                                                                   "Booking Session",
                                                               onPressed: () {
                                                                 _showDialog(
-                                                                    context);
+                                                                    context, session.id.toString());
                                                               },
                                                             ),
                                                           ],
@@ -385,97 +386,126 @@ class _DetailMentorSessionsNewState extends State<DetailMentorSessionsNew> {
   }
 
   /// booking class ////
-  void _showDialog(BuildContext context) {
+ void _showDialog(BuildContext context, String sessionId) {
+    final mentorDetail = widget.detailmentor;
+
     DateTime? parsedJadwal;
-    if (widget.detailmentor.session != null &&
-        widget.detailmentor.session!.isNotEmpty) {
-      parsedJadwal =
-          DateTime.parse(widget.detailmentor.session!.first.dateTime!);
+    if (mentorDetail.session != null && mentorDetail.session!.isNotEmpty) {
+      parsedJadwal = DateTime.parse(mentorDetail.session!.first.dateTime!);
     }
+    final DateFormat formatOutput = DateFormat("HH:mm");
+    final String formattedStartTime = formatOutput
+        .format(DateTime.parse(mentorDetail.session!.first.startTime!));
+    final String formattedEndTime = formatOutput
+        .format(DateTime.parse(mentorDetail.session!.first.endTime!));
+
+    String formattedJadwal = parsedJadwal != null
+        ? DateFormat('dd MMMM yyyy').format(parsedJadwal)
+        : "No scheduled session";
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
+          contentPadding: EdgeInsets.symmetric(
+              horizontal: 24, vertical: 20), // Atur padding konten
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),
           backgroundColor: ColorStyle().whiteColors,
           title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text("Booking Session", style: FontFamily().titleText),
+              Text("Booking Class", style: FontFamily().titleText),
+              SizedBox(width: 20),
               IconButton(
                 onPressed: () => Navigator.of(context).pop(),
                 icon: Icon(
-                  Icons.close_sharp,
+                  Icons.close_rounded,
                   color: ColorStyle().errorColors,
                 ),
               )
             ],
           ),
-          content: Padding(
-            padding: const EdgeInsets.all(12),
-            child: Text(
-              "Apakah kamu yakin untuk memesan session ini? Kamu dapat memesan session ini secara gratis",
-              textAlign: TextAlign.center,
-              style: FontFamily().regularText,
+          content: Container(
+            width: 400,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  "Apakah kamu yakin untuk memesan session ini, Kamu dapat memesan session ini secara gratis",
+                  textAlign: TextAlign.center,
+                  style: FontFamily().regularText.copyWith(
+                        fontSize: 14,
+                      ),
+                ),
+                SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    SmallOutlinedButton(
+                      style: FontFamily().regularText.copyWith(
+                          color: ColorStyle().primaryColors, fontSize: 16),
+                      height: 48,
+                      width: 150,
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      title: "Cancel",
+                    ),
+                    SizedBox(
+                      child: SmallElevatedButton(
+                        style: FontFamily().regularText.copyWith(
+                            color: ColorStyle().whiteColors, fontSize: 16),
+                        height: 48,
+                        width: 150,
+                        onPressed: () async {
+                          try {
+                            String? userId = await UserPreferences.getUserId();
+                            if (userId != null) {
+                              var result = await bookSession(sessionId, userId);
+                              if (result.isSuccess) {
+                                // ignore: use_build_context_synchronously
+                                Navigator.pushAndRemoveUntil(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          DetailBookingSession(
+                                            nama_mentor: widget
+                                                .detailmentor.name
+                                                .toString(),
+                                            nama_session: widget
+                                                .detailmentor.session!
+                                                .map((session) => session.title)
+                                                .join(", "),
+                                            jadwal_session: formattedJadwal +
+                                                " " +
+                                                formattedStartTime +
+                                                " - " +
+                                                formattedEndTime,
+                                          )),
+                                  (Route<dynamic> route) => false,
+                                );
+                              } else {
+                                // Jika booking gagal, tampilkan pesan error
+                                throw Exception(result.message);
+                              }
+                            } else {
+                              throw Exception(
+                                  "Anda belum login, silahkan login terlebih dahulu.");
+                            }
+                          } catch (e) {
+                            showTopSnackBar(context, e.toString());
+                          }
+                        },
+                        title: "Booking",
+                      ),
+                    )
+                  ],
+                ),
+              ],
             ),
           ),
-          actions: <Widget>[
-            SmallOutlinedButton(
-              style: FontFamily()
-                  .regularText
-                  .copyWith(color: ColorStyle().primaryColors, fontSize: 12),
-              height: 48,
-              width: 100,
-              onPressed: () => Navigator.of(context).pop(),
-              title: "Cancel",
-            ),
-            SmallElevatedButton(
-              style: FontFamily()
-                  .regularText
-                  .copyWith(color: ColorStyle().whiteColors, fontSize: 12),
-              height: 48,
-              width: 100,
-              onPressed: () async {
-                try {
-                  String? userId = await UserPreferences.getUserId();
-                  if (userId != null) {
-                    var result = await bookSession(
-                        widget.detailmentor.session!
-                            .map((session) => session.id)
-                            .join(","),
-                        userId);
-                    if (result.isSuccess) {
-                      // Jika booking sukses, lakukan navigasi
-                      Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => DetailBookingSession(
-                                  nama_mentor:
-                                      widget.detailmentor.name.toString(),
-                                  nama_session: widget.detailmentor.session!
-                                      .map((session) => session.title)
-                                      .join(", "),
-                                  jadwal_session: parsedJadwal.toString(),
-                                )),
-                        (Route<dynamic> route) => false,
-                      );
-                    } else {
-                      // Jika booking gagal, tampilkan pesan error
-                      throw Exception(result.message);
-                    }
-                  } else {
-                    throw Exception(
-                        "Anda belum login, silahkan login terlebih dahulu.");
-                  }
-                } catch (e) {
-                  showTopSnackBar(context, e.toString());
-                }
-              },
-              title: "Booking",
-            ),
-          ],
         );
       },
     );
@@ -497,4 +527,110 @@ class _DetailMentorSessionsNewState extends State<DetailMentorSessionsNew> {
       flushbarPosition: FlushbarPosition.TOP, // Menampilkan di bagian atas
     ).show(context);
   }
+
+  Widget buildReviewWidgets() {
+    // Periksa apakah reviews ada dan tidak kosong
+    if (widget.mentorReviews != null && widget.mentorReviews!.isNotEmpty) {
+      return Column(
+        children: widget.mentorReviews!.map((review) {
+          return ReviewWidget(
+            name: review.reviewer ?? "No Name",
+            review: review.content ?? "No Review",
+          );
+        }).toList(),
+      );
+    } else {
+      // Jika tidak ada review, tampilkan pesan
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            "Belum ada review",
+            style: FontFamily().regularText,
+          ),
+        ),
+      );
+    }
+  }
 }
+
+class SkillCard extends StatelessWidget {
+  final String skill;
+  SkillCard({Key? key, required this.skill}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 12.0),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.transparent,
+            borderRadius: BorderRadius.circular(4),
+            border: Border.all(
+              color: ColorStyle().secondaryColors,
+              width: 1.5,
+            ),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(skill,
+                style: FontFamily().regularText.copyWith(
+                      fontSize: 14,
+                    )),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class ExperienceWidget extends StatelessWidget {
+  final String role;
+  final String company;
+  ExperienceWidget({Key? key, required this.role, required this.company})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 8.0, bottom: 8.0, left: 12.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Icon(Icons.work_outline_outlined,
+              size: 20, color: ColorStyle().primaryColors),
+          SizedBox(width: 8), // Sesuaikan sesuai dengan kebutuhan Anda
+          Column(
+            crossAxisAlignment:
+                CrossAxisAlignment.start, // Atur sesuai kebutuhan
+            children: [
+              Text(role, style: FontFamily().boldText.copyWith(fontSize: 16)),
+              Text(company,
+                  style: FontFamily().regularText.copyWith(fontSize: 14)),
+            ],
+          )
+        ],
+      ),
+    );
+  }
+}
+
+  void showTopSnackBar(BuildContext context, String message) {
+    Flushbar(
+      backgroundColor: ColorStyle().secondaryColors,
+      message: message,
+      icon: Icon(
+        Icons.info_outline,
+        size: 28.0,
+        color: ColorStyle().whiteColors,
+      ),
+      duration: Duration(seconds: 3),
+      leftBarIndicatorColor: ColorStyle().errorColors,
+      margin: EdgeInsets.all(8),
+      borderRadius: BorderRadius.circular(8),
+      flushbarPosition: FlushbarPosition.TOP, // Menampilkan di bagian atas
+    ).show(context);
+  }
+
