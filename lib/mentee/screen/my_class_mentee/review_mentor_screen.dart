@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:mentormatch_apps/mentee/provider/review_mentor_provider.dart';
 import 'package:mentormatch_apps/mentee/screen/bottom_mentee_screen.dart';
@@ -68,11 +69,16 @@ class _ReviewMentorScreenState extends State<ReviewMentorScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           ClipOval(
-                            child: Image.network(
-                              widget.mentorPhoto.toString(),
+                            child: CachedNetworkImage(
+                              imageUrl: widget.mentorPhoto,
                               fit: BoxFit.cover,
                               width: 98,
                               height: 98,
+                              placeholder: (context, url) => Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                              errorWidget: (context, url, error) =>
+                                  Icon(Icons.error),
                             ),
                           ),
                           const SizedBox(

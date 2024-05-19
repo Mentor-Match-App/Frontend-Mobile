@@ -1,7 +1,7 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:mentormatch_apps/mentee/model/community_model.dart';
 import 'package:mentormatch_apps/mentee/service/community_service.dart';
-
 
 class CommunityListScreen extends StatefulWidget {
   @override
@@ -10,7 +10,6 @@ class CommunityListScreen extends StatefulWidget {
 
 class _CommunityListScreenState extends State<CommunityListScreen> {
   final CommunityService communityService = CommunityService();
- 
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +40,13 @@ class _CommunityListScreenState extends State<CommunityListScreen> {
                 itemBuilder: (context, index) {
                   var community = communityList[index];
                   return ListTile(
-                    leading: Image.network(community.imageUrl ?? ''),
+                    leading: CachedNetworkImage(
+                      imageUrl: community.imageUrl ?? '',
+                      placeholder: (context, url) => Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                      errorWidget: (context, url, error) => Icon(Icons.error),
+                    ),
                     title: Text(community.name ?? ''),
                     subtitle: Text(community.link ?? ''),
                     // Anda dapat menambahkan lebih banyak informasi komunitas sesuai kebutuhan

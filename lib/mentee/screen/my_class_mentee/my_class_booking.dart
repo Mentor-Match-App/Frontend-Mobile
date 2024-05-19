@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:mentormatch_apps/mentee/model/my_class_model.dart';
 import 'package:mentormatch_apps/mentee/screen/my_class_mentee/detail_my_class_mentee_screen.dart';
@@ -128,13 +129,17 @@ class _MyClassBookingMenteeState extends State<MyClassBookingMentee> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               ClipOval(
-                                child: Image.network(
-                                  classData.mentor!.photoUrl.toString(),
-                                  fit: BoxFit.cover,
-                                  width: 98,
-                                  height: 98,
+                                  child: CachedNetworkImage(
+                                imageUrl: classData.mentor!.photoUrl.toString(),
+                                fit: BoxFit.cover,
+                                width: 98,
+                                height: 98,
+                                placeholder: (context, url) => Center(
+                                  child: CircularProgressIndicator(),
                                 ),
-                              ),
+                                errorWidget: (context, url, error) =>
+                                    Icon(Icons.error),
+                              )),
                               const SizedBox(width: 10),
                               Expanded(
                                 child: Column(

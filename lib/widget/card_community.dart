@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
@@ -8,11 +9,11 @@ class CardCommunity extends StatefulWidget {
   final String imagePath;
   final VoidCallback onPressed;
 
-
   CardCommunity({
     Key? key,
     required this.imagePath,
-    required this.title, required this.onPressed,
+    required this.title,
+    required this.onPressed,
   }) : super(key: key);
 
   @override
@@ -35,11 +36,15 @@ class _GirdItemMentorState extends State<CardCommunity> {
           padding: const EdgeInsets.all(12),
           child: Column(
             children: [
-              Image.network(
-                widget.imagePath,
-                height: 100,
+              CachedNetworkImage(
+                imageUrl: widget.imagePath,
+                fit: BoxFit.cover,
                 width: 111,
-                fit: BoxFit.fill,
+                height: 100,
+                placeholder: (context, url) => Center(
+                  child: CircularProgressIndicator(),
+                ),
+                errorWidget: (context, url, error) => Icon(Icons.error),
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 12.0, bottom: 12.0),
@@ -56,8 +61,8 @@ class _GirdItemMentorState extends State<CardCommunity> {
                     .copyWith(color: ColorStyle().whiteColors, fontSize: 12),
                 height: 24,
                 width: 136,
-                title: "Bergabung",
-                 onPressed: widget.onPressed,
+                title: "Lihat",
+                onPressed: widget.onPressed,
               )
             ],
           ),

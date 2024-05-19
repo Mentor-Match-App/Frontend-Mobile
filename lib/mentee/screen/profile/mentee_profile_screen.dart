@@ -173,51 +173,24 @@ class _ProfileMenteeScreenState extends State<ProfileMenteeScreen> {
                                 ],
                               ),
                             ),
-                            Builder(
-                              builder: (context) {
-                                // Check if there are experiences and if any of them is marked as a current job.
-                                var hasCurrentJob = mentee.user?.experiences
-                                        ?.any((element) =>
-                                            element.isCurrentJob == true) ??
-                                    false;
-
-                                // Only display the Row widget if there is a current job experience.
-                                if (hasCurrentJob) {
-                                  var currentExperience =
-                                      mentee.user!.experiences!.firstWhere(
-                                    (element) => element.isCurrentJob == true,
-                                  );
-
-                                  String jobTitle =
-                                      currentExperience.jobTitle ??
-                                          "No Job Title";
-                                  String company =
-                                      currentExperience.company ?? "No Company";
-
-                                  return Center(
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize
-                                          .min, // Ensures the Row only takes up necessary space
-                                      children: [
-                                        Icon(
-                                          Icons.work,
-                                          color: ColorStyle().primaryColors,
-                                        ),
-                                        SizedBox(
-                                            width:
-                                                8), // Provides a small gap between the icon and the text
-                                        Text(
-                                          "$jobTitle at $company",
-                                          style: FontFamily().regularText,
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                } else {
-                                  // Return an empty Container if there's no current job experience.
-                                  return Container();
-                                }
-                              },
+                            Center(
+                              child: Row(
+                                mainAxisSize: MainAxisSize
+                                    .min, // Ensures the Row only takes up necessary space
+                                children: [
+                                  Icon(
+                                    Icons.work,
+                                    color: ColorStyle().primaryColors,
+                                  ),
+                                  SizedBox(
+                                      width:
+                                          8), // Provides a small gap between the icon and the text
+                                  Text(
+                                    "${mentee.user?.experiences?.firstWhere((element) => element.isCurrentJob == true, orElse: () => ExperienceMentee()).jobTitle ?? 'No Job Title'} at ${mentee.user?.experiences?.firstWhere((element) => element.isCurrentJob == true, orElse: () => ExperienceMentee()).company ?? 'No Company'}",
+                                    style: FontFamily().regularText,
+                                  ),
+                                ],
+                              ),
                             ),
 
 // For Location Information Row

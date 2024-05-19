@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
@@ -42,9 +43,13 @@ class _CardItemMentorState extends State<CardItemMentor> {
           children: [
             Expanded(
               flex: 3,
-              child: Image.network(
-                widget.imagePath,
+              child: CachedNetworkImage(
+                imageUrl: widget.imagePath,
                 fit: BoxFit.cover,
+                placeholder: (context, url) => Center(
+                  child: CircularProgressIndicator(),
+                ),
+                errorWidget: (context, url, error) => Icon(Icons.error),
               ),
             ),
             Padding(

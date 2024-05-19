@@ -218,7 +218,7 @@ class _SMPScreenState extends State<SMPScreen> {
                           _handleMenuSelected('Kimia');
                         },
                         title: "Kimia",
-                        img: 'assets/Handoff/icon/categoryIcon/SMP/Kimia.png',
+                        img: 'assets/Handoff/icon/categoryIcon/SMP/kimia.png',
                       ),
                       CategoriCardWidget(
                         isActive: isTechActive,

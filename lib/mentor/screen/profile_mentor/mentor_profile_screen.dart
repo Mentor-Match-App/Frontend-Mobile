@@ -132,8 +132,7 @@ class _MentorProfileScreenState extends State<MentorProfileScreen> {
                               imageUrl: mentor!.user?.photoUrl,
                             ),
                             SizedBox(
-                              height:
-                                  40, // Adjust the height to ensure enough space for the Stack
+                              height: 40,
                               child: Stack(
                                 children: [
                                   Center(
@@ -176,8 +175,6 @@ class _MentorProfileScreenState extends State<MentorProfileScreen> {
                                 ],
                               ),
                             ),
-
-// For Location Information Row
                             Center(
                               child: Row(
                                 mainAxisSize: MainAxisSize

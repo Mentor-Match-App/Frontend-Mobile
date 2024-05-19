@@ -63,10 +63,10 @@ class _MyClassMenteeListScreenState extends State<MyClassMenteeListScreen> {
             Padding(
               padding: EdgeInsets.all(20.0),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Container(
-                    width: 150,
+                    width: 120,
                     height: 38,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(4),
@@ -87,8 +87,11 @@ class _MyClassMenteeListScreenState extends State<MyClassMenteeListScreen> {
                       ),
                     ),
                   ),
+                  SizedBox(
+                    width: 10,
+                  ),
                   Container(
-                    width: 150,
+                    width: 120,
                     height: 38,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(4),
