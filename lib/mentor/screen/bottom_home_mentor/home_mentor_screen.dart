@@ -6,6 +6,7 @@ import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
 import 'package:mentormatch_apps/widget/button.dart';
 import 'package:mentormatch_apps/widget/category_card.dart';
+import 'package:mentormatch_apps/widget/search_bar.dart';
 
 class HomeMentorScreen extends StatefulWidget {
   const HomeMentorScreen({Key? key}) : super(key: key);
@@ -54,11 +55,22 @@ class _HomeMentorScreenState extends State<HomeMentorScreen> {
                       ),
                 ),
               ),
+              SearchBarWidget(title: 'search'),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
+                    boxShadow: [
+                      BoxShadow(
+                        color: ColorStyle()
+                            .blackColors
+                            .withOpacity(0.3), // Warna shadow dengan opacity
+                        spreadRadius: 1, // Radius penyebaran shadow
+                        blurRadius: 2, // Radius blur shadow
+                        offset: Offset(0, 2), // Posisi offset shadow (x, y)
+                      ),
+                    ],
                     borderRadius: BorderRadius.circular(12),
                     color: ColorStyle().tertiaryColors,
                   ),
@@ -66,39 +78,57 @@ class _HomeMentorScreenState extends State<HomeMentorScreen> {
                     children: [
                       Expanded(
                         child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             const SizedBox(height: 12),
                             Text(
-                              "Tingkatkan Masa Depan Generasi Muda",
+                              "Tingkatkan Masa Depan\nGenerasi Muda",
                               style: FontFamily().boldText.copyWith(
                                   color: ColorStyle().secondaryColors,
-                                  fontSize: 14),
+                                  fontSize: 16),
                             ),
-                            const SizedBox(height: 2),
+                            const SizedBox(height: 12),
                             Text(
                               'Dengan menjadi mentor, Anda memberikan ilmu inspiratif, mengembangkan potensi mentee, dan bersama membangun masa depan cerah.',
                               style: FontFamily().regularText,
                             ),
                             const SizedBox(
-                              height: 12,
+                              height: 4,
                             ),
                           ],
                         ),
                       ),
                       Container(
-                        height: 100,
-                        width: 100,
+                        height: 200,
+                        width: 150,
                         decoration: const BoxDecoration(
                           image: DecorationImage(
                             image: AssetImage(
-                                'assets/Handoff/ilustrator/mentor in zoom.png'),
+                                'assets/Handoff/ilustrator/banner.png'),
                             fit: BoxFit.cover,
                           ),
                         ),
                       ),
                     ],
                   ),
+                ),
+              ),
+              const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Divider(
+                  thickness:
+                      1.0, // Atur ketebalan garis sesuai keinginan Anda, misalnya 1.0
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  "what's the mentor activity",
+                  style: FontFamily().regularText.copyWith(
+                        fontSize: 16,
+                        color: ColorStyle().primaryColors,
+                      ),
                 ),
               ),
               Padding(
@@ -114,9 +144,23 @@ class _HomeMentorScreenState extends State<HomeMentorScreen> {
                   ),
                   child: Row(
                     children: [
+                      Container(
+                        height: 140,
+                        width: 140,
+                        decoration: const BoxDecoration(
+                          image: DecorationImage(
+                            image: AssetImage(
+                                'assets/Handoff/ilustrator/looking mentor.png'),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 12,
+                      ),
                       Expanded(
                         child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
                             const SizedBox(height: 12),
                             Text(
@@ -129,6 +173,7 @@ class _HomeMentorScreenState extends State<HomeMentorScreen> {
                             Text(
                               'Temukan potensi dalam menciptakan kelas menginspirasi yang mengubah hidup. Bergabunglah dalam perjalanan belajar yang tak terlupakan',
                               style: FontFamily().regularText,
+                              textAlign: TextAlign.end,
                             ),
                             const SizedBox(
                               height: 12,
@@ -151,17 +196,6 @@ class _HomeMentorScreenState extends State<HomeMentorScreen> {
                           ],
                         ),
                       ),
-                      Container(
-                        height: 100,
-                        width: 100,
-                        decoration: const BoxDecoration(
-                          image: DecorationImage(
-                            image: AssetImage(
-                                'assets/Handoff/ilustrator/looking mentor.png'),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
                     ],
                   ),
                 ),
@@ -179,9 +213,23 @@ class _HomeMentorScreenState extends State<HomeMentorScreen> {
                   ),
                   child: Row(
                     children: [
+                      Container(
+                        height: 140,
+                        width: 140,
+                        decoration: const BoxDecoration(
+                          image: DecorationImage(
+                            image: AssetImage(
+                                'assets/Handoff/ilustrator/learn together 2.png'),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 12,
+                      ),
                       Expanded(
                         child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
                             const SizedBox(height: 12),
                             Text(
@@ -194,6 +242,7 @@ class _HomeMentorScreenState extends State<HomeMentorScreen> {
                             Text(
                               'Raih Potensi Anda dalam Membuat Sesi yang Menginspirasi. Bergabunglah dalam Perjalanan Menciptakan Pengalaman Belajar yang Tak Terlupakan untuk Semua',
                               style: FontFamily().regularText,
+                              textAlign: TextAlign.end,
                             ),
                             const SizedBox(
                               height: 12,
@@ -214,17 +263,6 @@ class _HomeMentorScreenState extends State<HomeMentorScreen> {
                               },
                             )
                           ],
-                        ),
-                      ),
-                      Container(
-                        height: 100,
-                        width: 100,
-                        decoration: const BoxDecoration(
-                          image: DecorationImage(
-                            image: AssetImage(
-                                'assets/Handoff/ilustrator/learn together 2.png'),
-                            fit: BoxFit.cover,
-                          ),
                         ),
                       ),
                     ],
