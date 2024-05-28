@@ -86,6 +86,7 @@ class _ProfileMenteeScreenState extends State<ProfileMenteeScreen> {
                 '',
             experiences: experiencesMaps,
             skills: mentee.user!.skills ?? [],
+            activeScreen: 3, // Pass 3 for active screen 3
           ),
         ),
       );

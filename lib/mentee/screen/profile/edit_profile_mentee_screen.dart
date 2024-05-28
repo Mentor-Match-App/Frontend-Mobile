@@ -12,13 +12,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../../style/text.dart';
 
 class EditProfileMenteeScreen extends StatefulWidget {
-  final List<String> skills; // Ini harus di-pass ke State
+  final List<String> skills;
   final String linkedin;
   final String about;
   final String location;
   final String currentJob;
   final String currentCompany;
   final List<Map<String, String>> experiences;
+  final int activeScreen;
 
   const EditProfileMenteeScreen({
     Key? key,
@@ -29,6 +30,7 @@ class EditProfileMenteeScreen extends StatefulWidget {
     required this.currentJob,
     required this.currentCompany,
     required this.experiences,
+    required this.activeScreen, // Add this line
   }) : super(key: key);
 
   @override
@@ -114,9 +116,8 @@ class _EditProfileMenteeScreenState extends State<EditProfileMenteeScreen> {
     }
   }
 
-  void _updateUserProfile() async {
+  Future<void> _updateUserProfile() async {
     skills = _skills.map((skill) => skill['skill']!).toList();
-    // Instance of ProfileService
     ProfileService profileService = ProfileService();
     await profileService.updateProfile(
       job: _jobController.text,
@@ -357,24 +358,37 @@ class _EditProfileMenteeScreenState extends State<EditProfileMenteeScreen> {
   Widget _saveButton(BuildContext context) {
     return ElevatedButtonWidget(
       title: "Save",
-      onPressed: () {
+      onPressed: () async {
         if (_skills.isEmpty) {
           showTopSnackBar(context, 'Please add at least one skill',
               leftBarIndicatorColor: ColorStyle().errorColors);
         } else if (_formKey.currentState!.validate()) {
           _formKey.currentState!.save();
-          _updateUserProfile(); // Memanggil _updateUserProfile() tanpa await
+          await _updateUserProfile();
           showTopSnackBar(context, 'Profile updated successfully',
               leftBarIndicatorColor: ColorStyle().succesColors);
-          Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const BottomNavbarMenteeScreen(
-                activeScreen: 3,
+
+          if (widget.activeScreen == 0) {
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const BottomNavbarMenteeScreen(
+                  activeScreen: 0,
+                ),
               ),
-            ),
-            (route) => false,
-          );
+              (route) => false,
+            );
+          } else if (widget.activeScreen == 3) {
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const BottomNavbarMenteeScreen(
+                  activeScreen: 3,
+                ),
+              ),
+              (route) => false,
+            );
+          }
         }
       },
     );
