@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:mentormatch_apps/mentee/screen/notification_mentee_screen.dart';
 import 'package:mentormatch_apps/mentor/screen/create_class_and_session/form_create_session.dart';
 import 'package:mentormatch_apps/mentor/screen/daftar_mentor/syarat_ketentuan_daftar_mentor/persetujuan_1.dart';
+import 'package:mentormatch_apps/mentor/screen/notification_mentor_screen.dart';
+import 'package:mentormatch_apps/mentor/service/notification_service.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
 import 'package:mentormatch_apps/widget/button.dart';
-import 'package:mentormatch_apps/widget/category_card.dart';
 import 'package:mentormatch_apps/widget/search_bar.dart';
 
 class HomeMentorScreen extends StatefulWidget {
@@ -16,6 +16,29 @@ class HomeMentorScreen extends StatefulWidget {
 }
 
 class _HomeMentorScreenState extends State<HomeMentorScreen> {
+  final NotificationService _notificationService = NotificationService();
+  int _unreadNotificationsCount = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchUnreadNotificationsCount();
+  }
+
+  Future<void> _fetchUnreadNotificationsCount() async {
+    try {
+      final notifications =
+          await _notificationService.fetchNotificationsForCurrentUser();
+      final unreadCount =
+          notifications.where((notification) => !notification.isRead!).length;
+      setState(() {
+        _unreadNotificationsCount = unreadCount;
+      });
+    } catch (e) {
+      print(e); // Handle error appropriately
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,17 +47,47 @@ class _HomeMentorScreenState extends State<HomeMentorScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Image.asset('assets/Handoff/logo/LogoMobile.png'),
-            IconButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => NotificationMenteeScreen(),
+            Stack(
+              children: [
+                IconButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => NotificationMentorScreen(),
+                      ),
+                    ).then((_) {
+                      _fetchUnreadNotificationsCount(); // Fetch the unread count when returning to this screen
+                    });
+                  },
+                  icon: Icon(Icons.notifications_none_outlined),
+                  color: ColorStyle().secondaryColors,
+                ),
+                if (_unreadNotificationsCount > 0)
+                  Positioned(
+                    right: 11,
+                    top: 11,
+                    child: Container(
+                      padding: EdgeInsets.all(2),
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      constraints: BoxConstraints(
+                        minWidth: 14,
+                        minHeight: 14,
+                      ),
+                      child: Text(
+                        '$_unreadNotificationsCount',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 8,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
                   ),
-                );
-              },
-              icon: Icon(Icons.notifications_none_outlined),
-              color: ColorStyle().secondaryColors,
+              ],
             )
           ],
         ),
@@ -250,7 +303,7 @@ class _HomeMentorScreenState extends State<HomeMentorScreen> {
                             SmallElevatedButton(
                               width: 150,
                               height: 38,
-                              title: 'Buat session',
+                              title: 'Buat Session',
                               style: FontFamily().buttonText,
                               onPressed: () {
                                 Navigator.push(

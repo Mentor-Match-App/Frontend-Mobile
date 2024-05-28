@@ -1,7 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:mentormatch_apps/fcm_service.dart';
 import 'package:mentormatch_apps/login/choose_role_screen.dart';
 import 'package:mentormatch_apps/mentee/screen/bottom_mentee_screen.dart';
 import 'package:mentormatch_apps/mentor/screen/bottom_mentor_screen.dart';
@@ -51,6 +53,12 @@ class _LoginScreenState extends State<LoginScreen> {
           // Cek data yang disimpan di SharedPreferences
           Map<String, String?> userData = await AuthService.getUserData();
 
+          // Mengambil token FCM dan mengirimkannya ke server
+          String? fcmToken = await FirebaseMessaging.instance.getToken();
+          if (fcmToken != null && userData['userId'] != null) {
+            await sendTokenToServer(fcmToken, userData['userId']!);
+          }
+
           // Tentukan navigasi berdasarkan userType
           String? userType = userData['userType'];
           if (userType == null) {
@@ -90,7 +98,7 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-@override
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -149,5 +157,4 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
-
 }

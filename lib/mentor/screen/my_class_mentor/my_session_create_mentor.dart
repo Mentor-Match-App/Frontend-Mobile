@@ -216,7 +216,7 @@ class _MySessionCreateState extends State<MySessionCreate> {
                                   ),
                                   child: TextButton.icon(
                                     style: TextButton.styleFrom(
-                                      primary: ColorStyle().whiteColors,
+                                      foregroundColor: ColorStyle().whiteColors,
                                     ),
                                     onPressed: () {
                                       // final zommLink = session.zoomLink ?? '';

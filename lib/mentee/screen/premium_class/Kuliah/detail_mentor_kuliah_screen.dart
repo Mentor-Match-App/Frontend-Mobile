@@ -147,7 +147,7 @@ class _DetailMentorKuliahScreenState extends State<DetailMentorKuliahScreen> {
                                 ),
                                 child: TextButton.icon(
                                   style: TextButton.styleFrom(
-                                    primary: ColorStyle().whiteColors,
+                                    foregroundColor: ColorStyle().whiteColors,
                                   ),
                                   onPressed: () {
                                     final linkedlnlink = widget.linkedin ?? '';

@@ -142,7 +142,7 @@ class _DetailMentorSessionsNewState extends State<DetailMentorSessionsNew> {
                                     ),
                                     child: TextButton.icon(
                                       style: TextButton.styleFrom(
-                                        primary: ColorStyle().whiteColors,
+                                        foregroundColor: ColorStyle().whiteColors,
                                       ),
                                       onPressed: () {
                                         final linkedlnlink =
