@@ -26,7 +26,7 @@ class _CommunityMenteeScreenState extends State<CommunityMenteeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-         appBar: AppBar(title: AppBarHomePage()),
+      appBar: AppBar(title: AppBarHomePage()),
       body: FutureBuilder<CommunityModels>(
         future: communityService.fetchCommunities(),
         builder: (context, snapshot) {
@@ -47,11 +47,7 @@ class _CommunityMenteeScreenState extends State<CommunityMenteeScreen> {
             } else {
               return Column(
                 children: [
-                  SearchBarWidget(
-                    title: "Search by name,company, role ",
-                    onPressed: () {},
-                  ),
-                  
+                  SearchBarWidgetMentee(),
                   Expanded(
                     child: GridView.builder(
                       gridDelegate:

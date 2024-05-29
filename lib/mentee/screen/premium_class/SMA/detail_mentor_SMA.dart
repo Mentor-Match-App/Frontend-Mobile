@@ -92,6 +92,7 @@ class _DetailMentorSMAScreenState extends State<DetailMentorSMAScreen> {
                 offset: Offset(0.0, -120 / 2.0),
                 child: Center(
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       ProfileAvatar(
                         imageUrl: widget.photoUrl,
@@ -105,16 +106,24 @@ class _DetailMentorSMAScreenState extends State<DetailMentorSMAScreen> {
                               fontSize: 16,
                             ),
                       ),
-                      TextButton.icon(
-                        onPressed: () {},
-                        icon: Icon(
-                          Icons.location_on,
-                          color: ColorStyle().primaryColors,
-                        ),
-                        label: Text(
-                          widget.location,
-                          style: FontFamily().regularText,
-                        ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          IconButton(
+                            onPressed: () {},
+                            icon: Icon(
+                              Icons.location_on,
+                              color: ColorStyle().primaryColors,
+                            ),
+                          ),
+                          const SizedBox(
+                            width: 2,
+                          ),
+                          Text(
+                            widget.location,
+                            style: FontFamily().regularText,
+                          ),
+                        ],
                       ),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -208,10 +217,14 @@ class _DetailMentorSMAScreenState extends State<DetailMentorSMAScreen> {
                       ),
                      Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: widget.classes != null &&
+                          child: widget.classes != null &&
                                 widget.classes!.isNotEmpty
                             ? Column(
-                                children: widget.classes!.map((kelas) {
+                                children: widget.classes!
+                                    .where((kelas) =>
+                                        kelas.isAvailable ==
+                                        true) // Filter kelas dengan isAvailable true
+                                    .map((kelas) {
                                   int getApprovedTransactionCount(
                                       ClassMentorSMA kelas) {
                                     int count = kelas.transactions

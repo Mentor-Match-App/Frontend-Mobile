@@ -137,7 +137,9 @@ class _KarierScreenState extends State<KarierScreen> {
     return Scaffold(
       appBar: AppBar(
         actions: [
-          AppBarPremiumClass(),
+         AppBarPremiumClass(
+            title: "Premium Class",
+          ),
         ],
         title: Text(
           'Karier',
@@ -155,9 +157,8 @@ class _KarierScreenState extends State<KarierScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SearchBarWidget(
-                  title: 'Search by name, role, company',
-                  onPressed: () {},
+                SearchBarWidgetMentee(
+                
                 ),
                 SingleChildScrollView(
                   scrollDirection: Axis.horizontal,

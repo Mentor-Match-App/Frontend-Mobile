@@ -67,7 +67,9 @@ class _SDScreenState extends State<SDScreen> {
     return Scaffold(
       appBar: AppBar(
         actions: [
-          AppBarPremiumClass(),
+        AppBarPremiumClass(
+            title: "Premium Class",
+          ),
         ],
         title: Text(
           'SD',
@@ -85,9 +87,8 @@ class _SDScreenState extends State<SDScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SearchBarWidget(
-                  title: 'Search by name, role, company',
-                  onPressed: () {},
+                SearchBarWidgetMentee(
+               
                 ),
                 SingleChildScrollView(
                   scrollDirection: Axis.horizontal,

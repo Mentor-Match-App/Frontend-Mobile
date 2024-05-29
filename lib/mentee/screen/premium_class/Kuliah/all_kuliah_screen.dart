@@ -34,7 +34,16 @@ class _AllKuliahScreenState extends State<AllKuliahScreen> {
         } else if (snapshot.hasError) {
           return Center(child: Text('Error: ${snapshot.error}'));
         } else if (snapshot.hasData) {
-          final mentors = snapshot.data!.mentors!;
+          // Filter mentors based on availability of classes
+          final mentors = snapshot.data!.mentors!.where((mentor) {
+            // Periksa apakah mentor memiliki setidaknya satu kelas yang tersedia
+            return mentor.mentorClass!
+                .any((classMentor) => classMentor.isAvailable == true);
+          }).toList();
+
+          if (mentors.isEmpty) {
+            return Center(child: Text(" Mentor masi tidak tersedia"));
+          }
 
           return GridView.builder(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -73,7 +82,7 @@ class _AllKuliahScreenState extends State<AllKuliahScreen> {
                 return availableSlots > 0 ? availableSlots : 0;
               }
 
-// Fungsi untuk menentukan apakah semua kelas dalam daftar mentor dianggap penuh
+              // Fungsi untuk menentukan apakah semua kelas dalam daftar mentor dianggap penuh
               bool allClassesFull = mentor.mentorClass!.every((classMentor) {
                 int availableSlotCount = getAvailableSlotCount(classMentor);
                 return availableSlotCount <= 0;
@@ -89,6 +98,28 @@ class _AllKuliahScreenState extends State<AllKuliahScreen> {
               return Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: CardItemMentor(
+                   onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => DetailMentorKuliahScreen(
+                          experiences: mentor.experiences ?? [],
+                          email: mentor.email ?? '',
+                          classes: mentor.mentorClass ?? [],
+                          about: mentor.about ?? '',
+                          name: mentor.name ?? 'No Name',
+                          photoUrl: mentor.photoUrl ?? '',
+                          skills: mentor.skills ?? [],
+                          classid: mentor.id.toString(),
+                          company: company,
+                          job: jobTitle,
+                          linkedin: mentor.linkedin ?? '',
+                          mentor: mentor,
+                          location: mentor.location ?? '',
+                        ),
+                      ),
+                    );
+                  },
                   title: availabilityStatus,
                   color: buttonColor,
                   onPressesd: () {

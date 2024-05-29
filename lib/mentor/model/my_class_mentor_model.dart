@@ -51,7 +51,7 @@ class User {
   String? accountName;
   dynamic rejectReason;
   List<Experience>? experiences;
-  List<Class>? userClass;
+  List<AllClass>? userClass;
   List<Session>? session;
   List<dynamic>? transactions;
   List<dynamic>? participant;
@@ -103,7 +103,7 @@ class User {
                 json["experiences"]!.map((x) => Experience.fromMap(x))),
         userClass: json["class"] == null
             ? []
-            : List<Class>.from(json["class"]!.map((x) => Class.fromMap(x))),
+            : List<AllClass>.from(json["class"]!.map((x) => AllClass.fromMap(x))),
         session: json["session"] == null
             ? []
             : List<Session>.from(
@@ -252,7 +252,7 @@ class Session {
       };
 }
 
-class Class {
+class AllClass {
   String? id;
   String? mentorId;
   String? educationLevel;
@@ -279,7 +279,7 @@ class Class {
   List<Transaction>? transactions;
   List<FeedbackMyClassMentor>? feedbacks;
 
-  Class({
+  AllClass({
     this.id,
     this.mentorId,
     this.educationLevel,
@@ -307,7 +307,7 @@ class Class {
     this.feedbacks,
   });
 
-  factory Class.fromMap(Map<String, dynamic> json) => Class(
+  factory AllClass.fromMap(Map<String, dynamic> json) => AllClass(
         id: json["id"],
         mentorId: json["mentorId"],
         educationLevel: json["educationLevel"],

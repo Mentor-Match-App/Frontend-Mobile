@@ -1,43 +1,108 @@
 import 'package:flutter/material.dart';
+import 'package:mentormatch_apps/mentee/seacrh_page_mentee_screen.dart';
+import 'package:mentormatch_apps/mentor/screen/search_page_mentor_screen.dart';
+import 'package:mentormatch_apps/style/color_style.dart';
 
-class SearchBarWidget extends StatefulWidget {
+class SearchBarWidgetMentor extends StatefulWidget {
   final String title;
   final VoidCallback? onPressed;
   final TextEditingController? controller;
 
-  SearchBarWidget({Key? key, required this.title,
-  this.controller,
-   this.onPressed})
+  SearchBarWidgetMentor(
+      {Key? key, required this.title, this.controller, this.onPressed})
       : super(key: key);
 
   @override
-  State<SearchBarWidget> createState() => _SearchBarWidgetState();
+  State<SearchBarWidgetMentor> createState() => _SearchBarWidgetMentorState();
 }
 
-class _SearchBarWidgetState extends State<SearchBarWidget> {
+class _SearchBarWidgetMentorState extends State<SearchBarWidgetMentor> {
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding:
+          const EdgeInsets.only(top: 8.0, bottom: 8.0, left: 8.0, right: 8.0),
+      child: GestureDetector(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => SearchPageMentorMobile()),
+          );
+        },
+        child: Container(
+          
+          width: 800,
+          height: 40,
+          decoration: BoxDecoration(
+            border: Border.all(color: ColorStyle().tertiaryColors),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: TextField(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => SearchPageMentorMobile()),
+              );
+            },
+            obscureText: false,
+            decoration: InputDecoration(
+              border: InputBorder.none,
+              labelText: 'Search by mentee name, class, or class name',
+
+              /// style label text
+              labelStyle: TextStyle(
+                color: ColorStyle().textColors,
+                fontSize: 14,
+              ),
+
+              prefixIcon: Icon(Icons.search),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class SearchBarWidgetMentee extends StatelessWidget {
+  const SearchBarWidgetMentee({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-      child: Container(
-        // height: 352.0,
-        // width: 200.0, // Ubah nilai lebar sesuai kebutuhan
-        padding: const EdgeInsets.symmetric(horizontal: 6.0),
-        child: TextField(
-          controller: widget.controller,
-          decoration: InputDecoration(
-            hintText: 'Search by name,company, role ',
-            prefixIcon: IconButton(
-              icon: Icon(Icons.search),
-              onPressed: widget.onPressed,
+      padding: const EdgeInsets.all(16.0),
+      child: GestureDetector(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => SearchPageMenteeMobile()),
+          );
+        },
+        child: Container(
+          height: 40,
+          decoration: BoxDecoration(
+            border: Border.all(color: ColorStyle().tertiaryColors),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: TextField(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => SearchPageMenteeMobile(),
+                ),
+              );
+            },
+            obscureText: false,
+            decoration: const InputDecoration(
+              border: InputBorder.none,
+              labelText: 'Search by mentor name, class name',
+              prefixIcon: Icon(Icons.search),
             ),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(20.0),
-            ),
-            contentPadding:
-                EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
-            hintStyle: TextStyle(fontSize: 16.0),
           ),
         ),
       ),

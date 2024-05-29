@@ -94,6 +94,7 @@ class _DetailMentorSDScreenState extends State<DetailMentorSDScreen> {
                 offset: Offset(0.0, -120 / 2.0),
                 child: Center(
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       ProfileAvatar(
                         imageUrl: widget.photoUrl,
@@ -107,16 +108,24 @@ class _DetailMentorSDScreenState extends State<DetailMentorSDScreen> {
                               fontSize: 16,
                             ),
                       ),
-                      TextButton.icon(
-                        onPressed: () {},
-                        icon: Icon(
-                          Icons.location_on,
-                          color: ColorStyle().primaryColors,
-                        ),
-                        label: Text(
-                          widget.location,
-                          style: FontFamily().regularText,
-                        ),
+                   Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          IconButton(
+                            onPressed: () {},
+                            icon: Icon(
+                              Icons.location_on,
+                              color: ColorStyle().primaryColors,
+                            ),
+                          ),
+                          const SizedBox(
+                            width: 2,
+                          ),
+                          Text(
+                            widget.location,
+                            style: FontFamily().regularText,
+                          ),
+                        ],
                       ),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -210,10 +219,14 @@ class _DetailMentorSDScreenState extends State<DetailMentorSDScreen> {
                       ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: widget.classes != null &&
+                           child: widget.classes != null &&
                                 widget.classes!.isNotEmpty
                             ? Column(
-                                children: widget.classes!.map((kelas) {
+                                children: widget.classes!
+                                    .where((kelas) =>
+                                        kelas.isAvailable ==
+                                        true) // Filter kelas dengan isAvailable true
+                                    .map((kelas) {
                                   int getApprovedTransactionCount(
                                       ClassMentorSD kelas) {
                                     int count = kelas.transactions
@@ -221,29 +234,22 @@ class _DetailMentorSDScreenState extends State<DetailMentorSDScreen> {
                                                 t.paymentStatus == "Approved")
                                             .length ??
                                         0;
-
+                                    print(
+                                        "Kelas: ${kelas.name}, Transaksi Approved: $count");
                                     return count;
                                   }
 
-                                  int getPendingTransactionCount(
-                                      ClassMentorSD kelas) {
-                                    int count = kelas.transactions
-                                            ?.where((t) =>
-                                                t.paymentStatus == "Pending")
-                                            .length ??
-                                        0;
+                                  int approvedTransactions =
+                                      getApprovedTransactionCount(kelas);
+                                  int availableSlots = kelas.maxParticipants! -
+                                      approvedTransactions;
 
-                                    return count;
-                                  }
-
-                                  ///jika jumlah  getApprovedTransactionCount + getPendingTransactionCount == maxParticipants maka warna buttonya grey///
-                                  Color buttonColor =
-                                      getApprovedTransactionCount(kelas) +
-                                                  getPendingTransactionCount(
-                                                      kelas) ==
-                                              kelas.maxParticipants
-                                          ? Colors.grey
-                                          : ColorStyle().primaryColors;
+                                  // Mengubah logika warna berdasarkan availableSlots
+                                  Color buttonColor = availableSlots > 0
+                                      ? ColorStyle()
+                                          .primaryColors // Jika masih ada slot, gunakan warna primer
+                                      : ColorStyle()
+                                          .disableColors; // Jika slot penuh, gunakan warna disable
 
                                   ///availableSlots//
 

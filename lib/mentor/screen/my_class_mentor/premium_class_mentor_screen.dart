@@ -8,14 +8,15 @@ import 'package:mentormatch_apps/widget/button.dart';
 
 enum ClassStatus { active, inactive, scheduled }
 
-class MyClassCreateMentor extends StatefulWidget {
-  MyClassCreateMentor({Key? key}) : super(key: key);
+class PremiumClassMentorScreen extends StatefulWidget {
+  PremiumClassMentorScreen({Key? key}) : super(key: key);
 
   @override
-  State<MyClassCreateMentor> createState() => _MyClassCreateMentorState();
+  State<PremiumClassMentorScreen> createState() =>
+      _PremiumClassMentorScreenState();
 }
 
-class _MyClassCreateMentorState extends State<MyClassCreateMentor> {
+class _PremiumClassMentorScreenState extends State<PremiumClassMentorScreen> {
   late Future<MyClassMentorMondel> classData;
 
   @override
@@ -25,7 +26,7 @@ class _MyClassCreateMentorState extends State<MyClassCreateMentor> {
     classData = ListClassMentor().fetchClassData();
   }
 
-  ClassStatus getClassStatus(Class classData) {
+  ClassStatus getClassStatus(AllClass classData) {
     DateTime now = DateTime.now();
     DateTime? startDate = classData.startDate != null
         ? DateTime.parse(classData.startDate!)
@@ -75,7 +76,8 @@ class _MyClassCreateMentorState extends State<MyClassCreateMentor> {
           var userClass = snapshot.data!.user!.userClass!;
           return SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.all(12.0),
+              padding: const EdgeInsets.only(
+                  left: 16.0, right: 16.0, top: 16.0, bottom: 4.0),
               child: Column(
                 children: userClass.map((classData) {
                   // Filtering transactions with "Approved" payment status
@@ -113,101 +115,87 @@ class _MyClassCreateMentorState extends State<MyClassCreateMentor> {
                       buttonText = "Scheduled"; // Default text
                   }
 
-                  return Padding(
-                    padding: const EdgeInsets.all(12.0),
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => DetailMyClassMentorScreen(
+                            feedbacks: classData.feedbacks ?? [],
+                            addressMentoring: classData.address ?? '',
+                            locationMentoring: classData.location ?? '',
+                            approvedTransactionsCount:
+                                approvedTransactions.length,
+                            transactions: classData.transactions ?? [],
+                            evaluation: classData.evaluations ?? [],
+                            learningMaterial: classData.learningMaterial ?? [],
+                            userClass: classData,
+                            aksesLinkZoom: classData.zoomLink ?? '',
+                            deskripsiKelas: classData.description.toString(),
+                            classid: classData.id.toString(),
+                            durationInDays: classData.durationInDays ?? 0,
+                            endDate: DateTime.parse(classData.endDate ?? ''),
+                            startDate:
+                                DateTime.parse(classData.startDate ?? ''),
+                            term: classData.terms ?? [],
+                            maxParticipants: classData.maxParticipants ?? 0,
+                            schedule: classData.schedule ?? '',
+                            targetLearning: classData.targetLearning ?? [],
+                            linkZoom: classData.zoomLink ?? '',
+                            namaKelas: classData.name ?? '',
+                          ),
+                        ),
+                      );
+                    },
                     child: Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
-                        border: Border.all(
-                          color: ColorStyle().tertiaryColors,
-                          width: 2,
-                        ),
+                        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.3),
+            // spreadRadius: 1,
+            blurRadius: 2,
+            offset: Offset(0, 2),
+          ),
+        ],
+                        color: ColorStyle().tertiaryColors,
                       ),
                       child: Padding(
-                        padding: const EdgeInsets.all(12.0),
+                        padding: const EdgeInsets.all(20.0),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Align(
                               alignment: Alignment.centerRight,
-                              child: SmallElevatedButton(
-                                color: buttonColor,
-                                onPressed: () {},
-                                height: 30,
-                                width: 124,
-                                title: buttonText,
-                                style: FontFamily().buttonText,
+                              child: Text(
+                                buttonText,
+                                style: FontFamily().boldText.copyWith(
+                                      color: buttonColor,
+                                      fontSize: 14,
+                                    ),
                               ),
                             ),
-                            SizedBox(height: 10),
+                            const SizedBox(height: 12),
                             Text(
                               classData.name ?? '',
-                              style: FontFamily().boldText.copyWith(
-                                  fontSize: 14,
-                                  color: ColorStyle().primaryColors),
+                              style: FontFamily().buttonText.copyWith(
+                                  color: ColorStyle().primaryColors,
+                                  fontSize: 16),
                             ),
-                            const SizedBox(height: 12),
+                            const SizedBox(height: 8),
                             Text(
-                              'Mentee: $menteeNames',
-                              style: TextStyle(/* Your TextStyle here */),
+                              'Mentee : $menteeNames',
+                              style: FontFamily().regularText.copyWith(
+                                    color: ColorStyle().blackColors,
+                                  ),
                             ),
-                            const SizedBox(height: 12),
+                            const SizedBox(height: 4),
                             Text(
-                              'Durasi: ${classData.durationInDays} Hari',
-                              style: FontFamily().regularText,
+                              'Durasi   : ${classData.durationInDays} Hari',
+                              style: FontFamily().regularText.copyWith(
+                                    color: ColorStyle().blackColors,
+                                  ),
                             ),
-                            Align(
-                              alignment: Alignment.centerRight,
-                              child: TextButton(
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          DetailMyClassMentorScreen(
-                                        feedbacks: classData.feedbacks ?? [],
-                                        addressMentoring:
-                                            classData.address ?? '',
-                                        locationMentoring:
-                                            classData.location ?? '',
-                                        approvedTransactionsCount:
-                                            approvedTransactions.length,
-                                        transactions:
-                                            classData.transactions ?? [],
-                                        evaluation: classData.evaluations ?? [],
-                                        learningMaterial:
-                                            classData.learningMaterial ?? [],
-                                        userClass: classData,
-                                        aksesLinkZoom: classData.zoomLink ?? '',
-                                        deskripsiKelas:
-                                            classData.description.toString(),
-                                        classid: classData.id.toString(),
-                                        durationInDays:
-                                            classData.durationInDays ?? 0,
-                                        endDate: DateTime.parse(
-                                            classData.endDate ?? ''),
-                                        startDate: DateTime.parse(
-                                            classData.startDate ?? ''),
-                                        term: classData.terms ?? [],
-                                        maxParticipants:
-                                            classData.maxParticipants ?? 0,
-                                        schedule: classData.schedule ?? '',
-                                        targetLearning:
-                                            classData.targetLearning ?? [],
-                                        linkZoom: classData.zoomLink ?? '',
-                                        namaKelas: classData.name ?? '',
-                                      ),
-                                    ),
-                                  );
-                                },
-                                child: Text(
-                                  'Lihat Detail',
-                                  style: FontFamily().boldText.copyWith(
-                                      color: ColorStyle().secondaryColors,
-                                      fontSize: 14),
-                                ),
-                              ),
-                            )
                           ],
                         ),
                       ),

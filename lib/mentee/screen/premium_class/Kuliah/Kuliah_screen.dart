@@ -145,7 +145,9 @@ class _KuliahScreenState extends State<KuliahScreen> {
     return Scaffold(
       appBar: AppBar(
         actions: [
-          AppBarPremiumClass(),
+        AppBarPremiumClass(
+            title: "Premium Class",
+          ),
         ],
         title: Text(
           'Kuliah',
@@ -163,9 +165,8 @@ class _KuliahScreenState extends State<KuliahScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SearchBarWidget(
-                  title: 'Search by name, role, company',
-                  onPressed: () {},
+                SearchBarWidgetMentee(
+              
                 ),
                 SingleChildScrollView(
                   scrollDirection: Axis.horizontal,

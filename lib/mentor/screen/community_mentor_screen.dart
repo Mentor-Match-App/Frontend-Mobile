@@ -48,10 +48,7 @@ class _CommunityMentorScreenState extends State<CommunityMentorScreen> {
             } else {
               return Column(
                 children: [
-                  SearchBarWidget(
-                    title: "Search by name,company, role ",
-                    onPressed: () {},
-                  ),
+                   SearchBarWidgetMentor(title: 'search by mentee name,or class name'),
                   Expanded(
                     child: GridView.builder(
                       gridDelegate:
