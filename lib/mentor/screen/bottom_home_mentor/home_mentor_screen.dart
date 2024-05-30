@@ -1,11 +1,12 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:mentormatch_apps/mentee/screen/notification_mentee_screen.dart';
 import 'package:mentormatch_apps/mentor/screen/create_class_and_session/form_create_session.dart';
 import 'package:mentormatch_apps/mentor/screen/daftar_mentor/syarat_ketentuan_daftar_mentor/persetujuan_1.dart';
-import 'package:mentormatch_apps/mentor/screen/notification_mentor_screen.dart';
-import 'package:mentormatch_apps/mentor/service/notification_service.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
 import 'package:mentormatch_apps/widget/button.dart';
+import 'package:mentormatch_apps/widget/carausel_home.dart';
 import 'package:mentormatch_apps/widget/search_bar.dart';
 
 class HomeMentorScreen extends StatefulWidget {
@@ -16,29 +17,26 @@ class HomeMentorScreen extends StatefulWidget {
 }
 
 class _HomeMentorScreenState extends State<HomeMentorScreen> {
-  final NotificationService _notificationService = NotificationService();
-  int _unreadNotificationsCount = 0;
-
-  @override
-  void initState() {
-    super.initState();
-    _fetchUnreadNotificationsCount();
-  }
-
-  Future<void> _fetchUnreadNotificationsCount() async {
-    try {
-      final notifications =
-          await _notificationService.fetchNotificationsForCurrentUser();
-      final unreadCount =
-          notifications.where((notification) => !notification.isRead!).length;
-      setState(() {
-        _unreadNotificationsCount = unreadCount;
-      });
-    } catch (e) {
-      print(e); // Handle error appropriately
-    }
-  }
-
+  final List<Map<String, String>> carouselData = [
+    {
+      'title': 'Hello,\nSelamat datang di MentorMatch',
+      'description':
+          'Mulailah membuat kelas yang akan membantu banyak orang belajar dan berkembang. Ayo mulai sekarang!',
+      'imagePath': 'assets/Handoff/ilustrator/banner.png'
+    },
+    {
+      'title': 'Menjadi Inspirasi Bagi Generasi Muda',
+      'description':
+          'Berbagi pengalaman dan pengetahuan Anda untuk membantu generasi muda meraih impian mereka.',
+      'imagePath': 'assets/Handoff/ilustrator/looking mentor.png'
+    },
+    {
+      'title': 'Siap untuk membuat perubahan?',
+      'description':
+          'Dengan menjadi mentor, Anda memberikan ilmu inspiratif yang akan membantu banyak orang belajar dan berkembang.',
+      'imagePath': 'assets/Handoff/ilustrator/learn-by-online.png'
+    },
+  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,47 +45,17 @@ class _HomeMentorScreenState extends State<HomeMentorScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Image.asset('assets/Handoff/logo/LogoMobile.png'),
-            Stack(
-              children: [
-                IconButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => NotificationMentorScreen(),
-                      ),
-                    ).then((_) {
-                      _fetchUnreadNotificationsCount(); // Fetch the unread count when returning to this screen
-                    });
-                  },
-                  icon: Icon(Icons.notifications_none_outlined),
-                  color: ColorStyle().secondaryColors,
-                ),
-                if (_unreadNotificationsCount > 0)
-                  Positioned(
-                    right: 11,
-                    top: 11,
-                    child: Container(
-                      padding: EdgeInsets.all(2),
-                      decoration: BoxDecoration(
-                        color: Colors.red,
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      constraints: BoxConstraints(
-                        minWidth: 14,
-                        minHeight: 14,
-                      ),
-                      child: Text(
-                        '$_unreadNotificationsCount',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 8,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
+            IconButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => NotificationMenteeScreen(),
                   ),
-              ],
+                );
+              },
+              icon: Icon(Icons.notifications_none_outlined),
+              color: ColorStyle().secondaryColors,
             )
           ],
         ),
@@ -108,70 +76,24 @@ class _HomeMentorScreenState extends State<HomeMentorScreen> {
                       ),
                 ),
               ),
-              SearchBarWidget(title: 'search'),
+              SearchBarWidgetMentor(
+                  title: 'search by mentee name,or class name'),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    boxShadow: [
-                      BoxShadow(
-                        color: ColorStyle()
-                            .blackColors
-                            .withOpacity(0.3), // Warna shadow dengan opacity
-                        spreadRadius: 1, // Radius penyebaran shadow
-                        blurRadius: 2, // Radius blur shadow
-                        offset: Offset(0, 2), // Posisi offset shadow (x, y)
-                      ),
-                    ],
-                    borderRadius: BorderRadius.circular(12),
-                    color: ColorStyle().tertiaryColors,
+                child: CarouselSlider(
+                  options: CarouselOptions(
+                    height: 200,
+                    autoPlay: true,
+                    enlargeCenterPage: true,
+                    enableInfiniteScroll: true,
                   ),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const SizedBox(height: 12),
-                            Text(
-                              "Tingkatkan Masa Depan\nGenerasi Muda",
-                              style: FontFamily().boldText.copyWith(
-                                  color: ColorStyle().secondaryColors,
-                                  fontSize: 16),
-                            ),
-                            const SizedBox(height: 12),
-                            Text(
-                              'Dengan menjadi mentor, Anda memberikan ilmu inspiratif, mengembangkan potensi mentee, dan bersama membangun masa depan cerah.',
-                              style: FontFamily().regularText,
-                            ),
-                            const SizedBox(
-                              height: 4,
-                            ),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        height: 200,
-                        width: 150,
-                        decoration: const BoxDecoration(
-                          image: DecorationImage(
-                            image: AssetImage(
-                                'assets/Handoff/ilustrator/banner.png'),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              const Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Divider(
-                  thickness:
-                      1.0, // Atur ketebalan garis sesuai keinginan Anda, misalnya 1.0
+                  items: carouselData.map((data) {
+                    return CarouselCard(
+                      title: data['title']!,
+                      description: data['description']!,
+                      imagePath: data['imagePath']!,
+                    );
+                  }).toList(),
                 ),
               ),
               Padding(
@@ -303,7 +225,7 @@ class _HomeMentorScreenState extends State<HomeMentorScreen> {
                             SmallElevatedButton(
                               width: 150,
                               height: 38,
-                              title: 'Buat Session',
+                              title: 'Buat session',
                               style: FontFamily().buttonText,
                               onPressed: () {
                                 Navigator.push(
