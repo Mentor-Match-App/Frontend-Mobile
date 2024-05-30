@@ -551,8 +551,9 @@ class _SearchPageMenteeMobileState extends State<SearchPageMenteeMobile> {
                                                 ),
                                                 child: TextButton.icon(
                                                   style: TextButton.styleFrom(
-                                                    primary: ColorStyle()
-                                                        .whiteColors,
+                                                    foregroundColor:
+                                                        ColorStyle()
+                                                            .whiteColors,
                                                   ),
                                                   onPressed: () {
                                                     final zommLink =

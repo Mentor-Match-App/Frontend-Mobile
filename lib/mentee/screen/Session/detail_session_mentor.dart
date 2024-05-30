@@ -11,7 +11,6 @@ import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
 import 'package:mentormatch_apps/style/text.dart';
 import 'package:mentormatch_apps/widget/button.dart';
-import 'package:mentormatch_apps/widget/category_card.dart';
 import 'package:mentormatch_apps/widget/experience_widget.dart';
 import 'package:mentormatch_apps/widget/navbar.dart';
 import 'package:mentormatch_apps/widget/profile_avatar.dart';
@@ -135,254 +134,250 @@ class _DetailMentorSessionsNewState extends State<DetailMentorSessionsNew> {
                                   color: ColorStyle().primaryColors,
                                   borderRadius: BorderRadius.circular(4),
                                 ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                    right: 12.0, top: 8.0),
-                                child: Align(
-                                  alignment: Alignment.centerRight,
-                                  child: Container(
-                                    width: 120,
-                                    height: 40,
-                                    decoration: BoxDecoration(
-                                      color: ColorStyle().primaryColors,
-                                      borderRadius: BorderRadius.circular(4),
-                                    ),
-                                    child: TextButton.icon(
-                                      style: TextButton.styleFrom(
-                                        foregroundColor: ColorStyle().whiteColors,
-                                      ),
-                                      onPressed: () {
-                                        final linkedlnlink =
-                                            widget.detailmentor.linkedin;
-                                        _launchURL(linkedlnlink.toString());
-                                      },
-                                      icon: const Icon(Icons.link),
-                                      label: Text('Linkedln',
-                                          style: FontFamily()
-                                              .regularText
-                                              .copyWith(
-                                                color: ColorStyle().whiteColors,
-                                              )),
-                                    ),
+                                child: TextButton.icon(
+                                  style: TextButton.styleFrom(
+                                    foregroundColor: ColorStyle().whiteColors,
                                   ),
+                                  onPressed: () {
+                                    final linkedlnlink =
+                                        widget.detailmentor.linkedin;
+                                    _launchURL(linkedlnlink.toString());
+                                  },
+                                  icon: const Icon(Icons.link),
+                                  label: Text('Linkedln',
+                                      style: FontFamily().regularText.copyWith(
+                                            color: ColorStyle().whiteColors,
+                                          )),
                                 ),
                               ),
                             ),
                           ),
-                        ],
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          TitleProfile(
-                            title: 'Experience',
-                            color: ColorStyle().primaryColors,
-                          ),
                           Column(
-                            children: widget.detailmentor.experiences
-                                    ?.map((experience) {
-                                  return ExperienceWidget(
-                                    role: experience.jobTitle ?? 'No Job Title',
-                                    company: experience.company ?? 'No Company',
-                                  );
-                                }).toList() ??
-                                [const Text('No experiences')],
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              TitleProfile(
+                                title: 'Experience',
+                                color: ColorStyle().primaryColors,
+                              ),
+                              Column(
+                                children: widget.detailmentor.experiences
+                                        ?.map((experience) {
+                                      return ExperienceWidget(
+                                        role: experience.jobTitle ??
+                                            'No Job Title',
+                                        company:
+                                            experience.company ?? 'No Company',
+                                      );
+                                    }).toList() ??
+                                    [const Text('No experiences')],
+                              ),
+                            ],
+                          ),
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: TitleProfile(
+                              title: 'Skills',
+                              color: ColorStyle().primaryColors,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: widget.detailmentor.skills!
+                                  .map((skill) => SkillCard(skill: skill))
+                                  .toList(),
+                            ),
+                          ),
+                          const SizedBox(height: 24),
+                          Container(
+                            color: Colors.white,
+                            width: double.infinity,
+                            constraints: BoxConstraints(
+                              minHeight: MediaQuery.of(context).size.height,
+                            ),
+                            padding: const EdgeInsets.all(25),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: mentorDetail.session != null &&
+                                          mentorDetail.session!.isNotEmpty
+                                      ? ListView.builder(
+                                          shrinkWrap: true,
+                                          physics:
+                                              const NeverScrollableScrollPhysics(),
+                                          itemCount:
+                                              mentorDetail.session!.length,
+                                          itemBuilder: (context, index) {
+                                            final session =
+                                                mentorDetail.session![index];
+
+                                            // Parse the session date-time
+                                            final DateTime sessionDate =
+                                                DateTime.parse(
+                                                    session.dateTime ?? "");
+                                            final DateTime currentDate =
+                                                DateTime.now();
+
+                                            // Filter out sessions with a date-time that has passed
+                                            if (sessionDate
+                                                .isBefore(currentDate)) {
+                                              return const SizedBox.shrink();
+                                            }
+
+                                            String formattedJadwal =
+                                                DateFormat('dd MMM yyyy')
+                                                    .format(sessionDate);
+                                            String formattedStartTime =
+                                                DateFormat('HH:mm').format(
+                                                    DateTime.parse(
+                                                        session.startTime ??
+                                                            ""));
+                                            String formattedEndTime =
+                                                DateFormat('HH:mm').format(
+                                                    DateTime.parse(
+                                                        session.endTime ?? ""));
+
+                                            // Compute total participants and available slots for each session
+                                            int totalParticipants =
+                                                session.participant?.length ??
+                                                    0;
+                                            int availableSlots =
+                                                (session.maxParticipants ?? 0) -
+                                                    totalParticipants;
+
+                                            return Padding(
+                                              padding: const EdgeInsets.only(
+                                                  bottom: 40),
+                                              child: Container(
+                                                decoration: BoxDecoration(
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                      color: ColorStyle()
+                                                          .tertiaryColors,
+                                                      blurRadius: 4,
+                                                      spreadRadius: 4,
+                                                      offset:
+                                                          const Offset(0, 4),
+                                                    ),
+                                                  ],
+                                                  color: Colors.white,
+                                                  borderRadius:
+                                                      const BorderRadius.all(
+                                                          Radius.circular(5)),
+                                                ),
+                                                child: Padding(
+                                                  padding: const EdgeInsets.all(
+                                                      32.0),
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .only(
+                                                                top: 24.0,
+                                                                left: 12,
+                                                                bottom: 12.0,
+                                                                right: 12.0),
+                                                        child: Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Align(
+                                                              alignment: Alignment
+                                                                  .centerLeft,
+                                                              child: Text(
+                                                                "Jadwal Session",
+                                                                style: FontFamily()
+                                                                    .titleText
+                                                                    .copyWith(
+                                                                      color: ColorStyle()
+                                                                          .primaryColors,
+                                                                    ),
+                                                              ),
+                                                            ),
+                                                            JadwalSessionWidget(
+                                                              icon:
+                                                                  Icons.comment,
+                                                              title1: "topic",
+                                                              title2: session
+                                                                  .title
+                                                                  .toString(),
+                                                            ),
+                                                            JadwalSessionWidget(
+                                                              icon: Icons
+                                                                  .access_time_outlined,
+                                                              title1: "time",
+                                                              title2:
+                                                                  "$formattedJadwal $formattedStartTime - $formattedEndTime",
+                                                            ),
+                                                            const JadwalSessionWidget(
+                                                              icon: Icons
+                                                                  .location_on_outlined,
+                                                              title1:
+                                                                  "location",
+                                                              title2:
+                                                                  "Meeting Zoom",
+                                                            ),
+                                                            JadwalSessionWidget(
+                                                              icon: Icons
+                                                                  .people_alt_outlined,
+                                                              title1:
+                                                                  "Total Participants",
+                                                              title2:
+                                                                  totalParticipants
+                                                                      .toString(),
+                                                            ),
+                                                            JadwalSessionWidget(
+                                                              icon: Icons
+                                                                  .chair_alt,
+                                                              title1:
+                                                                  "Available Slots",
+                                                              title2:
+                                                                  availableSlots
+                                                                      .toString(),
+                                                            ),
+                                                            const SizedBox(
+                                                                height: 24),
+                                                            ElevatedButtonWidget(
+                                                              title:
+                                                                  "Booking Session",
+                                                              onPressed: () {
+                                                                _showDialog(
+                                                                    context,
+                                                                    session.id
+                                                                        .toString());
+                                                              },
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                        )
+                                      : Center(
+                                          child: Text(
+                                            'Belum ada program',
+                                            style: FontFamily().regularText,
+                                          ),
+                                        ),
+                                ),
+                              ],
+                            ),
                           ),
                         ],
                       ),
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: TitleProfile(
-                          title: 'Skills',
-                          color: ColorStyle().primaryColors,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: widget.detailmentor.skills!
-                              .map((skill) => SkillCard(skill: skill))
-                              .toList(),
-                        ),
-                      ),
-                      const SizedBox(height: 24),
-                      Container(
-                        color: Colors.white,
-                        width: double.infinity,
-                        constraints: BoxConstraints(
-                          minHeight: MediaQuery.of(context).size.height,
-                        ),
-                        padding: const EdgeInsets.all(25),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: mentorDetail.session != null &&
-                                      mentorDetail.session!.isNotEmpty
-                                  ? ListView.builder(
-                                      shrinkWrap: true,
-                                      physics:
-                                          const NeverScrollableScrollPhysics(),
-                                      itemCount: mentorDetail.session!.length,
-                                      itemBuilder: (context, index) {
-                                        final session =
-                                            mentorDetail.session![index];
-
-                                        // Parse the session date-time
-                                        final DateTime sessionDate =
-                                            DateTime.parse(
-                                                session.dateTime ?? "");
-                                        final DateTime currentDate =
-                                            DateTime.now();
-
-                                        // Filter out sessions with a date-time that has passed
-                                        if (sessionDate.isBefore(currentDate)) {
-                                          return const SizedBox.shrink();
-                                        }
-
-                                        String formattedJadwal =
-                                            DateFormat('dd MMM yyyy')
-                                                .format(sessionDate);
-                                        String formattedStartTime =
-                                            DateFormat('HH:mm').format(
-                                                DateTime.parse(
-                                                    session.startTime ?? ""));
-                                        String formattedEndTime =
-                                            DateFormat('HH:mm').format(
-                                                DateTime.parse(
-                                                    session.endTime ?? ""));
-
-                                        // Compute total participants and available slots for each session
-                                        int totalParticipants =
-                                            session.participant?.length ?? 0;
-                                        int availableSlots =
-                                            (session.maxParticipants ?? 0) -
-                                                totalParticipants;
-
-                                        return Padding(
-                                          padding:
-                                              const EdgeInsets.only(bottom: 40),
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                              boxShadow: [
-                                                BoxShadow(
-                                                  color: ColorStyle()
-                                                      .tertiaryColors,
-                                                  blurRadius: 4,
-                                                  spreadRadius: 4,
-                                                  offset: const Offset(0, 4),
-                                                ),
-                                              ],
-                                              color: Colors.white,
-                                              borderRadius:
-                                                  const BorderRadius.all(
-                                                      Radius.circular(5)),
-                                            ),
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(32.0),
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            top: 24.0,
-                                                            left: 12,
-                                                            bottom: 12.0,
-                                                            right: 12.0),
-                                                    child: Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        Align(
-                                                          alignment: Alignment
-                                                              .centerLeft,
-                                                          child: Text(
-                                                            "Jadwal Session",
-                                                            style: FontFamily()
-                                                                .titleText
-                                                                .copyWith(
-                                                                  color: ColorStyle()
-                                                                      .primaryColors,
-                                                                ),
-                                                          ),
-                                                        ),
-                                                        JadwalSessionWidget(
-                                                          icon: Icons.comment,
-                                                          title1: "topic",
-                                                          
-                                                          title2: session.title
-                                                              .toString(),
-                                                        ),
-                                                        JadwalSessionWidget(
-                                                          icon: Icons
-                                                              .access_time_outlined,
-                                                          title1: "time",
-                                                          title2:
-                                                              "$formattedJadwal $formattedStartTime - $formattedEndTime",
-                                                        ),
-                                                        const JadwalSessionWidget(
-                                                          icon: Icons
-                                                              .location_on_outlined,
-                                                          title1: "location",
-                                                          title2:
-                                                              "Meeting Zoom",
-                                                        ),
-                                                        JadwalSessionWidget(
-                                                          icon: Icons
-                                                              .people_alt_outlined,
-                                                          title1:
-                                                              "Total Participants",
-                                                          title2:
-                                                              totalParticipants
-                                                                  .toString(),
-                                                        ),
-                                                        JadwalSessionWidget(
-                                                          icon: Icons.chair_alt,
-                                                          title1:
-                                                              "Available Slots",
-                                                          title2: availableSlots
-                                                              .toString(),
-                                                        ),
-                                                        const SizedBox(
-                                                            height: 24),
-                                                        ElevatedButtonWidget(
-                                                          title:
-                                                              "Booking Session",
-                                                          onPressed: () {
-                                                            _showDialog(
-                                                                context,
-                                                                session.id
-                                                                    .toString());
-                                                          },
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                    )
-                                  : Center(
-                                      child: Text(
-                                        'Belum ada program',
-                                        style: FontFamily().regularText,
-                                      ),
-                                    ),
-                            ),
-                          ],
-                        ),
-                      )
                     ],
                   ),
                 ),
