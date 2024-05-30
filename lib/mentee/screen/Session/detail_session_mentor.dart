@@ -135,21 +135,36 @@ class _DetailMentorSessionsNewState extends State<DetailMentorSessionsNew> {
                                   color: ColorStyle().primaryColors,
                                   borderRadius: BorderRadius.circular(4),
                                 ),
-                                child: TextButton.icon(
-                                  style: TextButton.styleFrom(
-                                    primary: ColorStyle().whiteColors,
-                                  ),
-                                  onPressed: () {
-                                    final linkedlnlink =
-                                        widget.detailmentor.linkedin;
-                                    _launchURL(linkedlnlink.toString());
-                                  },
-                                  icon: const Icon(Icons.link),
-                                  label: Text(
-                                    'Linkedln',
-                                    style: FontFamily().regularText.copyWith(
-                                          color: ColorStyle().whiteColors,
-                                        ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    right: 12.0, top: 8.0),
+                                child: Align(
+                                  alignment: Alignment.centerRight,
+                                  child: Container(
+                                    width: 120,
+                                    height: 40,
+                                    decoration: BoxDecoration(
+                                      color: ColorStyle().primaryColors,
+                                      borderRadius: BorderRadius.circular(4),
+                                    ),
+                                    child: TextButton.icon(
+                                      style: TextButton.styleFrom(
+                                        foregroundColor: ColorStyle().whiteColors,
+                                      ),
+                                      onPressed: () {
+                                        final linkedlnlink =
+                                            widget.detailmentor.linkedin;
+                                        _launchURL(linkedlnlink.toString());
+                                      },
+                                      icon: const Icon(Icons.link),
+                                      label: Text('Linkedln',
+                                          style: FontFamily()
+                                              .regularText
+                                              .copyWith(
+                                                color: ColorStyle().whiteColors,
+                                              )),
+                                    ),
                                   ),
                                 ),
                               ),

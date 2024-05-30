@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:mentormatch_apps/mentor/service/choose_role_service.dart';
 import 'package:mentormatch_apps/mentee/screen/profile/edit_profile_mentee_screen.dart';
 import 'package:mentormatch_apps/mentor/screen/daftar_mentor/register_form.dart';
+import 'package:mentormatch_apps/mentor/service/choose_role_service.dart';
 import 'package:mentormatch_apps/widget/button.dart';
 
 class ChooseRoleScreen extends StatefulWidget {
@@ -79,6 +79,8 @@ class _ChooseRoleScreenState extends State<ChooseRoleScreen> {
                                           currentJob: '',
                                           currentCompany: '',
                                           experiences: [],
+                                          activeScreen:
+                                              0, // Pass 1 for active screen 1
                                         ),
                                       ),
                                       (route) => false,

@@ -155,7 +155,7 @@ class _DetailMentorKarierScreenState extends State<DetailMentorKarierScreen> {
                                 ),
                                 child: TextButton.icon(
                                   style: TextButton.styleFrom(
-                                    primary: ColorStyle().whiteColors,
+                                    foregroundColor: ColorStyle().whiteColors,
                                   ),
                                   onPressed: () {
                                     final linkedlnlink = widget.linkedin ?? '';

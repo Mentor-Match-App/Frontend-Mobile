@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:mentormatch_apps/login/login_screen.dart';
 import 'package:mentormatch_apps/mentor/screen/profile_mentor/edit_profile_mentor_screen.dart';
 import 'package:mentormatch_apps/mentor/service/profile_service.dart';
@@ -23,6 +24,7 @@ class MentorProfileScreen extends StatefulWidget {
 }
 
 class _MentorProfileScreenState extends State<MentorProfileScreen> {
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
   _launchURL(String url) async {
     if (await canLaunch(url)) {
       await launch(url);
@@ -85,6 +87,22 @@ class _MentorProfileScreenState extends State<MentorProfileScreen> {
             skills: mentor.user!.skills ?? [],
           ),
         ),
+      );
+    }
+  }
+
+  Future<void> _handleSignOut() async {
+    try {
+      await _googleSignIn.signOut();
+      await UserPreferences.clearPreferences();
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) => LoginScreen()),
+        (Route<dynamic> route) => false,
+      );
+    } catch (error) {
+      print('Sign out failed: $error');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Sign out failed: $error')),
       );
     }
   }
@@ -155,7 +173,6 @@ class _MentorProfileScreenState extends State<MentorProfileScreen> {
                                 ],
                               ),
                             ),
-
                             Center(
                               child: Row(
                                 mainAxisSize: MainAxisSize
@@ -222,7 +239,7 @@ class _MentorProfileScreenState extends State<MentorProfileScreen> {
                                       ),
                                       child: TextButton.icon(
                                         style: TextButton.styleFrom(
-                                          primary: ColorStyle().whiteColors,
+                                          foregroundColor: ColorStyle().whiteColors,
                                         ),
                                         onPressed: () {
                                           final linkedlnlink =
@@ -301,17 +318,7 @@ class _MentorProfileScreenState extends State<MentorProfileScreen> {
                                         content:
                                             "Apakah kamu yakin ingin keluar dari aplikasi MentorMatch?",
                                         onConfirm: () async {
-                                          // Tulis logika logout Anda di sini
-                                          // Misalnya, membersihkan shared preferences dan navigasi ke halaman login
-                                          await UserPreferences
-                                              .clearPreferences();
-                                          Navigator.of(context)
-                                              .pushAndRemoveUntil(
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    LoginScreen()),
-                                            (Route<dynamic> route) => false,
-                                          );
+                                          await _handleSignOut();
                                         },
                                       );
                                     },

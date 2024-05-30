@@ -160,7 +160,7 @@ class _DetailMentorClassAllScreenState
                                 ),
                                 child: TextButton.icon(
                                   style: TextButton.styleFrom(
-                                    primary: ColorStyle().whiteColors,
+                                    foregroundColor: ColorStyle().whiteColors,
                                   ),
                                   onPressed: () {
                                     final linkedlnlink = widget.linkedin ?? '';

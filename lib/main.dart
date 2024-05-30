@@ -1,6 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:mentormatch_apps/login/choose_role_screen.dart';
+import 'package:mentormatch_apps/fcm_service.dart';
 import 'package:mentormatch_apps/login/login_screen.dart';
 import 'package:mentormatch_apps/mentee/provider/review_mentor_provider.dart';
 import 'package:mentormatch_apps/mentee/screen/bottom_mentee_screen.dart';
@@ -18,10 +18,16 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  await FCMService.initialize();
+
   await UserPreferences.init();
 
   final isLoggedIn = UserPreferences.isLoggedIn();
   final userType = UserPreferences.getUserType();
+
+// print user type
+  print('User type: $userType');
 
   runApp(MyApp(
     isLoggedIn: isLoggedIn,
@@ -50,7 +56,7 @@ class MyApp extends StatelessWidget {
           homeScreen = VerificationFormRegistScreen(); // Layar awal untuk admin
           break;
         default:
-          homeScreen = ChooseRoleScreen(); // Jika userType tidak dikenali
+          homeScreen = LoginScreen(); // Jika userType tidak dikenali
       }
     }
 

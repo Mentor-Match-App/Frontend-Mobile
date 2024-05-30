@@ -256,7 +256,7 @@ class _ButtonEducationLevelsState extends State<ButtonEducationLevels> {
                 .copyWith(color: ColorStyle().secondaryColors),
           ),
           style: ElevatedButton.styleFrom(
-            primary: ColorStyle().tertiaryColors,
+            backgroundColor: ColorStyle().tertiaryColors,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(0),
             ),

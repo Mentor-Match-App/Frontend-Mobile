@@ -155,7 +155,7 @@ class _DetailMentorSDScreenState extends State<DetailMentorSDScreen> {
                                 ),
                                 child: TextButton.icon(
                                   style: TextButton.styleFrom(
-                                    primary: ColorStyle().whiteColors,
+                                    foregroundColor: ColorStyle().whiteColors,
                                   ),
                                   onPressed: () {
                                     final linkedlnlink = widget.linkedin ?? '';

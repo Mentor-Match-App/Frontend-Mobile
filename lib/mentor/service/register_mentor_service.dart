@@ -3,8 +3,7 @@ import 'package:mentormatch_apps/style/base_url.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class RegisterMentorService {
-  Dio dio = Dio(); // Create Dio instance
-
+  Dio dio = Dio();
 
   Future<void> registerMentor({
     required String gender,
@@ -23,7 +22,6 @@ class RegisterMentorService {
     final token = prefs.getString('token') ?? '';
     final id = prefs.getString('userId') ?? '';
 
-    // Ensure headers are correctly set
     dio.options.headers = {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $token',
@@ -31,7 +29,7 @@ class RegisterMentorService {
 
     try {
       final response = await dio.patch(
-        '$baseUrl/users/mentor/$id/register', // Make sure this endpoint is correct
+        '$baseUrl/users/mentor/$id/register',
         data: {
           'gender': gender,
           'job': job,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:mentormatch_apps/login/login_screen.dart';
 import 'package:mentormatch_apps/mentee/model/profile_model.dart';
 import 'package:mentormatch_apps/mentee/screen/notification_mentee_screen.dart';
@@ -22,13 +23,10 @@ class ProfileMenteeScreen extends StatefulWidget {
 }
 
 class _ProfileMenteeScreenState extends State<ProfileMenteeScreen> {
-  _launchURL(String url) async {
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Tidak dapat membuka $url';
-    }
-  }
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
+
+  final ProfileService menteeService = ProfileService();
+  late Future<MenteeProfile> _menteeProfileFuture;
 
   @override
   void initState() {
@@ -36,12 +34,19 @@ class _ProfileMenteeScreenState extends State<ProfileMenteeScreen> {
     _loadData();
   }
 
-  void _loadData() async {
-    final profileData = await menteeService.getMenteeProfile();
-    setState(() {});
+  void _loadData() {
+    setState(() {
+      _menteeProfileFuture = menteeService.getMenteeProfile();
+    });
   }
 
-  final ProfileService menteeService = ProfileService();
+  _launchURL(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Tidak dapat membuka $url';
+    }
+  }
 
   void _navigateToEditProfile() async {
     final mentee = await menteeService
@@ -62,7 +67,6 @@ class _ProfileMenteeScreenState extends State<ProfileMenteeScreen> {
               })
           .toList();
 
-      // Navigate to EditProfileMenteeScreen with the converted experiences
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -82,8 +86,25 @@ class _ProfileMenteeScreenState extends State<ProfileMenteeScreen> {
                 '',
             experiences: experiencesMaps,
             skills: mentee.user!.skills ?? [],
+            activeScreen: 3, // Pass 3 for active screen 3
           ),
         ),
+      );
+    }
+  }
+
+  Future<void> _handleSignOut() async {
+    try {
+      await _googleSignIn.signOut();
+      await UserPreferences.clearPreferences();
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) => LoginScreen()),
+        (Route<dynamic> route) => false,
+      );
+    } catch (error) {
+      print('Sign out failed: $error');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Sign out failed: $error')),
       );
     }
   }
@@ -241,7 +262,8 @@ class _ProfileMenteeScreenState extends State<ProfileMenteeScreen> {
                                       ),
                                       child: TextButton.icon(
                                         style: TextButton.styleFrom(
-                                          primary: ColorStyle().whiteColors,
+                                          foregroundColor:
+                                              ColorStyle().whiteColors,
                                         ),
                                         onPressed: () {
                                           final linkedlnlink =
@@ -326,17 +348,7 @@ class _ProfileMenteeScreenState extends State<ProfileMenteeScreen> {
                                         content:
                                             "Apakah kamu yakin ingin keluar dari aplikasi MentorMatch?",
                                         onConfirm: () async {
-                                          // Tulis logika logout Anda di sini
-                                          // Misalnya, membersihkan shared preferences dan navigasi ke halaman login
-                                          await UserPreferences
-                                              .clearPreferences();
-                                          Navigator.of(context)
-                                              .pushAndRemoveUntil(
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    LoginScreen()),
-                                            (Route<dynamic> route) => false,
-                                          );
+                                          await _handleSignOut();
                                         },
                                       );
                                     },
