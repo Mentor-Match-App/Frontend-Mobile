@@ -34,7 +34,7 @@ class DetailMyClassMentorScreen extends StatefulWidget {
   final String linkZoom;
   final String namaKelas;
   final int durationInDays;
-  final Class userClass;
+  final AllClass userClass;
 
   DetailMyClassMentorScreen({
     Key? key,

@@ -4,13 +4,13 @@ import 'package:mentormatch_apps/style/base_url.dart';
 class ReviewService {
   final Dio _dio = Dio();
 
-  Future<String> sendReview(String content, String userId, String mentorId) async {
-
-
+  Future<String> sendReview(
+      String content, String userId, String mentorId) async {
     try {
-      final response = await _dio.post(baseUrl, data: {
+      final response = await _dio.post("$baseUrl/mentee/$userId/review", data: {
         "mentorId": mentorId,
-        "userId": userId, // Pastikan konsistensi nama kunci sesuai dengan backend
+        "userId":
+            userId, // Pastikan konsistensi nama kunci sesuai dengan backend
         "content": content,
       });
 
@@ -23,10 +23,11 @@ class ReviewService {
         final message = response.data['message'] ?? 'Gagal mengirim review';
         throw Exception(message);
       }
-    // ignore: deprecated_member_use
+      // ignore: deprecated_member_use
     } on DioError catch (dioError) {
       // Menangkap error dari Dio dan melempar kembali exception dengan pesan error dari server atau default
-      final errorMessage = dioError.response?.data['message'] ?? 'Terjadi kesalahan saat mengirim review';
+      final errorMessage = dioError.response?.data['message'] ??
+          'Terjadi kesalahan saat mengirim review';
       throw Exception(errorMessage);
     } catch (e) {
       // Menangkap error umum lainnya dan melempar kembali sebagai exception

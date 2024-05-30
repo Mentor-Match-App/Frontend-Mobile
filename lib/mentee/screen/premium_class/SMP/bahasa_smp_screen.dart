@@ -34,8 +34,9 @@ class _BahasaSMPScreenState extends State<BahasaSMPScreen> {
           return Center(child: Text('Error: ${snapshot.error}'));
         } else if (snapshot.hasData) {
           final mentorsWithLanguageCategory = snapshot.data!.mentors!
-              .where((mentor) => mentor.mentorClass!
-                  .any((mentorClass) => mentorClass.category == 'Bahasa'))
+              .where((mentor) => mentor.mentorClass!.any((mentorClass) =>
+                  mentorClass.category == 'Bahasa' &&
+                  mentorClass.isAvailable == true))
               .toList();
           return GridView.builder(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -90,6 +91,28 @@ class _BahasaSMPScreenState extends State<BahasaSMPScreen> {
               return Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: CardItemMentor(
+                   onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => DetailMentorSMPScreen(
+                          experiences: mentor.experiences ?? [],
+                          email: mentor.email ?? '',
+                          classes: mentor.mentorClass ?? [],
+                          about: mentor.about ?? '',
+                          name: mentor.name ?? 'No Name',
+                          photoUrl: mentor.photoUrl ?? '',
+                          skills: mentor.skills ?? [],
+                          classid: mentor.id.toString(),
+                          company: company,
+                          job: jobTitle,
+                          linkedin: mentor.linkedin ?? '',
+                          mentor: mentor,
+                          location: mentor.location ?? '',
+                        ),
+                      ),
+                    );
+                  },
                   title: availabilityStatus,
                   color: buttonColor,
                   onPressesd: () {

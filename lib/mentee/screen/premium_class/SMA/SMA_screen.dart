@@ -138,7 +138,9 @@ class _SMAScreenState extends State<SMAScreen> {
     return Scaffold(
       appBar: AppBar(
         actions: [
-          AppBarPremiumClass(),
+          AppBarPremiumClass(
+            title: "Premium Class",
+          ),
         ],
         title: Text(
           'SMA',
@@ -156,10 +158,7 @@ class _SMAScreenState extends State<SMAScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SearchBarWidget(
-                  title: 'Search by name, role, company',
-                  onPressed: () {},
-                ),
+                SearchBarWidgetMentee(),
                 SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: Row(
@@ -178,7 +177,8 @@ class _SMAScreenState extends State<SMAScreen> {
                           _handleMenuSelected('Geografi');
                         },
                         title: "Geografi",
-                        img: 'assets/Handoff/icon/categoryIcon/SMA/geografi.png',
+                        img:
+                            'assets/Handoff/icon/categoryIcon/SMA/geografi.png',
                       ),
                       CategoriCardWidget(
                         isActive: isEkonomiActive,
@@ -186,8 +186,7 @@ class _SMAScreenState extends State<SMAScreen> {
                           _handleMenuSelected('Ekonomi');
                         },
                         title: "Ekonomi",
-                        img:
-                            'assets/Handoff/icon/categoryIcon/SMA/economi.png',
+                        img: 'assets/Handoff/icon/categoryIcon/SMA/economi.png',
                       ),
                       CategoriCardWidget(
                         isActive: isBiologyActive,
@@ -195,8 +194,7 @@ class _SMAScreenState extends State<SMAScreen> {
                           _handleMenuSelected('Biology');
                         },
                         title: "Biology",
-                        img:
-                            'assets/Handoff/icon/categoryIcon/SMA/bilogy.png',
+                        img: 'assets/Handoff/icon/categoryIcon/SMA/bilogy.png',
                       ),
                       CategoriCardWidget(
                         isActive: isFisikaActive,
@@ -212,9 +210,10 @@ class _SMAScreenState extends State<SMAScreen> {
                           _handleMenuSelected('Bahasa');
                         },
                         title: "Bahasa",
-                        img: 'assets/Handoff/icon/categoryIcon/SMA/Sastra Bahasa.png',
+                        img:
+                            'assets/Handoff/icon/categoryIcon/SMA/Sastra Bahasa.png',
                       ),
-                       CategoriCardWidget(
+                      CategoriCardWidget(
                         isActive: isKimiaActive,
                         onTap: () {
                           _handleMenuSelected('Kimia');

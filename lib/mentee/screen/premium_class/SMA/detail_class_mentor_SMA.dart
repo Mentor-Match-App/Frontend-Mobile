@@ -54,7 +54,8 @@ class DetailClassMentorSMA extends StatefulWidget {
     required this.price,
     required this.location,
     required this.address,
-    required this.transaction, required this.mentorName,
+    required this.transaction,
+    required this.mentorName,
     // required this.currentParticipant
   }) : super(key: key);
 
@@ -72,6 +73,7 @@ class _DetailClassMentorSMAState extends State<DetailClassMentorSMA> {
 
   @override
   Widget build(BuildContext context) {
+     final formattedPrice = NumberFormat('#,##0', 'id_ID').format(widget.price);
     String formattedStartDate =
         DateFormat('dd MMMM yyyy').format(widget.startDate);
     String formattedEndDate = DateFormat('dd MMMM yyyy').format(widget.endDate);
@@ -110,7 +112,8 @@ class _DetailClassMentorSMAState extends State<DetailClassMentorSMA> {
                         Padding(
                           padding: const EdgeInsets.only(top: 2.0),
                           child: Text(
-                            widget.classDescription ?? 'No description available',
+                            widget.classDescription ??
+                                'No description available',
                             style: FontFamily().regularText,
                           ),
                         )
@@ -186,12 +189,11 @@ class _DetailClassMentorSMAState extends State<DetailClassMentorSMA> {
                       children: [
                         TittleTextField(title: 'Harga Kelas'),
                         Padding(
-                          padding: const EdgeInsets.only(top: 2.0),
-                          child: Text(
-                            'RP ${widget.price},00 ( setiap mentee)',
-                            style: FontFamily().regularText,
-                          ),
-                        )
+                            padding: const EdgeInsets.only(top: 2.0),
+                            child: Text(
+                              'RP $formattedPrice,00 ( setiap mentee)',
+                              style: TextStyle(fontSize: 14),
+                            ))
                       ],
                     ),
                   ),
@@ -234,7 +236,7 @@ class _DetailClassMentorSMAState extends State<DetailClassMentorSMA> {
                       children: [
                         TittleTextField(title: 'Sisa Slot Mentee'),
                         Padding(
-                          padding: const EdgeInsets.only(top:2.0),
+                          padding: const EdgeInsets.only(top: 2.0),
                           child: Text(
                             '$availableSlots Orang',
                             style: FontFamily().regularText,
@@ -252,33 +254,34 @@ class _DetailClassMentorSMAState extends State<DetailClassMentorSMA> {
                         Padding(
                           padding: const EdgeInsets.only(top: 2.0),
                           child: Text(
-                            'Hari ${widget.schedule} ' ?? "No schedule available",
+                            'Hari ${widget.schedule} ' ??
+                                "No schedule available",
                             style: FontFamily().regularText,
                           ),
                         )
                       ],
                     ),
                   ),
-               Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      TittleTextField(title: 'Lokasi Kelas'),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 2.0),
-                        child: Text(
-                          widget.locationMentoring,
-                          style: FontFamily().regularText,
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        TittleTextField(title: 'Lokasi Kelas'),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 2.0),
+                          child: Text(
+                            widget.locationMentoring,
+                            style: FontFamily().regularText,
+                          ),
                         ),
-                      ),
-                      Text(
-                        "Lokasi : ${widget.address == null || widget.address!.isEmpty ? "Meeting Zoom" : widget.address}",
-                        style: FontFamily().regularText,
-                      )
-                    ],
+                        Text(
+                          "Lokasi : ${widget.address == null || widget.address!.isEmpty ? "Meeting Zoom" : widget.address}",
+                          style: FontFamily().regularText,
+                        )
+                      ],
+                    ),
                   ),
-                ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Column(
@@ -356,18 +359,18 @@ class _DetailClassMentorSMAState extends State<DetailClassMentorSMA> {
                     ),
                   ),
                   ElevatedButtonWidget(
-                  onPressed: () {
-                    _showDialog(context);
-                  },
-                  title: 'Pesan kelas',
-                ),
+                    onPressed: () {
+                      _showDialog(context);
+                    },
+                    title: 'Pesan kelas',
+                  ),
                 ],
               ),
             )
           ],
         ));
   }
-  
+
   void _showDialog(BuildContext context) {
     showDialog(
       context: context,

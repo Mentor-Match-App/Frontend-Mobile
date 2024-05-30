@@ -60,13 +60,12 @@ class _MySessionBookingState extends State<MySessionBooking> {
   createStatusButton(String title, Color color) {
     return Align(
       alignment: Alignment.centerRight,
-      child: SmallElevatedButton(
-        color: color,
-        onPressed: () {}, // Tentukan tindakan yang diinginkan
-        height: 28,
-        width: 124,
-        title: title,
-        style: FontFamily().buttonText,
+      child: Text(
+        title,
+        style: FontFamily().boldText.copyWith(
+              color: color,
+              fontSize: 14,
+            ),
       ),
     );
   }
@@ -95,32 +94,36 @@ class _MySessionBookingState extends State<MySessionBooking> {
         } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
           final List<ParticipantMyClass> participants = snapshot.data!;
           return SingleChildScrollView(
-            child: Column(
-              children: participants.map((participant) {
-                final session = participant.session!;
-                int statusButton = _getPriority(session);
-
-                DateTime parsedJadwal = DateTime.parse(session.dateTime!);
-                String formattedJadwal =
-                    DateFormat('dd MMMM yyyy').format(parsedJadwal);
-
-                final DateFormat formatOutput = DateFormat("HH:mm");
-                final String formattedStartTime =
-                    formatOutput.format(DateTime.parse(session.startTime!));
-                final String formattedEndTime =
-                    formatOutput.format(DateTime.parse(session.endTime!));
-
-                return Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: Container(
+            child: Padding(
+             padding: const EdgeInsets.only(
+                  left: 16.0, right: 16.0, top: 16.0, bottom: 4.0),
+              child: Column(
+                children: participants.map((participant) {
+                  final session = participant.session!;
+                  int statusButton = _getPriority(session);
+              
+                  DateTime parsedJadwal = DateTime.parse(session.dateTime!);
+                  String formattedJadwal =
+                      DateFormat('dd MMMM yyyy').format(parsedJadwal);
+              
+                  final DateFormat formatOutput = DateFormat("HH:mm");
+                  final String formattedStartTime =
+                      formatOutput.format(DateTime.parse(session.startTime!));
+                  final String formattedEndTime =
+                      formatOutput.format(DateTime.parse(session.endTime!));
+              
+                  return Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
-                      border: Border.all(
-                        color: ColorStyle().tertiaryColors, // Warna border
-                        width: 2, // Lebar border
-                      ),
-                      color: Colors
-                          .transparent, // Warna bagian dalam, bisa diatur menjadi transparent atau null
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.3),
+                          // spreadRadius: 1,
+                          blurRadius: 2,
+                          offset: Offset(0, 2),
+                        ),
+                      ],
+                      color: ColorStyle().tertiaryColors,
                     ),
                     child: Padding(
                       padding: const EdgeInsets.all(12.0),
@@ -174,7 +177,7 @@ class _MySessionBookingState extends State<MySessionBooking> {
                                       style: FontFamily().regularText,
                                     ),
                                     Text(
-                                      'Jam : ${formattedStartTime} - ${formattedEndTime}',
+                                      'Jam      : ${formattedStartTime} - ${formattedEndTime}',
                                       style: FontFamily().regularText,
                                     ),
                                   ],
@@ -217,9 +220,9 @@ class _MySessionBookingState extends State<MySessionBooking> {
                         ],
                       ),
                     ),
-                  ),
-                );
-              }).toList(),
+                  );
+                }).toList(),
+              ),
             ),
           );
         } else {

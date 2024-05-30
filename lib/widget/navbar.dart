@@ -66,7 +66,8 @@ class _PopMenuButtonWidgetState extends State<PopMenuButtonWidget> {
 }
 
 class AppBarPremiumClass extends StatefulWidget {
-  AppBarPremiumClass({Key? key}) : super(key: key);
+  final String title; // Tambahkan properti title
+  AppBarPremiumClass({Key? key, required this.title}) : super(key: key);
 
   @override
   State<AppBarPremiumClass> createState() => _AppBarPremiumClassState();
@@ -83,7 +84,7 @@ class _AppBarPremiumClassState extends State<AppBarPremiumClass> {
             children: [
               const Icon(Icons.arrow_drop_down_outlined),
               Text(
-                "Program & Layanan",
+                widget.title, // Gunakan judul dari properti title
                 style: FontFamily()
                     .regularText
                     .copyWith(color: ColorStyle().primaryColors, fontSize: 14),
@@ -157,15 +158,15 @@ class _AppBarLogoNotifState extends State<AppBarLogoNotif> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         GestureDetector(
-  onTap: () {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => BottomNavbarMenteeScreen()),
-    );
-  },
-  child: Image.asset('assets/Handoff/logo/LogoMobile.png'),
-)
-,
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => BottomNavbarMenteeScreen()),
+            );
+          },
+          child: Image.asset('assets/Handoff/logo/LogoMobile.png'),
+        ),
         IconButton(
           onPressed: () {
             Navigator.push(

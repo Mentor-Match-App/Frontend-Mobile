@@ -292,7 +292,7 @@ class _PersetujuanPremiClassMentorState
                     ),
                     Expanded(
                       child: Text(
-                        'Link atau informasi mengenai meeting Zoom akan diberikan di dahalaman “My Class” yang dapat diakses oleh mentor dan mentee .',
+                        'Link atau informasi mengenai meeting Zoom akan diberikan di dahalaman “Class” yang dapat diakses oleh mentor dan mentee .',
                         style: FontFamily().regularText,
                       ),
                     ),

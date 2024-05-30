@@ -94,6 +94,24 @@ class _BackEndSessionScreenState extends State<BackEndSessionScreen> {
                 height: 250,
                 width: 150,
                 child: CardItemMentor(
+                   onTap: (){
+                     Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => DetailMentorSessionsNew(
+                          session: mentor.session,
+                          availableSlots: mentor.session!.isEmpty
+                              ? 0
+                              : mentor.session!.first.maxParticipants! -
+                                  (mentor.session!.first.participant?.length ??
+                                      0),
+                          detailmentor: mentor,
+                          totalParticipants: numberOfParticipants,
+                          mentorReviews: mentor.mentorReviews ?? [],
+                        ),
+                      ),
+                    );
+                  },
                   // apabila session penuh maka tiitlenya " session full" , tetapi apabila tidak full maka " available"
                   title: isSessionFull ? "Full Booked" : "Available",
                   color: buttonColor,

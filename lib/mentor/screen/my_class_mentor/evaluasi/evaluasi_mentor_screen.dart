@@ -337,12 +337,8 @@ class _EvaluasiMentorScreenState extends State<EvaluasiMentorScreen> {
                                 MaterialPageRoute(
                                   builder: (context) =>
                                       DetailEvaluastionMenteeMentorScreen(
-                                    feedbacks: widget.feedbacks,
-                                    learningMaterial: widget.learningMaterial,
-                                    transactions: widget.transactions,
                                     classId: widget.transactions[index].classId
                                         .toString(),
-                                    evaluations: widget.evaluasi,
                                     currentMenteeId: widget
                                         .transactions[index].userId
                                         .toString(),

@@ -29,6 +29,7 @@ class ReviewMentorScreen extends StatefulWidget {
 
 class _ReviewMentorScreenState extends State<ReviewMentorScreen> {
   final TextEditingController _reviewController = TextEditingController();
+  bool _isSendingReview = false;
 
   @override
   void dispose() {
@@ -148,49 +149,62 @@ class _ReviewMentorScreenState extends State<ReviewMentorScreen> {
                       Navigator.pop(context);
                     },
                   ),
-                  SmallElevatedButton(
-                    width: 150,
-                    height: 38,
-                    title: "Kirim",
-                    style: FontFamily().buttonText.copyWith(
-                          fontSize: 12,
-                          color: ColorStyle().whiteColors,
-                        ),
-                    onPressed: () async {
-                      // Pastikan untuk mendapatkan userId dengan cara yang benar
-                      final userId = await UserPreferences
-                          .getUserId(); // Pastikan ini asynchronous call
-                      if (userId == null) {
-                        // Handle user belum login
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                              content:
-                                  Text('Anda harus login terlebih dahulu.')),
-                        );
-                        return;
-                      }
+                  SizedBox(
+                    child: _isSendingReview
+                        ? const CircularProgressIndicator()
+                        : SmallElevatedButton(
+                            width: 150,
+                            height: 38,
+                            title: "Kirim",
+                            style: FontFamily().buttonText.copyWith(
+                                  fontSize: 12,
+                                  color: ColorStyle().whiteColors,
+                                ),
+                            onPressed: () async {
+                              setState(() {
+                                _isSendingReview = true;
+                              });
+                              // Pastikan untuk mendapatkan userId dengan cara yang benar
+                              final userId = await UserPreferences
+                                  .getUserId(); // Pastikan ini asynchronous call
+                              if (userId == null) {
+                                // Handle user belum login
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                      content: Text(
+                                          'Anda harus login terlebih dahulu.')),
+                                );
+                                return;
+                              }
 
-                      String message = await reviewProvider.sendReview(
-                          _reviewController.text,
-                          userId,
-                          widget.mentorId,
-                          context);
+                              String message = await reviewProvider.sendReview(
+                                  _reviewController.text,
+                                  userId,
+                                  widget.mentorId,
+                                  context);
+                              setState(() {
+                                _isSendingReview = false;
+                              });
 
-                      // Menunggu Flushbar ditampilkan selama beberapa detik sebelum navigasi
-                      // ignore: prefer_const_constructors
-                      await Future.delayed(Duration(
-                          seconds:
-                              3)); // Sesuaikan durasi dengan durasi Flushbar
-
-                      // Navigasi ke halaman baru
-                      // ignore: use_build_context_synchronously
-                      Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => BottomNavbarMenteeScreen()),
-                        (Route<dynamic> route) => false,
-                      );
-                    },
+                              // Menunggu Flushbar ditampilkan selama beberapa detik sebelum navigasi
+                              // ignore: prefer_const_constructors
+                              await Future.delayed(Duration(
+                                  seconds:
+                                      3)); // Sesuaikan durasi dengan durasi Flushbar
+                              setState(() {
+                                _isSendingReview = false;
+                              });
+                              // Navigasi ke halaman baru
+                              // ignore: use_build_context_synchronously
+                              Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        BottomNavbarMenteeScreen()),
+                                (Route<dynamic> route) => false,
+                              );
+                            },
+                          ),
                   ),
                 ],
               )

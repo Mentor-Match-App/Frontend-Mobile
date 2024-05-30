@@ -136,7 +136,9 @@ class _SMPScreenState extends State<SMPScreen> {
     return Scaffold(
       appBar: AppBar(
         actions: [
-          AppBarPremiumClass(),
+        AppBarPremiumClass(
+            title: "Premium Class",
+          ),
         ],
         title: Text(
           'SMP',
@@ -154,9 +156,8 @@ class _SMPScreenState extends State<SMPScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SearchBarWidget(
-                  title: 'Search by name, role, company',
-                  onPressed: () {},
+                SearchBarWidgetMentee(
+              
                 ),
                 SingleChildScrollView(
                   scrollDirection: Axis.horizontal,

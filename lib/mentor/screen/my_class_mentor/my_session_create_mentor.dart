@@ -86,13 +86,12 @@ class _MySessionCreateState extends State<MySessionCreate> {
   createStatusButton(String title, Color color) {
     return Align(
       alignment: Alignment.centerRight,
-      child: SmallElevatedButton(
-        color: color,
-        onPressed: () {}, // Tentukan tindakan yang diinginkan
-        height: 28,
-        width: 124,
-        title: title,
-        style: FontFamily().buttonText,
+      child: Text(
+        title,
+        style: FontFamily().boldText.copyWith(
+              color: color,
+              fontSize: 14,
+            ),
       ),
     );
   }
@@ -151,17 +150,25 @@ class _MySessionCreateState extends State<MySessionCreate> {
                 // final formattedEndTimeWIB = formatOutput.format(endTimeInWIB);
 
                 return Padding(
-                  padding: const EdgeInsets.all(12.0),
+                  padding: const EdgeInsets.only(
+                      left: 16.0, right: 16.0, top: 16.0, bottom: 4.0),
                   child: Container(
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(
-                        color: ColorStyle().tertiaryColors, // Warna border
-                        width: 1, // Lebar border
+                        borderRadius: BorderRadius.circular(10),
+                        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.3),
+            // spreadRadius: 1,
+            blurRadius: 2,
+            offset: Offset(0, 2),
+          ),
+        ],
+                        // border: Border.all(
+                        //   color: ColorStyle().secondaryColors.withOpacity(0.2),
+                        //   width: 1,
+                        // ),
+                        color: ColorStyle().tertiaryColors,
                       ),
-                      color: Colors
-                          .transparent, // Warna bagian dalam, bisa diatur menjadi transparent atau null
-                    ),
                     child: Padding(
                       padding: const EdgeInsets.all(12.0),
                       child: Column(
@@ -185,22 +192,29 @@ class _MySessionCreateState extends State<MySessionCreate> {
                             const SizedBox(height: 12),
                             Text(
                               session.title!,
-                              style: FontFamily().boldText.copyWith(
-                                  fontSize: 14,
-                                  color: ColorStyle().secondaryColors),
+                              style: FontFamily().buttonText.copyWith(
+                                    color: ColorStyle().primaryColors,
+                                    fontSize: 16,
+                                  ),
                             ),
                             const SizedBox(height: 12),
                             Text(
-                              'Jadwal : ${formattedJadwal}',
-                              style: FontFamily().regularText,
+                              'Jadwal               : ${formattedJadwal}',
+                              style: FontFamily().regularText.copyWith(
+                                color: ColorStyle().blackColors,
+                              ),
                             ),
                             Text(
-                              'Jam : ${formattedStartTime} - ${formattedEndTime}',
-                              style: FontFamily().regularText,
+                              'Jam                    : ${formattedStartTime} - ${formattedEndTime}',
+                              style: FontFamily().regularText.copyWith(
+                                color: ColorStyle().blackColors,
+                              ),
                             ),
                             Text(
-                              'Jumlah Peserta: ${session.participant!.length} peserta',
-                              style: FontFamily().regularText,
+                              'Jumlah Peserta : ${session.participant!.length} peserta',
+                             style: FontFamily().regularText.copyWith(
+                                color: ColorStyle().blackColors,
+                              ),
                             ),
                             Padding(
                               padding:

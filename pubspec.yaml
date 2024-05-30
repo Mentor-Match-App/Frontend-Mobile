@@ -52,6 +52,9 @@ dependencies:
   firebase_analytics: ^10.10.6
   permission_handler: ^11.3.1
   timeago: ^3.6.1
+  carousel_slider: ^4.0.0
+
+
 
 dev_dependencies:
   flutter_test:

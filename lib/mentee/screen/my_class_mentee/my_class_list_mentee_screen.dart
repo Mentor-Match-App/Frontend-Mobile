@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mentormatch_apps/mentee/screen/my_class_mentee/my_class_booking.dart';
+import 'package:mentormatch_apps/mentee/screen/my_class_mentee/premium_class_mentor_screen.dart';
 import 'package:mentormatch_apps/mentee/screen/my_class_mentee/my_session_booking.dart';
 import 'package:mentormatch_apps/mentee/screen/notification_mentee_screen.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
@@ -19,10 +19,10 @@ class _MyClassMenteeListScreenState extends State<MyClassMenteeListScreen> {
 
   void changeClass(String menu) {
     setState(() {
-      if (menu == "My Class") {
+      if (menu == "Premium Class") {
         isClassActive = true;
         isSessionActive = false;
-      } else if (menu == "My Session") {
+      } else if (menu == "Session") {
         // Corrected the condition
         isClassActive = false;
         isSessionActive = true;
@@ -68,22 +68,28 @@ class _MyClassMenteeListScreenState extends State<MyClassMenteeListScreen> {
                   Container(
                     width: 120,
                     height: 38,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(4),
-                      color: isClassActive
-                          ? ColorStyle().secondaryColors
-                          : ColorStyle().tertiaryColors,
-                    ),
+                    decoration: isClassActive
+                        ? BoxDecoration(
+                            borderRadius: BorderRadius.circular(4),
+                            color: ColorStyle().secondaryColors,
+                          )
+                        : BoxDecoration(
+                            borderRadius: BorderRadius.circular(4),
+                            border: Border.all(
+                              color: ColorStyle().secondaryColors,
+                            ),
+                          ),
                     child: TextButton(
                       onPressed: () {
-                        changeClass("My Class");
+                        changeClass("Premium Class");
                       },
                       child: Text(
-                        "My Class",
+                        "Premium Class",
                         style: FontFamily().boldText.copyWith(
-                            color: isClassActive
-                                ? ColorStyle().whiteColors
-                                : ColorStyle().disableColors),
+                              color: isClassActive
+                                  ? ColorStyle().whiteColors
+                                  : ColorStyle().secondaryColors,
+                            ),
                       ),
                     ),
                   ),
@@ -93,32 +99,41 @@ class _MyClassMenteeListScreenState extends State<MyClassMenteeListScreen> {
                   Container(
                     width: 120,
                     height: 38,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(4),
-                      color: isSessionActive
-                          ? ColorStyle().secondaryColors
-                          : ColorStyle().tertiaryColors,
-                    ),
+                    decoration: isSessionActive
+                        ? BoxDecoration(
+                            borderRadius: BorderRadius.circular(4),
+                            color: ColorStyle().secondaryColors,
+                          )
+                        : BoxDecoration(
+                            borderRadius: BorderRadius.circular(4),
+                            border: Border.all(
+                              color: ColorStyle().secondaryColors,
+                            ),
+                          ),
                     child: TextButton(
-                        onPressed: () {
-                          changeClass("My Session");
-                        },
-                        child: Text("My Session",
-                            style: FontFamily().boldText.copyWith(
-                                color: isSessionActive
-                                    ? ColorStyle().whiteColors
-                                    : ColorStyle().disableColors))),
-                  ),
+                      onPressed: () {
+                        changeClass("Session");
+                      },
+                      child: Text(
+                        "Session",
+                        style: FontFamily().boldText.copyWith(
+                              color: isSessionActive
+                                  ? ColorStyle().whiteColors
+                                  : ColorStyle().secondaryColors,
+                            ),
+                      ),
+                    ),
+                  )
                 ],
               ),
             ),
             Column(
               children: [
                 isClassActive
-                    ? MyClassBookingMentee()
+                    ? PremiumClassMenteeScreen()
                     : isSessionActive
                         ? MySessionBooking()
-                        : MyClassBookingMentee(),
+                        : PremiumClassMenteeScreen(),
               ],
             )
           ],

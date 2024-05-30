@@ -21,7 +21,7 @@ class BottomNavbarWidget extends StatelessWidget {
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.menu_book_sharp),
-          label:'My Class',
+          label:'Class',
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.people_alt),

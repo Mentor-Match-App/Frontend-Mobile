@@ -74,6 +74,7 @@ class _DetailClassMentorSDState extends State<DetailClassMentorSD> {
 
   @override
   Widget build(BuildContext context) {
+     final formattedPrice = NumberFormat('#,##0', 'id_ID').format(widget.price);
     String formattedStartDate =
         DateFormat('dd MMMM yyyy').format(widget.startDate);
     String formattedEndDate = DateFormat('dd MMMM yyyy').format(widget.endDate);
@@ -190,8 +191,8 @@ class _DetailClassMentorSDState extends State<DetailClassMentorSD> {
                       Padding(
                         padding: const EdgeInsets.only(top: 2.0),
                         child: Text(
-                          'RP ${widget.price},00 ( setiap mentee)',
-                          style: FontFamily().regularText,
+                'RP $formattedPrice,00 ( setiap mentee)',
+                style: TextStyle(fontSize: 14),
                         ),
                       )
                     ],

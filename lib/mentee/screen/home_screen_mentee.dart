@@ -66,6 +66,8 @@ class _HomeMenteeScreenState extends State<HomeMenteeScreen> {
           } else {
             // mentor session yang di tampilkan hanya yang isActive == true
             var mentorSessionData = snapshot.data![0] as Session;
+
+            /// tampilkan mentor yang memiliki kelas semua kelas nya isAvailable == true
             var mentorClassData = snapshot.data![1] as MentorClassModel;
 
             return CustomScrollView(slivers: <Widget>[
@@ -84,12 +86,7 @@ class _HomeMenteeScreenState extends State<HomeMenteeScreen> {
                               fontSize: 14,
                             ),
                       ),
-                      SearchBarWidget(
-                          controller: searchController,
-                          title: "Search Mentor",
-                          onPressed: () {
-                            // searchMentor(searchController.text);
-                          }),
+                      SearchBarWidgetMentee(),
                       const SizedBox(height: 8.0),
                       TittleTextField(
                         title: "Premium Class",
@@ -192,54 +189,28 @@ class _HomeMenteeScreenState extends State<HomeMenteeScreen> {
                         height: 8,
                       ),
                       SizedBox(
-                        height:
-                            250, // Adjust the height according to your design
+                        height: 250, // Sesuaikan tinggi sesuai desain Anda
                         child: SingleChildScrollView(
                           scrollDirection: Axis.horizontal,
                           child: Row(
-                            children: List.generate(
-                                ////yang ditampilkan hanya 6 aja
-                                mentorClassData.mentors!.length > 6
-                                    ? 6
-                                    : mentorClassData.mentors!.length, (index) {
-                              final mentor = mentorClassData.mentors![index];
+                            children: mentorClassData.mentors!
+                                .where((mentor) => mentor.mentorClass!
+                                    .any((kelas) => kelas.isAvailable == true))
+                                .take(6) // Hanya ambil 6 mentor pertama
+                                .map((mentor) {
+                              // Cek apakah mentor memiliki setidaknya satu kelas yang tersedia
+                              bool hasAvailableClass = mentor.mentorClass!
+                                  .any((kelas) => kelas.isAvailable == true);
+                              if (!hasAvailableClass) {
+                                // Jika mentor tidak memiliki kelas yang tersedia, lewati
+                                return SizedBox.shrink();
+                              }
+
                               ExperienceClassAll? currentJob =
                                   mentor.experiences?.firstWhere(
                                 (exp) => exp.isCurrentJob ?? false,
                                 orElse: () => ExperienceClassAll(),
                               );
-                              // Fungsi untuk mendapatkan slot yang tersedia
-                              int getAvailableSlotCount(ClassAll kelas) {
-                                int approvedCount = kelas.transactions
-                                        ?.where((t) =>
-                                            t.paymentStatus == "Approved")
-                                        .length ??
-                                    0;
-
-                                int pendingCount = kelas.transactions
-                                        ?.where(
-                                            (t) => t.paymentStatus == "Pending")
-                                        .length ??
-                                    0;
-
-                                int totalApprovedAndPendingCount =
-                                    approvedCount + pendingCount;
-
-                                // Jumlah slot yang tersedia adalah maksimum partisipan dikurangi dengan total transaksi yang telah disetujui dan sedang diproses
-                                int availableSlots =
-                                    (kelas.maxParticipants ?? 0) -
-                                        totalApprovedAndPendingCount;
-                                // Pastikan slot yang tersedia tidak negatif
-                                return availableSlots > 0 ? availableSlots : 0;
-                              }
-
-// Fungsi untuk menentukan apakah semua kelas dalam daftar mentor dianggap penuh
-                              bool allClassesFull =
-                                  mentor.mentorClass!.every((classMentor) {
-                                int availableSlotCount =
-                                    getAvailableSlotCount(classMentor);
-                                return availableSlotCount <= 0;
-                              });
 
                               String company =
                                   currentJob?.company ?? 'Placeholder Company';
@@ -251,8 +222,29 @@ class _HomeMenteeScreenState extends State<HomeMenteeScreen> {
                                 height: 250,
                                 width: 150,
                                 child: CardItemMentor(
-                                  // color:
-                                  //     buttonColor, // Use the determined color based on class availability
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            DetailMentorClassAllScreen(
+                                          experiences: mentor.experiences ?? [],
+                                          email: mentor.email ?? '',
+                                          classes: mentor.mentorClass ?? [],
+                                          about: mentor.about ?? '',
+                                          name: mentor.name ?? 'No Name',
+                                          photoUrl: mentor.photoUrl ?? '',
+                                          skills: mentor.skills ?? [],
+                                          classid: mentor.id.toString(),
+                                          company: company,
+                                          job: jobTitle,
+                                          linkedin: mentor.linkedin ?? '',
+                                          mentor: mentor,
+                                          location: mentor.location ?? '',
+                                        ),
+                                      ),
+                                    );
+                                  },
                                   onPressesd: () {
                                     Navigator.push(
                                       context,
@@ -283,7 +275,7 @@ class _HomeMenteeScreenState extends State<HomeMenteeScreen> {
                                   company: company,
                                 ),
                               );
-                            }),
+                            }).toList(),
                           ),
                         ),
                       ),
@@ -382,6 +374,33 @@ class _HomeMenteeScreenState extends State<HomeMenteeScreen> {
                                   height: 250,
                                   width: 150,
                                   child: CardItemMentor(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              DetailMentorSessionsNew(
+                                            session: mentor.session,
+                                            availableSlots:
+                                                mentor.session!.isEmpty
+                                                    ? 0
+                                                    : mentor.session!.first
+                                                            .maxParticipants! -
+                                                        (mentor
+                                                                .session!
+                                                                .first
+                                                                .participant
+                                                                ?.length ??
+                                                            0),
+                                            detailmentor: mentor,
+                                            totalParticipants:
+                                                numberOfParticipants,
+                                            mentorReviews:
+                                                mentor.mentorReviews ?? [],
+                                          ),
+                                        ),
+                                      );
+                                    },
                                     // apabila session penuh maka tiitlenya " session full" , tetapi apabila tidak full maka " available"
                                     title: isSessionFull
                                         ? "Full Booked"

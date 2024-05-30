@@ -75,6 +75,8 @@ class _DetailClassMentorKarierState extends State<DetailClassMentorKarier> {
 
   @override
   Widget build(BuildContext context) {
+     final formattedPrice = NumberFormat('#,##0', 'id_ID').format(widget.price);
+    bool isLoading = false;
     String formattedStartDate =
         DateFormat('dd MMMM yyyy').format(widget.startDate);
     String formattedEndDate = DateFormat('dd MMMM yyyy').format(widget.endDate);
@@ -190,9 +192,9 @@ class _DetailClassMentorKarierState extends State<DetailClassMentorKarier> {
                       TittleTextField(title: 'Harga Kelas'),
                       Padding(
                         padding: const EdgeInsets.only(top: 2.0),
-                        child: Text(
-                          'RP ${widget.price},00 ( setiap mentee)',
-                          style: FontFamily().regularText,
+                       child: Text(
+                'RP $formattedPrice,00 ( setiap mentee)',
+                style: TextStyle(fontSize: 14),
                         ),
                       )
                     ],

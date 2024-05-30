@@ -113,16 +113,24 @@ class _DetailMentorClassAllScreenState
                               fontSize: 16,
                             ),
                       ),
-                      TextButton.icon(
-                        onPressed: () {},
-                        icon: Icon(
-                          Icons.location_on,
-                          color: ColorStyle().primaryColors,
-                        ),
-                        label: Text(
-                          widget.location,
-                          style: FontFamily().regularText,
-                        ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          IconButton(
+                            onPressed: () {},
+                            icon: Icon(
+                              Icons.location_on,
+                              color: ColorStyle().primaryColors,
+                            ),
+                          ),
+                          const SizedBox(
+                            width: 2,
+                          ),
+                          Text(
+                            widget.location,
+                            style: FontFamily().regularText,
+                          ),
+                        ],
                       ),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -257,8 +265,6 @@ class _DetailMentorClassAllScreenState
                                                 MaterialPageRoute(
                                                   builder: (context) =>
                                                       DetailClassMentorAll(
-                                                  
-                                                       
                                                     mentorName: widget.name,
                                                     transaction:
                                                         kelas.transactions ??
@@ -358,8 +364,10 @@ class _DetailMentorClassAllScreenState
       return Center(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Text("Belum ada review",
-              style: FontFamily().regularText,),
+          child: Text(
+            "Belum ada review",
+            style: FontFamily().regularText,
+          ),
         ),
       );
     }

@@ -33,7 +33,11 @@ class _AllSDScreenState extends State<AllSDScreen> {
         } else if (snapshot.hasError) {
           return Center(child: Text('Error: ${snapshot.error}'));
         } else if (snapshot.hasData) {
-          final mentors = snapshot.data!.mentors!;
+          final mentors = snapshot.data!.mentors!.where((mentor) {
+            // Periksa apakah mentor memiliki setidaknya satu kelas yang tersedia
+            return mentor.mentorClass!
+                .any((classMentor) => classMentor.isAvailable == true);
+          }).toList();
 
           return GridView.builder(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -88,6 +92,28 @@ class _AllSDScreenState extends State<AllSDScreen> {
               return Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: CardItemMentor(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => DetailMentorSDScreen(
+                          experiences: mentor.experiences ?? [],
+                          email: mentor.email ?? '',
+                          classes: mentor.mentorClass ?? [],
+                          about: mentor.about ?? '',
+                          name: mentor.name ?? 'No Name',
+                          photoUrl: mentor.photoUrl ?? '',
+                          skills: mentor.skills ?? [],
+                          classid: mentor.id.toString(),
+                          company: company,
+                          job: jobTitle,
+                          linkedin: mentor.linkedin ?? '',
+                          mentor: mentor,
+                          location: mentor.location ?? '',
+                        ),
+                      ),
+                    );
+                  },
                   title: availabilityStatus,
                   color: buttonColor,
                   onPressesd: () {

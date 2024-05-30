@@ -67,13 +67,14 @@ class _JadwalSessionWidgetState extends State<JadwalSessionWidget> {
               children: [
                 Text(widget.title1,
                     style: FontFamily().boldText.copyWith(
-                          color: ColorStyle().disableColors,
+                          color: ColorStyle().secondaryColors,
+                          fontSize: 14
                         )),
                 Text(
                   widget.title2,
                   style: FontFamily().regularText.copyWith(
-                        fontSize: 14,
-                        color: ColorStyle().secondaryColors,
+                        fontSize: 12,
+                          color: ColorStyle().disableColors,
                       ),
                   softWrap:
                       true, // Memungkinkan teks untuk wrap jika terlalu panjang

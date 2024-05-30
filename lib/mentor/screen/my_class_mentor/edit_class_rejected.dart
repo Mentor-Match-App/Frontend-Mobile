@@ -16,7 +16,7 @@ import 'package:multi_select_flutter/dialog/mult_select_dialog.dart';
 import 'package:multi_select_flutter/util/multi_select_item.dart';
 
 class EditRejectedClass extends StatefulWidget {
-  final Class classData;
+  final AllClass classData;
   EditRejectedClass({Key? key, required this.classData}) : super(key: key);
 
   @override

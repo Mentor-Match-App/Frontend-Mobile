@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mentormatch_apps/mentee/screen/bottom_mentee_screen.dart';
 import 'package:mentormatch_apps/mentee/screen/session/all_session_screen.dart';
 import 'package:mentormatch_apps/mentee/screen/session/back_end_session_screen.dart';
 import 'package:mentormatch_apps/mentee/screen/session/data_analys_session_screen.dart';
@@ -136,17 +137,31 @@ class _SessionScreenState extends State<SessionScreen> {
     return Scaffold(
       appBar: AppBar(
         actions: [
-          AppBarPremiumClass(),
+          AppBarPremiumClass(
+            title: "Session",
+          ),
         ],
         title: Align(
           alignment: Alignment.centerLeft,
-          child: Text(
-            'Session',
-            style: FontFamily().boldText.copyWith(
-                  color: ColorStyle().primaryColors,
-                  fontSize: 14.0,
+          child: Padding(
+              padding: const EdgeInsets.only(left: 8.0, top: 4.0),
+              child: GestureDetector(
+                /// ke dasboardmentee
+                onTap: () {
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => BottomNavbarMenteeScreen(),
+                    ),
+                    (route) => false,
+                  );
+                },
+                child: Image.asset(
+                  'assets/Handoff/logo/LogoMobile.png',
+                  width: 120,
+                  height: 120,
                 ),
-          ),
+              )),
         ),
       ),
       body: ListView(
@@ -157,10 +172,7 @@ class _SessionScreenState extends State<SessionScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SearchBarWidget(
-                  title: 'Search by name, role, company',
-                  onPressed: () {},
-                ),
+                SearchBarWidgetMentee(),
                 SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: Row(
@@ -255,7 +267,7 @@ class _SessionScreenState extends State<SessionScreen> {
                     isAllCategoryActive
                         ? AllSessionScreen()
                         : isBackEndActive
-                            ? BackEndSessionScreen() 
+                            ? BackEndSessionScreen()
                             : isFrontEndActive
                                 ? FrontEndSessionScreen()
                                 : isDataAnalystActive
