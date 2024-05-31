@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:mentormatch_apps/fcm_service.dart';
 import 'package:mentormatch_apps/login/login_screen.dart';
+import 'package:mentormatch_apps/login/splash_screen_first.dart';
 import 'package:mentormatch_apps/mentee/provider/review_mentor_provider.dart';
 import 'package:mentormatch_apps/mentee/screen/bottom_mentee_screen.dart';
 import 'package:mentormatch_apps/mentor/provider/create_class_provider.dart';
@@ -43,7 +44,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Widget homeScreen = LoginScreen();
+    Widget homeScreen = SplashScreenFirst();
     if (isLoggedIn) {
       switch (userType) {
         case 'Mentee':
