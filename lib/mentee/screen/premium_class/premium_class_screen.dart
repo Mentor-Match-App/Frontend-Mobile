@@ -22,7 +22,14 @@ class _PremiumClassScreenState extends State<PremiumClassScreen> {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Image.asset('assets/Handoff/logo/LogoMobile.png'),
+            Image.asset(
+              'assets/Handoff/logo/LogoMobile.png',
+              width: 120,
+              height: 120,
+            ),
+            // SizedBox(
+            //   width: 20,
+            // ),
             PopMenuButtonWidget(),
           ],
         ),

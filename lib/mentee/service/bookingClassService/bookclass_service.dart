@@ -1,8 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:mentormatch_apps/mentee/service/bookingClassService/bookclass_model.dart';
 import 'package:mentormatch_apps/style/base_url.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 Future<BookingResultClass> bookClass(String classId, String userId) async {
+  final prefs = await SharedPreferences.getInstance();
+  final userd = prefs.getString('userId') ?? '';
 
   var dio = Dio();
 

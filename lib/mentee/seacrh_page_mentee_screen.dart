@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mentormatch_apps/mentee/model/my_class_model.dart';
-import 'package:mentormatch_apps/mentee/screen/Session/detail_session_mentor.dart';
+import 'package:mentormatch_apps/mentee/screen/session/detail_session_mentor.dart';
 import 'package:mentormatch_apps/mentee/screen/detail_mentor_class_screen.dart';
 import 'package:mentormatch_apps/mentee/screen/my_class_mentee/detail_my_class_mentee_screen.dart';
 import 'package:mentormatch_apps/mentee/service/session_mentor_service.dart';

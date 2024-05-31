@@ -60,6 +60,7 @@ class DetailMentorClassAllScreen extends StatefulWidget {
 
 class _DetailMentorClassAllScreenState
     extends State<DetailMentorClassAllScreen> {
+      
   _launchURL(String url) async {
     if (await canLaunch(url)) {
       await launch(url);

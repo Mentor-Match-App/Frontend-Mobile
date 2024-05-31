@@ -1,7 +1,6 @@
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
 import 'package:mentormatch_apps/mentee/screen/premium_class/detail_booking_premium_class_screen.dart';
 import 'package:mentormatch_apps/mentee/service/bookingClassService/bookclass_model.dart';
 import 'package:mentormatch_apps/mentee/service/bookingClassService/bookclass_service.dart';
@@ -65,6 +64,7 @@ class DetailClassMentorSD extends StatefulWidget {
 }
 
 class _DetailClassMentorSDState extends State<DetailClassMentorSD> {
+  bool _isLoading = false;
   int getApprovedTransactionCount() {
     return widget.transaction
             ?.where((t) => t.paymentStatus == "Approved")
@@ -74,7 +74,7 @@ class _DetailClassMentorSDState extends State<DetailClassMentorSD> {
 
   @override
   Widget build(BuildContext context) {
-     final formattedPrice = NumberFormat('#,##0', 'id_ID').format(widget.price);
+    final formattedPrice = NumberFormat('#,##0', 'id_ID').format(widget.price);
     String formattedStartDate =
         DateFormat('dd MMMM yyyy').format(widget.startDate);
     String formattedEndDate = DateFormat('dd MMMM yyyy').format(widget.endDate);
@@ -191,8 +191,8 @@ class _DetailClassMentorSDState extends State<DetailClassMentorSD> {
                       Padding(
                         padding: const EdgeInsets.only(top: 2.0),
                         child: Text(
-                'RP $formattedPrice,00 ( setiap mentee)',
-                style: TextStyle(fontSize: 14),
+                          'RP $formattedPrice,00 ( setiap mentee)',
+                          style: TextStyle(fontSize: 14),
                         ),
                       )
                     ],
@@ -375,105 +375,126 @@ class _DetailClassMentorSDState extends State<DetailClassMentorSD> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          backgroundColor: ColorStyle().whiteColors,
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Text("Booking Class", style: FontFamily().titleText),
-              IconButton(
-                onPressed: () => Navigator.of(context).pop(),
-                icon: Icon(
-                  Icons.close_rounded,
-                  color: ColorStyle().errorColors,
-                ),
-              )
-            ],
-          ),
-          content: Padding(
-            padding: const EdgeInsets.all(12),
-            child: Text(
-              "Apakah kamu yakin ingin memesan kelas ini? Langkah ini akan mengamankan tempatmu, pastikan untuk memeriksa kembali detail kelas sebelum mengonfirmasi",
-              textAlign: TextAlign.center,
-              style: FontFamily().regularText,
-            ),
-          ),
-          actions: <Widget>[
-            // Actions untuk booking class...
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return Stack(
               children: [
-                SmallOutlinedButton(
-                  style: FontFamily().regularText.copyWith(
-                      color: ColorStyle().primaryColors, fontSize: 12),
-                  height: 48,
-                  width: 100,
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  title: "Cancel",
-                ),
-                SmallElevatedButton(
-                  style: FontFamily()
-                      .regularText
-                      .copyWith(color: ColorStyle().whiteColors, fontSize: 12),
-                  height: 48,
-                  width: 100,
-                  onPressed: () async {
-                    try {
-                      // Initialize UserPreferences if not already done.
-                      await UserPreferences.init();
-
-                      // Retrieve the user ID from SharedPreferences
-                      String? userId = UserPreferences.getUserId();
-
-                      if (userId != null) {
-                        BookingResultClass result =
-                            await bookClass(widget.classId!, userId);
-
-                        if (result.isSuccess) {
-                          int? uniqueCode =
-                              result.uniqueCode; // Here you get the uniqueCode
-
-                          Navigator.of(context).pushAndRemoveUntil(
-                            MaterialPageRoute(
-                              builder: (context) => DetailBookingClass(
-                                durasi: widget.classduration,
-                                nama_kelas: widget.classname,
-                                nama_mentor: widget.mentorName,
-                                price: widget.price,
-                                uniqueCode: uniqueCode!,
-                              ),
-                            ),
-                            (route) => false,
-                          );
-                        } else {
-                          // tampilkan messege erro dalam bentuk pop up
-                          showTopSnackBar(context, result.message);
-                        }
-                      } else {
-                        // If userId is not found, show an error
-                        throw Exception(
-                            "Anda belum login, silahkan login terlebih dahulu");
-                      }
-                    } catch (e) {
-                      // Show a SnackBar if an exception occurs
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text("Error: ${e.toString()}"),
-                          backgroundColor: ColorStyle().errorColors,
+                AlertDialog(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  backgroundColor: ColorStyle().whiteColors,
+                  title: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Text("Booking Class", style: FontFamily().titleText),
+                      IconButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        icon: Icon(
+                          Icons.close_rounded,
+                          color: ColorStyle().errorColors,
                         ),
-                      );
-                    }
-                  },
-                  title: "Booking",
-                )
+                      )
+                    ],
+                  ),
+                  content: Padding(
+                    padding: const EdgeInsets.all(12),
+                    child: Text(
+                      "Apakah kamu yakin ingin memesan kelas ini? Langkah ini akan mengamankan tempatmu, pastikan untuk memeriksa kembali detail kelas sebelum mengonfirmasi",
+                      textAlign: TextAlign.center,
+                      style: FontFamily().regularText,
+                    ),
+                  ),
+                  actions: <Widget>[
+                    // Actions untuk booking class...
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        SmallOutlinedButton(
+                          style: FontFamily().regularText.copyWith(
+                              color: ColorStyle().primaryColors, fontSize: 12),
+                          height: 48,
+                          width: 100,
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          title: "Cancel",
+                        ),
+                        SmallElevatedButton(
+                          style: FontFamily().regularText.copyWith(
+                              color: ColorStyle().whiteColors, fontSize: 12),
+                          height: 48,
+                          width: 100,
+                          onPressed: () async {
+                            setState(() {
+                              _isLoading = true;
+                            });
+                            try {
+                              // Initialize UserPreferences if not already done.
+                              await UserPreferences.init();
+
+                              // Retrieve the user ID from SharedPreferences
+                              String? userId = UserPreferences.getUserId();
+
+                              if (userId != null) {
+                                BookingResultClass result =
+                                    await bookClass(widget.classId!, userId);
+
+                                setState(() {
+                                  _isLoading = false;
+                                });
+
+                                if (result.isSuccess) {
+                                  int? uniqueCode = result
+                                      .uniqueCode; // Here you get the uniqueCode
+
+                                  Navigator.of(context).pushAndRemoveUntil(
+                                    MaterialPageRoute(
+                                      builder: (context) => DetailBookingClass(
+                                        durasi: widget.classduration,
+                                        nama_kelas: widget.classname,
+                                        nama_mentor: widget.mentorName,
+                                        price: widget.price,
+                                        uniqueCode: uniqueCode!,
+                                      ),
+                                    ),
+                                    (route) => false,
+                                  );
+                                } else {
+                                  // tampilkan messege erro dalam bentuk pop up
+                                  showTopSnackBar(context, result.message);
+                                }
+                              } else {
+                                // If userId is not found, show an error
+                                throw Exception(
+                                    "Anda belum login, silahkan login terlebih dahulu");
+                              }
+                            } catch (e) {
+                              // Show a SnackBar if an exception occurs
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text("Error: ${e.toString()}"),
+                                  backgroundColor: ColorStyle().errorColors,
+                                ),
+                              );
+                            }
+                          },
+                          title: "Booking",
+                        )
+                      ],
+                    ),
+                  ],
+                ),
+                if (_isLoading)
+                  Container(
+                    color: Colors.black.withOpacity(0.5),
+                    child: Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  ),
               ],
-            ),
-          ],
+            );
+          },
         );
       },
     );

@@ -107,53 +107,61 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Image.asset('assets/Handoff/logo/LogoMobile.png'),
         ),
       ),
-      body: Center(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Image.asset('assets/Handoff/ilustrator/first screen.png'),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    'Selamat Datang di Aplikasi Mentor Terbaik',
-                    style: GoogleFonts.poppins(
-                      fontWeight: FontWeight.w500,
-                      color: Color(0xff0A1737),
-                      fontSize: 20,
+      body: Stack(
+        children: [
+          Center(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Image.asset('assets/Handoff/ilustrator/first screen.png'),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'Selamat Datang di Aplikasi Mentor Terbaik',
+                        style: GoogleFonts.poppins(
+                          fontWeight: FontWeight.w500,
+                          color: Color(0xff0A1737),
+                          fontSize: 20,
+                        ),
+                        textAlign: TextAlign.left,
+                      ),
                     ),
-                    textAlign: TextAlign.left,
-                  ),
+                    const SizedBox(height: 12),
+                    Text(
+                      'Dengan Mentormatch, Anda dapat terhubung dengan mentor yang berpengalaman dan inspiratif di berbagai bidang.',
+                      style: GoogleFonts.poppins(
+                        fontWeight: FontWeight.w300,
+                        color: Colors.black,
+                        fontSize: 14,
+                      ),
+                      textAlign: TextAlign.left,
+                    ),
+                    const SizedBox(height: 20),
+                    ElevatedButtonWidget(
+                      onPressed: _isLoggingIn
+                          ? null
+                          : () async {
+                              await signInWithGoogle();
+                            },
+                      title: "Login with Google Account",
+                    ),
+                    SizedBox(
+                      height: 80,
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 12),
-                Text(
-                  'Dengan Mentormatch, Anda dapat terhubung dengan mentor yang berpengalaman dan inspiratif di berbagai bidang.',
-                  style: GoogleFonts.poppins(
-                    fontWeight: FontWeight.w300,
-                    color: Colors.black,
-                    fontSize: 14,
-                  ),
-                  textAlign: TextAlign.left,
-                ),
-                const SizedBox(height: 20),
-                ElevatedButtonWidget(
-                  onPressed: _isLoggingIn
-                      ? null
-                      : () async {
-                          await signInWithGoogle();
-                        },
-                  title: "Login with Google Account",
-                ),
-                SizedBox(
-                  height: 80,
-                ),
-              ],
+              ),
             ),
           ),
-        ),
+          if (_isLoggingIn)
+            Center(
+              child: CircularProgressIndicator(),
+            ),
+        ],
       ),
     );
   }
