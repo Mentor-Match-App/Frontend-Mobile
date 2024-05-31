@@ -1,9 +1,6 @@
-import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
 import 'package:mentormatch_apps/mentor/model/my_class_mentor_model.dart';
-
 import 'package:mentormatch_apps/mentor/screen/my_class_mentor/akses_materi_my_class_mentor.dart';
 import 'package:mentormatch_apps/mentor/screen/my_class_mentor/evaluasi/evaluasi_mentor_screen.dart';
 import 'package:mentormatch_apps/mentor/screen/notification_mentor_screen.dart';
@@ -370,7 +367,6 @@ class _DetailMyClassMentorScreenState extends State<DetailMyClassMentorScreen> {
                                 MaterialPageRoute(
                                   builder: (context) => MyMateriMentor(
                                     classId: widget.classid,
-                                    learningMaterial: widget.learningMaterial,
                                   ),
                                 ),
                               );
