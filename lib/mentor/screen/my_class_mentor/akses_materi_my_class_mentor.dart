@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mentormatch_apps/mentor/model/my_class_mentor_model.dart';
+import 'package:mentormatch_apps/mentor/service/my_class_create_mentor_service.dart';
 import 'package:mentormatch_apps/mentor/service/sent_materi_service.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
@@ -11,16 +12,25 @@ import 'package:url_launcher/url_launcher.dart';
 
 class MyMateriMentor extends StatefulWidget {
   final String classId;
-  final List<LearningMaterialMentor> learningMaterial;
-  const MyMateriMentor(
-      {Key? key, required this.classId, required this.learningMaterial})
-      : super(key: key);
+  const MyMateriMentor({
+    Key? key,
+    required this.classId,
+  }) : super(key: key);
 
   @override
   State<MyMateriMentor> createState() => _MyMateriMentorState();
 }
 
 class _MyMateriMentorState extends State<MyMateriMentor> {
+  List<String> learningMaterial = [];
+  late Future<MyClassMentorMondel> _futureClassData;
+
+  @override
+  void initState() {
+    super.initState();
+    _futureClassData = ListClassMentor().fetchClassData();
+  }
+
   final TextEditingController _materiPembelajaranController =
       TextEditingController();
   final TextEditingController _linkMateriPembelajaranController =
@@ -35,11 +45,6 @@ class _MyMateriMentorState extends State<MyMateriMentor> {
       throw 'Tidak dapat membuka $url';
     }
   }
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  // }
 
   @override
   void dispose() {
@@ -88,10 +93,6 @@ class _MyMateriMentorState extends State<MyMateriMentor> {
       }
 
       // Tambahkan materi yang baru saja dikirim ke daftar materi yang ditampilkan
-      setState(() {
-        widget.learningMaterial
-            .add(LearningMaterialMentor(title: title, link: link));
-      });
 
       // Bersihkan field setelah pengiriman berhasil
       _materiPembelajaranController.clear();
@@ -103,6 +104,11 @@ class _MyMateriMentorState extends State<MyMateriMentor> {
     } finally {
       setState(() {
         _isLoading = false; // Proses selesai, hilangkan indikator loading
+      });
+
+      // Refresh data kelas setelah pengiriman materi selesai
+      setState(() {
+        _futureClassData = ListClassMentor().fetchClassData();
       });
     }
   }
@@ -119,25 +125,45 @@ class _MyMateriMentorState extends State<MyMateriMentor> {
               ),
         ),
       ),
-      body: CustomScrollView(
-        slivers: <Widget>[
-          SliverToBoxAdapter(
-            child: _buildFormSection(),
-          ),
-          SliverGrid(
-            gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                crossAxisSpacing: 3, //lebar
-                mainAxisSpacing: 10, //tinggi
-                mainAxisExtent: 180,
-                maxCrossAxisExtent: 220),
-            delegate: SliverChildBuilderDelegate(
-              (BuildContext context, int index) {
-                return _buildGridItem(index);
-              },
-              childCount: widget.learningMaterial.length,
-            ),
-          ),
-        ],
+      body: FutureBuilder<MyClassMentorMondel>(
+        future: _futureClassData,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Text("Error: ${snapshot.error}");
+          } else if (snapshot.hasData &&
+              snapshot.data!.user?.userClass != null) {
+            var userClass = snapshot.data!.user!.userClass!;
+
+            final classData = userClass.firstWhere(
+              (userClass) => userClass.id == widget.classId,
+              orElse: () => AllClass(),
+            );
+            return CustomScrollView(
+              slivers: <Widget>[
+                SliverToBoxAdapter(
+                  child: _buildFormSection(),
+                ),
+                SliverGrid(
+                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                      crossAxisSpacing: 3,
+                      mainAxisSpacing: 10,
+                      mainAxisExtent: 180,
+                      maxCrossAxisExtent: 220),
+                  delegate: SliverChildBuilderDelegate(
+                    (BuildContext context, int index) {
+                      return _buildGridItem(index, classData);
+                    },
+                    childCount: classData.learningMaterial!.length,
+                  ),
+                ),
+              ],
+            );
+          } else {
+            return Center(child: Text('Tidak ada data'));
+          }
+        },
       ),
     );
   }
@@ -219,9 +245,9 @@ class _MyMateriMentorState extends State<MyMateriMentor> {
     );
   }
 
-  Widget _buildGridItem(int materialIndex) {
+  Widget _buildGridItem(int materialIndex, AllClass classData) {
     // Kode untuk membangun tiap item di grid
-    final material = widget.learningMaterial[materialIndex];
+    final material = classData.learningMaterial![materialIndex];
     return Padding(
       padding: const EdgeInsets.only(left: 12, right: 12, bottom: 8),
       child: Container(
@@ -247,8 +273,7 @@ class _MyMateriMentorState extends State<MyMateriMentor> {
               const SizedBox(
                 height: 8,
               ),
-              Text(widget.learningMaterial[materialIndex].title ?? '',
-                  style: FontFamily().regularText),
+              Text(material.title ?? "", style: FontFamily().regularText),
               const SizedBox(
                 height: 8,
               ),
@@ -258,8 +283,7 @@ class _MyMateriMentorState extends State<MyMateriMentor> {
                       ColorStyle().secondaryColors),
                 ),
                 onPressed: () {
-                  final linkEvaluasi =
-                      widget.learningMaterial[materialIndex].link ?? '';
+                  final linkEvaluasi = material.link ?? "";
                   _launchURL(linkEvaluasi);
                 },
                 child: Text(

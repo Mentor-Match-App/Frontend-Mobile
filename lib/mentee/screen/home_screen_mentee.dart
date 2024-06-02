@@ -11,7 +11,9 @@ import 'package:mentormatch_apps/mentee/screen/session/session_screen.dart';
 import 'package:mentormatch_apps/mentee/service/session_mentor_service.dart';
 import 'package:mentormatch_apps/mentor/model/mentor_model.dart';
 import 'package:mentormatch_apps/mentor/model/session_model.dart';
+import 'package:mentormatch_apps/mentor/screen/notification_mentor_screen.dart';
 import 'package:mentormatch_apps/mentor/service/mentor_service.dart';
+import 'package:mentormatch_apps/mentor/service/notification_service.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
 import 'package:mentormatch_apps/style/text.dart';
@@ -28,6 +30,23 @@ class HomeMenteeScreen extends StatefulWidget {
 }
 
 class _HomeMenteeScreenState extends State<HomeMenteeScreen> {
+  final NotificationService _notificationService = NotificationService();
+
+  Future<void> _fetchUnreadNotificationsCount() async {
+    try {
+      final notifications =
+          await _notificationService.fetchNotificationsForCurrentUser();
+      final unreadCount =
+          notifications.where((notification) => !notification.isRead!).length;
+      setState(() {
+        _unreadNotificationsCount = unreadCount;
+      });
+    } catch (e) {
+      print(e); // Handle error appropriately
+    }
+  }
+
+  int _unreadNotificationsCount = 0;
   late Future<List<dynamic>> _futureData;
   // Membuat instance dari kedua service
   final SessionServices _sessionServices = SessionServices();
@@ -37,7 +56,7 @@ class _HomeMenteeScreenState extends State<HomeMenteeScreen> {
   @override
   void initState() {
     super.initState();
-
+    _fetchUnreadNotificationsCount();
     _futureData = Future.wait([
       _sessionServices.getSessionData(),
       _mentorService.fetchFilteredMentors(),
@@ -53,7 +72,61 @@ class _HomeMenteeScreenState extends State<HomeMenteeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: AppBarHomePage()),
+      appBar: AppBar(
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Image.asset(
+              'assets/Handoff/logo/LogoMobile.png',
+              width: 120,
+              height: 120,
+            ),
+            PopMenuButtonWidget(),
+            Stack(
+              children: [
+                IconButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => NotificationMentorScreen(),
+                      ),
+                    ).then((_) {
+                      _fetchUnreadNotificationsCount(); // Fetch the unread count when returning to this screen
+                    });
+                  },
+                  icon: Icon(Icons.notifications_none_outlined),
+                  color: ColorStyle().secondaryColors,
+                ),
+                if (_unreadNotificationsCount > 0)
+                  Positioned(
+                    right: 11,
+                    top: 11,
+                    child: Container(
+                      padding: EdgeInsets.all(2),
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      constraints: BoxConstraints(
+                        minWidth: 14,
+                        minHeight: 14,
+                      ),
+                      child: Text(
+                        '$_unreadNotificationsCount',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 8,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+              ],
+            )
+          ],
+        ),
+      ),
       body: FutureBuilder<List<dynamic>>(
         future: _futureData,
         builder: (context, snapshot) {

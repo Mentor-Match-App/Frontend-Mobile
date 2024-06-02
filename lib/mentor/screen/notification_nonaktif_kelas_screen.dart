@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:mentormatch_apps/mentor/screen/my_class_mentor/detail_my_class_mentor_screen.dart';
 import 'package:mentormatch_apps/mentor/screen/bottom_mentor_screen.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
@@ -17,7 +16,10 @@ class _NonAktifKelasScreenState extends State<NonAktifKelasScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title:  Text('Nonaktif Kelas', style: FontFamily().titleText,),
+        title: Text(
+          'Nonaktif Kelas',
+          style: FontFamily().titleText,
+        ),
       ),
       body: SingleChildScrollView(
         child: Padding(
