@@ -5,6 +5,7 @@ import 'package:mentormatch_apps/mentee/model/profile_model.dart';
 import 'package:mentormatch_apps/mentee/screen/notification_mentee_screen.dart';
 import 'package:mentormatch_apps/mentee/screen/profile/edit_profile_mentee_screen.dart';
 import 'package:mentormatch_apps/mentee/screen/profile/service.dart';
+import 'package:mentormatch_apps/mentor/service/notification_service.dart';
 import 'package:mentormatch_apps/preferences/%20preferences_helper.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
@@ -23,6 +24,23 @@ class ProfileMenteeScreen extends StatefulWidget {
 }
 
 class _ProfileMenteeScreenState extends State<ProfileMenteeScreen> {
+  int _unreadNotificationsCount = 0;
+  final NotificationService _notificationService = NotificationService();
+
+  Future<void> _fetchUnreadNotificationsCount() async {
+    try {
+      final notifications =
+          await _notificationService.fetchNotificationsForCurrentUser();
+      final unreadCount =
+          notifications.where((notification) => !notification.isRead!).length;
+      setState(() {
+        _unreadNotificationsCount = unreadCount;
+      });
+    } catch (e) {
+      print(e); // Handle error appropriately
+    }
+  }
+
   final GoogleSignIn _googleSignIn = GoogleSignIn();
 
   final ProfileService menteeService = ProfileService();
@@ -31,6 +49,7 @@ class _ProfileMenteeScreenState extends State<ProfileMenteeScreen> {
   @override
   void initState() {
     super.initState();
+    _fetchUnreadNotificationsCount();
     _loadData();
   }
 
@@ -112,27 +131,62 @@ class _ProfileMenteeScreenState extends State<ProfileMenteeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+     appBar: AppBar(
+        backgroundColor: ColorStyle().whiteColors,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Image.asset('assets/Handoff/logo/LogoMobile.png'),
-            IconButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => NotificationMenteeScreen(),
+            Image.asset(
+              'assets/Handoff/logo/LogoMobile.png',
+              width: 120,
+              height: 120,
+            ),
+            Stack(
+              children: [
+                IconButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => NotificationMenteeScreen(),
+                      ),
+                    ).then((_) {
+                      _fetchUnreadNotificationsCount(); // Fetch the unread count when returning to this screen
+                    });
+                  },
+                  icon: Icon(Icons.notifications_none_outlined),
+                  color: ColorStyle().secondaryColors,
+                ),
+                if (_unreadNotificationsCount > 0)
+                  Positioned(
+                    right: 11,
+                    top: 11,
+                    child: Container(
+                      padding: EdgeInsets.all(2),
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      constraints: BoxConstraints(
+                        minWidth: 14,
+                        minHeight: 14,
+                      ),
+                      child: Text(
+                        '$_unreadNotificationsCount',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 8,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
                   ),
-                );
-              },
-              icon: Icon(Icons.notifications_none_outlined),
-              color: ColorStyle().secondaryColors,
+              ],
             )
           ],
         ),
       ),
-      body: FutureBuilder<MenteeProfile>(
+       body: FutureBuilder<MenteeProfile>(
         future: menteeService
             .getMenteeProfile(), // Call the asynchronous fetchMentee method here
         builder: (context, snapshot) {
@@ -320,16 +374,22 @@ class _ProfileMenteeScreenState extends State<ProfileMenteeScreen> {
                                 color: ColorStyle().primaryColors,
                               ),
                             ),
-                            SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: mentee.user!.skills
-                                          ?.map((skill) => SkillCard(
-                                                skill: skill,
-                                              ))
-                                          .toList() ??
-                                      [Text('No skills')]),
+                            SizedBox(
+                              height: 8,
+                            ),
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: mentee.user!.skills
+                                            ?.map((skill) => SkillCard(
+                                                  skill: skill,
+                                                ))
+                                            .toList() ??
+                                        [Text('No skills')]),
+                              ),
                             ),
                             const SizedBox(
                               height: 24,

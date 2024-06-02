@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:mentormatch_apps/mentee/model/community_model.dart';
+import 'package:mentormatch_apps/mentee/screen/notification_mentee_screen.dart';
 import 'package:mentormatch_apps/mentee/service/community_service.dart';
+import 'package:mentormatch_apps/mentor/service/notification_service.dart';
+import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/widget/card_community.dart';
-import 'package:mentormatch_apps/widget/navbar.dart';
-import 'package:mentormatch_apps/widget/search_bar.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class CommunityMenteeScreen extends StatefulWidget {
@@ -14,6 +15,29 @@ class CommunityMenteeScreen extends StatefulWidget {
 }
 
 class _CommunityMenteeScreenState extends State<CommunityMenteeScreen> {
+  int _unreadNotificationsCount = 0;
+  final NotificationService _notificationService = NotificationService();
+
+  Future<void> _fetchUnreadNotificationsCount() async {
+    try {
+      final notifications =
+          await _notificationService.fetchNotificationsForCurrentUser();
+      final unreadCount =
+          notifications.where((notification) => !notification.isRead!).length;
+      setState(() {
+        _unreadNotificationsCount = unreadCount;
+      });
+    } catch (e) {
+      print(e); // Handle error appropriately
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchUnreadNotificationsCount();
+  }
+
   _launchURL(String url) async {
     if (await canLaunch(url)) {
       await launch(url);
@@ -26,7 +50,61 @@ class _CommunityMenteeScreenState extends State<CommunityMenteeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: AppBarHomePage()),
+      appBar: AppBar(
+        backgroundColor: ColorStyle().whiteColors,
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Image.asset(
+              'assets/Handoff/logo/LogoMobile.png',
+              width: 120,
+              height: 120,
+            ),
+            Stack(
+              children: [
+                IconButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => NotificationMenteeScreen(),
+                      ),
+                    ).then((_) {
+                      _fetchUnreadNotificationsCount(); // Fetch the unread count when returning to this screen
+                    });
+                  },
+                  icon: Icon(Icons.notifications_none_outlined),
+                  color: ColorStyle().secondaryColors,
+                ),
+                if (_unreadNotificationsCount > 0)
+                  Positioned(
+                    right: 11,
+                    top: 11,
+                    child: Container(
+                      padding: EdgeInsets.all(2),
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      constraints: BoxConstraints(
+                        minWidth: 14,
+                        minHeight: 14,
+                      ),
+                      child: Text(
+                        '$_unreadNotificationsCount',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 8,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+              ],
+            )
+          ],
+        ),
+      ),
       body: FutureBuilder<CommunityModels>(
         future: communityService.fetchCommunities(),
         builder: (context, snapshot) {
@@ -47,7 +125,6 @@ class _CommunityMenteeScreenState extends State<CommunityMenteeScreen> {
             } else {
               return Column(
                 children: [
-                  SearchBarWidgetMentee(),
                   Expanded(
                     child: GridView.builder(
                       gridDelegate:

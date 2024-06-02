@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:mentormatch_apps/login/login_screen.dart';
+import 'package:mentormatch_apps/mentor/screen/notification_mentor_screen.dart';
 import 'package:mentormatch_apps/mentor/screen/profile_mentor/edit_profile_mentor_screen.dart';
+import 'package:mentormatch_apps/mentor/service/notification_service.dart';
 import 'package:mentormatch_apps/mentor/service/profile_service.dart';
 import 'package:mentormatch_apps/preferences/%20preferences_helper.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
@@ -9,7 +11,6 @@ import 'package:mentormatch_apps/style/font_style.dart';
 import 'package:mentormatch_apps/style/text.dart';
 import 'package:mentormatch_apps/widget/category_card.dart';
 import 'package:mentormatch_apps/widget/experience_widget.dart';
-import 'package:mentormatch_apps/widget/navbar.dart';
 import 'package:mentormatch_apps/widget/profile_avatar.dart';
 import 'package:mentormatch_apps/widget/show_dialog_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -24,6 +25,23 @@ class MentorProfileScreen extends StatefulWidget {
 }
 
 class _MentorProfileScreenState extends State<MentorProfileScreen> {
+  final NotificationService _notificationService = NotificationService();
+  int _unreadNotificationsCount = 0;
+
+  Future<void> _fetchUnreadNotificationsCount() async {
+    try {
+      final notifications =
+          await _notificationService.fetchNotificationsForCurrentUser();
+      final unreadCount =
+          notifications.where((notification) => !notification.isRead!).length;
+      setState(() {
+        _unreadNotificationsCount = unreadCount;
+      });
+    } catch (e) {
+      print(e); // Handle error appropriately
+    }
+  }
+
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   _launchURL(String url) async {
     if (await canLaunch(url)) {
@@ -37,6 +55,7 @@ class _MentorProfileScreenState extends State<MentorProfileScreen> {
   void initState() {
     super.initState();
     _loadData();
+    _fetchUnreadNotificationsCount();
   }
 
   void _loadData() async {
@@ -111,8 +130,59 @@ class _MentorProfileScreenState extends State<MentorProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          backgroundColor: ColorStyle().tertiaryColors,
-          title: AppBarLogoNotif()),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Image.asset(
+              'assets/Handoff/logo/LogoMobile.png',
+              width: 120,
+              height: 120,
+            ),
+            Stack(
+              children: [
+                IconButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => NotificationMentorScreen(),
+                      ),
+                    ).then((_) {
+                      _fetchUnreadNotificationsCount(); // Fetch the unread count when returning to this screen
+                    });
+                  },
+                  icon: Icon(Icons.notifications_none_outlined),
+                  color: ColorStyle().secondaryColors,
+                ),
+                if (_unreadNotificationsCount > 0)
+                  Positioned(
+                    right: 11,
+                    top: 11,
+                    child: Container(
+                      padding: EdgeInsets.all(2),
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      constraints: BoxConstraints(
+                        minWidth: 14,
+                        minHeight: 14,
+                      ),
+                      child: Text(
+                        '$_unreadNotificationsCount',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 8,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+              ],
+            )
+          ],
+        ),
+      ),
       body: FutureBuilder<MentorProfile>(
         future: mentorService
             .getMentorProfile(), // Call the asynchronous fetchMentee method here
@@ -239,7 +309,8 @@ class _MentorProfileScreenState extends State<MentorProfileScreen> {
                                       ),
                                       child: TextButton.icon(
                                         style: TextButton.styleFrom(
-                                          foregroundColor: ColorStyle().whiteColors,
+                                          foregroundColor:
+                                              ColorStyle().whiteColors,
                                         ),
                                         onPressed: () {
                                           final linkedlnlink =
@@ -290,16 +361,22 @@ class _MentorProfileScreenState extends State<MentorProfileScreen> {
                                 color: ColorStyle().primaryColors,
                               ),
                             ),
-                            SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: mentor.user!.skills
-                                          ?.map((skill) => SkillCard(
-                                                skill: skill,
-                                              ))
-                                          .toList() ??
-                                      [Text('No skills')]),
+                            SizedBox(
+                              height: 8,
+                            ),
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: mentor.user!.skills
+                                            ?.map((skill) => SkillCard(
+                                                  skill: skill,
+                                                ))
+                                            .toList() ??
+                                        [Text('No skills')]),
+                              ),
                             ),
                             const SizedBox(
                               height: 24,

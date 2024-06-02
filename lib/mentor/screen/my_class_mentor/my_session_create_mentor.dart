@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:mentormatch_apps/mentor/model/my_class_mentor_model.dart';
 import 'package:mentormatch_apps/mentor/service/my_class_create_mentor_service.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
-import 'package:mentormatch_apps/widget/button.dart';
 import 'package:mentormatch_apps/widget/flushs_bar_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -90,7 +90,7 @@ class _MySessionCreateState extends State<MySessionCreate> {
         title,
         style: FontFamily().boldText.copyWith(
               color: color,
-              fontSize: 14,
+              fontSize: 12,
             ),
       ),
     );
@@ -140,35 +140,21 @@ class _MySessionCreateState extends State<MySessionCreate> {
                 final String formattedEndTime =
                     formatOutput.format(DateTime.parse(session.endTime!));
 
-                // Konversi waktu UTC ke zona waktu Indonesia (WIB)
-                // final startTimeInWIB =
-                //     DateTime.parse(session.startTime!).add(timeZoneOffset);
-                // final endTimeInWIB =
-                //     DateTime.parse(session.endTime!).add(timeZoneOffset);
-                // final formattedStartTimeWIB =
-                //     formatOutput.format(startTimeInWIB);
-                // final formattedEndTimeWIB = formatOutput.format(endTimeInWIB);
-
                 return Padding(
                   padding: const EdgeInsets.only(
                       left: 16.0, right: 16.0, top: 16.0, bottom: 4.0),
                   child: Container(
                     decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.3),
-            // spreadRadius: 1,
-            blurRadius: 2,
-            offset: Offset(0, 2),
-          ),
-        ],
-                        // border: Border.all(
-                        //   color: ColorStyle().secondaryColors.withOpacity(0.2),
-                        //   width: 1,
-                        // ),
-                        color: ColorStyle().tertiaryColors,
-                      ),
+                      borderRadius: BorderRadius.circular(10),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.1),
+                          blurRadius: 2,
+                          offset: Offset(0, 2),
+                        ),
+                      ],
+                      color: ColorStyle().whiteColors,
+                    ),
                     child: Padding(
                       padding: const EdgeInsets.all(12.0),
                       child: Column(
@@ -192,29 +178,31 @@ class _MySessionCreateState extends State<MySessionCreate> {
                             const SizedBox(height: 12),
                             Text(
                               session.title!,
-                              style: FontFamily().buttonText.copyWith(
-                                    color: ColorStyle().primaryColors,
-                                    fontSize: 16,
-                                  ),
+                              style: FontFamily().boldText.copyWith(
+                                  fontSize: 14,
+                                  color: ColorStyle().blackColors),
                             ),
                             const SizedBox(height: 12),
                             Text(
                               'Jadwal               : ${formattedJadwal}',
-                              style: FontFamily().regularText.copyWith(
-                                color: ColorStyle().blackColors,
-                              ),
+                              style: GoogleFonts.poppins(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w400,
+                                  color: ColorStyle().disableColors),
                             ),
                             Text(
                               'Jam                    : ${formattedStartTime} - ${formattedEndTime}',
-                              style: FontFamily().regularText.copyWith(
-                                color: ColorStyle().blackColors,
-                              ),
+                              style: GoogleFonts.poppins(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w400,
+                                  color: ColorStyle().disableColors),
                             ),
                             Text(
                               'Jumlah Peserta : ${session.participant!.length} peserta',
-                             style: FontFamily().regularText.copyWith(
-                                color: ColorStyle().blackColors,
-                              ),
+                              style: GoogleFonts.poppins(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w400,
+                                  color: ColorStyle().disableColors),
                             ),
                             Padding(
                               padding:
@@ -223,7 +211,7 @@ class _MySessionCreateState extends State<MySessionCreate> {
                                 alignment: Alignment.centerRight,
                                 child: Container(
                                   width: 150,
-                                  height: 48,
+                                  height: 38,
                                   decoration: BoxDecoration(
                                     color: ColorStyle().primaryColors,
                                     borderRadius: BorderRadius.circular(12),

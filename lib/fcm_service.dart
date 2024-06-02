@@ -27,29 +27,6 @@ Future<void> sendTokenToServer(String token, String userId) async {
   }
 }
 
-Future<void> saveNotificationToBackend(
-    String userId, String title, String content) async {
-  try {
-    Dio dio = Dio();
-    var response = await dio.post(
-      '$baseUrl/save-notification',
-      data: {
-        'userId': userId,
-        'title': title,
-        'content': content,
-      },
-    );
-    if (response.statusCode == 200 || response.statusCode == 201) {
-      print('Notification saved to server successfully');
-    } else {
-      print(
-          'Failed to save notification to server, status code: ${response.statusCode}, response: ${response.data}');
-    }
-  } catch (e) {
-    print('Error saving notification to server: $e');
-  }
-}
-
 class FCMService {
   static final FlutterLocalNotificationsPlugin
       _flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
@@ -122,16 +99,6 @@ class FCMService {
           ),
         ),
       );
-
-      final prefs = await SharedPreferences.getInstance();
-      String? userId = prefs.getString('userId');
-      if (userId != null) {
-        await saveNotificationToBackend(
-          userId,
-          notification.title ?? 'No Title',
-          notification.body ?? 'No Content',
-        );
-      }
     }
   }
 
@@ -144,18 +111,5 @@ class FCMService {
       RemoteMessage message) async {
     await Firebase.initializeApp();
     print("Handling a background message: ${message.messageId}");
-
-    RemoteNotification? notification = message.notification;
-    if (notification != null) {
-      final prefs = await SharedPreferences.getInstance();
-      String? userId = prefs.getString('userId');
-      if (userId != null) {
-        await saveNotificationToBackend(
-          userId,
-          notification.title ?? 'No Title',
-          notification.body ?? 'No Content',
-        );
-      }
-    }
   }
 }

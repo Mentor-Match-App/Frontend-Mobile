@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -53,12 +55,12 @@ class _LoginScreenState extends State<LoginScreen> {
           // Cek data yang disimpan di SharedPreferences
           Map<String, String?> userData = await AuthService.getUserData();
 
-          // Mengambil token FCM dan mengirimkannya ke server
-          // String? fcmToken = await FirebaseMessaging.instance.getToken();
-          // if (fcmToken != null && userData['userId'] != null) {
-          //   await sendTokenToServer(fcmToken, userData['userId']!);
-          // }
-
+          if (!Platform.isIOS) {
+            String? fcmToken = await FirebaseMessaging.instance.getToken();
+            if (fcmToken != null && userData['userId'] != null) {
+              await sendTokenToServer(fcmToken, userData['userId']!);
+            }
+          }
           // Tentukan navigasi berdasarkan userType
           String? userType = userData['userType'];
           if (userType == null) {

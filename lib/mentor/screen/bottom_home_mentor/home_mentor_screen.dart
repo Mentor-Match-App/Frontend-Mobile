@@ -1,6 +1,5 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:mentormatch_apps/mentor/screen/create_class_and_session/form_create_session.dart';
 import 'package:mentormatch_apps/mentor/screen/daftar_mentor/syarat_ketentuan_daftar_mentor/persetujuan_1.dart';
 import 'package:mentormatch_apps/mentor/screen/notification_mentor_screen.dart';
 import 'package:mentormatch_apps/mentor/service/notification_service.dart';
@@ -44,8 +43,7 @@ class _HomeMentorScreenState extends State<HomeMentorScreen> {
   final List<Map<String, String>> carouselData = [
     {
       'title': 'Hello,\nSelamat datang di MentorMatch',
-      'description':
-          'Mulailah membuat kelas yang akan membantu banyak orang',
+      'description': 'Mulailah membuat kelas yang akan membantu banyak orang',
       'imagePath': 'assets/Handoff/ilustrator/banner.png'
     },
     {
@@ -68,7 +66,11 @@ class _HomeMentorScreenState extends State<HomeMentorScreen> {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Image.asset('assets/Handoff/logo/LogoMobile.png'),
+            Image.asset(
+              'assets/Handoff/logo/LogoMobile.png',
+              width: 120,
+              height: 120,
+            ),
             Stack(
               children: [
                 IconButton(
@@ -173,12 +175,13 @@ class _HomeMentorScreenState extends State<HomeMentorScreen> {
                 child: Row(
                   children: [
                     Container(
-                      height: 140,
-                      width: 140,
+                      height: 110,
+                      width: 110,
                       decoration: const BoxDecoration(
                         image: DecorationImage(
                           image: AssetImage(
-                              'assets/Handoff/ilustrator/looking mentor.png'),
+                            'assets/Handoff/ilustrator/looking mentor.png',
+                          ),
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -192,34 +195,42 @@ class _HomeMentorScreenState extends State<HomeMentorScreen> {
                         children: [
                           const SizedBox(height: 12),
                           Text(
-                            "Bangun Kelas yang Menginspirasi",
+                            textAlign: TextAlign.end,
+                            "Create your premium class",
                             style: FontFamily().boldText.copyWith(
                                 color: ColorStyle().secondaryColors,
                                 fontSize: 14),
                           ),
-                          const SizedBox(height: 2),
+                          const SizedBox(height: 4),
                           Text(
-                            'Temukan potensi dalam menciptakan kelas menginspirasi yang mengubah hidup.',
-                            style: FontFamily().regularText,
+                            'Premium class adalah kelas berbayar berkualitas tinggi. Kamu dapat membuat kelas ini untuk mentee yang ingin belajar secara mendalam di bidang tertentu.',
+                            style: FontFamily().regularText.copyWith(
+                                  fontSize: 10,
+                                ),
                             textAlign: TextAlign.end,
                           ),
                           const SizedBox(
-                            height: 12,
+                            height: 4,
                           ),
-                          SmallElevatedButton(
-                            width: 150,
-                            height: 38,
-                            title: 'Buat Kelas',
-                            style: FontFamily().buttonText,
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      PersetujuanPremiClassMentor(),
-                                ),
-                              );
-                            },
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: SmallElevatedButton(
+                              width: 150,
+                              height: 38,
+                              title: 'Buat Kelas',
+                              style: FontFamily().buttonText.copyWith(
+                                    fontSize: 12,
+                                  ),
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        PersetujuanPremiClassMentor(),
+                                  ),
+                                );
+                              },
+                            ),
                           )
                         ],
                       ),
@@ -229,7 +240,8 @@ class _HomeMentorScreenState extends State<HomeMentorScreen> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(24.0),
+              padding: const EdgeInsets.only(
+                  top: 12.0, bottom: 0.0, left: 12.0, right: 12.0),
               child: Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
@@ -242,12 +254,13 @@ class _HomeMentorScreenState extends State<HomeMentorScreen> {
                 child: Row(
                   children: [
                     Container(
-                      height: 140,
-                      width: 140,
+                      height: 110,
+                      width: 110,
                       decoration: const BoxDecoration(
                         image: DecorationImage(
                           image: AssetImage(
-                              'assets/Handoff/ilustrator/learn together 2.png'),
+                            'assets/Handoff/ilustrator/learn together 2.png',
+                          ),
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -257,40 +270,46 @@ class _HomeMentorScreenState extends State<HomeMentorScreen> {
                     ),
                     Expanded(
                       child: Column(
-                   
+                        crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           const SizedBox(height: 12),
                           Text(
-                            "Berikan Pengalaman menarik melalui Session",
-                                 textAlign: TextAlign.end,
+                            textAlign: TextAlign.end,
+                            "Create your session",
                             style: FontFamily().boldText.copyWith(
                                 color: ColorStyle().secondaryColors,
-                                
                                 fontSize: 14),
                           ),
-                          const SizedBox(height: 2),
+                          const SizedBox(height: 4),
                           Text(
-                            'Raih Potensi Anda dalam Membuat Sesi yang Menginspirasi.',
-                            style: FontFamily().regularText,
+                            'Buatlah sesi inspiratifmu untuk berbagi ilmu dan pengalaman kepada banyak orang yang bersemangat untuk pengetahuan dan pertumbuhan pribadi.',
+                            style: FontFamily().regularText.copyWith(
+                                  fontSize: 10,
+                                ),
                             textAlign: TextAlign.end,
                           ),
                           const SizedBox(
-                            height: 12,
+                            height: 4,
                           ),
-                          SmallElevatedButton(
-                            width: 200,
-                            height: 38,
-                            title: 'Buat session',
-                            style: FontFamily().buttonText,
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      FormCreateSessionScreen(),
-                                ),
-                              );
-                            },
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: SmallElevatedButton(
+                              width: 150,
+                              height: 38,
+                              title: 'Buat Sesion',
+                              style: FontFamily().buttonText.copyWith(
+                                    fontSize: 12,
+                                  ),
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        PersetujuanPremiClassMentor(),
+                                  ),
+                                );
+                              },
+                            ),
                           )
                         ],
                       ),

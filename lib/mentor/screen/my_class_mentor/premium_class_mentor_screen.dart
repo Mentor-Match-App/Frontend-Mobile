@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:mentormatch_apps/mentor/model/my_class_mentor_model.dart';
 import 'package:mentormatch_apps/mentor/screen/my_class_mentor/detail_my_class_mentor_screen.dart';
 import 'package:mentormatch_apps/mentor/service/my_class_create_mentor_service.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
-import 'package:mentormatch_apps/widget/button.dart';
 
 enum ClassStatus { active, inactive, scheduled }
 
@@ -147,56 +147,56 @@ class _PremiumClassMentorScreenState extends State<PremiumClassMentorScreen> {
                         ),
                       );
                     },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.3),
-            // spreadRadius: 1,
-            blurRadius: 2,
-            offset: Offset(0, 2),
-          ),
-        ],
-                        color: ColorStyle().tertiaryColors,
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(20.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Align(
-                              alignment: Alignment.centerRight,
-                              child: Text(
-                                buttonText,
-                                style: FontFamily().boldText.copyWith(
-                                      color: buttonColor,
-                                      fontSize: 14,
-                                    ),
-                              ),
-                            ),
-                            const SizedBox(height: 12),
-                            Text(
-                              classData.name ?? '',
-                              style: FontFamily().buttonText.copyWith(
-                                  color: ColorStyle().primaryColors,
-                                  fontSize: 16),
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              'Mentee : $menteeNames',
-                              style: FontFamily().regularText.copyWith(
-                                    color: ColorStyle().blackColors,
-                                  ),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              'Durasi   : ${classData.durationInDays} Hari',
-                              style: FontFamily().regularText.copyWith(
-                                    color: ColorStyle().blackColors,
-                                  ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.1),
+                              blurRadius: 2,
+                              offset: Offset(0, 2),
                             ),
                           ],
+                          color: ColorStyle().whiteColors,
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Align(
+                                alignment: Alignment.centerRight,
+                                child: Text(
+                                  buttonText,
+                                  style: FontFamily().boldText.copyWith(
+                                      fontSize: 12,
+                                      color: ColorStyle().blackColors),
+                                ),
+                              ),
+                              const SizedBox(height: 12),
+                              Text(
+                                classData.name ?? '',
+                                style: FontFamily().boldText.copyWith(
+                                    fontSize: 14,
+                                    color: ColorStyle().blackColors),
+                              ),
+                              const SizedBox(height: 8),
+                              Text('Mentee : $menteeNames',
+                                  style: GoogleFonts.poppins(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w400,
+                                      color: ColorStyle().disableColors)),
+                              const SizedBox(height: 4),
+                              Text(
+                                  'Durasi   : ${classData.durationInDays} Hari',
+                                  style: GoogleFonts.poppins(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w400,
+                                      color: ColorStyle().disableColors)),
+                            ],
+                          ),
                         ),
                       ),
                     ),

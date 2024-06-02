@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:mentormatch_apps/fcm_service.dart';
@@ -5,7 +7,6 @@ import 'package:mentormatch_apps/login/login_screen.dart';
 import 'package:mentormatch_apps/login/splash_screen_first.dart';
 import 'package:mentormatch_apps/mentee/provider/review_mentor_provider.dart';
 import 'package:mentormatch_apps/mentee/screen/bottom_mentee_screen.dart';
-import 'package:mentormatch_apps/mentee/screen/my_class_mentee/payment_error_screen.dart';
 import 'package:mentormatch_apps/mentor/provider/create_class_provider.dart';
 import 'package:mentormatch_apps/mentor/provider/create_session_provider.dart';
 import 'package:mentormatch_apps/mentor/screen/bottom_mentor_screen.dart';
@@ -21,7 +22,9 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  // await FCMService.initialize();
+  if (!Platform.isIOS) {
+    await FCMService.initialize();
+  }
 
   await UserPreferences.init();
 
@@ -55,7 +58,7 @@ class MyApp extends StatelessWidget {
           homeScreen = BottomNavbarMentorScreen(); // Layar awal untuk mentor
           break;
         case 'PendingMentor' || 'RejectedMentor':
-          homeScreen = VerificationFormRegistScreen(); // Layar awal untuk admin
+          homeScreen = VerificationFormRegistScreen();
           break;
         default:
           homeScreen = LoginScreen(); // Jika userType tidak dikenali
@@ -72,11 +75,9 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
         theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
         ),
-        home: 
-        homeScreen,
+        home: homeScreen,
       ),
     );
   }

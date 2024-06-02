@@ -1,11 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:mentormatch_apps/mentee/model/my_class_model.dart';
 import 'package:mentormatch_apps/mentor/service/my_class_service.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
-import 'package:mentormatch_apps/widget/button.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class MySessionBooking extends StatefulWidget {
@@ -62,10 +62,7 @@ class _MySessionBookingState extends State<MySessionBooking> {
       alignment: Alignment.centerRight,
       child: Text(
         title,
-        style: FontFamily().boldText.copyWith(
-              color: color,
-              fontSize: 14,
-            ),
+        style: FontFamily().boldText.copyWith(color: color, fontSize: 12),
       ),
     );
   }
@@ -95,23 +92,23 @@ class _MySessionBookingState extends State<MySessionBooking> {
           final List<ParticipantMyClass> participants = snapshot.data!;
           return SingleChildScrollView(
             child: Padding(
-             padding: const EdgeInsets.only(
+              padding: const EdgeInsets.only(
                   left: 16.0, right: 16.0, top: 16.0, bottom: 4.0),
               child: Column(
                 children: participants.map((participant) {
                   final session = participant.session!;
                   int statusButton = _getPriority(session);
-              
+
                   DateTime parsedJadwal = DateTime.parse(session.dateTime!);
                   String formattedJadwal =
                       DateFormat('dd MMMM yyyy').format(parsedJadwal);
-              
+
                   final DateFormat formatOutput = DateFormat("HH:mm");
                   final String formattedStartTime =
                       formatOutput.format(DateTime.parse(session.startTime!));
                   final String formattedEndTime =
                       formatOutput.format(DateTime.parse(session.endTime!));
-              
+
                   return Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Container(
@@ -119,13 +116,12 @@ class _MySessionBookingState extends State<MySessionBooking> {
                         borderRadius: BorderRadius.circular(10),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.3),
-                            // spreadRadius: 1,
+                            color: Colors.black.withOpacity(0.1),
                             blurRadius: 2,
                             offset: Offset(0, 2),
                           ),
                         ],
-                        color: ColorStyle().tertiaryColors,
+                        color: ColorStyle().whiteColors,
                       ),
                       child: Padding(
                         padding: const EdgeInsets.all(12.0),
@@ -161,27 +157,36 @@ class _MySessionBookingState extends State<MySessionBooking> {
                                 ),
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         session.title ?? '',
                                         style: FontFamily().boldText.copyWith(
                                             fontSize: 14,
-                                            color: ColorStyle().primaryColors),
+                                            color: ColorStyle().blackColors),
                                       ),
                                       const SizedBox(height: 12),
                                       Text(
                                         'Mentor : ${session.mentor!.name}',
-                                        style: FontFamily().regularText,
+                                        style: GoogleFonts.poppins(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w400,
+                                            color: ColorStyle().disableColors),
                                       ),
+                                      Text('Jadwal : ${formattedJadwal}',
+                                          style: GoogleFonts.poppins(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w400,
+                                              color:
+                                                  ColorStyle().disableColors)),
                                       Text(
-                                        'Jadwal : ${formattedJadwal}',
-                                        style: FontFamily().regularText,
-                                      ),
-                                      Text(
-                                        'Jam      : ${formattedStartTime} - ${formattedEndTime}',
-                                        style: FontFamily().regularText,
-                                      ),
+                                          'Jam      : ${formattedStartTime} - ${formattedEndTime}',
+                                          style: GoogleFonts.poppins(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w400,
+                                              color:
+                                                  ColorStyle().disableColors)),
                                     ],
                                   ),
                                 ),
@@ -212,7 +217,9 @@ class _MySessionBookingState extends State<MySessionBooking> {
                                     },
                                     icon: Icon(Icons.link),
                                     label: Text('Join Session',
-                                        style: FontFamily().regularText.copyWith(
+                                        style: FontFamily()
+                                            .regularText
+                                            .copyWith(
                                               color: ColorStyle().whiteColors,
                                             )),
                                   ),

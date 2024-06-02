@@ -15,7 +15,7 @@ class FontFamily {
     color: ColorStyle().whiteColors,
   );
   TextStyle regularText = GoogleFonts.poppins(
-    fontWeight: FontWeight.w300,
+    fontWeight: FontWeight.w400,
     fontSize: 12,
     color: ColorStyle().textColors,
   );

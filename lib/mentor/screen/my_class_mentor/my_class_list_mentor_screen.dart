@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:mentormatch_apps/mentor/screen/my_class_mentor/premium_class_mentor_screen.dart';
 import 'package:mentormatch_apps/mentor/screen/my_class_mentor/all_class_mentor_screen.dart';
 import 'package:mentormatch_apps/mentor/screen/my_class_mentor/my_session_create_mentor.dart';
+import 'package:mentormatch_apps/mentor/screen/my_class_mentor/premium_class_mentor_screen.dart';
 import 'package:mentormatch_apps/mentor/screen/notification_mentor_screen.dart';
+import 'package:mentormatch_apps/mentor/service/notification_service.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
 import 'package:mentormatch_apps/widget/search_bar.dart';
@@ -16,6 +17,29 @@ class MyClassMentorListScreen extends StatefulWidget {
 }
 
 class _MyClassMentorListScreenState extends State<MyClassMentorListScreen> {
+  final NotificationService _notificationService = NotificationService();
+  int _unreadNotificationsCount = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchUnreadNotificationsCount();
+  }
+
+  Future<void> _fetchUnreadNotificationsCount() async {
+    try {
+      final notifications =
+          await _notificationService.fetchNotificationsForCurrentUser();
+      final unreadCount =
+          notifications.where((notification) => !notification.isRead!).length;
+      setState(() {
+        _unreadNotificationsCount = unreadCount;
+      });
+    } catch (e) {
+      print(e); // Handle error appropriately
+    }
+  }
+
   bool isAllClassActive = true;
   bool isPremiumClassActive = false;
   bool isSessionActive = false; // Renamed for consistency
@@ -43,23 +67,59 @@ class _MyClassMentorListScreenState extends State<MyClassMentorListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: ColorStyle().whiteColors,
       appBar: AppBar(
+        backgroundColor: ColorStyle().whiteColors,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Image.asset('assets/Handoff/logo/LogoMobile.png'),
-            IconButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => NotificationMentorScreen(),
-                  ),
-                );
-              },
-              icon: Icon(Icons.notifications_none_outlined),
-              color: ColorStyle().secondaryColors,
+            Image.asset(
+              'assets/Handoff/logo/LogoMobile.png',
+              width: 120,
+              height: 120,
             ),
+            Stack(
+              children: [
+                IconButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => NotificationMentorScreen(),
+                      ),
+                    ).then((_) {
+                      _fetchUnreadNotificationsCount(); // Fetch the unread count when returning to this screen
+                    });
+                  },
+                  icon: Icon(Icons.notifications_none_outlined),
+                  color: ColorStyle().secondaryColors,
+                ),
+                if (_unreadNotificationsCount > 0)
+                  Positioned(
+                    right: 11,
+                    top: 11,
+                    child: Container(
+                      padding: EdgeInsets.all(2),
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      constraints: BoxConstraints(
+                        minWidth: 14,
+                        minHeight: 14,
+                      ),
+                      child: Text(
+                        '$_unreadNotificationsCount',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 8,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+              ],
+            )
           ],
         ),
       ),
@@ -70,13 +130,13 @@ class _MyClassMentorListScreenState extends State<MyClassMentorListScreen> {
             children: [
               SearchBarWidgetMentor(
                   title: 'search by mentee name,or class name'),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
+              Padding(
+                padding: const EdgeInsets.all(8.0),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.all(12.0),
+                      padding: const EdgeInsets.all(6.0),
                       child: Container(
                         width: 80,
                         height: 38,
@@ -107,7 +167,7 @@ class _MyClassMentorListScreenState extends State<MyClassMentorListScreen> {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: const EdgeInsets.all(6.0),
                       child: Container(
                         width: 120,
                         height: 38,
@@ -138,12 +198,12 @@ class _MyClassMentorListScreenState extends State<MyClassMentorListScreen> {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: const EdgeInsets.all(6.0),
                       child: Container(
                         width: 80,
                         height: 38,
                         decoration: isSessionActive
-                             ? BoxDecoration(
+                            ? BoxDecoration(
                                 borderRadius: BorderRadius.circular(4),
                                 color: ColorStyle().secondaryColors,
                               )

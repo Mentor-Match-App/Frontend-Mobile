@@ -5,7 +5,6 @@ import 'package:mentormatch_apps/mentor/screen/my_class_mentor/edit_class_reject
 import 'package:mentormatch_apps/mentor/service/my_class_create_mentor_service.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
-import 'package:mentormatch_apps/widget/button.dart';
 
 class AllClassMentorScreen extends StatefulWidget {
   AllClassMentorScreen({Key? key}) : super(key: key);
@@ -113,7 +112,7 @@ class _AllClassMentorScreenState extends State<AllClassMentorScreen> {
         title,
         style: FontFamily().boldText.copyWith(
               color: color,
-              fontSize: 14,
+              fontSize: 12,
             ),
       ),
     );
@@ -201,76 +200,77 @@ class _AllClassMentorScreenState extends State<AllClassMentorScreen> {
                         );
                       }
                     },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.3),
-                            // spreadRadius: 1,
-                            blurRadius: 2,
-                            offset: Offset(0, 2),
-                          ),
-                        ],
-                        color: ColorStyle().tertiaryColors,
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(20.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            if (statusButton == 1)
-                              createStatusButton(
-                                  "Rejected", ColorStyle().errorColors),
-                            if (statusButton == 2)
-                              createStatusButton(
-                                  "Pending", ColorStyle().pendingColors),
-                            if (statusButton == 3)
-                              createStatusButton(
-                                  "Full", ColorStyle().fullbookedColors),
-                            if (statusButton == 4)
-                              createStatusButton(
-                                  "Active", ColorStyle().succesColors),
-                            if (statusButton == 5)
-                              createStatusButton(
-                                  "Completed", ColorStyle().disableColors),
-                            if (statusButton == 6)
-                              createStatusButton(
-                                  "Expired", ColorStyle().blackColors),
-                            if (statusButton == 7)
-                              createStatusButton(
-                                  "Unavailable", ColorStyle().primaryColors),
-                            if (statusButton == 8)
-                              createStatusButton(
-                                  "Available", ColorStyle().secondaryColors),
-                            const SizedBox(height: 12),
-                            Text(
-                              //nama kelas
-                              data.name ?? '',
-                              style: FontFamily().buttonText.copyWith(
-                                    color: ColorStyle().primaryColors,
-                                    fontSize: 16,
-                                  ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.1),
+                              blurRadius: 2,
+                              offset: Offset(0, 2),
                             ),
-                            const SizedBox(height: 8),
-                            Text(
-                              'Jumlah mentee terdaftar : ${approvedTransactionsCount} orang',
-                              style: FontFamily().regularText.copyWith(
-                                    color: ColorStyle().blackColors,
-                                  ),
-                            ),
-
-                            const SizedBox(height: 4),
-                            Text(
-                              //durationIndays
-                              'Durasi kelas                        : ${data.durationInDays} hari',
-                              style: FontFamily().regularText.copyWith(
-                                    color: ColorStyle().blackColors,
-                                  ),
-                            ),
-
-                            // buat align text button di kanan menuju DetailMyclass namun aoabila statusnya rejected maka ke editrejectedClaas
                           ],
+                          color: ColorStyle().whiteColors,
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              if (statusButton == 1)
+                                createStatusButton(
+                                    "Rejected", ColorStyle().errorColors),
+                              if (statusButton == 2)
+                                createStatusButton(
+                                    "Pending", ColorStyle().pendingColors),
+                              if (statusButton == 3)
+                                createStatusButton(
+                                    "Full", ColorStyle().fullbookedColors),
+                              if (statusButton == 4)
+                                createStatusButton(
+                                    "Active", ColorStyle().succesColors),
+                              if (statusButton == 5)
+                                createStatusButton(
+                                    "Completed", ColorStyle().disableColors),
+                              if (statusButton == 6)
+                                createStatusButton(
+                                    "Expired", ColorStyle().blackColors),
+                              if (statusButton == 7)
+                                createStatusButton(
+                                    "Unavailable", ColorStyle().primaryColors),
+                              if (statusButton == 8)
+                                createStatusButton(
+                                    "Available", ColorStyle().secondaryColors),
+                              const SizedBox(height: 12),
+                              Text(
+                                //nama kelas
+                                data.name ?? '',
+                               style: FontFamily().boldText.copyWith(
+                                    fontSize: 14,
+                                    color: ColorStyle().blackColors),
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                'Jumlah mentee terdaftar : ${approvedTransactionsCount} orang',
+                                style: FontFamily().regularText.copyWith(
+                                      color: ColorStyle().blackColors,
+                                    ),
+                              ),
+                      
+                              const SizedBox(height: 4),
+                              Text(
+                                //durationIndays
+                                'Durasi kelas                        : ${data.durationInDays} hari',
+                                style: FontFamily().regularText.copyWith(
+                                      color: ColorStyle().blackColors,
+                                    ),
+                              ),
+                      
+                              // buat align text button di kanan menuju DetailMyclass namun aoabila statusnya rejected maka ke editrejectedClaas
+                            ],
+                          ),
                         ),
                       ),
                     ),

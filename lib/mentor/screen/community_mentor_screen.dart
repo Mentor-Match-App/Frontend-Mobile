@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:mentormatch_apps/mentee/model/community_model.dart';
 import 'package:mentormatch_apps/mentee/service/community_service.dart';
+import 'package:mentormatch_apps/mentor/screen/notification_mentor_screen.dart';
+import 'package:mentormatch_apps/mentor/service/notification_service.dart';
+import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/widget/card_community.dart';
-import 'package:mentormatch_apps/widget/search_bar.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class CommunityMentorScreen extends StatefulWidget {
@@ -13,6 +15,29 @@ class CommunityMentorScreen extends StatefulWidget {
 }
 
 class _CommunityMentorScreenState extends State<CommunityMentorScreen> {
+  final NotificationService _notificationService = NotificationService();
+  int _unreadNotificationsCount = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchUnreadNotificationsCount();
+  }
+
+  Future<void> _fetchUnreadNotificationsCount() async {
+    try {
+      final notifications =
+          await _notificationService.fetchNotificationsForCurrentUser();
+      final unreadCount =
+          notifications.where((notification) => !notification.isRead!).length;
+      setState(() {
+        _unreadNotificationsCount = unreadCount;
+      });
+    } catch (e) {
+      print(e); // Handle error appropriately
+    }
+  }
+
   _launchURL(String url) async {
     if (await canLaunch(url)) {
       await launch(url);
@@ -26,7 +51,58 @@ class _CommunityMentorScreenState extends State<CommunityMentorScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Image.asset('assets/Handoff/logo/LogoMobile.png'),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Image.asset(
+              'assets/Handoff/logo/LogoMobile.png',
+              width: 120,
+              height: 120,
+            ),
+            Stack(
+              children: [
+                IconButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => NotificationMentorScreen(),
+                      ),
+                    ).then((_) {
+                      _fetchUnreadNotificationsCount(); // Fetch the unread count when returning to this screen
+                    });
+                  },
+                  icon: Icon(Icons.notifications_none_outlined),
+                  color: ColorStyle().secondaryColors,
+                ),
+                if (_unreadNotificationsCount > 0)
+                  Positioned(
+                    right: 11,
+                    top: 11,
+                    child: Container(
+                      padding: EdgeInsets.all(2),
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      constraints: BoxConstraints(
+                        minWidth: 14,
+                        minHeight: 14,
+                      ),
+                      child: Text(
+                        '$_unreadNotificationsCount',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 8,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+              ],
+            )
+          ],
+        ),
       ),
       body: FutureBuilder<CommunityModels>(
         future: communityService.fetchCommunities(),
@@ -48,7 +124,6 @@ class _CommunityMentorScreenState extends State<CommunityMentorScreen> {
             } else {
               return Column(
                 children: [
-                   SearchBarWidgetMentor(title: 'search by mentee name,or class name'),
                   Expanded(
                     child: GridView.builder(
                       gridDelegate:

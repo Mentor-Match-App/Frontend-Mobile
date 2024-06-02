@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:mentormatch_apps/mentor/screen/bottom_mentor_screen.dart';
 import 'package:mentormatch_apps/mentor/screen/daftar_mentor/syarat_ketentuan_daftar_mentor/registrasi_ulang_mentor.dart';
 import 'package:mentormatch_apps/mentor/service/profile_service.dart';
+import 'package:mentormatch_apps/preferences/%20preferences_helper.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
 
+
 class VerificationFormRegistScreen extends StatefulWidget {
-  
   VerificationFormRegistScreen({Key? key}) : super(key: key);
 
   @override
@@ -33,15 +34,20 @@ class _VerificationFormRegistScreenState
       _userType = profileData.user?.userType ?? 'Unknown';
       _rejectReason = profileData.user?.rejectReason ?? '';
     });
+
+    if (_userType == 'Mentor') {
+      await UserPreferences.setUserType(
+          _userType); // Update the user type in preferences
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => BottomNavbarMentorScreen()),
+        (route) => false,
+      );
+    }
   }
-
-/// buat fungtion untuk load data profile mentor
-
-
 
   @override
   Widget build(BuildContext context) {
-    final profileData = mentorService.getMentorProfile();
     return Scaffold(
       appBar: AppBar(
         title: Image.asset('assets/Handoff/logo/LogoMobile.png'),
@@ -60,70 +66,46 @@ class _VerificationFormRegistScreenState
               const SizedBox(height: 8),
               isLoading
                   ? CircularProgressIndicator()
-                  : _userType == 'Mentor'
-                      ? Column(
-                          children: [
-                            Text(
-                              'Akun Anda telah terverifikasi!',
-                              style: FontFamily().regularText,
-                              textAlign: TextAlign.center,
-                            ),
-
-                            // Tambahkan button untuk melanjutkan ke halaman BottomMentorScreen
-                            ElevatedButton(
-                              onPressed: () {
-                                Navigator.pushAndRemoveUntil(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            BottomNavbarMentorScreen()),
-                                    (route) => false);
-                              },
-                              child: Text('Lanjutkan'),
-                            ),
-                          ],
+                  : _userType == 'PendingMentor'
+                      ? Text(
+                          'Akun Anda masih dalam proses verifikasi.',
+                          style: FontFamily().regularText,
+                          textAlign: TextAlign.center,
                         )
-                      : _userType == 'PendingMentor'
-                          ? Text(
-                              'Akun Anda masih dalam proses verifikasi.',
-                              style: FontFamily().regularText,
-                              textAlign: TextAlign.center,
-                            )
-                          : _userType == 'RejectedMentor'
-                              ? Column(
-                                  children: [
-                                    Text(
-                                      'Akun Anda ditolak.',
-                                      style: FontFamily().regularText,
-                                      textAlign: TextAlign.center,
-                                    ),
-                                    if (_rejectReason.isNotEmpty)
-                                      Text(
-                                        'Alasan Penolakan: $_rejectReason',
-                                        style: FontFamily().regularText,
-                                        textAlign: TextAlign.center,
-                                      ),
-                                    ElevatedButton(
-                                      onPressed: () {
-                                        //navigate ke RegisterUlangMentorScreen
-                                        Navigator.pushAndRemoveUntil(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    RegisterUlangMentorScreen(
-                                                     
-                                                    )),
-                                            (route) => false);
-                                      },
-                                      child: Text('Kirim Ulang Verifikasi'),
-                                    ),
-                                  ],
-                                )
-                              : Text(
-                                  'Status verifikasi tidak diketahui.',
+                      : _userType == 'RejectedMentor'
+                          ? Column(
+                              children: [
+                                Text(
+                                  'Akun Anda ditolak.',
                                   style: FontFamily().regularText,
                                   textAlign: TextAlign.center,
                                 ),
+                                if (_rejectReason.isNotEmpty)
+                                  Text(
+                                    'Alasan Penolakan: $_rejectReason',
+                                    style: FontFamily().regularText,
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ElevatedButton(
+                                  onPressed: () {
+                                    // Navigate ke RegisterUlangMentorScreen
+                                    Navigator.pushAndRemoveUntil(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              RegisterUlangMentorScreen()),
+                                      (route) => false,
+                                    );
+                                  },
+                                  child: Text('Kirim Ulang Verifikasi'),
+                                ),
+                              ],
+                            )
+                          : Text(
+                              'Status verifikasi tidak diketahui.',
+                              style: FontFamily().regularText,
+                              textAlign: TextAlign.center,
+                            ),
             ],
           )
         ],

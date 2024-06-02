@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mentormatch_apps/mentee/screen/detail_mentor_class_screen.dart';
+import 'package:mentormatch_apps/mentee/screen/notification_mentee_screen.dart';
 import 'package:mentormatch_apps/mentee/screen/premium_class/karier/karier_screen.dart';
 import 'package:mentormatch_apps/mentee/screen/premium_class/kuliah/kuliah_screen.dart';
 import 'package:mentormatch_apps/mentee/screen/premium_class/premium_class_screen.dart';
@@ -11,7 +12,6 @@ import 'package:mentormatch_apps/mentee/screen/session/session_screen.dart';
 import 'package:mentormatch_apps/mentee/service/session_mentor_service.dart';
 import 'package:mentormatch_apps/mentor/model/mentor_model.dart';
 import 'package:mentormatch_apps/mentor/model/session_model.dart';
-import 'package:mentormatch_apps/mentor/screen/notification_mentor_screen.dart';
 import 'package:mentormatch_apps/mentor/service/mentor_service.dart';
 import 'package:mentormatch_apps/mentor/service/notification_service.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
@@ -89,7 +89,7 @@ class _HomeMenteeScreenState extends State<HomeMenteeScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => NotificationMentorScreen(),
+                        builder: (context) => NotificationMenteeScreen(),
                       ),
                     ).then((_) {
                       _fetchUnreadNotificationsCount(); // Fetch the unread count when returning to this screen

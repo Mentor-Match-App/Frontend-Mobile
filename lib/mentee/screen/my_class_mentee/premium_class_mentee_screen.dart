@@ -1,14 +1,12 @@
-import 'dart:math';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:mentormatch_apps/mentee/model/my_class_model.dart';
 import 'package:mentormatch_apps/mentee/screen/my_class_mentee/detail_my_class_mentee_screen.dart';
 import 'package:mentormatch_apps/mentee/screen/my_class_mentee/payment_error_screen.dart';
 import 'package:mentormatch_apps/mentor/service/my_class_service.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
-import 'package:mentormatch_apps/widget/button.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class PremiumClassMenteeScreen extends StatefulWidget {
@@ -68,7 +66,7 @@ class _PremiumClassMenteeScreenState extends State<PremiumClassMenteeScreen> {
         title,
         style: FontFamily().boldText.copyWith(
               color: color,
-              fontSize: 14,
+              fontSize: 12,
             ),
       ),
     );
@@ -154,12 +152,12 @@ class _PremiumClassMenteeScreenState extends State<PremiumClassMenteeScreen> {
                           borderRadius: BorderRadius.circular(10),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.3),
+                              color: Colors.black.withOpacity(0.1),
                               blurRadius: 2,
                               offset: Offset(0, 2),
                             ),
                           ],
-                          color: ColorStyle().tertiaryColors,
+                          color: ColorStyle().whiteColors,
                         ),
                         child: Padding(
                           padding: const EdgeInsets.all(12.0),
@@ -199,16 +197,23 @@ class _PremiumClassMenteeScreenState extends State<PremiumClassMenteeScreen> {
                                           classData.name ?? '',
                                           style: FontFamily().boldText.copyWith(
                                               fontSize: 14,
-                                              color:
-                                                  ColorStyle().primaryColors),
+                                              color: ColorStyle().blackColors),
                                         ),
                                         const SizedBox(height: 12),
                                         Text(
                                             'Mentor : ${classData.mentor!.name}',
-                                            style: FontFamily().regularText),
+                                            style: GoogleFonts.poppins(
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.w400,
+                                                color: ColorStyle()
+                                                    .disableColors)),
                                         Text(
                                             'Durasi : ${classData.durationInDays} Hari',
-                                            style: FontFamily().regularText),
+                                            style: GoogleFonts.poppins(
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.w400,
+                                                color: ColorStyle()
+                                                    .disableColors)),
                                       ],
                                     ),
                                   ),

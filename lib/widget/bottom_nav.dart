@@ -13,7 +13,8 @@ class BottomNavbarWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
-      backgroundColor: Colors.white,
+      backgroundColor: ColorStyle().whiteColors,
+
       items: const <BottomNavigationBarItem>[
         BottomNavigationBarItem(
           icon: Icon(Icons.home_filled),
@@ -21,11 +22,11 @@ class BottomNavbarWidget extends StatelessWidget {
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.menu_book_sharp),
-          label:'Class',
+          label: 'Class',
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.people_alt),
-          label: 'Community', 
+          label: 'Community',
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.person_outline),

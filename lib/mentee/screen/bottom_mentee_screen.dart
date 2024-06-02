@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:mentormatch_apps/mentee/screen/my_class_mentee/my_class_list_mentee_screen.dart';
 import 'package:mentormatch_apps/mentee/screen/community_mentee_screen.dart';
 import 'package:mentormatch_apps/mentee/screen/home_screen_mentee.dart';
+import 'package:mentormatch_apps/mentee/screen/my_class_mentee/my_class_list_mentee_screen.dart';
 import 'package:mentormatch_apps/mentee/screen/profile/mentee_profile_screen.dart';
 import 'package:mentormatch_apps/widget/bottom_nav.dart';
 
@@ -48,6 +48,7 @@ class _BottomNavbarMenteeScreenState extends State<BottomNavbarMenteeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: AnimatedSwitcher(
         duration: const Duration(milliseconds: 1000),
         child: screenBottomNavigation(_selectedNavbar),
