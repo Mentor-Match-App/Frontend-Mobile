@@ -522,7 +522,7 @@ class _RegisterUlangMentorScreenState extends State<RegisterUlangMentorScreen> {
         onPressed: () {
           _updateMentor();
         },
-        title: "Apply",
+        title: "Kitim",
       ),
     );
   }

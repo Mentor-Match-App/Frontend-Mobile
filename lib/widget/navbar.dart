@@ -81,13 +81,12 @@ class _AppBarPremiumClassState extends State<AppBarPremiumClass> {
         PopupMenuButton<int>(
           // add icon, by default "3 dot" icon
           child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const Icon(Icons.arrow_drop_down_outlined),
               Text(
                 widget.title, // Gunakan judul dari properti title
-                style: FontFamily()
-                    .regularText
-                    .copyWith(color: ColorStyle().primaryColors, fontSize: 14),
+                style: FontFamily().regularText.copyWith(fontSize: 14),
               ),
             ],
           ),
@@ -97,16 +96,14 @@ class _AppBarPremiumClassState extends State<AppBarPremiumClass> {
                 value: 0,
                 child: Text(
                   "Premium Class",
-                  style: FontFamily().regularText.copyWith(
-                      color: ColorStyle().primaryColors, fontSize: 14),
+                  style: FontFamily().regularText.copyWith(fontSize: 14),
                 ),
               ),
               PopupMenuItem<int>(
                 value: 1,
                 child: Text(
                   "Session",
-                  style: FontFamily().regularText.copyWith(
-                      color: ColorStyle().primaryColors, fontSize: 14),
+                  style: FontFamily().regularText.copyWith(fontSize: 14),
                 ),
               ),
             ];

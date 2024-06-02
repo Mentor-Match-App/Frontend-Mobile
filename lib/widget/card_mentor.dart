@@ -127,3 +127,21 @@ class _CardItemMentorState extends State<CardItemMentor> {
     );
   }
 }
+
+class WidgetMentorIsNotEmpety extends StatelessWidget {
+  const WidgetMentorIsNotEmpety({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Container(
+          width: double.infinity,
+          height: MediaQuery.of(context).size.height / 2,
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Center(child: Text('No mentors available')),
+          )),
+    );
+  }
+}

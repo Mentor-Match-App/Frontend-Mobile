@@ -57,7 +57,7 @@ class _DetailBookingSessionState extends State<DetailBookingSession> {
               ),
               Padding(
                 padding: const EdgeInsets.only(
-                    top: 8.0, left: 12.0, right: 12.0, bottom: 8.0),
+                    top: 8.0, left: 24.0, right: 24.0, bottom: 8.0),
                 child: Container(
                   width: double.infinity,
                   height: 250,

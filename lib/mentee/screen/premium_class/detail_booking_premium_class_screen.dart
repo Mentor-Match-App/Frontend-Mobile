@@ -1,14 +1,11 @@
-import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:mentormatch_apps/mentee/screen/Session/detail_session_mentor.dart';
 import 'package:mentormatch_apps/mentee/screen/bottom_mentee_screen.dart';
-import 'package:mentormatch_apps/mentee/screen/home_screen_mentee.dart';
-import 'package:mentormatch_apps/mentee/screen/premium_class/premium_class_screen.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
 import 'package:mentormatch_apps/widget/button.dart';
-import 'package:mentormatch_apps/widget/flushs_bar_widget.dart';
 
 class DetailBookingClass extends StatefulWidget {
   final int uniqueCode;
@@ -30,221 +27,302 @@ class DetailBookingClass extends StatefulWidget {
   State<DetailBookingClass> createState() => _DetailBookingClassState();
 }
 
+String formatCurrency(int amount) {
+  final formatter =
+      NumberFormat.currency(locale: 'id_ID', symbol: 'Rp. ', decimalDigits: 0);
+  return formatter.format(amount);
+}
+
 class _DetailBookingClassState extends State<DetailBookingClass> {
   @override
   Widget build(BuildContext context) {
+    int totalAmount = widget.price + widget.uniqueCode;
     return Scaffold(
+      backgroundColor: ColorStyle().whiteColors,
       appBar: AppBar(),
-      body: ListView(
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
+      body: Align(
+        alignment: Alignment.center,
+        child: SizedBox(
+          width: 800,
+          child: ListView(
             children: [
-              Align(
-                alignment: Alignment.bottomLeft,
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                    top: 12.0,
-                    left: 24.0,
-                    right: 8.0,
-                  ),
-                  child: Text(
-                    "Payment Class",
-                    style: FontFamily().boldText.copyWith(
-                        fontSize: 24, color: ColorStyle().secondaryColors),
-                  ),
-                ),
-              ),
-              Padding(
-                padding:
-                    const EdgeInsets.only(left: 24.0, top: 8.0, bottom: 8.0),
-                child: Text(
-                  "Terima kasih telah melakukan booking kelas dengan kami. Pesanan Anda telah diterima dengan baik. Namun, untuk mengonfirmasi keikutsertaan Anda, pembayaran harus dilakukan.",
-                  style: FontFamily().regularText.copyWith(fontSize: 12),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(
-                    top: 8.0, left: 12.0, right: 12.0, bottom: 8.0),
-                child: Container(
-                  width: double.infinity,
-                  height: 400,
-                  decoration: BoxDecoration(
-                    color: ColorStyle().tertiaryColors,
-                    borderRadius: BorderRadius.all(Radius.circular(12.0)),
-                    // box shadow
-
-                    boxShadow: [
-                      BoxShadow(
-                        color: ColorStyle().blackColors.withOpacity(0.2),
-                        spreadRadius: 2,
-                        blurRadius: 5,
-                        offset: const Offset(0, 3),
+              Column(
+                children: [
+                  Align(
+                    alignment: Alignment.bottomLeft,
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                        top: 12.0,
+                        left: 24.0,
+                        right: 8.0,
                       ),
-                    ],
+                      child: Text(
+                        "Payment Class",
+                        style: FontFamily().boldText.copyWith(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 24,
+                            color: ColorStyle().secondaryColors),
+                      ),
+                    ),
                   ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  Padding(
+                    padding: const EdgeInsets.only(
+                        left: 24.0, top: 8.0, bottom: 8.0),
+                    child: Text(
+                      "Terima kasih telah melakukan booking kelas dengan kami. Pesanan Anda telah diterima dengan baik. Namun, untuk mengonfirmasi keikutsertaan Anda, pembayaran harus dilakukan.",
+                      style: FontFamily().regularText.copyWith(
+                          color: ColorStyle().disableColors, fontSize: 14),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Row(
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.only(
-                          top: 20.0,
-                          left: 12,
-                          bottom: 12.0,
+                      Expanded(
+                        child: DecoratedBox(
+                          decoration: const BoxDecoration(
+                            color: Colors.white,
+                          ),
+                          child: SizedBox(
+                            width: 42.12,
+                            child: Image.asset(
+                              'Handoff/payment.png',
+                              fit: BoxFit.fill,
+                            ),
+                          ),
                         ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Column(
-                              children: [
-                                Align(
-                                  alignment: Alignment.center,
-                                  child: Text(
-                                    "Total Pembayaran",
-                                    style: FontFamily()
-                                        .regularText
-                                        .copyWith(fontSize: 14),
-                                  ),
-                                ),
-                                Align(
-                                  alignment: Alignment.center,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text(
-                                      "${NumberFormat.currency(locale: 'id', symbol: 'Rp').format(widget.price + widget.uniqueCode)}",
-                                      style: FontFamily().boldText.copyWith(
-                                          color: ColorStyle().secondaryColors,
-                                          fontSize: 24),
-                                    ),
-                                  ),
+                      ),
+                      Expanded(
+                        child: Container(
+                          decoration: BoxDecoration(
+                              boxShadow: [
+                                BoxShadow(
+                                  color: ColorStyle().tertiaryColors,
+                                  blurRadius: 4,
+                                  spreadRadius: 4,
+                                  offset: Offset(0, 4), // Shadow position
                                 ),
                               ],
-                            ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(bottom: 8.0, top: 8.0),
-                              child: Text(
-                                "Nama Kelas",
-                                style: FontFamily().boldText.copyWith(
-                                    color: ColorStyle().primaryColors,
-                                    fontSize: 14),
-                              ),
-                            ),
-                            Text(widget.nama_kelas,
-                                style: FontFamily().regularText),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(bottom: 8.0, top: 8.0),
-                              child: Text(
-                                "Nama Mentor",
-                                style: FontFamily().boldText.copyWith(
-                                    color: ColorStyle().primaryColors,
-                                    fontSize: 14),
-                              ),
-                            ),
-                            Text(widget.nama_mentor,
-                                style: FontFamily().regularText),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(bottom: 8.0, top: 8.0),
-                              child: Text(
-                                "Periode Kelas",
-                                style: FontFamily().boldText.copyWith(
-                                    color: ColorStyle().primaryColors,
-                                    fontSize: 14),
-                              ),
-                            ),
-                            Text('${widget.durasi} Hari',
-                                style: FontFamily().regularText),
-                            SizedBox(
-                              height: 8.0,
-                            ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(bottom: 8.0, top: 8.0),
-                              child: Text(
-                                "Metode Pembayaran",
-                                style: FontFamily().boldText.copyWith(
-                                    color: ColorStyle().primaryColors,
-                                    fontSize: 14),
-                              ),
-                            ),
-                            Text(
-                              "BANK BCA",
-                              style: FontFamily()
-                                  .boldText
-                                  .copyWith(color: ColorStyle().primaryColors),
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  '1234567890',
-                                  style: FontFamily().boldText,
-                                ),
-                                const SizedBox(
-                                  width: 12,
-                                ),
-                                IconButton(
-                                  onPressed: () {
-                                    // Menyalin teks ke clipboard
-                                    Clipboard.setData(const ClipboardData(
-                                        text: '1234567890'));
+                              color: Colors.white,
 
-                                    // Tampilkan snackbar atau pesan bahwa teks telah disalin
-                                    showTopSnackBar(
-                                        context, 'Teks telah disalin');
+                              // border radius
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(5))),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    top: 20.0,
+                                    left: 12,
+                                    bottom: 12.0,
+                                    right: 20),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Column(
+                                      children: [
+                                        Align(
+                                          alignment: Alignment.center,
+                                          child: Text(
+                                            "Total Pembayaran",
+                                            style: FontFamily()
+                                                .boldText
+                                                .copyWith(fontSize: 14),
+                                          ),
+                                        ),
+                                        Align(
+                                          alignment: Alignment.center,
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Text(
+                                                formatCurrency(totalAmount),
+                                              style: FontFamily()
+                                                  .boldText
+                                                  .copyWith(
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      color: ColorStyle()
+                                                          .secondaryColors,
+                                                      fontSize: 18),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              bottom: 8.0, top: 8.0),
+                                          child: Text(
+                                            "Nama Kelas",
+                                            style: FontFamily()
+                                                .boldText
+                                                .copyWith(
+                                                    color: ColorStyle()
+                                                        .primaryColors,
+                                                    fontSize: 14),
+                                          ),
+                                        ),
+                                        Tooltip(
+                                            message: widget
+                                                .nama_kelas, // Isi tooltip dengan nama_kelas lengkap
+                                            child: Text(
+                                                widget.nama_kelas.length > 20
+                                                    ? '${widget.nama_kelas.substring(0, 20)}...'
+                                                    : widget.nama_kelas,
+                                                style: FontFamily()
+                                                    .regularText
+                                                    .copyWith(
+                                                        color: ColorStyle()
+                                                            .disableColors))),
+                                      ],
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              bottom: 8.0, top: 8.0),
+                                          child: Text(
+                                            "Nama Mentor",
+                                            style: FontFamily()
+                                                .boldText
+                                                .copyWith(
+                                                    color: ColorStyle()
+                                                        .primaryColors,
+                                                    fontSize: 14),
+                                          ),
+                                        ),
+                                        Text(widget.nama_mentor,
+                                            style: FontFamily()
+                                                .regularText
+                                                .copyWith(
+                                                    color: ColorStyle()
+                                                        .disableColors)),
+                                      ],
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              bottom: 8.0, top: 8.0),
+                                          child: Text(
+                                            "Periode Kelas",
+                                            style: FontFamily()
+                                                .boldText
+                                                .copyWith(
+                                                    color: ColorStyle()
+                                                        .primaryColors,
+                                                    fontSize: 14),
+                                          ),
+                                        ),
+                                        Text('${widget.durasi} Hari',
+                                            style: FontFamily()
+                                                .regularText
+                                                .copyWith(
+                                                    color: ColorStyle()
+                                                        .disableColors)),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: 8.0,
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          bottom: 8.0, top: 8.0),
+                                      child: Text(
+                                        "Metode Pembayaran :",
+                                        style: FontFamily().boldText.copyWith(
+                                            color: ColorStyle().primaryColors,
+                                            fontSize: 14),
+                                      ),
+                                    ),
+                                    Text(
+                                      "BANK BCA",
+                                      style: FontFamily().boldText.copyWith(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          "PT.TINOJER ACADEMY",
+                                          style: FontFamily()
+                                              .regularText
+                                              .copyWith(
+                                                  color: ColorStyle()
+                                                      .disableColors),
+                                        ),
+                                        Text(
+                                          '1234567890',
+                                          style: FontFamily().boldText.copyWith(
+                                              fontWeight: FontWeight.w500),
+                                        ),
+                                        const SizedBox(
+                                          width: 12,
+                                        ),
+                                        IconButton(
+                                          onPressed: () {
+                                            // Menyalin teks ke clipboard
+                                            Clipboard.setData(
+                                                const ClipboardData(
+                                                    text: '1234567890'));
+
+                                            // Tampilkan snackbar atau pesan bahwa teks telah disalin
+                                            showTopSnackBar(
+                                                context, 'Teks telah disalin');
+                                          },
+                                          icon: const Icon(Icons.copy),
+                                        )
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(12.0),
+                                child: Text(
+                                  "*Pembayaran berlaku sampai 24 jam setelah melakukan booking kelas",
+                                  style: FontFamily().regularText.copyWith(
+                                      fontSize: 12,
+                                      color: ColorStyle().errorColors),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(12.0),
+                                child: ElevatedButtonWidget(
+                                  title: "Kembali Ke Beranda",
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              BottomNavbarMenteeScreen()),
+                                    );
                                   },
-                                  icon: const Icon(Icons.copy),
-                                )
-                              ],
-                            ),
-                            Text(
-                              "PT.TINOJER ACADEMY",
-                              style: FontFamily().regularText,
-                            ),
-                          ],
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ],
                   ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Text(
-                  "*Pembayaran berlaku sampai 24 jam setelah melakukan booking kelas",
-                  style: FontFamily()
-                      .regularText
-                      .copyWith(color: ColorStyle().errorColors),
-                ),
-              ),
-              const SizedBox(
-                height: 12,
-              ),
-              Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: ElevatedButtonWidget(
-                  title: "Kembali Ke Beranda",
-                  onPressed: () {
-                    Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const BottomNavbarMenteeScreen(
-                                activeScreen: 0,
-                              )),
-                      (Route<dynamic> route) =>
-                          false, // Remove all routes until the new route
-                    );
-                  },
-                ),
-              ),
-              const SizedBox(
-                height: 24,
-              ),
+                ],
+              )
             ],
-          )
-        ],
+          ),
+        ),
       ),
     );
   }

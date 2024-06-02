@@ -45,7 +45,7 @@ class _HomeMentorScreenState extends State<HomeMentorScreen> {
     {
       'title': 'Hello,\nSelamat datang di MentorMatch',
       'description':
-          'Mulailah membuat kelas yang akan membantu banyak orang belajar dan berkembang. Ayo mulai sekarang!',
+          'Mulailah membuat kelas yang akan membantu banyak orang',
       'imagePath': 'assets/Handoff/ilustrator/banner.png'
     },
     {
@@ -57,7 +57,7 @@ class _HomeMentorScreenState extends State<HomeMentorScreen> {
     {
       'title': 'Siap untuk membuat perubahan?',
       'description':
-          'Dengan menjadi mentor, Anda memberikan ilmu inspiratif yang akan membantu banyak orang belajar dan berkembang.',
+          'Dengan menjadi mentor, Anda memberikan ilmu inspiratif kepada generasi.',
       'imagePath': 'assets/Handoff/ilustrator/learn-by-online.png'
     },
   ];
@@ -199,7 +199,7 @@ class _HomeMentorScreenState extends State<HomeMentorScreen> {
                           ),
                           const SizedBox(height: 2),
                           Text(
-                            'Temukan potensi dalam menciptakan kelas menginspirasi yang mengubah hidup. Bergabunglah dalam perjalanan belajar yang tak terlupakan',
+                            'Temukan potensi dalam menciptakan kelas menginspirasi yang mengubah hidup.',
                             style: FontFamily().regularText,
                             textAlign: TextAlign.end,
                           ),
@@ -257,18 +257,20 @@ class _HomeMentorScreenState extends State<HomeMentorScreen> {
                     ),
                     Expanded(
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
+                   
                         children: [
                           const SizedBox(height: 12),
                           Text(
                             "Berikan Pengalaman menarik melalui Session",
+                                 textAlign: TextAlign.end,
                             style: FontFamily().boldText.copyWith(
                                 color: ColorStyle().secondaryColors,
+                                
                                 fontSize: 14),
                           ),
                           const SizedBox(height: 2),
                           Text(
-                            'Raih Potensi Anda dalam Membuat Sesi yang Menginspirasi. Bergabunglah dalam Perjalanan Menciptakan Pengalaman Belajar yang Tak Terlupakan untuk Semua',
+                            'Raih Potensi Anda dalam Membuat Sesi yang Menginspirasi.',
                             style: FontFamily().regularText,
                             textAlign: TextAlign.end,
                           ),
@@ -276,7 +278,7 @@ class _HomeMentorScreenState extends State<HomeMentorScreen> {
                             height: 12,
                           ),
                           SmallElevatedButton(
-                            width: 150,
+                            width: 200,
                             height: 38,
                             title: 'Buat session',
                             style: FontFamily().buttonText,

@@ -38,6 +38,9 @@ class _AllSMPScreenState extends State<AllSMPScreen> {
             return mentor.mentorClass!
                 .any((classMentor) => classMentor.isAvailable == true);
           }).toList();
+          if (mentors.isEmpty) {
+            return WidgetMentorIsNotEmpety();
+          }
 
           return GridView.builder(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -92,7 +95,7 @@ class _AllSMPScreenState extends State<AllSMPScreen> {
               return Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: CardItemMentor(
-                   onTap: () {
+                  onTap: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(

@@ -33,14 +33,14 @@ class _BahasaSMAScreenState extends State<BahasaSMAScreen> {
         } else if (snapshot.hasError) {
           return Center(child: Text('Error: ${snapshot.error}'));
         } else if (snapshot.hasData) {
-         final mentorsWithLanguageCategory = snapshot.data!.mentors!
+          final mentorsWithLanguageCategory = snapshot.data!.mentors!
               .where((mentor) => mentor.mentorClass!.any((mentorClass) =>
                   mentorClass.category == 'Bahasa' &&
                   mentorClass.isAvailable == true))
               .toList();
 
           if (mentorsWithLanguageCategory.isEmpty) {
-            return Center(child: Text("No available mentors"));
+            return WidgetMentorIsNotEmpety();
           }
           return GridView.builder(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -95,7 +95,7 @@ class _BahasaSMAScreenState extends State<BahasaSMAScreen> {
               return Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: CardItemMentor(
-                   onTap: () {
+                  onTap: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mentormatch_apps/mentor/screen/daftar_mentor/syarat_ketentuan_daftar_mentor/persetujuan_rekening.dart';
+import 'package:mentormatch_apps/mentor/service/choose_role_service.dart';
 import 'package:mentormatch_apps/mentee/screen/profile/edit_profile_mentee_screen.dart';
 import 'package:mentormatch_apps/mentor/screen/daftar_mentor/register_form.dart';
-import 'package:mentormatch_apps/mentor/service/choose_role_service.dart';
 import 'package:mentormatch_apps/widget/button.dart';
 
 class ChooseRoleScreen extends StatefulWidget {
@@ -72,6 +73,7 @@ class _ChooseRoleScreenState extends State<ChooseRoleScreen> {
                                       MaterialPageRoute(
                                         builder: (context) =>
                                             const EditProfileMenteeScreen(
+                                              activeScreen: 2,
                                           skills: [],
                                           linkedin: '',
                                           about: '',
@@ -79,8 +81,6 @@ class _ChooseRoleScreenState extends State<ChooseRoleScreen> {
                                           currentJob: '',
                                           currentCompany: '',
                                           experiences: [],
-                                          activeScreen:
-                                              0, // Pass 1 for active screen 1
                                         ),
                                       ),
                                       (route) => false,
@@ -101,7 +101,7 @@ class _ChooseRoleScreenState extends State<ChooseRoleScreen> {
                               ElevatedButtonWidget(
                                 onPressed: () async {
                                   // Assuming you have an instance of AuthService
-                                  await chooseRoleService.chooseRole("Mentor");
+                                  await chooseRoleService.chooseRole("PendingMentor");
 
                                   // Check if the widget is still mounted before using the context
                                   if (mounted) {
@@ -109,7 +109,7 @@ class _ChooseRoleScreenState extends State<ChooseRoleScreen> {
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) =>
-                                            RegisterMentorScreen(),
+                                            PersetujuanRekeningScreen(),
                                       ),
                                       (route) => false,
                                     );
@@ -117,6 +117,7 @@ class _ChooseRoleScreenState extends State<ChooseRoleScreen> {
                                 },
                                 title: "As a Mentor",
                               ),
+
                             ],
                           ),
                         ),

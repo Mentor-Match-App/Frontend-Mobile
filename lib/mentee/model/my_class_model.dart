@@ -48,6 +48,8 @@ class UserMyClass {
   dynamic about;
   dynamic accountNumber;
   dynamic accountName;
+   dynamic rejectReason;
+
   List<dynamic>? experiences;
   List<dynamic>? userClass;
   List<dynamic>? session;
@@ -69,6 +71,7 @@ class UserMyClass {
     this.about,
     this.accountNumber,
     this.accountName,
+         this.rejectReason,
     this.experiences,
     this.userClass,
     this.session,
@@ -91,6 +94,7 @@ class UserMyClass {
         portofolio: json["portofolio"],
         photoUrl: json["photoUrl"],
         about: json["about"],
+         rejectReason: json["rejectReason"],
         accountNumber: json["accountNumber"],
         accountName: json["accountName"],
         experiences: json["experiences"] == null
@@ -130,6 +134,7 @@ class UserMyClass {
         "about": about,
         "accountNumber": accountNumber,
         "accountName": accountName,
+           "rejectReason": rejectReason,
         "experiences": experiences == null
             ? []
             : List<dynamic>.from(experiences!.map((x) => x)),
@@ -264,6 +269,7 @@ class TransactionMyClass {
   int? uniqueCode;
   String? paymentStatus;
   String? expired;
+     String? rejectReason;
   String? userId;
   ClassMyClass? transactionClass;
 
@@ -272,6 +278,7 @@ class TransactionMyClass {
     this.classId,
     this.createdAt,
     this.uniqueCode,
+         this.rejectReason,
     this.paymentStatus,
     this.expired,
     this.userId,
@@ -284,9 +291,11 @@ class TransactionMyClass {
         classId: json["classId"],
         createdAt: json["createdAt"],
         uniqueCode: json["uniqueCode"],
+        
         paymentStatus: json["paymentStatus"],
         expired: json["expired"],
         userId: json["userId"],
+                rejectReason: json["rejectReason"],
         transactionClass:
             json["class"] == null ? null : ClassMyClass.fromMap(json["class"]),
       );
@@ -297,6 +306,7 @@ class TransactionMyClass {
         "createdAt": createdAt,
         "uniqueCode": uniqueCode,
         "paymentStatus": paymentStatus,
+                "rejectReason": rejectReason,
         "expired": expired,
         "userId": userId,
         "class": transactionClass?.toMap(),
@@ -324,6 +334,7 @@ class ClassMyClass {
   dynamic address;
   int? maxParticipants;
   dynamic zoomLink;
+     dynamic rejectReason;
   Mentor? mentor;
   List<EvaluationMyClass>? evaluations;
   List<LearningMaterialMyClass>? learningMaterial;
@@ -345,6 +356,7 @@ class ClassMyClass {
     this.endDate,
     this.schedule,
     this.durationInDays,
+        this.rejectReason,
     this.location,
     this.address,
     this.maxParticipants,
@@ -376,6 +388,7 @@ class ClassMyClass {
         schedule: json["schedule"],
         durationInDays: json["durationInDays"],
         location: json["location"],
+             rejectReason: json["rejectReason"],
         address: json["address"],
         maxParticipants: json["maxParticipants"],
         zoomLink: json["zoomLink"],
@@ -412,6 +425,7 @@ class ClassMyClass {
         "location": location,
         "address": address,
         "maxParticipants": maxParticipants,
+          "rejectReason": rejectReason,
         "zoomLink": zoomLink,
         "mentor": mentor?.toMap(),
         "evaluations": evaluations == null

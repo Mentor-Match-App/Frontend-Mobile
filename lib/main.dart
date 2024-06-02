@@ -4,6 +4,7 @@ import 'package:mentormatch_apps/fcm_service.dart';
 import 'package:mentormatch_apps/login/login_screen.dart';
 import 'package:mentormatch_apps/mentee/provider/review_mentor_provider.dart';
 import 'package:mentormatch_apps/mentee/screen/bottom_mentee_screen.dart';
+import 'package:mentormatch_apps/mentee/screen/my_class_mentee/payment_error_screen.dart';
 import 'package:mentormatch_apps/mentor/provider/create_class_provider.dart';
 import 'package:mentormatch_apps/mentor/provider/create_session_provider.dart';
 import 'package:mentormatch_apps/mentor/screen/bottom_mentor_screen.dart';
@@ -19,7 +20,7 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  await FCMService.initialize();
+  // await FCMService.initialize();
 
   await UserPreferences.init();
 
@@ -73,7 +74,8 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
         ),
-        home: homeScreen,
+        home: 
+        homeScreen,
       ),
     );
   }

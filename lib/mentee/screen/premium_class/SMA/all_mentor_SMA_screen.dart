@@ -38,6 +38,18 @@ class _AllSMAScreenState extends State<AllSMAScreen> {
             return mentor.mentorClass!
                 .any((classMentor) => classMentor.isAvailable == true);
           }).toList();
+          if (mentors.isEmpty) {
+             return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                  width: double.infinity,
+                  height: MediaQuery.of(context).size.height / 2,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Center(child: Text('No mentors available')),
+                  )),
+            );
+          }
 
           return GridView.builder(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(

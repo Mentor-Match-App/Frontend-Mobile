@@ -38,6 +38,10 @@ class _FisikaSMPScreenState extends State<FisikaSMPScreen> {
                   mentorClass.category == 'Fisika' &&
                   mentorClass.isAvailable == true))
               .toList();
+               if (mentorsWithLanguageCategory.isEmpty) {
+            return WidgetMentorIsNotEmpety();
+          }
+
           return GridView.builder(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,

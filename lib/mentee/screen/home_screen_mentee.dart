@@ -168,11 +168,14 @@ class _HomeMenteeScreenState extends State<HomeMenteeScreen> {
                           ),
                           TextButton(
                             onPressed: () {
-                              Navigator.push(
+                              Navigator.pushAndRemoveUntil(
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => PremiumClassScreen(),
-                                ),
+                                )
+                                // ignore: avoid_returning_null
+                                ,
+                                (route) => false,
                               );
                             },
                             child: Text(
@@ -228,6 +231,7 @@ class _HomeMenteeScreenState extends State<HomeMenteeScreen> {
                                       MaterialPageRoute(
                                         builder: (context) =>
                                             DetailMentorClassAllScreen(
+                                          reviews: mentor.mentorReviews ?? [],
                                           experiences: mentor.experiences ?? [],
                                           email: mentor.email ?? '',
                                           classes: mentor.mentorClass ?? [],

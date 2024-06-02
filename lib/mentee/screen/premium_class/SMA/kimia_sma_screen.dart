@@ -40,7 +40,7 @@ class _KimiaSMAScreenState extends State<KimiaSMAScreen> {
               .toList();
 
           if (mentorsWithLanguageCategory.isEmpty) {
-            return Center(child: Text("No available mentors"));
+            return WidgetMentorIsNotEmpety();
           }
 
           return GridView.builder(

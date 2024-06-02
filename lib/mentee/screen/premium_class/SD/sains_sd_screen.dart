@@ -39,9 +39,10 @@ class _SainsSDScreenState extends State<SainsSDScreen> {
                   mentorClass.isAvailable == true))
               .toList();
 
-          if (mentorsWithLanguageCategory.isEmpty) {
-            return Center(child: Text("No available mentors"));
+           if (mentorsWithLanguageCategory.isEmpty) {
+            return WidgetMentorIsNotEmpety();
           }
+
 
           return GridView.builder(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(

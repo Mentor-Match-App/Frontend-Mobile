@@ -39,9 +39,10 @@ class _ElectroKuliahScreenState extends State<ElectroKuliahScreen> {
                   mentorClass.isAvailable == true))
               .toList();
 
-          if (mentorsWithLanguageCategory.isEmpty) {
-            return Center(child: Text("Mentor sedang kosong"));
+           if (mentorsWithLanguageCategory.isEmpty) {
+            return WidgetMentorIsNotEmpety();
           }
+
           return GridView.builder(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,

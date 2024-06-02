@@ -38,6 +38,22 @@ class _BahasaSMPScreenState extends State<BahasaSMPScreen> {
                   mentorClass.category == 'Bahasa' &&
                   mentorClass.isAvailable == true))
               .toList();
+          if (mentorsWithLanguageCategory.isEmpty) {
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                  width: double.infinity,
+                  height: MediaQuery.of(context).size.height / 2,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Center(child: Text('No mentors available')),
+                  )),
+            );
+          }
+          if (mentorsWithLanguageCategory.isEmpty) {
+            return WidgetMentorIsNotEmpety();
+          }
+
           return GridView.builder(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
@@ -91,7 +107,7 @@ class _BahasaSMPScreenState extends State<BahasaSMPScreen> {
               return Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: CardItemMentor(
-                   onTap: () {
+                  onTap: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(

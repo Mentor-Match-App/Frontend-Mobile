@@ -112,112 +112,115 @@ class _MySessionBookingState extends State<MySessionBooking> {
                   final String formattedEndTime =
                       formatOutput.format(DateTime.parse(session.endTime!));
               
-                  return Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.3),
-                          // spreadRadius: 1,
-                          blurRadius: 2,
-                          offset: Offset(0, 2),
-                        ),
-                      ],
-                      color: ColorStyle().tertiaryColors,
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(12.0),
-                      child: Column(
-                        children: [
-                          if (statusButton == 1)
-                            createStatusButton(
-                                "Active", ColorStyle().succesColors)
-                          else if (statusButton == 2)
-                            createStatusButton(
-                                "Scheduled", ColorStyle().secondaryColors)
-                          else if (statusButton == 3)
-                            createStatusButton(
-                                "Finished", ColorStyle().disableColors),
-                          const SizedBox(height: 12),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              ClipOval(
-                                  child: CachedNetworkImage(
-                                imageUrl: session.mentor!.photoUrl.toString(),
-                                fit: BoxFit.cover,
-                                width: 98,
-                                height: 98,
-                                placeholder: (context, url) => Center(
-                                  child: CircularProgressIndicator(),
-                                ),
-                                errorWidget: (context, url, error) =>
-                                    Icon(Icons.error),
-                              )),
-                              const SizedBox(
-                                width: 10,
-                              ),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      session.title ?? '',
-                                      style: FontFamily().boldText.copyWith(
-                                          fontSize: 14,
-                                          color: ColorStyle().primaryColors),
-                                    ),
-                                    const SizedBox(height: 12),
-                                    Text(
-                                      'Mentor : ${session.mentor!.name}',
-                                      style: FontFamily().regularText,
-                                    ),
-                                    Text(
-                                      'Jadwal : ${formattedJadwal}',
-                                      style: FontFamily().regularText,
-                                    ),
-                                    Text(
-                                      'Jam      : ${formattedStartTime} - ${formattedEndTime}',
-                                      style: FontFamily().regularText,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.3),
+                            // spreadRadius: 1,
+                            blurRadius: 2,
+                            offset: Offset(0, 2),
                           ),
-                          const SizedBox(
-                            width: 24,
-                          ),
-                          Padding(
-                            padding:
-                                const EdgeInsets.only(right: 12.0, top: 8.0),
-                            child: Align(
-                              alignment: Alignment.centerRight,
-                              child: Container(
-                                width: 150,
-                                height: 38,
-                                decoration: BoxDecoration(
-                                  color: ColorStyle().primaryColors,
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                child: TextButton.icon(
-                                  style: TextButton.styleFrom(
-                                    foregroundColor: ColorStyle().whiteColors,
+                        ],
+                        color: ColorStyle().tertiaryColors,
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: Column(
+                          children: [
+                            if (statusButton == 1)
+                              createStatusButton(
+                                  "Active", ColorStyle().succesColors)
+                            else if (statusButton == 2)
+                              createStatusButton(
+                                  "Scheduled", ColorStyle().secondaryColors)
+                            else if (statusButton == 3)
+                              createStatusButton(
+                                  "Finished", ColorStyle().disableColors),
+                            const SizedBox(height: 12),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                ClipOval(
+                                    child: CachedNetworkImage(
+                                  imageUrl: session.mentor!.photoUrl.toString(),
+                                  fit: BoxFit.cover,
+                                  width: 98,
+                                  height: 98,
+                                  placeholder: (context, url) => Center(
+                                    child: CircularProgressIndicator(),
                                   ),
-                                  onPressed: () {
-                                    final zommLink = session.zoomLink ?? '';
-                                    _launchURL(zommLink);
-                                  },
-                                  icon: Icon(Icons.link),
-                                  label: Text('Join Session',
-                                      style: FontFamily().regularText.copyWith(
-                                            color: ColorStyle().whiteColors,
-                                          )),
+                                  errorWidget: (context, url, error) =>
+                                      Icon(Icons.error),
+                                )),
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        session.title ?? '',
+                                        style: FontFamily().boldText.copyWith(
+                                            fontSize: 14,
+                                            color: ColorStyle().primaryColors),
+                                      ),
+                                      const SizedBox(height: 12),
+                                      Text(
+                                        'Mentor : ${session.mentor!.name}',
+                                        style: FontFamily().regularText,
+                                      ),
+                                      Text(
+                                        'Jadwal : ${formattedJadwal}',
+                                        style: FontFamily().regularText,
+                                      ),
+                                      Text(
+                                        'Jam      : ${formattedStartTime} - ${formattedEndTime}',
+                                        style: FontFamily().regularText,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(
+                              width: 24,
+                            ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(right: 12.0, top: 8.0),
+                              child: Align(
+                                alignment: Alignment.centerRight,
+                                child: Container(
+                                  width: 150,
+                                  height: 38,
+                                  decoration: BoxDecoration(
+                                    color: ColorStyle().primaryColors,
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: TextButton.icon(
+                                    style: TextButton.styleFrom(
+                                      foregroundColor: ColorStyle().whiteColors,
+                                    ),
+                                    onPressed: () {
+                                      final zommLink = session.zoomLink ?? '';
+                                      _launchURL(zommLink);
+                                    },
+                                    icon: Icon(Icons.link),
+                                    label: Text('Join Session',
+                                        style: FontFamily().regularText.copyWith(
+                                              color: ColorStyle().whiteColors,
+                                            )),
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   );

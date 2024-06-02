@@ -38,6 +38,10 @@ class _KimiaSMPScreenState extends State<KimiaSMPScreen> {
                   mentorClass.category == 'Kimia' &&
                   mentorClass.isAvailable == true))
               .toList();
+              if (mentorsWithLanguageCategory.isEmpty) {
+            return WidgetMentorIsNotEmpety();
+          }
+
           return GridView.builder(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,

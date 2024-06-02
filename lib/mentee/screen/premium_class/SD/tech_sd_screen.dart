@@ -40,7 +40,7 @@ class _TechSDScreenState extends State<TechSDScreen> {
               .toList();
 
           if (mentorsWithLanguageCategory.isEmpty) {
-            return Center(child: Text("No available mentors"));
+            return WidgetMentorIsNotEmpety();
           }
 
           return GridView.builder(

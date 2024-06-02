@@ -108,24 +108,33 @@ class _DetailMentorKarierScreenState extends State<DetailMentorKarierScreen> {
                               fontSize: 16,
                             ),
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          IconButton(
-                            onPressed: () {},
-                            icon: Icon(
-                              Icons.location_on,
-                              color: ColorStyle().primaryColors,
+                      SizedBox(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.work,
+                                size: 16, color: ColorStyle().secondaryColors),
+                            const SizedBox(width: 4),
+                            Text(
+                              widget.job + ' at ' + widget.company,
+                              style: FontFamily().regularText,
                             ),
-                          ),
-                          const SizedBox(
-                            width: 2,
-                          ),
-                          Text(
-                            widget.location,
-                            style: FontFamily().regularText,
-                          ),
-                        ],
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                      Icon(Icons.location_on,
+                                size: 16, color: ColorStyle().secondaryColors),
+                            const SizedBox(width: 4),
+                            Text(
+                              widget.location,
+                              style: FontFamily().regularText,
+                            ),
+                          ],
+                        ),
                       ),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -155,7 +164,8 @@ class _DetailMentorKarierScreenState extends State<DetailMentorKarierScreen> {
                                 ),
                                 child: TextButton.icon(
                                   style: TextButton.styleFrom(
-                                    foregroundColor: ColorStyle().whiteColors,
+                                      foregroundColor: ColorStyle().whiteColors
+                                    
                                   ),
                                   onPressed: () {
                                     final linkedlnlink = widget.linkedin ?? '';
@@ -198,6 +208,9 @@ class _DetailMentorKarierScreenState extends State<DetailMentorKarierScreen> {
                           color: ColorStyle().primaryColors,
                         ),
                       ),
+                       const SizedBox(
+                        height: 10,
+                      ),
                       SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
                         child: Row(
@@ -219,13 +232,11 @@ class _DetailMentorKarierScreenState extends State<DetailMentorKarierScreen> {
                       ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
-                       child: widget.classes != null &&
+                        child: widget.classes != null &&
                                 widget.classes!.isNotEmpty
                             ? Column(
                                 children: widget.classes!
-                                    .where((kelas) =>
-                                        kelas.isAvailable ==
-                                        true) // Filter kelas dengan isAvailable true
+                                    .where((kelas) => kelas.isAvailable == true)
                                     .map((kelas) {
                                   int getApprovedTransactionCount(
                                       ClassMentorKarier kelas) {
@@ -234,22 +245,29 @@ class _DetailMentorKarierScreenState extends State<DetailMentorKarierScreen> {
                                                 t.paymentStatus == "Approved")
                                             .length ??
                                         0;
-                                    print(
-                                        "Kelas: ${kelas.name}, Transaksi Approved: $count");
                                     return count;
                                   }
 
-                                  int approvedTransactions =
-                                      getApprovedTransactionCount(kelas);
-                                  int availableSlots = kelas.maxParticipants! -
-                                      approvedTransactions;
-                                  // Mengubah logika warna berdasarkan availableSlots
-                                  Color buttonColor = availableSlots > 0
-                                      ? ColorStyle()
-                                          .primaryColors // Jika masih ada slot, gunakan warna primer
-                                      : ColorStyle()
-                                          .disableColors; // Jika slot penuh, gunakan warna disable
+                                  int getPendingTransactionCount(
+                                      ClassMentorKarier kelas) {
+                                    int count = kelas.transactions
+                                            ?.where((t) =>
+                                                t.paymentStatus == "Pending")
+                                            .length ??
+                                        0;
+                                    return count;
+                                  }
 
+                                  int availableSlots = kelas.maxParticipants! -
+                                      getApprovedTransactionCount(kelas);
+
+                                  Color buttonColor =
+                                      getApprovedTransactionCount(kelas) +
+                                                  getPendingTransactionCount(
+                                                      kelas) ==
+                                              kelas.maxParticipants
+                                          ? Colors.grey
+                                          : ColorStyle().primaryColors;
                                   return Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: ElevetadButtonWithIcon(
@@ -361,8 +379,10 @@ class _DetailMentorKarierScreenState extends State<DetailMentorKarierScreen> {
       return Center(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Text("Belum ada review",
-               style: FontFamily().regularText,),
+          child: Text(
+            "Belum ada review",
+            style: FontFamily().regularText,
+          ),
         ),
       );
     }

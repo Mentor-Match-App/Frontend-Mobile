@@ -96,11 +96,12 @@ class _AllSessionScreenState extends State<AllSessionScreen> {
               final Color buttonColor = isSessionFull
                   ? ColorStyle().disableColors
                   : ColorStyle().primaryColors;
+
               return Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: CardItemMentor(
-                  onTap: (){
-                     Navigator.push(
+                  onTap: () {
+                    Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => DetailMentorSessionsNew(

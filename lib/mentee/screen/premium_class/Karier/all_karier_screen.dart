@@ -39,6 +39,11 @@ class _AllKarierScreenState extends State<AllKarierScreen> {
                 .any((classMentor) => classMentor.isAvailable == true);
           }).toList();
 
+            if (mentors.isEmpty) {
+            return WidgetMentorIsNotEmpety();
+          }
+
+
           return GridView.builder(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,

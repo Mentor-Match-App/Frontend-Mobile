@@ -40,6 +40,9 @@ class _SecurityEngineingKarierScreenState
                   mentorClass.category == 'Security Engineer' &&
                   mentorClass.isAvailable == true))
               .toList();
+          if (mentorsWithLanguageCategory.isEmpty) {
+            return WidgetMentorIsNotEmpety();
+          }
 
           return GridView.builder(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -94,7 +97,7 @@ class _SecurityEngineingKarierScreenState
               return Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: CardItemMentor(
-                   onTap: () {
+                  onTap: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(

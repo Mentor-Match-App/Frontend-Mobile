@@ -28,11 +28,14 @@ class ReviewWidget extends StatelessWidget {
                 SizedBox(
                   width: 4,
                 ),
-                Text(
-                  textAlign: TextAlign.start,
-                  name,
-                  style: FontFamily().titleText.copyWith(
-                      color: ColorStyle().secondaryColors, fontSize: 12),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    textAlign: TextAlign.start,
+                    name,
+                    style: FontFamily().titleText.copyWith(
+                        color: ColorStyle().secondaryColors, fontSize: 12),
+                  ),
                 ),
               ],
             ),

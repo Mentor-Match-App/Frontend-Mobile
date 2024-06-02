@@ -41,9 +41,10 @@ class _AllKuliahScreenState extends State<AllKuliahScreen> {
                 .any((classMentor) => classMentor.isAvailable == true);
           }).toList();
 
-          if (mentors.isEmpty) {
-            return Center(child: Text(" Mentor masi tidak tersedia"));
+            if (mentors.isEmpty) {
+            return WidgetMentorIsNotEmpety();
           }
+
 
           return GridView.builder(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(

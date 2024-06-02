@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:mentormatch_apps/mentee/screen/my_class_mentee/premium_class_mentor_screen.dart';
+import 'package:mentormatch_apps/mentee/screen/my_class_mentee/all_class_mentee_screen.dart';
+import 'package:mentormatch_apps/mentee/screen/my_class_mentee/premium_class_mentee_screen.dart';
 import 'package:mentormatch_apps/mentee/screen/my_class_mentee/my_session_booking.dart';
 import 'package:mentormatch_apps/mentee/screen/notification_mentee_screen.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
+import 'package:mentormatch_apps/widget/search_bar.dart';
 
 class MyClassMenteeListScreen extends StatefulWidget {
   MyClassMenteeListScreen({Key? key}) : super(key: key);
@@ -14,18 +16,25 @@ class MyClassMenteeListScreen extends StatefulWidget {
 }
 
 class _MyClassMenteeListScreenState extends State<MyClassMenteeListScreen> {
-  bool isClassActive = true;
+  bool isAllClassActive = true;
   bool isSessionActive = false; // Renamed for consistency
+  bool isPremiumClassActive = false;
 
   void changeClass(String menu) {
     setState(() {
-      if (menu == "Premium Class") {
-        isClassActive = true;
+      if (menu == "All Class") {
+        isAllClassActive = true;
         isSessionActive = false;
+        isPremiumClassActive = false;
       } else if (menu == "Session") {
         // Corrected the condition
-        isClassActive = false;
+        isAllClassActive = false;
         isSessionActive = true;
+        isPremiumClassActive = false;
+      } else if (menu == "Premium Class") {
+        isAllClassActive = false;
+        isSessionActive = false;
+        isPremiumClassActive = true;
       }
     });
   }
@@ -60,80 +69,121 @@ class _MyClassMenteeListScreenState extends State<MyClassMenteeListScreen> {
       body: ListView(children: [
         Column(
           children: [
-            Padding(
-              padding: EdgeInsets.all(20.0),
+            SearchBarWidgetMentee(),
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Container(
-                    width: 120,
-                    height: 38,
-                    decoration: isClassActive
-                        ? BoxDecoration(
-                            borderRadius: BorderRadius.circular(4),
-                            color: ColorStyle().secondaryColors,
-                          )
-                        : BoxDecoration(
-                            borderRadius: BorderRadius.circular(4),
-                            border: Border.all(
-                              color: ColorStyle().secondaryColors,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: Container(
+                          width: 80,
+                          height: 38,
+                          decoration: isAllClassActive
+                              ? BoxDecoration(
+                                  borderRadius: BorderRadius.circular(4),
+                                  color: ColorStyle().secondaryColors,
+                                )
+                              : BoxDecoration(
+                                  borderRadius: BorderRadius.circular(4),
+                                  border: Border.all(
+                                    color: ColorStyle().secondaryColors,
+                                  ),
+                                ),
+                          child: TextButton(
+                            onPressed: () {
+                              changeClass("All Class");
+                            },
+                            child: Text(
+                              "All Class",
+                              style: FontFamily().boldText.copyWith(
+                                    color: isAllClassActive
+                                        ? ColorStyle().whiteColors
+                                        : ColorStyle().secondaryColors,
+                                  ),
                             ),
                           ),
-                    child: TextButton(
-                      onPressed: () {
-                        changeClass("Premium Class");
-                      },
-                      child: Text(
-                        "Premium Class",
-                        style: FontFamily().boldText.copyWith(
-                              color: isClassActive
-                                  ? ColorStyle().whiteColors
-                                  : ColorStyle().secondaryColors,
-                            ),
+                        ),
                       ),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Container(
-                    width: 120,
-                    height: 38,
-                    decoration: isSessionActive
-                        ? BoxDecoration(
-                            borderRadius: BorderRadius.circular(4),
-                            color: ColorStyle().secondaryColors,
-                          )
-                        : BoxDecoration(
-                            borderRadius: BorderRadius.circular(4),
-                            border: Border.all(
-                              color: ColorStyle().secondaryColors,
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          width: 120,
+                          height: 38,
+                          decoration: isPremiumClassActive
+                              ? BoxDecoration(
+                                  borderRadius: BorderRadius.circular(4),
+                                  color: ColorStyle().secondaryColors,
+                                )
+                              : BoxDecoration(
+                                  borderRadius: BorderRadius.circular(4),
+                                  border: Border.all(
+                                    color: ColorStyle().secondaryColors,
+                                  ),
+                                ),
+                          child: TextButton(
+                            onPressed: () {
+                              changeClass("Premium Class");
+                            },
+                            child: Text(
+                              "Premium Class",
+                              style: FontFamily().boldText.copyWith(
+                                    color: isPremiumClassActive
+                                        ? ColorStyle().whiteColors
+                                        : ColorStyle().secondaryColors,
+                                  ),
                             ),
                           ),
-                    child: TextButton(
-                      onPressed: () {
-                        changeClass("Session");
-                      },
-                      child: Text(
-                        "Session",
-                        style: FontFamily().boldText.copyWith(
-                              color: isSessionActive
-                                  ? ColorStyle().whiteColors
-                                  : ColorStyle().secondaryColors,
-                            ),
+                        ),
                       ),
-                    ),
-                  )
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          width: 80,
+                          height: 38,
+                          decoration: isSessionActive
+                              ? BoxDecoration(
+                                  borderRadius: BorderRadius.circular(4),
+                                  color: ColorStyle().secondaryColors,
+                                )
+                              : BoxDecoration(
+                                  borderRadius: BorderRadius.circular(4),
+                                  border: Border.all(
+                                    color: ColorStyle().secondaryColors,
+                                  ),
+                                ),
+                          child: TextButton(
+                            onPressed: () {
+                              changeClass("Session");
+                            },
+                            child: Text(
+                              "Session",
+                              style: FontFamily().boldText.copyWith(
+                                    color: isSessionActive
+                                        ? ColorStyle().whiteColors
+                                        : ColorStyle().secondaryColors,
+                                  ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),
             Column(
               children: [
-                isClassActive
-                    ? PremiumClassMenteeScreen()
-                    : isSessionActive
-                        ? MySessionBooking()
-                        : PremiumClassMenteeScreen(),
+                isAllClassActive
+                    ? AllClassMenteeScreen()
+                    : isPremiumClassActive
+                        ? PremiumClassMenteeScreen()
+                        : isSessionActive
+                            ? MySessionBooking()
+                            : PremiumClassMenteeScreen(),
               ],
             )
           ],

@@ -38,6 +38,10 @@ class _MathSMPScreenState extends State<MathSMPScreen> {
                   mentorClass.category == 'Matematika' &&
                   mentorClass.isAvailable == true))
               .toList();
+              if (mentorsWithLanguageCategory.isEmpty) {
+            return WidgetMentorIsNotEmpety();
+          }
+
           return GridView.builder(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,

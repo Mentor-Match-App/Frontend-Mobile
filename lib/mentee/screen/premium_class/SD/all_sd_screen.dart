@@ -39,6 +39,11 @@ class _AllSDScreenState extends State<AllSDScreen> {
                 .any((classMentor) => classMentor.isAvailable == true);
           }).toList();
 
+          if (mentors.isEmpty) {
+            return WidgetMentorIsNotEmpety();
+          }
+
+
           return GridView.builder(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,

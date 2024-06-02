@@ -38,6 +38,10 @@ class _TechSMPScreenState extends State<TechSMPScreen> {
                   mentorClass.category == 'Teknologi' &&
                   mentorClass.isAvailable == true))
               .toList();
+              if (mentorsWithLanguageCategory.isEmpty) {
+            return WidgetMentorIsNotEmpety();
+          }
+
           return GridView.builder(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,

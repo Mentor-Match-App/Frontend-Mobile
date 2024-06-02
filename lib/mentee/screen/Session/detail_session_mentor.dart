@@ -69,6 +69,16 @@ class _DetailMentorSessionsNewState extends State<DetailMentorSessionsNew> {
         ? DateFormat('dd MMMM yyyy').format(parsedJadwal)
         : "No scheduled session";
 
+//company yang iscurrent
+    String company = mentorDetail.experiences
+            ?.firstWhere((experience) => experience.isCurrentJob == true)
+            .company ??
+        'No Company';
+    String jobTitle = mentorDetail.experiences
+            ?.firstWhere((experience) => experience.isCurrentJob == true)
+            .jobTitle ??
+        'No Job Title';
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: ColorStyle().tertiaryColors,
@@ -98,15 +108,32 @@ class _DetailMentorSessionsNewState extends State<DetailMentorSessionsNew> {
                         widget.detailmentor.name.toString(),
                         style: FontFamily().boldText.copyWith(fontSize: 16),
                       ),
-                      TextButton.icon(
-                        onPressed: () {},
-                        icon: Icon(
-                          Icons.location_on,
-                          color: ColorStyle().primaryColors,
+                      SizedBox(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.work,
+                                size: 16, color: ColorStyle().secondaryColors),
+                            const SizedBox(width: 4),
+                            Text(
+                              jobTitle + ' at ' + company,
+                              style: FontFamily().regularText,
+                            ),
+                          ],
                         ),
-                        label: Text(
-                          widget.detailmentor.location ?? 'No Location',
-                          style: FontFamily().regularText,
+                      ),
+                      SizedBox(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.location_on,
+                                size: 16, color: ColorStyle().secondaryColors),
+                            const SizedBox(width: 2),
+                            Text(
+                              widget.detailmentor.location ?? 'No Location',
+                              style: FontFamily().regularText,
+                            ),
+                          ],
                         ),
                       ),
                       Column(

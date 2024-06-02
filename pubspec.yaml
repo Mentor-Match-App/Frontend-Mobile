@@ -54,6 +54,7 @@ dependencies:
   timeago: ^3.6.1
   carousel_slider: ^4.0.0
   loader_overlay: ^4.0.0
+  
 
 
 

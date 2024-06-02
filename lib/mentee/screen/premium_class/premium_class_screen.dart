@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mentormatch_apps/mentee/screen/bottom_mentee_screen.dart';
 import 'package:mentormatch_apps/mentee/screen/premium_class/karier/karier_screen.dart';
 import 'package:mentormatch_apps/mentee/screen/premium_class/kuliah/kuliah_screen.dart';
 import 'package:mentormatch_apps/mentee/screen/premium_class/sd/sd_screen.dart';
@@ -22,15 +23,28 @@ class _PremiumClassScreenState extends State<PremiumClassScreen> {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Image.asset(
-              'assets/Handoff/logo/LogoMobile.png',
-              width: 120,
-              height: 120,
+            GestureDetector(
+              onDoubleTap: () {
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const BottomNavbarMenteeScreen(
+                      activeScreen: 0,
+                    ),
+                  ),
+                  (route) => false,
+                );
+              },
+              child: Image.asset(
+                'assets/Handoff/logo/LogoMobile.png',
+                height: 120,
+                width: 120,
+              ),
             ),
-            // SizedBox(
-            //   width: 20,
-            // ),
-            PopMenuButtonWidget(),
+           AppBarPremiumClass(
+            title: "Premium Class",
+            
+          ),
           ],
         ),
       ),
@@ -93,7 +107,7 @@ class _PremiumClassScreenState extends State<PremiumClassScreen> {
                       'Dapatkan panduan khusus dari mentor mahasiswa kami untuk meraih keberhasilan akademis dan persiapkan diri Anda untuk masa depan karier yang cemerlang.',
                 ),
                 CardPremiumClassOptions(
-                 onPressed: () {
+                  onPressed: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(

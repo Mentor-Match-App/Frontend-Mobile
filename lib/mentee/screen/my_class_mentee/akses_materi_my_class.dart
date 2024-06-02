@@ -65,27 +65,36 @@ class _MaterMyClassState extends State<MaterMyClass> {
           ),
         ],
       )),
-      body: CustomScrollView(
-        slivers: <Widget>[
-          SliverGrid(
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              childAspectRatio: 3 / 3.5,
-              crossAxisSpacing: 2,
-              mainAxisSpacing: 2,
+      body: widget.learningMaterial.isEmpty
+          ? Center(
+              child: Text(
+                "Materials are currently empty",
+                style: FontFamily()
+                    .regularText,
+                    
+              ),
+            )
+          : CustomScrollView(
+              slivers: <Widget>[
+                SliverGrid(
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    childAspectRatio: 3 / 3.5,
+                    crossAxisSpacing: 2,
+                    mainAxisSpacing: 2,
+                  ),
+                  delegate: SliverChildBuilderDelegate(
+                    (BuildContext context, int index) {
+                      return Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: _buildGridItem(index),
+                      );
+                    },
+                    childCount: widget.learningMaterial.length,
+                  ),
+                ),
+              ],
             ),
-            delegate: SliverChildBuilderDelegate(
-              (BuildContext context, int index) {
-                return Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: _buildGridItem(index),
-                );
-              },
-              childCount: widget.learningMaterial.length,
-            ),
-          ),
-        ],
-      ),
     );
   }
 

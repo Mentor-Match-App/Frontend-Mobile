@@ -54,10 +54,10 @@ class _LoginScreenState extends State<LoginScreen> {
           Map<String, String?> userData = await AuthService.getUserData();
 
           // Mengambil token FCM dan mengirimkannya ke server
-          String? fcmToken = await FirebaseMessaging.instance.getToken();
-          if (fcmToken != null && userData['userId'] != null) {
-            await sendTokenToServer(fcmToken, userData['userId']!);
-          }
+          // String? fcmToken = await FirebaseMessaging.instance.getToken();
+          // if (fcmToken != null && userData['userId'] != null) {
+          //   await sendTokenToServer(fcmToken, userData['userId']!);
+          // }
 
           // Tentukan navigasi berdasarkan userType
           String? userType = userData['userType'];
