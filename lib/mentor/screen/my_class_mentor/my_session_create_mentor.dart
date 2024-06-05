@@ -252,9 +252,14 @@ class _MySessionCreateState extends State<MySessionCreate> {
             ),
           );
         } else {
-          return Center(
-            child: Text("Tidak ada session", style: FontFamily().boldText),
-          );
+          return SizedBox(
+              width: double.infinity,
+              height: MediaQuery.of(context).size.height / 2.0,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child:
+                    Center(child: Text('Kamu belum memiliki session saat ini')),
+              ));
         }
       },
     );

@@ -16,7 +16,7 @@ class RegisterMentorService {
     required String portofolio,
     required String accountName,
     required String accountNumber,
-    required List<Map<String, String>> experience,
+    required List<Map<String, String>> experiences,
   }) async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token') ?? '';
@@ -39,7 +39,7 @@ class RegisterMentorService {
           'about': about,
           'linkedin': linkedin,
           'portofolio': portofolio,
-          'experience': experience,
+          'experiences': experiences,
           'accountName': accountName,
           'accountNumber': accountNumber,
         },

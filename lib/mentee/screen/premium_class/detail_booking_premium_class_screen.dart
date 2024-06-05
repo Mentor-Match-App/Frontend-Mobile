@@ -31,44 +31,29 @@ class _DetailBookingClassState extends State<DetailBookingClass> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ColorStyle().whiteColors,
       body: ListView(
         children: [
-          SizedBox(
-            height: 36,
+          Padding(
+            padding: const EdgeInsets.only(
+              top: 24.0,
+              left: 12.0,
+              right: 12.0,
+            ),
+            child: Container(
+              height: 160,
+              child: Image.asset(
+                "assets/Handoff/ilustrator/payment-success.png",
+              ),
+            ),
           ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Align(
-                alignment: Alignment.bottomLeft,
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                    top: 12.0,
-                    left: 24.0,
-                    right: 8.0,
-                  ),
-                  child: Text(
-                    "Payment Class",
-                    style: FontFamily().boldText.copyWith(
-                        fontSize: 24, color: ColorStyle().secondaryColors),
-                  ),
-                ),
-              ),
-              Padding(
-                padding:
-                    const EdgeInsets.only(left: 24.0, top: 8.0, bottom: 8.0),
-                child: Text(
-                  "Terima kasih telah melakukan booking kelas dengan kami. Pesanan Anda telah diterima dengan baik. Namun, untuk mengonfirmasi keikutsertaan Anda, pembayaran harus dilakukan.",
-                  style: FontFamily().regularText.copyWith(fontSize: 12),
-                ),
-              ),
               Padding(
                 padding: const EdgeInsets.only(
                     top: 8.0, left: 12.0, right: 12.0, bottom: 8.0),
                 child: Container(
                   width: double.infinity,
-                  height: 400,
                   decoration: BoxDecoration(
                       boxShadow: [
                         BoxShadow(
@@ -94,92 +79,153 @@ class _DetailBookingClassState extends State<DetailBookingClass> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            Container(
+                              child: Image.asset(
+                                'assets/Handoff/logo/LogoMobile.png',
+                              ),
+                            ),
+                            SizedBox(
+                              height: 24,
+                            ),
+                            Align(
+                              alignment: Alignment.bottomLeft,
+                              child: Text(
+                                "Berhasil Booking Kelas !",
+                                style: FontFamily().boldText.copyWith(
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 16,
+                                    color: ColorStyle().succesColors),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 8,
+                            ),
+                            Text(
+                              "Terima kasih telah melakukan booking kelas dengan kami. Pesanan Anda telah diterima dengan baik. Namun, untuk mengonfirmasi keikutsertaan Anda, pembayaran harus dilakukan.",
+                              style: FontFamily().regularText.copyWith(
+                                    color: ColorStyle().disableColors,
+                                    fontSize: 12,
+                                  ),
+                            ),
+                            SizedBox(
+                              height: 16,
+                            ),
                             Column(
                               children: [
                                 Align(
                                   alignment: Alignment.center,
-                                  child: Text(
-                                    "Total Pembayaran",
-                                    style: FontFamily()
-                                        .regularText
-                                        .copyWith(fontSize: 14),
-                                  ),
-                                ),
-                                Align(
-                                  alignment: Alignment.center,
                                   child: Padding(
                                     padding: const EdgeInsets.all(8.0),
-                                    child: Text(
-                                      "${NumberFormat.currency(locale: 'id', symbol: 'Rp').format(widget.price + widget.uniqueCode)}",
-                                      style: FontFamily().boldText.copyWith(
-                                          color: ColorStyle().secondaryColors,
-                                          fontSize: 24),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Image.asset(
+                                          height: 40,
+                                          width: 40,
+                                          'assets/Handoff/icon/MyClass/money_icon.png',
+                                        ),
+                                        SizedBox(
+                                          width: 8,
+                                        ),
+                                        Text(
+                                          "${NumberFormat.currency(locale: 'id', symbol: 'Rp').format(widget.price + widget.uniqueCode)}",
+                                          style: FontFamily().boldText.copyWith(
+                                              color:
+                                                  ColorStyle().secondaryColors,
+                                              fontSize: 24),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ),
                               ],
                             ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(bottom: 8.0, top: 8.0),
-                              child: Text(
-                                "Nama Kelas",
-                                style: FontFamily().boldText.copyWith(
-                                    color: ColorStyle().primaryColors,
-                                    fontSize: 14),
-                              ),
+                            SizedBox(
+                              height: 16,
                             ),
-                            Text(widget.nama_kelas,
-                                style: FontFamily().regularText),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(bottom: 8.0, top: 8.0),
-                              child: Text(
-                                "Nama Mentor",
-                                style: FontFamily().boldText.copyWith(
+                            Text(
+                              "Nama Kelas",
+                              style: FontFamily().boldText.copyWith(
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 16,
                                     color: ColorStyle().primaryColors,
-                                    fontSize: 14),
-                              ),
+                                  ),
                             ),
-                            Text(widget.nama_mentor,
-                                style: FontFamily().regularText),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(bottom: 8.0, top: 8.0),
-                              child: Text(
-                                "Periode Kelas",
-                                style: FontFamily().boldText.copyWith(
+                            Text(
+                              widget.nama_kelas,
+                              style: FontFamily().regularText.copyWith(
+                                    fontWeight: FontWeight.w400,
+                                    color: ColorStyle().disableColors,
+                                    fontSize: 14,
+                                  ),
+                            ),
+                            SizedBox(
+                              height: 8,
+                            ),
+                            Text(
+                              "Nama Mentor",
+                              style: FontFamily().boldText.copyWith(
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 16,
                                     color: ColorStyle().primaryColors,
-                                    fontSize: 14),
-                              ),
+                                  ),
                             ),
-                            Text('${widget.durasi} Hari',
-                                style: FontFamily().regularText),
+                            Text(
+                              widget.nama_mentor,
+                              style: FontFamily().regularText.copyWith(
+                                    fontWeight: FontWeight.w400,
+                                    color: ColorStyle().disableColors,
+                                    fontSize: 14,
+                                  ),
+                            ),
+                            SizedBox(
+                              height: 8,
+                            ),
+                            Text(
+                              "Periode Kelas",
+                              style: FontFamily().boldText.copyWith(
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 16,
+                                    color: ColorStyle().primaryColors,
+                                  ),
+                            ),
+                            Text(
+                              '${widget.durasi} Hari',
+                              style: FontFamily().regularText.copyWith(
+                                    fontWeight: FontWeight.w400,
+                                    color: ColorStyle().disableColors,
+                                    fontSize: 14,
+                                  ),
+                            ),
                             SizedBox(
                               height: 8.0,
                             ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(bottom: 8.0, top: 8.0),
-                              child: Text(
-                                "Metode Pembayaran",
-                                style: FontFamily().boldText.copyWith(
+                            Text(
+                              "Metode Pembayaran",
+                              style: FontFamily().boldText.copyWith(
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 16,
                                     color: ColorStyle().primaryColors,
-                                    fontSize: 14),
-                              ),
+                                  ),
                             ),
                             Text(
                               "BANK BCA",
-                              style: FontFamily()
-                                  .boldText
-                                  .copyWith(color: ColorStyle().primaryColors),
+                              style: FontFamily().boldText.copyWith(
+                                    fontSize: 14,
+                                    color: ColorStyle().primaryColors,
+                                  ),
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  '1234567890',
-                                  style: FontFamily().boldText,
+                                  '00000001234567890',
+                                  style: FontFamily().regularText.copyWith(
+                                        fontWeight: FontWeight.w400,
+                                        color: ColorStyle().disableColors,
+                                        fontSize: 14,
+                                      ),
                                 ),
                                 const SizedBox(
                                   width: 12,
@@ -188,7 +234,7 @@ class _DetailBookingClassState extends State<DetailBookingClass> {
                                   onPressed: () {
                                     // Menyalin teks ke clipboard
                                     Clipboard.setData(const ClipboardData(
-                                        text: '1234567890'));
+                                        text: '00000001234567890'));
 
                                     // Tampilkan snackbar atau pesan bahwa teks telah disalin
                                     showTopSnackBar(
@@ -200,7 +246,11 @@ class _DetailBookingClassState extends State<DetailBookingClass> {
                             ),
                             Text(
                               "PT.TINOJER ACADEMY",
-                              style: FontFamily().regularText,
+                              style: FontFamily().regularText.copyWith(
+                                    fontWeight: FontWeight.w400,
+                                    color: ColorStyle().disableColors,
+                                    fontSize: 14,
+                                  ),
                             ),
                           ],
                         ),
@@ -218,11 +268,12 @@ class _DetailBookingClassState extends State<DetailBookingClass> {
                       .copyWith(color: ColorStyle().errorColors),
                 ),
               ),
-              const SizedBox(
-                height: 12,
-              ),
               Padding(
-                padding: const EdgeInsets.all(12.0),
+                padding: const EdgeInsets.only(
+                  top: 12.0,
+                  left: 12.0,
+                  right: 12.0,
+                ),
                 child: ElevatedButtonWidget(
                   title: "Kembali Ke Beranda",
                   onPressed: () {

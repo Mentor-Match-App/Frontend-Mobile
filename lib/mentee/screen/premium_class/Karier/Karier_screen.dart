@@ -7,12 +7,10 @@ import 'package:mentormatch_apps/mentee/screen/premium_class/karier/finance_kari
 import 'package:mentormatch_apps/mentee/screen/premium_class/karier/front_end_karier_screen.dart';
 import 'package:mentormatch_apps/mentee/screen/premium_class/karier/marketing_karier_screen.dart';
 import 'package:mentormatch_apps/mentee/screen/premium_class/karier/quality_assurance_karier_screen.dart';
-
 import 'package:mentormatch_apps/mentee/screen/premium_class/karier/security_engineer_karier_screen.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
 import 'package:mentormatch_apps/widget/category_card.dart';
-import 'package:mentormatch_apps/widget/navbar.dart';
 import 'package:mentormatch_apps/widget/search_bar.dart';
 
 class KarierScreen extends StatefulWidget {
@@ -136,17 +134,15 @@ class _KarierScreenState extends State<KarierScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        actions: [
-         AppBarPremiumClass(
-            title: "Premium Class",
+        title: Align(
+          alignment: Alignment.centerLeft,
+          child: Text(
+            'Karier',
+            style: FontFamily().boldText.copyWith(
+                  color: ColorStyle().primaryColors,
+                  fontSize: 16.0,
+                ),
           ),
-        ],
-        title: Text(
-          'Karier',
-          style: FontFamily().boldText.copyWith(
-                color: ColorStyle().primaryColors,
-                fontSize: 14.0,
-              ),
         ),
       ),
       body: ListView(
@@ -157,9 +153,7 @@ class _KarierScreenState extends State<KarierScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SearchBarWidgetMentee(
-                
-                ),
+                SearchBarWidgetMentee(),
                 SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: Row(

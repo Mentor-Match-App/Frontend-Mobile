@@ -61,6 +61,7 @@ class _EditProfileMentorScreenState extends State<EditProfileMentorScreen> {
   String about = '';
   String linkedin = '';
   List<Map<String, String>> experiences = [];
+  bool _isSaving = false;
 
   @override
   void initState() {
@@ -71,7 +72,6 @@ class _EditProfileMentorScreenState extends State<EditProfileMentorScreen> {
     _locationController.text = widget.location;
     _jobController.text = widget.currentJob;
     _companyController.text = widget.currentCompany;
-    // Saring dan ubah experiences
     experiences = widget.experiences
         .map((exp) =>
             {'role': exp['jobTitle']!, 'experienceCompany': exp['company']!})
@@ -79,11 +79,6 @@ class _EditProfileMentorScreenState extends State<EditProfileMentorScreen> {
     _loadProfileData();
     _emailController.text = _email;
     _nameController.text = _name;
-    // _jobController.text = job;
-    // _schoolController.text = school;
-    // _locationController.text = location;
-    // _aboutController.text = about;
-    // _linkedinController.text = linkedin;
   }
 
   Future<void> _loadProfileData() async {
@@ -121,7 +116,10 @@ class _EditProfileMentorScreenState extends State<EditProfileMentorScreen> {
     }
   }
 
-  void _updateUserProfile() async {
+  Future<void> _updateUserProfile() async {
+    setState(() {
+      _isSaving = true;
+    });
     skills = _skills.map((skill) => skill['skill']!).toList();
     // Instance of ProfileService
     ProfileService profileService = ProfileService();
@@ -134,7 +132,9 @@ class _EditProfileMentorScreenState extends State<EditProfileMentorScreen> {
       linkedin: _linkedinController.text,
       experiences: experiences,
     );
-    // Handle post-update actions, like showing a confirmation dialog
+    setState(() {
+      _isSaving = false;
+    });
   }
 
   @override
@@ -182,17 +182,25 @@ class _EditProfileMentorScreenState extends State<EditProfileMentorScreen> {
       appBar: AppBar(
         title: Image.asset('assets/Handoff/logo/LogoMobile.png'),
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-        child: Column(
-          children: [
-            _profileSection(),
-            _formFields(),
-            const SizedBox(height: 40),
-            _saveButton(context),
-            const SizedBox(height: 10),
-          ],
-        ),
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+            child: Column(
+              children: [
+                _profileSection(),
+                _formFields(),
+                const SizedBox(height: 40),
+                _saveButton(context),
+                const SizedBox(height: 10),
+              ],
+            ),
+          ),
+          if (_isSaving)
+            Center(
+              child: CircularProgressIndicator(),
+            ),
+        ],
       ),
     );
   }
@@ -364,15 +372,13 @@ class _EditProfileMentorScreenState extends State<EditProfileMentorScreen> {
   Widget _saveButton(BuildContext context) {
     return ElevatedButtonWidget(
         title: "Simpan",
-        onPressed: () {
-          // Validate if any skills have been added to the chips (i.e., the _skills list is not empty)
+        onPressed: () async {
           if (_skills.isEmpty) {
             showTopSnackBar(context, 'Please add at least one skill',
                 leftBarIndicatorColor: ColorStyle().errorColors);
           } else if (_formKey.currentState!.validate()) {
-            // If there are one or more skills added and the form is valid, proceed to update the profile
             _formKey.currentState!.save();
-            _updateUserProfile();
+            await _updateUserProfile();
             showTopSnackBar(context, 'Profile updated successfully',
                 leftBarIndicatorColor: ColorStyle().succesColors);
             Navigator.pushAndRemoveUntil(

@@ -135,17 +135,15 @@ class _SMPScreenState extends State<SMPScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        actions: [
-        AppBarPremiumClass(
-            title: "Premium Class",
+        title: Align(
+          alignment: Alignment.centerLeft,
+          child: Text(
+            'SMP',
+            style: FontFamily().boldText.copyWith(
+                  color: ColorStyle().primaryColors,
+                  fontSize: 16.0,
+                ),
           ),
-        ],
-        title: Text(
-          'SMP',
-          style: FontFamily().boldText.copyWith(
-                color: ColorStyle().primaryColors,
-                fontSize: 14.0,
-              ),
         ),
       ),
       body: ListView(

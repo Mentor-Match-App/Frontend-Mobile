@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mentormatch_apps/mentor/screen/daftar_mentor/verification_regist.dart';
 import 'package:mentormatch_apps/mentor/service/register_mentor_service.dart';
+import 'package:mentormatch_apps/preferences/%20preferences_helper.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
 import 'package:mentormatch_apps/style/text.dart';
 import 'package:mentormatch_apps/widget/button.dart';
@@ -46,8 +47,8 @@ class _RegisterMentorScreenState extends State<RegisterMentorScreen> {
   String accountNumber = "";
   String accountName = "";
   List<String> skills = [];
-  // list experience with role and experienceCompany
-  List<Map<String, String>> experience = [];
+  List<Map<String, String>> experiences = [];
+  bool _isSaving = false;
 
   @override
   void initState() {
@@ -96,7 +97,7 @@ class _RegisterMentorScreenState extends State<RegisterMentorScreen> {
   void _addExperience() {
     if (_formKey.currentState!.validate()) {
       setState(() {
-        experience.add({
+        experiences.add({
           'role': _roleController.text,
           'experienceCompany': _experienceCompanyController.text
         });
@@ -106,9 +107,11 @@ class _RegisterMentorScreenState extends State<RegisterMentorScreen> {
     }
   }
 
-  void _registerMentor() async {
+  Future<void> _registerMentor() async {
     skills = _skills.map((skill) => skill['skill']!).toList();
-
+    setState(() {
+      _isSaving = true;
+    });
     // Instance of ProfileService
     RegisterMentorService registerMentorService = RegisterMentorService();
     await registerMentorService.registerMentor(
@@ -120,10 +123,15 @@ class _RegisterMentorScreenState extends State<RegisterMentorScreen> {
       about: _aboutController.text,
       linkedin: _linkedinController.text,
       portofolio: _portofolioController.text,
-      experience: experience,
+      experiences: experiences,
       accountName: _accountNameController.text,
       accountNumber: _accountNumberController.text,
     );
+    setState(() {
+      _isSaving = false;
+    });
+
+    await UserPreferences.setUserType("PendingMentor");
   }
 
   @override
@@ -132,23 +140,31 @@ class _RegisterMentorScreenState extends State<RegisterMentorScreen> {
       appBar: AppBar(
         title: Image.asset('assets/Handoff/logo/LogoMobile.png'),
       ),
-      body: Form(
-        key: _formKey,
-        child: ListView(
-          padding: const EdgeInsets.all(20),
-          children: [
-            Image.asset('assets/Handoff/ilustrator/mentor in zoom.png'),
-            const SizedBox(height: 24),
-            Text(
-              'Hello $_name, \nComplete the form to become a mentor',
-              style: FontFamily().titleText.copyWith(fontSize: 16),
-              textAlign: TextAlign.start,
+      body: Stack(
+        children: [
+          Form(
+            key: _formKey,
+            child: ListView(
+              padding: const EdgeInsets.all(20),
+              children: [
+                Image.asset('assets/Handoff/ilustrator/mentor in zoom.png'),
+                const SizedBox(height: 24),
+                Text(
+                  'Hello $_name, \nComplete the form to become a mentor',
+                  style: FontFamily().titleText.copyWith(fontSize: 16),
+                  textAlign: TextAlign.start,
+                ),
+                const SizedBox(height: 24),
+                _formFields(),
+                const SizedBox(height: 24),
+              ],
             ),
-            const SizedBox(height: 24),
-            _formFields(),
-            const SizedBox(height: 24),
-          ],
-        ),
+          ),
+          if (_isSaving)
+            Center(
+              child: CircularProgressIndicator(),
+            ),
+        ],
       ),
     );
   }
@@ -156,8 +172,7 @@ class _RegisterMentorScreenState extends State<RegisterMentorScreen> {
   Widget _formFields() {
     return Column(
       children: [
-        _genderDropdownField(), // Replace the gender text field with this
-
+        _genderDropdownField(), 
         _textFieldWithTitle(
           "Job/Title",
           _jobController,
@@ -246,8 +261,6 @@ class _RegisterMentorScreenState extends State<RegisterMentorScreen> {
             linkedin = value;
           });
         }),
-
-
 
         _textFieldWithTitle("About", _aboutController, "Enter Your About",
             onChanged: (value) {
@@ -370,7 +383,7 @@ class _RegisterMentorScreenState extends State<RegisterMentorScreen> {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
-        children: experience.map((exp) => _buildExperienceChip(exp)).toList(),
+        children: experiences.map((exp) => _buildExperienceChip(exp)).toList(),
       ),
     );
   }
@@ -386,7 +399,7 @@ class _RegisterMentorScreenState extends State<RegisterMentorScreen> {
         backgroundColor: ColorStyle().primaryColors,
         deleteIcon: const Icon(Icons.close, size: 12),
         onDeleted: () {
-          setState(() => experience.remove(exp));
+          setState(() => experiences.remove(exp));
         },
       ),
     );
@@ -436,9 +449,9 @@ class _RegisterMentorScreenState extends State<RegisterMentorScreen> {
   Widget _applyButton() {
     return Center(
       child: ElevatedButtonWidget(
-        onPressed: () {
+        onPressed: () async {
           if (_formKey.currentState!.validate()) {
-            _registerMentor();
+            await _registerMentor();
             Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(

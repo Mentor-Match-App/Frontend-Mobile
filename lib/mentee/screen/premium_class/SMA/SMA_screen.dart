@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:mentormatch_apps/mentee/screen/premium_class/sd/all_sd_screen.dart';
-import 'package:mentormatch_apps/mentee/screen/premium_class/sd/math_sd_scree.dart';
-import 'package:mentormatch_apps/mentee/screen/premium_class/sd/tech_sd_screen.dart';
 import 'package:mentormatch_apps/mentee/screen/premium_class/sma/all_mentor_SMA_screen.dart';
 import 'package:mentormatch_apps/mentee/screen/premium_class/sma/bahasa_sma_screen.dart';
 import 'package:mentormatch_apps/mentee/screen/premium_class/sma/biology_sma_screen.dart';
@@ -137,17 +135,15 @@ class _SMAScreenState extends State<SMAScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        actions: [
-          AppBarPremiumClass(
-            title: "Premium Class",
+        title: Align(
+          alignment: Alignment.centerLeft,
+          child: Text(
+            'SMA',
+            style: FontFamily().boldText.copyWith(
+                  color: ColorStyle().primaryColors,
+                  fontSize: 16.0,
+                ),
           ),
-        ],
-        title: Text(
-          'SMA',
-          style: FontFamily().boldText.copyWith(
-                color: ColorStyle().primaryColors,
-                fontSize: 14.0,
-              ),
         ),
       ),
       body: ListView(

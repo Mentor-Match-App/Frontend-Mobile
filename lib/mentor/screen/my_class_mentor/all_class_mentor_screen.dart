@@ -143,7 +143,7 @@ class _AllClassMentorScreenState extends State<AllClassMentorScreen> {
               child: Center(child: CircularProgressIndicator()));
         } else if (snapshot.hasError) {
           return Text("Error: ${snapshot.error}");
-        } else if (snapshot.hasData && snapshot.data!.user?.userClass != null) {
+        } else if (snapshot.hasData && snapshot.data!.user?.userClass == null) {
           var userClass = snapshot.data!.user!.userClass!;
           return SingleChildScrollView(
             child: Padding(
@@ -280,7 +280,14 @@ class _AllClassMentorScreenState extends State<AllClassMentorScreen> {
             ),
           );
         } else {
-          return Center(child: Text('No data'));
+          return SizedBox(
+              width: double.infinity,
+              height: MediaQuery.of(context).size.height / 2.0,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child:
+                    Center(child: Text('Kamu belum memiliki kelas saat ini')),
+              ));
         }
       },
     );

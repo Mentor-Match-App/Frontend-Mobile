@@ -7,7 +7,6 @@ import 'package:mentormatch_apps/mentee/screen/premium_class/sd/tech_sd_screen.d
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
 import 'package:mentormatch_apps/widget/category_card.dart';
-import 'package:mentormatch_apps/widget/navbar.dart';
 import 'package:mentormatch_apps/widget/search_bar.dart';
 
 class SDScreen extends StatefulWidget {
@@ -66,17 +65,15 @@ class _SDScreenState extends State<SDScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        actions: [
-        AppBarPremiumClass(
-            title: "Premium Class",
+        title: Align(
+          alignment: Alignment.centerLeft,
+          child: Text(
+            'SD',
+            style: FontFamily().boldText.copyWith(
+                  color: ColorStyle().primaryColors,
+                  fontSize: 16.0,
+                ),
           ),
-        ],
-        title: Text(
-          'SD',
-          style: FontFamily().boldText.copyWith(
-                color: ColorStyle().primaryColors,
-                fontSize: 14.0,
-              ),
         ),
       ),
       body: ListView(
@@ -87,9 +84,7 @@ class _SDScreenState extends State<SDScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SearchBarWidgetMentee(
-               
-                ),
+                SearchBarWidgetMentee(),
                 SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: Row(

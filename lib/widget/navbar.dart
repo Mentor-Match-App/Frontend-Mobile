@@ -9,7 +9,9 @@ import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
 
 class PopMenuButtonWidget extends StatefulWidget {
-  PopMenuButtonWidget({Key? key}) : super(key: key);
+  final String title; // Tambahkan properti title
+
+  PopMenuButtonWidget({Key? key, required this.title}) : super(key: key);
 
   @override
   State<PopMenuButtonWidget> createState() => _PopMenuButtonWidgetState();
@@ -25,7 +27,7 @@ class _PopMenuButtonWidgetState extends State<PopMenuButtonWidget> {
         children: [
           const Icon(Icons.arrow_drop_down_outlined),
           Text(
-            "Program & Layanan",
+            widget.title,
             style: FontFamily().regularText,
           ),
         ],
@@ -219,7 +221,9 @@ class _AppBarHomePageState extends State<AppBarHomePage> {
           width: 120,
           height: 120,
         ),
-        PopMenuButtonWidget(),
+        PopMenuButtonWidget(
+          title: "Program & Layanan",
+        ),
         Stack(
           children: [
             IconButton(

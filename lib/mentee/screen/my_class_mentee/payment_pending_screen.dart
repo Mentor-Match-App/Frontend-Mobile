@@ -1,30 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
+import 'package:mentormatch_apps/widget/flushs_bar_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class PaymentErrorScreenMentee extends StatefulWidget {
+class PaymentPendingScreenMentee extends StatefulWidget {
   final String classname;
   final int price;
-  // final String paymentdate;
   final String rejectReason;
   final int uniqueId;
-  PaymentErrorScreenMentee(
+  PaymentPendingScreenMentee(
       {Key? key,
       required this.classname,
       required this.price,
-      // required this.paymentdate,
       required this.uniqueId,
       required this.rejectReason})
       : super(key: key);
 
   @override
-  State<PaymentErrorScreenMentee> createState() =>
-      _PaymentErrorScreenMenteeState();
+  State<PaymentPendingScreenMentee> createState() =>
+      _PaymentPendingScreenMenteeState();
 }
 
-class _PaymentErrorScreenMenteeState extends State<PaymentErrorScreenMentee> {
+class _PaymentPendingScreenMenteeState
+    extends State<PaymentPendingScreenMentee> {
   final String phoneNumber =
       "+6281362845327"; // Ganti dengan nomor telepon tujuan
 
@@ -38,8 +39,7 @@ class _PaymentErrorScreenMenteeState extends State<PaymentErrorScreenMentee> {
   }
 
   String formatCurrency(int amount) {
-    final formatter = NumberFormat.currency(
-        locale: 'id', symbol: 'Rp');
+    final formatter = NumberFormat.currency(locale: 'id', symbol: 'Rp');
     return formatter.format(amount);
   }
 
@@ -88,17 +88,17 @@ class _PaymentErrorScreenMenteeState extends State<PaymentErrorScreenMentee> {
                                   height: 24,
                                 ),
                                 Text(
-                                  "Transaksi Gagal",
+                                  "Menunggu Pembayaran",
                                   style: FontFamily().boldText.copyWith(
                                       fontWeight: FontWeight.w700,
                                       fontSize: 16,
-                                      color: ColorStyle().errorColors),
+                                      color: ColorStyle().pendingColors),
                                 ),
                                 SizedBox(
                                   height: 8,
                                 ),
                                 Text(
-                                  "Mohon maaf, transaksi yang kamu lakukan untuk membooking kelas ini gagal dikarenakan: ${widget.rejectReason}",
+                                  "Segera lakukan pembayaran untuk mengikuti kelas",
                                   style: FontFamily().regularText.copyWith(
                                         color: ColorStyle().disableColors,
                                         fontSize: 14,
@@ -145,66 +145,67 @@ class _PaymentErrorScreenMenteeState extends State<PaymentErrorScreenMentee> {
                                       ),
                                 ),
                                 SizedBox(
+                                  height: 12,
+                                ),
+                                Text(
+                                  "Metode Pembayaran",
+                                  style: FontFamily().boldText.copyWith(
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 16,
+                                        color: ColorStyle().primaryColors,
+                                      ),
+                                ),
+                                Text(
+                                  "BANK BCA",
+                                  style: FontFamily().boldText.copyWith(
+                                        fontSize: 14,
+                                        color: ColorStyle().primaryColors,
+                                      ),
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      '00000001234567890',
+                                      style: FontFamily().regularText.copyWith(
+                                            fontWeight: FontWeight.w400,
+                                            color: ColorStyle().disableColors,
+                                            fontSize: 14,
+                                          ),
+                                    ),
+                                    const SizedBox(
+                                      width: 12,
+                                    ),
+                                    IconButton(
+                                      onPressed: () {
+                                        // Menyalin teks ke clipboard
+                                        Clipboard.setData(const ClipboardData(
+                                            text: '00000001234567890'));
+
+                                        // Tampilkan snackbar atau pesan bahwa teks telah disalin
+                                        showTopSnackBar(
+                                            context, 'Teks telah disalin');
+                                      },
+                                      icon: const Icon(Icons.copy),
+                                    )
+                                  ],
+                                ),
+                                Text(
+                                  "PT.TINOJER ACADEMY",
+                                  style: FontFamily().regularText.copyWith(
+                                        fontWeight: FontWeight.w400,
+                                        color: ColorStyle().disableColors,
+                                        fontSize: 14,
+                                      ),
+                                ),
+                                SizedBox(
                                   height: 24,
                                 ),
                                 Text(
-                                    "Silahkan hubungi kontak admin dibawah ini untuk proses lebih lanjut",
-                                    style: FontFamily().regularText.copyWith(
-                                          color: ColorStyle().disableColors,
-                                          fontSize: 14,
-                                        )),
-                                SizedBox(
-                                  height: 24,
-                                ),
-                                SizedBox(
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Container(
-                                        height: 48,
-                                        width: 132,
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(12),
-                                          color: ColorStyle().succesColors,
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color:
-                                                  Colors.grey.withOpacity(0.5),
-                                              spreadRadius: 1,
-                                              blurRadius: 2,
-                                              offset: Offset(0,
-                                                  2), // changes position of shadow
-                                            ),
-                                          ],
-                                        ),
-                                        child: TextButton.icon(
-                                          onPressed: _launchWhatsApp,
-                                          label: Text(
-                                            'WhatsApp ',
-                                            style: FontFamily()
-                                                .regularText
-                                                .copyWith(
-                                                  color:
-                                                      ColorStyle().whiteColors,
-                                                ),
-                                          ),
-                                          icon: Icon(
-                                            Icons.phone,
-                                            color: ColorStyle().whiteColors,
-                                          ),
-                                          style: ButtonStyle(
-                                            iconSize:
-                                                WidgetStateProperty.all(20),
-                                            padding: WidgetStateProperty.all(
-                                              EdgeInsets.symmetric(
-                                                  horizontal: 20, vertical: 10),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                                  "*Pembayaran berlaku sampai 24 jam setelah melakukan booking kelas",
+                                  style: FontFamily().regularText.copyWith(
+                                      color: ColorStyle().errorColors),
                                 ),
                               ],
                             ),

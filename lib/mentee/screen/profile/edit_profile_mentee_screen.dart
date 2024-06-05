@@ -63,6 +63,7 @@ class _EditProfileMenteeScreenState extends State<EditProfileMenteeScreen> {
   String about = '';
   String linkedin = '';
   List<Map<String, String>> experiences = [];
+  bool _isSaving = false;
 
   @override
   void initState() {
@@ -117,6 +118,9 @@ class _EditProfileMenteeScreenState extends State<EditProfileMenteeScreen> {
   }
 
   Future<void> _updateUserProfile() async {
+    setState(() {
+      _isSaving = true;
+    });
     skills = _skills.map((skill) => skill['skill']!).toList();
     ProfileService profileService = ProfileService();
     await profileService.updateProfile(
@@ -128,7 +132,10 @@ class _EditProfileMenteeScreenState extends State<EditProfileMenteeScreen> {
       linkedin: _linkedinController.text,
       experiences: experiences,
     );
-    // Handle post-update actions, like showing a confirmation dialog
+
+    setState(() {
+      _isSaving = false;
+    });
   }
 
   @override
@@ -176,17 +183,25 @@ class _EditProfileMenteeScreenState extends State<EditProfileMenteeScreen> {
       appBar: AppBar(
         title: Image.asset('assets/Handoff/logo/LogoMobile.png'),
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-        child: Column(
-          children: [
-            _profileSection(),
-            _formFields(),
-            const SizedBox(height: 40),
-            _saveButton(context),
-            const SizedBox(height: 10),
-          ],
-        ),
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+            child: Column(
+              children: [
+                _profileSection(),
+                _formFields(),
+                const SizedBox(height: 40),
+                _saveButton(context),
+                const SizedBox(height: 10),
+              ],
+            ),
+          ),
+          if (_isSaving)
+            Center(
+              child: CircularProgressIndicator(),
+            ),
+        ],
       ),
     );
   }
@@ -357,7 +372,7 @@ class _EditProfileMenteeScreenState extends State<EditProfileMenteeScreen> {
 
   Widget _saveButton(BuildContext context) {
     return ElevatedButtonWidget(
-      title: "Save",
+      title: "Simpan",
       onPressed: () async {
         if (_skills.isEmpty) {
           showTopSnackBar(context, 'Please add at least one skill',

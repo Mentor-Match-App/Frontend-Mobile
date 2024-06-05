@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:mentormatch_apps/mentee/screen/bottom_mentee_screen.dart';
+import 'package:mentormatch_apps/mentee/screen/notification_mentee_screen.dart';
 import 'package:mentormatch_apps/mentee/screen/premium_class/karier/karier_screen.dart';
 import 'package:mentormatch_apps/mentee/screen/premium_class/kuliah/kuliah_screen.dart';
 import 'package:mentormatch_apps/mentee/screen/premium_class/sd/sd_screen.dart';
 import 'package:mentormatch_apps/mentee/screen/premium_class/sma/SMA_screen.dart';
 import 'package:mentormatch_apps/mentee/screen/premium_class/smp/SMP_screen.dart';
+import 'package:mentormatch_apps/mentor/service/notification_service.dart';
+import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/widget/card_premium_class.dart';
 import 'package:mentormatch_apps/widget/navbar.dart';
 
@@ -16,6 +19,29 @@ class PremiumClassScreen extends StatefulWidget {
 }
 
 class _PremiumClassScreenState extends State<PremiumClassScreen> {
+  final NotificationService _notificationService = NotificationService();
+
+  Future<void> _fetchUnreadNotificationsCount() async {
+    try {
+      final notifications =
+          await _notificationService.fetchNotificationsForCurrentUser();
+      final unreadCount =
+          notifications.where((notification) => !notification.isRead!).length;
+      setState(() {
+        _unreadNotificationsCount = unreadCount;
+      });
+    } catch (e) {
+      print(e); // Handle error appropriately
+    }
+  }
+
+  int _unreadNotificationsCount = 0;
+  @override
+  void initState() {
+    super.initState();
+    _fetchUnreadNotificationsCount();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,27 +50,66 @@ class _PremiumClassScreenState extends State<PremiumClassScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             GestureDetector(
-              onDoubleTap: () {
+              onTap: () {
                 Navigator.pushAndRemoveUntil(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const BottomNavbarMenteeScreen(
-                      activeScreen: 0,
-                    ),
+                    builder: (context) => BottomNavbarMenteeScreen(),
                   ),
                   (route) => false,
                 );
               },
               child: Image.asset(
                 'assets/Handoff/logo/LogoMobile.png',
-                height: 120,
                 width: 120,
+                height: 120,
               ),
             ),
-           AppBarPremiumClass(
-            title: "Premium Class",
-            
-          ),
+            PopMenuButtonWidget(
+              title: "Premium Class",
+            ),
+            Stack(
+              children: [
+                IconButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => NotificationMenteeScreen(),
+                      ),
+                    ).then((_) {
+                      _fetchUnreadNotificationsCount(); // Fetch the unread count when returning to this screen
+                    });
+                  },
+                  icon: Icon(Icons.notifications_none_outlined),
+                  color: ColorStyle().secondaryColors,
+                ),
+                if (_unreadNotificationsCount > 0)
+                  Positioned(
+                    right: 11,
+                    top: 11,
+                    child: Container(
+                      padding: EdgeInsets.all(2),
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      constraints: BoxConstraints(
+                        minWidth: 14,
+                        minHeight: 14,
+                      ),
+                      child: Text(
+                        '$_unreadNotificationsCount',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 8,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+              ],
+            )
           ],
         ),
       ),

@@ -4,6 +4,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:mentormatch_apps/mentee/model/my_class_model.dart';
 import 'package:mentormatch_apps/mentee/screen/my_class_mentee/detail_my_class_mentee_screen.dart';
 import 'package:mentormatch_apps/mentee/screen/my_class_mentee/payment_error_screen.dart';
+import 'package:mentormatch_apps/mentee/screen/my_class_mentee/payment_expired_screen.dart';
+import 'package:mentormatch_apps/mentee/screen/my_class_mentee/payment_pending_screen.dart';
 import 'package:mentormatch_apps/mentor/service/my_class_service.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
@@ -105,6 +107,7 @@ class _AllClassMenteeScreenState extends State<AllClassMenteeScreen> {
                   return GestureDetector(
                     onTap: () {
                       if (statusButton == 0) {
+                        // Rejected
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -114,6 +117,27 @@ class _AllClassMenteeScreenState extends State<AllClassMenteeScreen> {
                               price: classData.price ?? 0,
                               uniqueId: data.uniqueCode ?? 0,
                             ),
+                          ),
+                        );
+                      } else if (statusButton == 3) {
+                        // Pending
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => PaymentPendingScreenMentee(
+                              classname: classData.name ?? '',
+                              rejectReason: data.rejectReason.toString(),
+                              price: classData.price ?? 0,
+                              uniqueId: data.uniqueCode ?? 0,
+                            ),
+                          ),
+                        );
+                      } else if (statusButton == 5) {
+                        // Expired
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => PaymentExpiredScreenMentee(),
                           ),
                         );
                       } else {
