@@ -5,6 +5,7 @@ import 'package:mentormatch_apps/preferences/%20preferences_helper.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
 import 'package:mentormatch_apps/style/text.dart';
 import 'package:mentormatch_apps/widget/button.dart';
+import 'package:mentormatch_apps/widget/flushs_bar_widget.dart';
 import 'package:mentormatch_apps/widget/textField.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -36,6 +37,7 @@ class _RegisterMentorScreenState extends State<RegisterMentorScreen> {
       TextEditingController();
   final TextEditingController _accountNameController = TextEditingController();
 
+  bool isLoading = false;
   String _name = "";
   String _selectedGender = '';
   String job = "";
@@ -107,31 +109,82 @@ class _RegisterMentorScreenState extends State<RegisterMentorScreen> {
     }
   }
 
-  Future<void> _registerMentor() async {
-    skills = _skills.map((skill) => skill['skill']!).toList();
+  void _registerMentor(BuildContext context) async {
+    List<String> skills = _skills.map((skill) => skill['skill']!).toList();
+
+    // Check if any field is empty
+    if (_genderController.text.isEmpty ||
+        _aboutController.text.isEmpty ||
+        _jobController.text.isEmpty ||
+        _companyController.text.isEmpty ||
+        skills.isEmpty ||
+        _locationController.text.isEmpty ||
+        _linkedinController.text.isEmpty ||
+        _portofolioController.text.isEmpty ||
+        experiences.isEmpty ||
+        _accountNameController.text.isEmpty ||
+        _accountNumberController.text.isEmpty) {
+      // Show Snackbar
+      showTopSnackBar(
+        context,
+        "Semua field harus diisi",
+        leftBarIndicatorColor: Colors
+            .red, // Atur warna indikator kiri ke merah untuk pesan kesalahan
+      );
+      print('Snackbar shown: Semua field harus diisi');
+      return;
+    }
     setState(() {
-      _isSaving = true;
-    });
-    // Instance of ProfileService
-    RegisterMentorService registerMentorService = RegisterMentorService();
-    await registerMentorService.registerMentor(
-      gender: _genderController.text,
-      job: _jobController.text,
-      company: _companyController.text,
-      skills: skills,
-      location: _locationController.text,
-      about: _aboutController.text,
-      linkedin: _linkedinController.text,
-      portofolio: _portofolioController.text,
-      experiences: experiences,
-      accountName: _accountNameController.text,
-      accountNumber: _accountNumberController.text,
-    );
-    setState(() {
-      _isSaving = false;
+      isLoading = true;
     });
 
-    await UserPreferences.setUserType("PendingMentor");
+    try {
+      // Instance of RegisterMentorService
+      RegisterMentorService registerMentorService = RegisterMentorService();
+      await registerMentorService.registerMentor(
+        gender: _genderController.text,
+        job: _jobController.text,
+        company: _companyController.text,
+        skills: skills,
+        location: _locationController.text,
+        about: _aboutController.text,
+        linkedin: _linkedinController.text,
+        portofolio: _portofolioController.text,
+        experiences: experiences,
+        accountName: _accountNameController.text,
+        accountNumber: _accountNumberController.text,
+      );
+
+      // Registration successful, show Snackbar
+      showTopSnackBar(
+        context,
+        "Registration successful",
+        leftBarIndicatorColor: Colors
+            .green, // Atur warna indikator kiri ke hijau untuk pesan sukses
+      );
+      print('Snackbar shown: Registration successful');
+
+      // Navigate to the verification page
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+          builder: (context) => VerificationFormRegistScreen(),
+        ),
+        (route) => false,
+      );
+    } catch (e) {
+      // Registration failed, show Snackbar
+      showTopSnackBar(
+        context,
+        "Registration failed: ${e.toString()}",
+        leftBarIndicatorColor: Colors.red,
+      );
+      print('Snackbar shown: Registration failed: ${e.toString()}');
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 
   @override
@@ -172,7 +225,7 @@ class _RegisterMentorScreenState extends State<RegisterMentorScreen> {
   Widget _formFields() {
     return Column(
       children: [
-        _genderDropdownField(), 
+        _genderDropdownField(),
         _textFieldWithTitle(
           "Job/Title",
           _jobController,
@@ -181,6 +234,12 @@ class _RegisterMentorScreenState extends State<RegisterMentorScreen> {
             setState(() {
               job = value;
             });
+          },
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'This field is required';
+            }
+            return null;
           },
         ),
         _textFieldWithTitle(
@@ -192,6 +251,12 @@ class _RegisterMentorScreenState extends State<RegisterMentorScreen> {
               company = value;
             });
           },
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'This field is required';
+            }
+            return null;
+          },
         ),
         _textFieldWithTitle(
           "Location",
@@ -202,9 +267,14 @@ class _RegisterMentorScreenState extends State<RegisterMentorScreen> {
               company = value;
             });
           },
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'This field is required';
+            }
+            return null;
+          },
         ),
         const SizedBox(height: 12),
-
         Align(
           alignment: Alignment.centerLeft,
           child: TittleTextField(
@@ -212,7 +282,6 @@ class _RegisterMentorScreenState extends State<RegisterMentorScreen> {
             color: ColorStyle().secondaryColors,
           ),
         ),
-
         Padding(
           // Add padding left to the column
           padding: const EdgeInsets.only(left: 16),
@@ -236,6 +305,12 @@ class _RegisterMentorScreenState extends State<RegisterMentorScreen> {
                     accountName = value;
                   });
                 },
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'This field is required';
+                  }
+                  return null;
+                },
               ),
               _textFieldWithTitle(
                 "Account Number",
@@ -246,6 +321,16 @@ class _RegisterMentorScreenState extends State<RegisterMentorScreen> {
                     accountNumber = value;
                   });
                 },
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'This field is required';
+                  }
+                  final numericRegex = RegExp(r'^[0-9]+$');
+                  if (!numericRegex.hasMatch(value)) {
+                    return 'Please enter a valid number';
+                  }
+                  return null;
+                },
               ),
             ],
           ),
@@ -255,29 +340,74 @@ class _RegisterMentorScreenState extends State<RegisterMentorScreen> {
         _skillChips(),
         const SizedBox(height: 12),
         _textFieldWithTitle(
-            "LinkedIn", _linkedinController, "Enter Your LinkedIn URL",
-            onChanged: (value) {
-          setState(() {
-            linkedin = value;
-          });
-        }),
+          "LinkedIn",
+          _linkedinController,
+          "Enter Your LinkedIn URL",
+          onChanged: (value) {
+            setState(() {
+              linkedin = value;
+            });
+          },
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'This field is required';
+            }
 
-        _textFieldWithTitle("About", _aboutController, "Enter Your About",
-            onChanged: (value) {
-          setState(() {
-            about = value;
-          });
-        }),
+            // Regular expression to validate a URL
+            final urlPattern =
+                r'^(https?:\/\/)?([a-z0-9-]+\.)+[a-z]{2,6}(\/[^\s]*)?$';
+            final urlRegExp = RegExp(urlPattern);
+
+            if (!urlRegExp.hasMatch(value)) {
+              return 'Please enter a valid URL';
+            }
+
+            return null;
+          },
+        ),
         _textFieldWithTitle(
-            "portofolio", _portofolioController, "Enter Your portofolio",
-            onChanged: (value) {
-          setState(() {
-            portofolio = value;
-          });
-        }),
+          "About",
+          _aboutController,
+          "Enter Your About",
+          onChanged: (value) {
+            setState(() {
+              about = value;
+            });
+          },
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'This field is required';
+            }
+            return null;
+          },
+        ),
+        _textFieldWithTitle(
+          "portofolio",
+          _portofolioController,
+          "Enter Your portofolio",
+          onChanged: (value) {
+            setState(() {
+              portofolio = value;
+            });
+          },
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'This field is required';
+            }
 
+            // Regular expression to validate a URL
+            final urlPattern =
+                r'^(https?:\/\/)?([a-z0-9-]+\.)+[a-z]{2,6}(\/[^\s]*)?$';
+            final urlRegExp = RegExp(urlPattern);
+
+            if (!urlRegExp.hasMatch(value)) {
+              return 'Please enter a valid URL';
+            }
+
+            return null;
+          },
+        ),
         _experienceField(),
-
         _experienceChips(),
         const SizedBox(height: 12),
         _applyButton(),
@@ -287,7 +417,9 @@ class _RegisterMentorScreenState extends State<RegisterMentorScreen> {
 
   Widget _textFieldWithTitle(
       String title, TextEditingController controller, String hintText,
-      {bool enabled = true, Function(String)? onChanged}) {
+      {bool enabled = true,
+      Function(String)? onChanged,
+      String? Function(String?)? validator}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -297,6 +429,7 @@ class _RegisterMentorScreenState extends State<RegisterMentorScreen> {
           controller: controller,
           enabled: enabled,
           onChanged: onChanged, // Add this line
+          validator: validator, // Add this line
         ),
       ],
     );
@@ -320,6 +453,12 @@ class _RegisterMentorScreenState extends State<RegisterMentorScreen> {
         TextFieldWidget(
           controller: _skillController,
           hintText: "Skill",
+          validator: (value) {
+            if (value!.isEmpty && _skills.isEmpty) {
+              return 'Please enter your skill';
+            }
+            return null;
+          },
         ),
       ],
     );
@@ -448,19 +587,14 @@ class _RegisterMentorScreenState extends State<RegisterMentorScreen> {
   // apply button and navigate to next page
   Widget _applyButton() {
     return Center(
-      child: ElevatedButtonWidget(
-        onPressed: () async {
-          if (_formKey.currentState!.validate()) {
-            await _registerMentor();
-            Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => VerificationFormRegistScreen()),
-                (route) => false);
-          }
-        },
-        title: "Apply",
-      ),
+      child: isLoading
+          ? CircularProgressIndicator()
+          : ElevatedButtonWidget(
+              onPressed: () {
+                _registerMentor(context);
+              },
+              title: 'Daftar',
+            ),
     );
   }
 }

@@ -35,10 +35,24 @@ class _DataAnalysSessionScreenState extends State<DataAnalysSessionScreen> {
           return Center(child: Text('Error: ${snapshot.error}'));
         } else if (snapshot.hasData && snapshot.data!.mentors!.isNotEmpty) {
           final mentors = snapshot.data!.mentors!
-              .where((mentor) => mentor.session!.any((sessionElement) =>
-                  sessionElement.isActive == true &&
-                  sessionElement.category == "Data Analyst"))
+              .where((mentor) => mentor.session!.any((sessionElement) {
+                    // Parse the session dateTime
+                    DateTime? sessionDateTime;
+                    if (sessionElement.dateTime != null) {
+                      sessionDateTime =
+                          DateTime.parse(sessionElement.dateTime!);
+                    }
+
+                    // Check if session is active, category is "Back End", and the dateTime is not now
+                    bool isValidSession = sessionElement.isActive == true &&
+                        sessionElement.category == "Data Analyst" &&
+                        (sessionDateTime == null ||
+                            sessionDateTime.isAfter(DateTime.now()));
+
+                    return isValidSession;
+                  }))
               .toList();
+
           if (mentors.isEmpty) {
             return Padding(
               padding: const EdgeInsets.all(8.0),
@@ -94,8 +108,8 @@ class _DataAnalysSessionScreenState extends State<DataAnalysSessionScreen> {
                 height: 250,
                 width: 150,
                 child: CardItemMentor(
-                   onTap: (){
-                     Navigator.push(
+                  onTap: () {
+                    Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => DetailMentorSessionsNew(
@@ -119,19 +133,18 @@ class _DataAnalysSessionScreenState extends State<DataAnalysSessionScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => DetailMentorSessionsNew(
-                            session: mentor.session,
-                            availableSlots: mentor.session!.isEmpty
-                                ? 0
-                                : mentor.session!.first.maxParticipants! -
-                                    (mentor.session!.first.participant
-                                            ?.length ??
-                                        0),
-                            detailmentor: mentor,
-                            totalParticipants: numberOfParticipants,
-                            mentorReviews: mentor.mentorReviews ?? [],
-                          ),
+                        builder: (context) => DetailMentorSessionsNew(
+                          session: mentor.session,
+                          availableSlots: mentor.session!.isEmpty
+                              ? 0
+                              : mentor.session!.first.maxParticipants! -
+                                  (mentor.session!.first.participant?.length ??
+                                      0),
+                          detailmentor: mentor,
+                          totalParticipants: numberOfParticipants,
+                          mentorReviews: mentor.mentorReviews ?? [],
                         ),
+                      ),
                     );
                   },
                   imagePath: mentor.photoUrl ??

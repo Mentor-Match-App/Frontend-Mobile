@@ -36,10 +36,10 @@ class _AllSessionScreenState extends State<AllSessionScreen> {
           // Menampilkan mentor yang isActive == true
           final mentors = snapshot.data!.mentors ?? [];
 
-          // Logging data yang diterima
+// Logging data yang diterima
           print('Total mentors: ${mentors.length}');
 
-          // Filter mentor yang memiliki sesi aktif dan valid
+// Filter mentor yang memiliki sesi aktif dan valid
           final activeMentors = mentors.where((mentor) {
             final activeSessions = mentor.session?.where((session) {
               final sessionDate = DateTime.tryParse(session.dateTime ?? "");
@@ -49,6 +49,18 @@ class _AllSessionScreenState extends State<AllSessionScreen> {
             }).toList();
             return activeSessions != null && activeSessions.isNotEmpty;
           }).toList();
+          if (mentors.isEmpty) {
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                  width: double.infinity,
+                  height: MediaQuery.of(context).size.height / 2,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Center(child: Text('No mentors available')),
+                  )),
+            );
+          }
 
           print('Active mentors with valid sessions: ${activeMentors.length}');
 

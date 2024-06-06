@@ -39,6 +39,7 @@ class _RegisterUlangMentorScreenState extends State<RegisterUlangMentorScreen> {
   final TextEditingController _accountNumberController =
       TextEditingController();
   final TextEditingController _accountNameController = TextEditingController();
+  bool isLoading = false;
   String _mentorid = "";
 
   String _name = "";
@@ -150,64 +151,75 @@ class _RegisterUlangMentorScreenState extends State<RegisterUlangMentorScreen> {
 
   void _updateMentor() async {
     if (_formKey.currentState!.validate()) {
+      setState(() {
+        isLoading = true;
+      });
+
       final profileData = await mentorService.getMentorProfile();
       try {
-        await MentorUpdateService().updateMentor(
-          accountNumber: profileData.user?.accountName ?? '',
-          accountName: profileData.user?.accountNumber ?? '',
-          gender: profileData.user?.gender ?? '',
-          mentorId: profileData.user?.id ?? '',
-          portfolio: profileData.user?.portofolio ?? '',
-          job: profileData.user?.experiences
-                  ?.firstWhere((element) => element.isCurrentJob == true,
-                      orElse: () => ExperienceMentor())
-                  .jobTitle ??
-              '',
-          company: profileData.user?.experiences
-                  ?.firstWhere((element) => element.isCurrentJob == true,
-                      orElse: () => ExperienceMentor())
-                  .company ??
-              '',
-          location: profileData.user?.location ?? '',
-          skills: profileData.user?.skills ?? [],
-          about: profileData.user?.about ?? '',
-          linkedin: profileData.user?.linkedin ?? '',
-          experiences: profileData.user?.experiences
-                  ?.map((exp) => {
-                        'role': exp.jobTitle ?? '',
-                        'experienceCompany': exp.company ?? ''
-                      })
-                  .toList() ??
-              [],
-        );
-
-        // Tampilkan SnackBar jika pembaruan berhasil
         if (mounted) {
-          showTopSnackBar(context, 'Profile updated successfully',
-        
-        leftBarIndicatorColor: ColorStyle().succesColors);
-        }
+          await MentorUpdateService().updateMentor(
+            accountNumber: profileData.user?.accountName ?? '',
+            accountName: profileData.user?.accountNumber ?? '',
+            gender: profileData.user?.gender ?? '',
+            mentorId: profileData.user?.id ?? '',
+            portfolio: profileData.user?.portofolio ?? '',
+            job: profileData.user?.experiences
+                    ?.firstWhere((element) => element.isCurrentJob == true,
+                        orElse: () => ExperienceMentor())
+                    .jobTitle ??
+                '',
+            company: profileData.user?.experiences
+                    ?.firstWhere((element) => element.isCurrentJob == true,
+                        orElse: () => ExperienceMentor())
+                    .company ??
+                '',
+            location: profileData.user?.location ?? '',
+            skills: profileData.user?.skills ?? [],
+            about: profileData.user?.about ?? '',
+            linkedin: profileData.user?.linkedin ?? '',
+            experiences: profileData.user?.experiences
+                    ?.map((exp) => {
+                          'role': exp.jobTitle ?? '',
+                          'experienceCompany': exp.company ?? ''
+                        })
+                    .toList() ??
+                [],
+          );
 
-        // Navigasi ke halaman verifikasi
-        Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(
-            builder: (context) => VerificationFormRegistScreen(),
-          ),
-          (route) => false,
-        );
-      } catch (error) {
-        // Menampilkan pesan kesalahan jika terjadi kesalahan saat pembaruan profil mentor
-        print('Error updating mentor profile: $error');
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              'Failed to update mentor profile. Please try again later.',
+          // Show SnackBar if the update is successful
+          showTopSnackBar(context, "Registration successful",
+              leftBarIndicatorColor: ColorStyle().succesColors);
+
+          // Navigate to the verification page
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+              builder: (context) => VerificationFormRegistScreen(),
             ),
-            backgroundColor: Colors.red, // Warna merah untuk pesan kesalahan
-          ),
+            (route) => false,
+          );
+        }
+      } catch (error) {
+        // Show error message if there is an error updating the mentor profile
+        print('Error updating mentor profile: $error');
+        showTopSnackBar(
+          context,
+          "Failed to update mentor profile",
+          leftBarIndicatorColor: ColorStyle().errorColors,
         );
+      } finally {
+        setState(() {
+          isLoading = false;
+        });
       }
+    } else {
+      // Show Snackbar if the form is not valid
+      showTopSnackBar(
+        context,
+        "Semua field harus diisi",
+        leftBarIndicatorColor: ColorStyle().errorColors,
+      );
     }
   }
 
@@ -518,12 +530,14 @@ class _RegisterUlangMentorScreenState extends State<RegisterUlangMentorScreen> {
   // apply button and navigate to next page
   Widget _applyButton() {
     return Center(
-      child: ElevatedButtonWidget(
-        onPressed: () {
-          _updateMentor();
-        },
-        title: "Kitim",
-      ),
+      child: isLoading
+          ? const CircularProgressIndicator()
+          : ElevatedButtonWidget(
+              onPressed: () {
+                _updateMentor();
+              },
+              title: "Apply",
+            ),
     );
   }
 }

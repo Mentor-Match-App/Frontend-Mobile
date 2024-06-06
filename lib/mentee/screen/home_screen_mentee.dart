@@ -396,19 +396,27 @@ class _HomeMenteeScreenState extends State<HomeMenteeScreen> {
                               mentorSessionData.mentors!
                                           .where((mentor) => mentor.session!
                                               .any((session) =>
-                                                  session.isActive == true))
+                                                  session.isActive == true &&
+                                                  DateTime.parse(
+                                                          session.dateTime!)
+                                                      .isAfter(DateTime.now())))
                                           .length >
                                       6
                                   ? 6
                                   : mentorSessionData.mentors!
                                       .where((mentor) => mentor.session!.any(
                                           (session) =>
-                                              session.isActive == true))
+                                              session.isActive == true &&
+                                              DateTime.parse(session.dateTime!)
+                                                  .isAfter(DateTime.now())))
                                       .length,
                               (index) {
                                 final mentor = mentorSessionData.mentors!
                                     .where((mentor) => mentor.session!.any(
-                                        (session) => session.isActive == true))
+                                        (session) =>
+                                            session.isActive == true &&
+                                            DateTime.parse(session.dateTime!)
+                                                .isAfter(DateTime.now())))
                                     .toList()[index];
 
                                 final currentExperience =
@@ -416,30 +424,36 @@ class _HomeMenteeScreenState extends State<HomeMenteeScreen> {
                                   (experience) =>
                                       experience.isCurrentJob ?? false,
                                   orElse: () =>
-                                      Experience(), // Menyediakan default Experience jika tidak ditemukan
+                                      Experience(), // Default Experience if not found
                                 );
 
-                                //buat session active ketika isActive = true
+                                // Filter sessions that are active and scheduled for a future time
                                 final activeSessions = mentor.session!
-                                    .where((s) => s.isActive == true)
+                                    .where((s) =>
+                                        s.isActive == true &&
+                                        DateTime.parse(s.dateTime!)
+                                            .isAfter(DateTime.now()))
                                     .toList();
-                                //// buat session full apabila jumlah participant sudah mencapai maxParticipants
+
+                                // Check if any of the active sessions are full
                                 final isSessionFull =
                                     activeSessions.isNotEmpty &&
                                         activeSessions.any((session) =>
                                             session.participant!.length >=
                                             session.maxParticipants!);
 
-                                ///numberOfParticipants = jumlah participant yang sudah join
+                                // Number of participants in the first active session
                                 final numberOfParticipants = activeSessions
                                         .isNotEmpty
                                     ? activeSessions.first.participant!.length
                                     : 0;
-                                ////// button color is full //////
+
+                                // Determine button color based on session capacity
                                 final Color buttonColor = isSessionFull
                                     ? ColorStyle().disableColors
                                     : ColorStyle().primaryColors;
-                                ////// slot///////
+
+                                // Determine available slots in the first active session
                                 SessionData sessionElement =
                                     mentor.session!.first;
                                 int maxParticipants =
