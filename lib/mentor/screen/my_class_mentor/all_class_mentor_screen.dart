@@ -139,12 +139,24 @@ class _AllClassMentorScreenState extends State<AllClassMentorScreen> {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Container(
-              height: MediaQuery.of(context).size.height / 2.0,
-              child: Center(child: CircularProgressIndicator()));
+            height: MediaQuery.of(context).size.height / 2.0,
+            child: Center(child: CircularProgressIndicator()),
+          );
         } else if (snapshot.hasError) {
           return Text("Error: ${snapshot.error}");
-        } else if (snapshot.hasData && snapshot.data!.user?.userClass == null) {
-          var userClass = snapshot.data!.user!.userClass!;
+        } else if (snapshot.hasData) {
+          var userClass = snapshot.data!.user?.userClass;
+          if (userClass == null || userClass.isEmpty) {
+            return SizedBox(
+              width: double.infinity,
+              height: MediaQuery.of(context).size.height / 2.0,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child:
+                    Center(child: Text('Kamu belum memiliki kelas saat ini')),
+              ),
+            );
+          }
           return SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.only(
@@ -247,7 +259,7 @@ class _AllClassMentorScreenState extends State<AllClassMentorScreen> {
                               Text(
                                 //nama kelas
                                 data.name ?? '',
-                               style: FontFamily().boldText.copyWith(
+                                style: FontFamily().boldText.copyWith(
                                     fontSize: 14,
                                     color: ColorStyle().blackColors),
                               ),
@@ -258,7 +270,7 @@ class _AllClassMentorScreenState extends State<AllClassMentorScreen> {
                                       color: ColorStyle().blackColors,
                                     ),
                               ),
-                      
+
                               const SizedBox(height: 4),
                               Text(
                                 //durationIndays
@@ -267,7 +279,7 @@ class _AllClassMentorScreenState extends State<AllClassMentorScreen> {
                                       color: ColorStyle().blackColors,
                                     ),
                               ),
-                      
+
                               // buat align text button di kanan menuju DetailMyclass namun aoabila statusnya rejected maka ke editrejectedClaas
                             ],
                           ),

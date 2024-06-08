@@ -6,7 +6,6 @@ class MentorUpdateService {
   Dio dio = Dio();
 
   Future<void> updateMentor({
-    required String mentorId,
     required String gender,
     required String job,
     required String company,
@@ -23,7 +22,6 @@ class MentorUpdateService {
     final token = prefs.getString('token') ?? '';
     final userId = prefs.getString('userId') ?? '';
 
-    // Ensure headers are correctly set
     dio.options.headers = {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $token',
@@ -33,7 +31,6 @@ class MentorUpdateService {
       final response = await dio.patch(
         "$baseUrl/users/mentor/$userId/register-update",
         data: {
-          "mentorId": mentorId,
           "gender": gender,
           "job": job,
           "company": company,

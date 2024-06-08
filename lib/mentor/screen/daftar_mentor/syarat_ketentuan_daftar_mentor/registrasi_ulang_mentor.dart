@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:mentormatch_apps/mentor/model/profile_model.dart';
 import 'package:mentormatch_apps/mentor/screen/daftar_mentor/verification_regist.dart';
 import 'package:mentormatch_apps/mentor/service/profile_service.dart';
-
 import 'package:mentormatch_apps/mentor/service/reregistration_mentor_service.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
@@ -40,7 +39,6 @@ class _RegisterUlangMentorScreenState extends State<RegisterUlangMentorScreen> {
       TextEditingController();
   final TextEditingController _accountNameController = TextEditingController();
   bool isLoading = false;
-  String _mentorid = "";
 
   String _name = "";
   String _selectedGender = '';
@@ -54,7 +52,7 @@ class _RegisterUlangMentorScreenState extends State<RegisterUlangMentorScreen> {
   String accountName = "";
   List<String> skills = [];
   // list experience with role and experienceCompany
-  List<Map<String, String>> experience = [];
+  List<Map<String, String>> experiences = [];
 
   /// ambil data profile
   final ProfileService mentorService = ProfileService();
@@ -89,7 +87,6 @@ class _RegisterUlangMentorScreenState extends State<RegisterUlangMentorScreen> {
     _skillController.dispose();
     _roleController.dispose();
     _experienceCompanyController.dispose();
-    _mentorid = "";
 
     super.dispose();
   }
@@ -97,8 +94,6 @@ class _RegisterUlangMentorScreenState extends State<RegisterUlangMentorScreen> {
   void _loadProfileData() async {
     final profileData = await mentorService.getMentorProfile();
     setState(() {
-      //id mentor
-      _mentorid = profileData.user!.id!;
       //gender
       _selectedGender = profileData.user!.gender ?? '';
       _jobController.text = profileData.user!.experiences
@@ -119,10 +114,12 @@ class _RegisterUlangMentorScreenState extends State<RegisterUlangMentorScreen> {
       _accountNameController.text = profileData.user?.accountName ?? '';
       _skills.addAll(
           profileData.user?.skills?.map((skill) => {'skill': skill}) ?? []);
-      experience.addAll(profileData.user?.experiences?.map((exp) => {
-                'role': exp.jobTitle ?? '',
-                'experienceCompany': exp.company ?? ''
-              }) ??
+      experiences.addAll(profileData.user?.experiences
+              ?.where((experience) => experience.isCurrentJob == false)
+              .map((exp) => {
+                    'role': exp.jobTitle ?? '',
+                    'experienceCompany': exp.company ?? ''
+                  }) ??
           []);
     });
   }
@@ -139,7 +136,7 @@ class _RegisterUlangMentorScreenState extends State<RegisterUlangMentorScreen> {
   void _addExperience() {
     if (_formKey.currentState!.validate()) {
       setState(() {
-        experience.add({
+        experiences.add({
           'role': _roleController.text,
           'experienceCompany': _experienceCompanyController.text
         });
@@ -155,43 +152,25 @@ class _RegisterUlangMentorScreenState extends State<RegisterUlangMentorScreen> {
         isLoading = true;
       });
 
-      final profileData = await mentorService.getMentorProfile();
       try {
         if (mounted) {
           await MentorUpdateService().updateMentor(
-            accountNumber: profileData.user?.accountName ?? '',
-            accountName: profileData.user?.accountNumber ?? '',
-            gender: profileData.user?.gender ?? '',
-            mentorId: profileData.user?.id ?? '',
-            portfolio: profileData.user?.portofolio ?? '',
-            job: profileData.user?.experiences
-                    ?.firstWhere((element) => element.isCurrentJob == true,
-                        orElse: () => ExperienceMentor())
-                    .jobTitle ??
-                '',
-            company: profileData.user?.experiences
-                    ?.firstWhere((element) => element.isCurrentJob == true,
-                        orElse: () => ExperienceMentor())
-                    .company ??
-                '',
-            location: profileData.user?.location ?? '',
-            skills: profileData.user?.skills ?? [],
-            about: profileData.user?.about ?? '',
-            linkedin: profileData.user?.linkedin ?? '',
-            experiences: profileData.user?.experiences
-                    ?.map((exp) => {
-                          'role': exp.jobTitle ?? '',
-                          'experienceCompany': exp.company ?? ''
-                        })
-                    .toList() ??
-                [],
+            gender: _selectedGender,
+            job: _jobController.text,
+            company: _companyController.text,
+            location: _locationController.text,
+            skills: _skills.map((skill) => skill['skill']!).toList(),
+            linkedin: _linkedinController.text,
+            portfolio: _portofolioController.text,
+            about: _aboutController.text,
+            accountNumber: _accountNumberController.text,
+            accountName: _accountNameController.text,
+            experiences: experiences,
           );
 
-          // Show SnackBar if the update is successful
           showTopSnackBar(context, "Registration successful",
               leftBarIndicatorColor: ColorStyle().succesColors);
 
-          // Navigate to the verification page
           Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(
@@ -201,7 +180,6 @@ class _RegisterUlangMentorScreenState extends State<RegisterUlangMentorScreen> {
           );
         }
       } catch (error) {
-        // Show error message if there is an error updating the mentor profile
         print('Error updating mentor profile: $error');
         showTopSnackBar(
           context,
@@ -465,7 +443,7 @@ class _RegisterUlangMentorScreenState extends State<RegisterUlangMentorScreen> {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
-        children: experience.map((exp) => _buildExperienceChip(exp)).toList(),
+        children: experiences.map((exp) => _buildExperienceChip(exp)).toList(),
       ),
     );
   }
@@ -481,7 +459,7 @@ class _RegisterUlangMentorScreenState extends State<RegisterUlangMentorScreen> {
         backgroundColor: ColorStyle().primaryColors,
         deleteIcon: const Icon(Icons.close, size: 12),
         onDeleted: () {
-          setState(() => experience.remove(exp));
+          setState(() => experiences.remove(exp));
         },
       ),
     );
@@ -527,7 +505,6 @@ class _RegisterUlangMentorScreenState extends State<RegisterUlangMentorScreen> {
     );
   }
 
-  // apply button and navigate to next page
   Widget _applyButton() {
     return Center(
       child: isLoading

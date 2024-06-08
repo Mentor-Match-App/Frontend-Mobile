@@ -5,7 +5,6 @@ import 'package:mentormatch_apps/mentor/service/profile_service.dart';
 import 'package:mentormatch_apps/preferences/%20preferences_helper.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
 
-
 class VerificationFormRegistScreen extends StatefulWidget {
   VerificationFormRegistScreen({Key? key}) : super(key: key);
 
@@ -67,10 +66,22 @@ class _VerificationFormRegistScreenState
               isLoading
                   ? CircularProgressIndicator()
                   : _userType == 'PendingMentor'
-                      ? Text(
-                          'Akun Anda masih dalam proses verifikasi.',
-                          style: FontFamily().regularText,
-                          textAlign: TextAlign.center,
+                      ? Column(
+                          children: [
+                            Text(
+                              'Akun Anda masih dalam proses verifikasi.',
+                              style: FontFamily().regularText,
+                              textAlign: TextAlign.center,
+                            ),
+                            ElevatedButton(
+                                onPressed: () {
+                                  setState(() {
+                                    isLoading = true;
+                                    _loadUserType();
+                                  });
+                                },
+                                child: Text("Refresh")),
+                          ],
                         )
                       : _userType == 'RejectedMentor'
                           ? Column(

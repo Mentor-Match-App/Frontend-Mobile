@@ -6,6 +6,7 @@ import 'package:mentormatch_apps/mentor/service/my_class_create_mentor_service.d
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
 
+// Enum to define different class statuses
 enum ClassStatus { active, inactive, scheduled }
 
 class PremiumClassMentorScreen extends StatefulWidget {
@@ -17,6 +18,7 @@ class PremiumClassMentorScreen extends StatefulWidget {
 }
 
 class _PremiumClassMentorScreenState extends State<PremiumClassMentorScreen> {
+  // Future to hold the fetched class data
   late Future<MyClassMentorMondel> classData;
 
   @override
@@ -26,6 +28,7 @@ class _PremiumClassMentorScreenState extends State<PremiumClassMentorScreen> {
     classData = ListClassMentor().fetchClassData();
   }
 
+  // Method to determine the class status based on dates and transactions
   ClassStatus getClassStatus(AllClass classData) {
     DateTime now = DateTime.now();
     DateTime? startDate = classData.startDate != null
@@ -34,30 +37,43 @@ class _PremiumClassMentorScreenState extends State<PremiumClassMentorScreen> {
     DateTime? endDate =
         classData.endDate != null ? DateTime.parse(classData.endDate!) : null;
 
-    // Memeriksa apakah ada transaksi yang disetujui sebelum tanggal mulai
+    // Check if there is any approved transaction before the start date
     bool hasApprovedTransactionBeforeStart = classData.transactions?.any(
             (transaction) =>
                 transaction.paymentStatus == "Approved" &&
                 (startDate == null || now.isBefore(startDate))) ??
         false;
 
+    print("Class Name: ${classData.name}");
+    print("Start Date: $startDate");
+    print("End Date: $endDate");
+    print(
+        "Approved Transactions Before Start: $hasApprovedTransactionBeforeStart");
+
     if (startDate != null && endDate != null) {
       if (now.isAfter(startDate) && now.isBefore(endDate)) {
+        print("Status: Active");
         return ClassStatus.active;
       } else if (hasApprovedTransactionBeforeStart) {
-        // Kondisi untuk transaksi disetujui tetapi kelas belum dimulai
+        // Condition for approved transactions but class hasn't started
+        print("Status: Scheduled (Approved transactions but hasn't started)");
         return ClassStatus.scheduled;
       } else if (now.isBefore(startDate)) {
-        return ClassStatus.scheduled;
+        print(
+            "Status: Inactive (Before Start Date and No Approved Transactions)");
+        return ClassStatus.inactive;
       } else if (now.isAfter(endDate)) {
+        print("Status: Inactive");
         return ClassStatus.inactive;
       }
     } else if (hasApprovedTransactionBeforeStart) {
-      // Jika tanggal tidak diatur dengan benar, tetapi ada transaksi yang disetujui
+      // If dates are not set correctly but there are approved transactions
+      print("Status: Scheduled (Dates not set but approved transactions)");
       return ClassStatus.scheduled;
     }
 
-    // Jika tidak ada tanggal yang diatur atau kondisi lainnya tidak terpenuhi
+    // Default to inactive if no other condition is met
+    print("Status: Inactive");
     return ClassStatus.inactive;
   }
 
@@ -72,23 +88,49 @@ class _PremiumClassMentorScreenState extends State<PremiumClassMentorScreen> {
               child: Center(child: CircularProgressIndicator()));
         } else if (snapshot.hasError) {
           return Text("Error: ${snapshot.error}");
-        } else if (snapshot.hasData && snapshot.data!.user?.userClass == null) {
+        } else if (snapshot.hasData && snapshot.data!.user?.userClass != null) {
           var userClass = snapshot.data!.user!.userClass!;
+          var filteredClasses = userClass.where((classData) {
+            var status = getClassStatus(classData);
+            return status == ClassStatus.scheduled ||
+                status == ClassStatus.active;
+          }).toList();
+
+          if (filteredClasses.length == 0) {
+            return SizedBox(
+              width: double.infinity,
+              height: MediaQuery.of(context).size.height / 2.0,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Center(
+                  child: Text('Kamu belum memiliki kelas saat ini'),
+                ),
+              ),
+            );
+          }
+
+          print("Filtered Classes Length: ${filteredClasses.length}");
+          print(
+              "Filtered Classes: ${filteredClasses.map((e) => e.name).toList()}");
+
           return SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.only(
                   left: 16.0, right: 16.0, top: 16.0, bottom: 4.0),
               child: Column(
-                children: userClass.map((classData) {
-                  // Filtering transactions with "Approved" payment status
+                children: filteredClasses.map((classData) {
                   var approvedTransactions = classData.transactions
                           ?.where((transaction) =>
                               transaction.paymentStatus == "Approved")
                           .toList() ??
                       [];
 
+                  print("Class: ${classData.name}");
+                  print(
+                      "Approved Transactions: ${approvedTransactions.length}");
+
                   if (approvedTransactions.isEmpty) {
-                    return Container(); // Return an empty container if no transactions match
+                    return Container();
                   }
 
                   String menteeNames = approvedTransactions
@@ -97,7 +139,6 @@ class _PremiumClassMentorScreenState extends State<PremiumClassMentorScreen> {
 
                   ClassStatus status = getClassStatus(classData);
 
-                  // Decide button color and title based on class status
                   Color buttonColor;
                   String buttonText;
                   switch (status) {
@@ -105,14 +146,13 @@ class _PremiumClassMentorScreenState extends State<PremiumClassMentorScreen> {
                       buttonColor = ColorStyle().succesColors;
                       buttonText = "Active";
                       break;
-                    case ClassStatus.inactive:
+                    case ClassStatus.scheduled:
                       buttonColor = ColorStyle().secondaryColors;
                       buttonText = "Scheduled";
                       break;
                     default:
-                      buttonColor =
-                          ColorStyle().secondaryColors; // Default color
-                      buttonText = "Scheduled"; // Default text
+                      buttonColor = ColorStyle().secondaryColors;
+                      buttonText = "Scheduled";
                   }
 
                   return GestureDetector(
@@ -212,7 +252,7 @@ class _PremiumClassMentorScreenState extends State<PremiumClassMentorScreen> {
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child:
-                    Center(child: Text('Kamu belum memiliki kelas saat ini')),
+                    Center(child: Text('kamu belum memiliki kelas saat ini')),
               ));
         }
       },

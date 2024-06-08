@@ -1,5 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:mentormatch_apps/mentor/screen/create_class_and_session/form_create_session.dart';
 import 'package:mentormatch_apps/mentor/screen/daftar_mentor/syarat_ketentuan_daftar_mentor/persetujuan_1.dart';
 import 'package:mentormatch_apps/mentor/screen/notification_mentor_screen.dart';
 import 'package:mentormatch_apps/mentor/service/notification_service.dart';
@@ -305,7 +306,7 @@ class _HomeMentorScreenState extends State<HomeMentorScreen> {
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) =>
-                                        PersetujuanPremiClassMentor(),
+                                        FormCreateSessionScreen(),
                                   ),
                                 );
                               },

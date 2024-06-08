@@ -1,5 +1,6 @@
-// preferences_helper.dart
+import 'dart:convert';
 
+import 'package:mentormatch_apps/mentee/model/community_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UserPreferences {
@@ -12,6 +13,7 @@ class UserPreferences {
   static const _keyPhotoUrl = 'photoUrl';
   static const _keyUserType = 'userType';
   static const _keyIsRoleJustSelected = 'isRoleJustSelected';
+  static const _keyCommunityCache = 'community_cache';
 
   static Future init() async =>
       _preferences = await SharedPreferences.getInstance();
@@ -57,10 +59,24 @@ class UserPreferences {
     return token != null && token.isNotEmpty;
   }
 
-  //// logout ///
-  // Di dalam class UserPreferences
   static Future clearPreferences() async {
-    // clearkan semuanya
     await _preferences.clear();
+  }
+
+  // Menyimpan cache komunitas
+  static Future setCommunityCache(List<Community> communities) async {
+    final String encodedData = jsonEncode(
+      communities.map((community) => community.toMap()).toList(),
+    );
+    await _preferences.setString(_keyCommunityCache, encodedData);
+  }
+
+  // Mengambil cache komunitas
+  static List<Community>? getCommunityCache() {
+    final String? encodedData = _preferences.getString(_keyCommunityCache);
+    if (encodedData == null) return null;
+
+    final List<dynamic> decodedData = jsonDecode(encodedData);
+    return decodedData.map((json) => Community.fromMap(json)).toList();
   }
 }

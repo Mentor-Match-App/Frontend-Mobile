@@ -30,9 +30,11 @@ class _CommunityMentorScreenState extends State<CommunityMentorScreen> {
           await _notificationService.fetchNotificationsForCurrentUser();
       final unreadCount =
           notifications.where((notification) => !notification.isRead!).length;
-      setState(() {
-        _unreadNotificationsCount = unreadCount;
-      });
+      if (mounted) {
+        setState(() {
+          _unreadNotificationsCount = unreadCount;
+        });
+      }
     } catch (e) {
       print(e); // Handle error appropriately
     }
