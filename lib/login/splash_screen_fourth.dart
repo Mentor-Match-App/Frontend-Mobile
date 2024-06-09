@@ -14,64 +14,67 @@ class SplashScreenFourth extends StatefulWidget {
 class _SplashScreenFourthState extends State<SplashScreenFourth> {
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Positioned(
-          top: 50,
-          left: -300,
-          right: 0,
-          child: ClipPath(
-            clipper: HalfCircleClipper(),
-            child: Container(
-              height: 400,
-              decoration: BoxDecoration(
-                color: ColorStyle().tertiaryColors,
-                shape: BoxShape.circle,
+    return Scaffold(
+      backgroundColor: ColorStyle().tertiaryColors,
+      body: Stack(
+        children: [
+          Positioned(
+            top: 50,
+            left: -300,
+            right: 0,
+            child: ClipPath(
+              clipper: HalfCircleClipper(),
+              child: Container(
+                height: 400,
+                decoration: BoxDecoration(
+                  color: ColorStyle().tertiaryColors,
+                  shape: BoxShape.circle,
+                ),
               ),
             ),
           ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                const SizedBox(
-                  height: 180,
-                ),
-                Image.asset(
-                  'assets/Handoff/ilustrator/community.png',
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(24),
-                  child: Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      border: Border(
-                        left: BorderSide(
-                          color: ColorStyle().disableColors,
-                          width: 1,
+          Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  const SizedBox(
+                    height: 180,
+                  ),
+                  Image.asset(
+                    'assets/Handoff/ilustrator/community.png',
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(24),
+                    child: Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        border: Border(
+                          left: BorderSide(
+                            color: ColorStyle().disableColors,
+                            width: 1,
+                          ),
                         ),
                       ),
+                      child: Text(
+                          'Temukan mentor yang berpengalaman dalam tingkat pendidikan Anda, dari SD hingga perguruan tinggi.',
+                          style: FontFamily().regularText),
                     ),
-                    child: Text(
-                        'Temukan mentor yang berpengalaman dalam tingkat pendidikan Anda, dari SD hingga perguruan tinggi.',
-                        style: FontFamily().regularText),
                   ),
-                ),
-                ElevatedButtonWidget(
-                  title: 'Get Started',
-                  onPressed: () {
-                    Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(builder: (context) => LoginScreen()));
-                  },
-                )
-              ],
+                  ElevatedButtonWidget(
+                    title: 'Get Started',
+                    onPressed: () {
+                      Navigator.of(context).pushReplacement(MaterialPageRoute(
+                          builder: (context) => LoginScreen()));
+                    },
+                  )
+                ],
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
