@@ -8,8 +8,8 @@ import 'package:url_launcher/url_launcher.dart';
 class ListEvaluasiMentee extends StatefulWidget {
   final String nameMentee;
   final String currentMenteeId;
-
   final String classId;
+
   ListEvaluasiMentee({
     Key? key,
     required this.nameMentee,
@@ -69,22 +69,30 @@ class _ListEvaluasiMenteeState extends State<ListEvaluasiMentee> {
               itemBuilder: (context, index) {
                 var evaluations = userClass[index].evaluations ?? [];
 
-                // Filter evaluasi yang memiliki feedback
-                var evaluationsWithFeedback = evaluations
-                    .where((evaluation) =>
-                        evaluation.feedbacks != null &&
-                        evaluation.feedbacks!.isNotEmpty)
-                    .toList();
-                // Filter evaluasi yang tidak memiliki feedback
-                var evaluationsWithoutFeedback = evaluations
-                    .where((evaluation) =>
-                        evaluation.feedbacks == null ||
-                        evaluation.feedbacks!.isEmpty)
-                    .toList();
+                // Filter evaluasi yang memiliki feedback untuk currentMenteeId
+                var filteredEvaluations = evaluations.where((evaluation) {
+                  var feedbacksForCurrentMentee = evaluation.feedbacks
+                          ?.where((feedback) =>
+                              feedback.menteeId == widget.currentMenteeId)
+                          .toList() ??
+                      [];
+                  return feedbacksForCurrentMentee.isNotEmpty;
+                }).toList();
+
+                // Filter evaluasi yang tidak memiliki feedback untuk currentMenteeId
+                var evaluationsWithoutFeedback =
+                    evaluations.where((evaluation) {
+                  var feedbacksForCurrentMentee = evaluation.feedbacks
+                          ?.where((feedback) =>
+                              feedback.menteeId == widget.currentMenteeId)
+                          .toList() ??
+                      [];
+                  return feedbacksForCurrentMentee.isEmpty;
+                }).toList();
 
                 // Gabungkan kembali evaluasi dengan feedback di atas
                 var sortedEvaluations = [
-                  ...evaluationsWithFeedback,
+                  ...filteredEvaluations,
                   ...evaluationsWithoutFeedback
                 ];
 
@@ -174,8 +182,7 @@ class _ListEvaluasiMenteeState extends State<ListEvaluasiMentee> {
                                         ],
                                       ),
                                       const SizedBox(height: 4),
-                                      ...(evaluation.feedbacks != null &&
-                                              evaluation.feedbacks!.isNotEmpty)
+                                      ...(feedbacksForCurrentMentee.isNotEmpty)
                                           ? [
                                               Padding(
                                                 padding: const EdgeInsets.only(
@@ -183,9 +190,9 @@ class _ListEvaluasiMenteeState extends State<ListEvaluasiMentee> {
                                                 child: Column(
                                                   crossAxisAlignment:
                                                       CrossAxisAlignment.start,
-                                                  children: evaluation
-                                                      .feedbacks!
-                                                      .map((feedback) {
+                                                  children:
+                                                      feedbacksForCurrentMentee
+                                                          .map((feedback) {
                                                     return Column(
                                                       crossAxisAlignment:
                                                           CrossAxisAlignment
@@ -241,8 +248,7 @@ class _ListEvaluasiMenteeState extends State<ListEvaluasiMentee> {
                             ),
                             Align(
                               alignment: Alignment.bottomRight,
-                              child: evaluation.feedbacks != null &&
-                                      evaluation.feedbacks!.isNotEmpty
+                              child: feedbacksForCurrentMentee.isNotEmpty
                                   ? SizedBox(
                                       height: 40,
                                       width: 160,

@@ -8,16 +8,16 @@ import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
 import 'package:mentormatch_apps/style/text.dart';
 import 'package:mentormatch_apps/widget/button.dart';
-import 'package:mentormatch_apps/widget/flushs_bar_widget.dart';
+import 'package:mentormatch_apps/widget/flush_bar_widget.dart';
 
 import '../../../model/my_class_mentor_model.dart';
 
-class DetailEvaluastionMenteeMentorScreen extends StatefulWidget {
+class DetailEvaluationMenteeMentorScreen extends StatefulWidget {
   final String menteeName;
   final String currentMenteeId;
   final String classId;
 
-  DetailEvaluastionMenteeMentorScreen({
+  DetailEvaluationMenteeMentorScreen({
     Key? key,
     required this.menteeName,
     required this.currentMenteeId,
@@ -25,12 +25,12 @@ class DetailEvaluastionMenteeMentorScreen extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<DetailEvaluastionMenteeMentorScreen> createState() =>
-      _DetailEvaluastionMenteeMentorScreenState();
+  State<DetailEvaluationMenteeMentorScreen> createState() =>
+      _DetailEvaluationMenteeMentorScreenState();
 }
 
-class _DetailEvaluastionMenteeMentorScreenState
-    extends State<DetailEvaluastionMenteeMentorScreen> {
+class _DetailEvaluationMenteeMentorScreenState
+    extends State<DetailEvaluationMenteeMentorScreen> {
   List<String> listMateriEvaluasi = [];
   String? selectedMateriFeedback;
   String? selectedEvaluationId;

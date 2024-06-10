@@ -9,7 +9,7 @@ import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
 import 'package:mentormatch_apps/style/text.dart';
 import 'package:mentormatch_apps/widget/category_card.dart';
-import 'package:mentormatch_apps/widget/flushs_bar_widget.dart';
+import 'package:mentormatch_apps/widget/flush_bar_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DetailMyClassMenteeScreen extends StatefulWidget {
@@ -328,14 +328,22 @@ class _DetailMyClassMenteeScreenState extends State<DetailMyClassMenteeScreen> {
                           title: "Meeting",
                           icon: 'assets/Handoff/icon/MyClass/meeting_icon.png',
                           onTap: () {
-                            if (widget.linkZoom == null ||
-                                widget.linkZoom!.isEmpty) {
+                            if (widget.classData.address != null ||
+                                widget.classData.address!.isNotEmpty) {
                               showTopSnackBar(
-                                  context, "Link Zoom belum tersedia",
+                                  context, "Kelas ini dilakukan secara offline",
                                   leftBarIndicatorColor:
                                       ColorStyle().errorColors);
                             } else {
-                              _launchURL(widget.linkZoom!);
+                              if (widget.linkZoom == null ||
+                                  widget.linkZoom!.isEmpty) {
+                                showTopSnackBar(
+                                    context, "Link Zoom belum tersedia",
+                                    leftBarIndicatorColor:
+                                        ColorStyle().errorColors);
+                              } else {
+                                _launchURL(widget.linkZoom!);
+                              }
                             }
                           },
                         ),

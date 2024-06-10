@@ -7,7 +7,7 @@ import 'package:mentormatch_apps/style/text.dart';
 import 'package:mentormatch_apps/widget/button.dart';
 import 'package:mentormatch_apps/widget/category_card.dart';
 import 'package:mentormatch_apps/widget/experience_widget.dart';
-import 'package:mentormatch_apps/widget/flushs_bar_widget.dart';
+import 'package:mentormatch_apps/widget/flush_bar_widget.dart';
 import 'package:mentormatch_apps/widget/navbar.dart';
 import 'package:mentormatch_apps/widget/profile_avatar.dart';
 import 'package:mentormatch_apps/widget/review_widget.dart';
@@ -327,8 +327,7 @@ class _DetailMentorClassAllScreenState
                                             }
                                           // Tampilkan pesan jika slot penuh
                                           : () {
-                                              showTopSnackBar(
-                                                  context,
+                                              showTopSnackBar(context,
                                                   'Maaf, slot kelas ini sudah penuh',
                                                   leftBarIndicatorColor:
                                                       Colors.red);

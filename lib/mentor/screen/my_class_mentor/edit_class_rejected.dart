@@ -8,7 +8,7 @@ import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
 import 'package:mentormatch_apps/style/text.dart';
 import 'package:mentormatch_apps/widget/button.dart';
-import 'package:mentormatch_apps/widget/flushs_bar_widget.dart';
+import 'package:mentormatch_apps/widget/flush_bar_widget.dart';
 import 'package:mentormatch_apps/widget/textField.dart';
 import 'package:mentormatch_apps/widget/text_field_dropdown.dart';
 import 'package:mentormatch_apps/widget/time_picker_widget.dart';
@@ -316,7 +316,7 @@ class _EditRejectedClassState extends State<EditRejectedClass> {
                           height: 8,
                         ),
                         Text(
-                       widget.classData.rejectReason.toString(),
+                          widget.classData.rejectReason.toString(),
                           style: FontFamily().regularText,
                         ),
                       ],
@@ -657,6 +657,4 @@ class _EditRejectedClassState extends State<EditRejectedClass> {
     }
     return null;
   }
-
-  
 }

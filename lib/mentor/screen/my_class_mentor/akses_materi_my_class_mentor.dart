@@ -6,7 +6,7 @@ import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
 import 'package:mentormatch_apps/style/text.dart';
 import 'package:mentormatch_apps/widget/button.dart';
-import 'package:mentormatch_apps/widget/flushs_bar_widget.dart';
+import 'package:mentormatch_apps/widget/flush_bar_widget.dart';
 import 'package:mentormatch_apps/widget/textField.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -198,15 +198,15 @@ class _MyMateriMentorState extends State<MyMateriMentor> {
               ),
               TextFieldWidget(
                 controller: _materiPembelajaranController,
-                hintText: "nama topik materi evaluasi",
+                hintText: "nama topik materi pembelajaran",
               ),
               TittleTextField(
-                title: "Link Evaluasi",
+                title: "Link Materi Pembelajaran",
                 color: ColorStyle().secondaryColors,
               ),
               TextFieldWidget(
                 controller: _linkMateriPembelajaranController,
-                hintText: "masukkan link evaluasi",
+                hintText: "masukkan link materi pembelajaran",
               ),
               SizedBox(height: 12),
               Align(

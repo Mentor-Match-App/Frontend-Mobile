@@ -6,6 +6,7 @@ import 'package:mentormatch_apps/mentee/model/my_class_model.dart';
 import 'package:mentormatch_apps/mentor/service/my_class_service.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
+import 'package:mentormatch_apps/widget/flush_bar_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class MySessionBooking extends StatefulWidget {
@@ -212,8 +213,14 @@ class _MySessionBookingState extends State<MySessionBooking> {
                                       foregroundColor: ColorStyle().whiteColors,
                                     ),
                                     onPressed: () {
-                                      final zommLink = session.zoomLink ?? '';
-                                      _launchURL(zommLink);
+                                      final zoomLink = session.zoomLink ?? '';
+
+                                      if (zoomLink.isEmpty) {
+                                        showTopSnackBar(context,
+                                            'Zoom link belum tersedia');
+                                      } else {
+                                        _launchURL(zoomLink);
+                                      }
                                     },
                                     icon: Icon(Icons.link),
                                     label: Text('Join Session',

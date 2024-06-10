@@ -8,7 +8,7 @@ import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
 import 'package:mentormatch_apps/style/text.dart';
 import 'package:mentormatch_apps/widget/category_card.dart';
-import 'package:mentormatch_apps/widget/flushs_bar_widget.dart';
+import 'package:mentormatch_apps/widget/flush_bar_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DetailMyClassMentorScreen extends StatefulWidget {
@@ -343,14 +343,25 @@ class _DetailMyClassMentorScreenState extends State<DetailMyClassMentorScreen> {
                           title: "Meeting",
                           icon: 'assets/Handoff/icon/MyClass/meeting_icon.png',
                           onTap: () {
-                            if (widget.linkZoom == null ||
-                                widget.linkZoom!.isEmpty) {
+                            // if (widget.linkZoom == null ||
+                            //     widget.linkZoom!.isEmpty) {
+                            //   showTopSnackBar(
+                            //       context, "Link Zoom belum tersedia",
+                            //       leftBarIndicatorColor:
+                            //           ColorStyle().errorColors);
+                            // } else {
+                            //   _launchURL(widget.linkZoom!);
+                            // }
+                            // jika widget.classData.address != null atau widget.classData.address!.isEmpty tampilkan showTopSnackBar dengan pesan "Kelas ini dilakukan secara offline"
+
+                            if (widget.addressMentoring != null ||
+                                widget.addressMentoring!.isEmpty) {
                               showTopSnackBar(
-                                  context, "Link Zoom belum tersedia",
+                                  context, "Kelas ini dilakukan secara offline",
                                   leftBarIndicatorColor:
                                       ColorStyle().errorColors);
                             } else {
-                              _launchURL(widget.linkZoom!);
+                              _launchURL(widget.linkZoom);
                             }
                           },
                         ),
@@ -385,7 +396,6 @@ class _DetailMyClassMentorScreenState extends State<DetailMyClassMentorScreen> {
                                 builder: (context) => EvaluasiMentorScreen(
                                   feedbacks: widget.feedbacks,
                                   classId: widget.classid,
-                                  learningMaterial: widget.learningMaterial,
                                   transactions: widget.transactions,
                                   evaluasi: widget.evaluation,
                                 ),
