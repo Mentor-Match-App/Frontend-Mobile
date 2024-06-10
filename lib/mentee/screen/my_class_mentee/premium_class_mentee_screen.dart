@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mentormatch_apps/mentee/model/my_class_model.dart';
 import 'package:mentormatch_apps/mentee/screen/my_class_mentee/detail_my_class_mentee_screen.dart';
-import 'package:mentormatch_apps/mentee/screen/my_class_mentee/payment_error_screen.dart';
 import 'package:mentormatch_apps/mentor/service/my_class_service.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
@@ -29,21 +28,15 @@ class _PremiumClassMenteeScreenState extends State<PremiumClassMenteeScreen> {
         now.isBefore(startDate) && transaction.paymentStatus == "Approved";
     bool isClassFinished = now.isAfter(endDate);
 
-    if (transaction.paymentStatus == "Rejected") {
-      return 0; // Highest priority
-    } else if (isClassActive) {
+    if (isClassActive) {
       return 1;
     } else if (isClassScheduled) {
       return 2;
-    } else if (transaction.paymentStatus == "Pending") {
-      return 3;
     } else if (isClassFinished) {
-      return 4;
-    } else if (transaction.paymentStatus == "Expired") {
-      return 5;
+      return 3;
     }
 
-    return 6; // For other or unknown statuses
+    return 4;
   }
 
   @override
@@ -52,10 +45,9 @@ class _PremiumClassMenteeScreenState extends State<PremiumClassMenteeScreen> {
     _userData = BookingService().fetchUserTransactions().then((transactions) {
       transactions.sort((a, b) =>
           getClassStatusPriority(a).compareTo(getClassStatusPriority(b)));
-      return transactions.where((transaction) {
-        int priority = getClassStatusPriority(transaction);
-        return priority == 1 || priority == 2; // Only active and scheduled
-      }).toList();
+      return transactions
+          .where((transaction) => getClassStatusPriority(transaction) != 4)
+          .toList();
     });
   }
 
@@ -103,47 +95,31 @@ class _PremiumClassMenteeScreenState extends State<PremiumClassMenteeScreen> {
                   final classData = data.transactionClass!;
                   return GestureDetector(
                     onTap: () {
-                      if (statusButton == 0) {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => PaymentErrorScreenMentee(
-                              classname: classData.name ?? '',
-                              rejectReason: data.rejectReason.toString(),
-                              price: classData.price ?? 0,
-                              uniqueId: data.uniqueCode ?? 0,
-                            ),
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => DetailMyClassMenteeScreen(
+                            learningMaterial: classData.learningMaterial ?? [],
+                            endDate: DateTime.parse(classData.endDate ?? ''),
+                            startDate:
+                                DateTime.parse(classData.startDate ?? ''),
+                            targetLearning: classData.targetLearning ?? [],
+                            maxParticipants: classData.maxParticipants ?? 0,
+                            schedule: classData.schedule ?? '',
+                            mentorId: classData.mentorId ?? '',
+                            mentorPhoto: classData.mentor!.photoUrl ?? '',
+                            classData: classData,
+                            descriptionKelas: classData.description.toString(),
+                            terms: classData.terms ?? [],
+                            evaluasi: classData.evaluations ?? [],
+                            linkEvaluasi: classData.zoomLink ?? '',
+                            mentorName: classData.mentor!.name ?? '',
+                            linkZoom: classData.zoomLink ?? '',
+                            namaKelas: classData.name ?? '',
+                            periode: classData.durationInDays ?? 0,
                           ),
-                        );
-                      } else {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => DetailMyClassMenteeScreen(
-                              learningMaterial:
-                                  classData.learningMaterial ?? [],
-                              endDate: DateTime.parse(classData.endDate ?? ''),
-                              startDate:
-                                  DateTime.parse(classData.startDate ?? ''),
-                              targetLearning: classData.targetLearning ?? [],
-                              maxParticipants: classData.maxParticipants ?? 0,
-                              schedule: classData.schedule ?? '',
-                              mentorId: classData.mentorId ?? '',
-                              mentorPhoto: classData.mentor!.photoUrl ?? '',
-                              classData: classData,
-                              descriptionKelas:
-                                  classData.description.toString(),
-                              terms: classData.terms ?? [],
-                              evaluasi: classData.evaluations ?? [],
-                              linkEvaluasi: classData.zoomLink ?? '',
-                              mentorName: classData.mentor!.name ?? '',
-                              linkZoom: classData.zoomLink ?? '',
-                              namaKelas: classData.name ?? '',
-                              periode: classData.durationInDays ?? 0,
-                            ),
-                          ),
-                        );
-                      }
+                        ),
+                      );
                     },
                     child: Padding(
                       padding: const EdgeInsets.only(bottom: 8.0),
@@ -168,7 +144,10 @@ class _PremiumClassMenteeScreenState extends State<PremiumClassMenteeScreen> {
                                     "Active", ColorStyle().succesColors)
                               else if (statusButton == 2)
                                 createStatusButton(
-                                    "Scheduled", ColorStyle().secondaryColors),
+                                    "Scheduled", ColorStyle().secondaryColors)
+                              else if (statusButton == 3)
+                                createStatusButton(
+                                    "Finished", ColorStyle().disableColors),
                               SizedBox(height: 10),
                               Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,

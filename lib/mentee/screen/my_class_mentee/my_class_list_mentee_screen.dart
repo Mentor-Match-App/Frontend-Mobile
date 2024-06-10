@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mentormatch_apps/mentee/screen/my_class_mentee/all_class_mentee_screen.dart';
+import 'package:mentormatch_apps/mentee/screen/my_class_mentee/booking_class_mentee_screen.dart';
 import 'package:mentormatch_apps/mentee/screen/my_class_mentee/my_session_booking.dart';
 import 'package:mentormatch_apps/mentee/screen/my_class_mentee/premium_class_mentee_screen.dart';
 import 'package:mentormatch_apps/mentee/screen/notification_mentee_screen.dart';
@@ -40,25 +40,24 @@ class _MyClassMenteeListScreenState extends State<MyClassMenteeListScreen> {
     _fetchUnreadNotificationsCount();
   }
 
-  bool isAllClassActive = true;
-  bool isSessionActive = false; // Renamed for consistency
+  bool isBookingClassActive = true;
   bool isPremiumClassActive = false;
+  bool isSessionActive = false;
 
   void changeClass(String menu) {
     setState(() {
-      if (menu == "All Class") {
-        isAllClassActive = true;
+      if (menu == "Booking Class") {
+        isBookingClassActive = true;
+        isPremiumClassActive = false;
         isSessionActive = false;
-        isPremiumClassActive = false;
-      } else if (menu == "Session") {
-        // Corrected the condition
-        isAllClassActive = false;
-        isSessionActive = true;
-        isPremiumClassActive = false;
       } else if (menu == "Premium Class") {
-        isAllClassActive = false;
-        isSessionActive = false;
+        isBookingClassActive = false;
         isPremiumClassActive = true;
+        isSessionActive = false;
+      } else if (menu == "Session") {
+        isBookingClassActive = false;
+        isPremiumClassActive = false;
+        isSessionActive = true;
       }
     });
   }
@@ -133,9 +132,8 @@ class _MyClassMenteeListScreenState extends State<MyClassMenteeListScreen> {
                   Padding(
                     padding: const EdgeInsets.all(6.0),
                     child: Container(
-                      width: 80,
                       height: 38,
-                      decoration: isAllClassActive
+                      decoration: isBookingClassActive
                           ? BoxDecoration(
                               borderRadius: BorderRadius.circular(4),
                               color: ColorStyle().secondaryColors,
@@ -148,12 +146,12 @@ class _MyClassMenteeListScreenState extends State<MyClassMenteeListScreen> {
                             ),
                       child: TextButton(
                         onPressed: () {
-                          changeClass("All Class");
+                          changeClass("Booking Class");
                         },
                         child: Text(
-                          "All Class",
+                          "Booking Class",
                           style: FontFamily().boldText.copyWith(
-                                color: isAllClassActive
+                                color: isBookingClassActive
                                     ? ColorStyle().whiteColors
                                     : ColorStyle().secondaryColors,
                               ),
@@ -164,7 +162,6 @@ class _MyClassMenteeListScreenState extends State<MyClassMenteeListScreen> {
                   Padding(
                     padding: const EdgeInsets.all(6.0),
                     child: Container(
-                      width: 120,
                       height: 38,
                       decoration: isPremiumClassActive
                           ? BoxDecoration(
@@ -195,7 +192,6 @@ class _MyClassMenteeListScreenState extends State<MyClassMenteeListScreen> {
                   Padding(
                     padding: const EdgeInsets.all(6.0),
                     child: Container(
-                      width: 80,
                       height: 38,
                       decoration: isSessionActive
                           ? BoxDecoration(
@@ -228,13 +224,13 @@ class _MyClassMenteeListScreenState extends State<MyClassMenteeListScreen> {
             ),
             Column(
               children: [
-                isAllClassActive
-                    ? AllClassMenteeScreen()
+                isBookingClassActive
+                    ? BookingClassMenteeScreen()
                     : isPremiumClassActive
                         ? PremiumClassMenteeScreen()
                         : isSessionActive
                             ? MySessionBooking()
-                            : PremiumClassMenteeScreen(),
+                            : BookingClassMenteeScreen()
               ],
             )
           ],

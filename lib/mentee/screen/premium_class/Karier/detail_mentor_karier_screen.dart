@@ -7,6 +7,7 @@ import 'package:mentormatch_apps/style/text.dart';
 import 'package:mentormatch_apps/widget/button.dart';
 import 'package:mentormatch_apps/widget/category_card.dart';
 import 'package:mentormatch_apps/widget/experience_widget.dart';
+import 'package:mentormatch_apps/widget/flushs_bar_widget.dart';
 import 'package:mentormatch_apps/widget/navbar.dart';
 import 'package:mentormatch_apps/widget/profile_avatar.dart';
 import 'package:mentormatch_apps/widget/review_widget.dart';
@@ -126,7 +127,7 @@ class _DetailMentorKarierScreenState extends State<DetailMentorKarierScreen> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                      Icon(Icons.location_on,
+                            Icon(Icons.location_on,
                                 size: 16, color: ColorStyle().secondaryColors),
                             const SizedBox(width: 4),
                             Text(
@@ -164,9 +165,8 @@ class _DetailMentorKarierScreenState extends State<DetailMentorKarierScreen> {
                                 ),
                                 child: TextButton.icon(
                                   style: TextButton.styleFrom(
-                                      foregroundColor: ColorStyle().whiteColors
-                                    
-                                  ),
+                                      foregroundColor:
+                                          ColorStyle().whiteColors),
                                   onPressed: () {
                                     final linkedlnlink = widget.linkedin ?? '';
                                     _launchURL(linkedlnlink);
@@ -208,7 +208,7 @@ class _DetailMentorKarierScreenState extends State<DetailMentorKarierScreen> {
                           color: ColorStyle().primaryColors,
                         ),
                       ),
-                       const SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
                       SingleChildScrollView(
@@ -323,7 +323,12 @@ class _DetailMentorKarierScreenState extends State<DetailMentorKarierScreen> {
                                                 ),
                                               );
                                             }
-                                          : null, // Menonaktifkan tombol jika slot penuh
+                                          : () {
+                                              showTopSnackBar(context,
+                                                  'Maaf, slot kelas ini sudah penuh',
+                                                  leftBarIndicatorColor:
+                                                      Colors.red);
+                                            },
 
                                       title: kelas.name ?? 'No Class Name',
                                     ),

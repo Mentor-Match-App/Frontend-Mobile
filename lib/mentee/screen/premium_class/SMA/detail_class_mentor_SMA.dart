@@ -75,7 +75,7 @@ class _DetailClassMentorSMAState extends State<DetailClassMentorSMA> {
 
   @override
   Widget build(BuildContext context) {
-     final formattedPrice = NumberFormat('#,##0', 'id_ID').format(widget.price);
+    final formattedPrice = NumberFormat('#,##0', 'id_ID').format(widget.price);
     String formattedStartDate =
         DateFormat('dd MMMM yyyy').format(widget.startDate);
     String formattedEndDate = DateFormat('dd MMMM yyyy').format(widget.endDate);
@@ -220,7 +220,7 @@ class _DetailClassMentorSMAState extends State<DetailClassMentorSMA> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        TittleTextField(title: 'Jumlah Mentee dikelas'),
+                        TittleTextField(title: 'Kapasitas Kelas'),
                         Padding(
                           padding: const EdgeInsets.only(top: 2.0),
                           child: Text(
@@ -373,7 +373,7 @@ class _DetailClassMentorSMAState extends State<DetailClassMentorSMA> {
         ));
   }
 
-   void _showDialog(BuildContext context) {
+  void _showDialog(BuildContext context) {
     showDialog(
       context: context,
       builder: (BuildContext context) {

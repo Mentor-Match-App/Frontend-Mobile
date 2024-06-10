@@ -324,7 +324,10 @@ class _EvaluasiMentorScreenState extends State<EvaluasiMentorScreen> {
                 ),
                 Column(
                   children: List.generate(
-                    widget.transactions.length,
+                    widget.transactions
+                        .where((transaction) =>
+                            transaction.paymentStatus == 'Approved')
+                        .length,
                     (index) => Column(
                       children: [
                         Padding(

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:mentormatch_apps/mentee/screen/premium_class/sma/detail_class_mentor_SMA.dart';
 import 'package:mentormatch_apps/mentor/model/category_SMA_model.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
@@ -8,6 +7,7 @@ import 'package:mentormatch_apps/style/text.dart';
 import 'package:mentormatch_apps/widget/button.dart';
 import 'package:mentormatch_apps/widget/category_card.dart';
 import 'package:mentormatch_apps/widget/experience_widget.dart';
+import 'package:mentormatch_apps/widget/flushs_bar_widget.dart';
 import 'package:mentormatch_apps/widget/navbar.dart';
 import 'package:mentormatch_apps/widget/profile_avatar.dart';
 import 'package:mentormatch_apps/widget/review_widget.dart';
@@ -106,7 +106,7 @@ class _DetailMentorSMAScreenState extends State<DetailMentorSMAScreen> {
                               fontSize: 16,
                             ),
                       ),
-                     SizedBox(
+                      SizedBox(
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -124,7 +124,7 @@ class _DetailMentorSMAScreenState extends State<DetailMentorSMAScreen> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                      Icon(Icons.location_on,
+                            Icon(Icons.location_on,
                                 size: 16, color: ColorStyle().secondaryColors),
                             const SizedBox(width: 4),
                             Text(
@@ -205,7 +205,7 @@ class _DetailMentorSMAScreenState extends State<DetailMentorSMAScreen> {
                           color: ColorStyle().primaryColors,
                         ),
                       ),
-                       const SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
                       SingleChildScrollView(
@@ -227,9 +227,9 @@ class _DetailMentorSMAScreenState extends State<DetailMentorSMAScreen> {
                           color: ColorStyle().primaryColors,
                         ),
                       ),
-                     Padding(
+                      Padding(
                         padding: const EdgeInsets.all(8.0),
-                          child: widget.classes != null &&
+                        child: widget.classes != null &&
                                 widget.classes!.isNotEmpty
                             ? Column(
                                 children: widget.classes!
@@ -321,7 +321,12 @@ class _DetailMentorSMAScreenState extends State<DetailMentorSMAScreen> {
                                                 ),
                                               );
                                             }
-                                          : null, // Menonaktifkan tombol jika slot penuh
+                                          : () {
+                                              showTopSnackBar(context,
+                                                  'Maaf, slot kelas ini sudah penuh',
+                                                  leftBarIndicatorColor:
+                                                      Colors.red);
+                                            },
 
                                       title: kelas.name ?? 'No Class Name',
                                     ),
@@ -377,8 +382,10 @@ class _DetailMentorSMAScreenState extends State<DetailMentorSMAScreen> {
       return Center(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Text("Belum ada review",
-               style: FontFamily().regularText,),
+          child: Text(
+            "Belum ada review",
+            style: FontFamily().regularText,
+          ),
         ),
       );
     }

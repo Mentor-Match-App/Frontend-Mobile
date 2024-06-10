@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:mentormatch_apps/mentee/screen/premium_class/kuliah/detail_class_mentor_Kuliah_screen.dart';
 import 'package:mentormatch_apps/mentor/model/category_kuliah_model.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
@@ -8,6 +7,7 @@ import 'package:mentormatch_apps/style/text.dart';
 import 'package:mentormatch_apps/widget/button.dart';
 import 'package:mentormatch_apps/widget/category_card.dart';
 import 'package:mentormatch_apps/widget/experience_widget.dart';
+import 'package:mentormatch_apps/widget/flushs_bar_widget.dart';
 import 'package:mentormatch_apps/widget/navbar.dart';
 import 'package:mentormatch_apps/widget/profile_avatar.dart';
 import 'package:mentormatch_apps/widget/review_widget.dart';
@@ -109,7 +109,7 @@ class _DetailMentorKuliahScreenState extends State<DetailMentorKuliahScreen> {
                               fontSize: 16,
                             ),
                       ),
-                       SizedBox(
+                      SizedBox(
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -127,7 +127,7 @@ class _DetailMentorKuliahScreenState extends State<DetailMentorKuliahScreen> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                      Icon(Icons.location_on,
+                            Icon(Icons.location_on,
                                 size: 16, color: ColorStyle().secondaryColors),
                             const SizedBox(width: 4),
                             Text(
@@ -165,8 +165,8 @@ class _DetailMentorKuliahScreenState extends State<DetailMentorKuliahScreen> {
                                 ),
                                 child: TextButton.icon(
                                   style: TextButton.styleFrom(
-                                      foregroundColor: ColorStyle().whiteColors
-                                  ),
+                                      foregroundColor:
+                                          ColorStyle().whiteColors),
                                   onPressed: () {
                                     final linkedlnlink = widget.linkedin ?? '';
                                     _launchURL(linkedlnlink);
@@ -208,7 +208,7 @@ class _DetailMentorKuliahScreenState extends State<DetailMentorKuliahScreen> {
                           color: ColorStyle().primaryColors,
                         ),
                       ),
-                       const SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
                       SingleChildScrollView(
@@ -232,7 +232,7 @@ class _DetailMentorKuliahScreenState extends State<DetailMentorKuliahScreen> {
                       ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
-                       child: widget.classes != null &&
+                        child: widget.classes != null &&
                                 widget.classes!.isNotEmpty
                             ? Column(
                                 children: widget.classes!
@@ -324,7 +324,12 @@ class _DetailMentorKuliahScreenState extends State<DetailMentorKuliahScreen> {
                                                 ),
                                               );
                                             }
-                                          : null, // Menonaktifkan tombol jika slot penuh
+                                          : () {
+                                              showTopSnackBar(context,
+                                                  'Maaf, slot kelas ini sudah penuh',
+                                                  leftBarIndicatorColor:
+                                                      Colors.red);
+                                            },
 
                                       title: kelas.name ?? 'No Class Name',
                                     ),

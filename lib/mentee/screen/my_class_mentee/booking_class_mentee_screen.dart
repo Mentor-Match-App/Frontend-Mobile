@@ -11,49 +11,34 @@ import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class AllClassMenteeScreen extends StatefulWidget {
+class BookingClassMenteeScreen extends StatefulWidget {
   @override
-  _AllClassMenteeScreenState createState() => _AllClassMenteeScreenState();
+  _BookingClassMenteeScreenState createState() =>
+      _BookingClassMenteeScreenState();
 }
 
-class _AllClassMenteeScreenState extends State<AllClassMenteeScreen> {
+class _BookingClassMenteeScreenState extends State<BookingClassMenteeScreen> {
   Future<List<TransactionMyClass>>? _userData;
   int getClassStatusPriority(TransactionMyClass transaction) {
-    // Gunakan logika yang sama untuk menentukan status
-    DateTime now = DateTime.now();
-    DateTime startDate =
-        DateTime.parse(transaction.transactionClass?.startDate ?? '');
-    DateTime endDate =
-        DateTime.parse(transaction.transactionClass?.endDate ?? '');
-    bool isClassActive = now.isAfter(startDate) && now.isBefore(endDate);
-    bool isClassScheduled =
-        now.isBefore(startDate) && transaction.paymentStatus == "Approved";
-    bool isClassFinished = now.isAfter(endDate);
-
-    /// buat kelas rejected ketika paymente status rejected
-
-    /// Prioritize Rejected status
     if (transaction.paymentStatus == "Rejected") {
       return 0; // Highest priority
-    } else if (isClassActive) {
-      return 1;
-    } else if (isClassScheduled) {
-      return 2;
     } else if (transaction.paymentStatus == "Pending") {
-      return 3;
-    } else if (isClassFinished) {
-      return 4;
+      return 1;
     } else if (transaction.paymentStatus == "Expired") {
-      return 5;
+      return 2;
     }
-
-    return 6; // For other or unknown statuses
+    return 3;
   }
 
   @override
   void initState() {
     super.initState();
     _userData = BookingService().fetchUserTransactions().then((transactions) {
+      transactions = transactions.where((transaction) {
+        return transaction.paymentStatus == "Rejected" ||
+            transaction.paymentStatus == "Pending" ||
+            transaction.paymentStatus == "Expired";
+      }).toList();
       transactions.sort((a, b) =>
           getClassStatusPriority(a).compareTo(getClassStatusPriority(b)));
       return transactions;
@@ -74,7 +59,6 @@ class _AllClassMenteeScreenState extends State<AllClassMenteeScreen> {
     );
   }
 
-//// link zoom akses///
   _launchURL(String url) async {
     if (await canLaunch(url)) {
       await launch(url);
@@ -119,7 +103,7 @@ class _AllClassMenteeScreenState extends State<AllClassMenteeScreen> {
                             ),
                           ),
                         );
-                      } else if (statusButton == 3) {
+                      } else if (statusButton == 1) {
                         // Pending
                         Navigator.push(
                           context,
@@ -132,7 +116,7 @@ class _AllClassMenteeScreenState extends State<AllClassMenteeScreen> {
                             ),
                           ),
                         );
-                      } else if (statusButton == 5) {
+                      } else if (statusButton == 2) {
                         // Expired
                         Navigator.push(
                           context,
@@ -193,17 +177,8 @@ class _AllClassMenteeScreenState extends State<AllClassMenteeScreen> {
                                     "Rejected", ColorStyle().errorColors)
                               else if (statusButton == 1)
                                 createStatusButton(
-                                    "Active", ColorStyle().succesColors)
-                              else if (statusButton == 2)
-                                createStatusButton(
-                                    "Scheduled", ColorStyle().secondaryColors)
-                              else if (statusButton == 3)
-                                createStatusButton(
                                     "Pending", ColorStyle().pendingColors)
-                              else if (statusButton == 4)
-                                createStatusButton(
-                                    "Finished", ColorStyle().disableColors)
-                              else if (statusButton == 5)
+                              else if (statusButton == 2)
                                 createStatusButton(
                                     "Expired", ColorStyle().blackColors),
                               SizedBox(height: 10),

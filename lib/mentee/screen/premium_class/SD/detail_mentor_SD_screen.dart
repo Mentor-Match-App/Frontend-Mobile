@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:mentormatch_apps/mentee/screen/premium_class/sd/detail_class_mentor_SD_screen.dart';
 import 'package:mentormatch_apps/mentor/model/category_SD_model.dart';
-
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
 import 'package:mentormatch_apps/style/text.dart';
 import 'package:mentormatch_apps/widget/button.dart';
 import 'package:mentormatch_apps/widget/category_card.dart';
 import 'package:mentormatch_apps/widget/experience_widget.dart';
+import 'package:mentormatch_apps/widget/flushs_bar_widget.dart';
 import 'package:mentormatch_apps/widget/navbar.dart';
 import 'package:mentormatch_apps/widget/profile_avatar.dart';
 import 'package:mentormatch_apps/widget/review_widget.dart';
@@ -126,7 +126,7 @@ class _DetailMentorSDScreenState extends State<DetailMentorSDScreen> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                      Icon(Icons.location_on,
+                            Icon(Icons.location_on,
                                 size: 16, color: ColorStyle().secondaryColors),
                             const SizedBox(width: 4),
                             Text(
@@ -207,7 +207,7 @@ class _DetailMentorSDScreenState extends State<DetailMentorSDScreen> {
                           color: ColorStyle().primaryColors,
                         ),
                       ),
-                       const SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
                       SingleChildScrollView(
@@ -274,50 +274,61 @@ class _DetailMentorSDScreenState extends State<DetailMentorSDScreen> {
                                       // Asumsi typo telah diperbaiki
                                       color:
                                           buttonColor, // Terapkan warna tombol
-                                      onPressed: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                DetailClassMentorSD(
-                                              addressMentoring:
-                                                  kelas.address ?? "",
-                                              locationMentoring:
-                                                  kelas.location ?? "",
-                                              mentorName: widget.name,
-                                              transaction:
-                                                  kelas.transactions ?? [],
-                                              mentorData: widget.mentor,
-                                              classId: kelas.id,
-                                              classname:
-                                                  kelas.name ?? 'No Class Name',
-                                              classprice: kelas.price ?? 0,
-                                              classduration:
-                                                  kelas.durationInDays ?? 0,
-                                              maxParticipants:
-                                                  kelas.maxParticipants ?? 0,
-                                              endDate: DateTime.parse(
-                                                  kelas.endDate ?? ''),
-                                              startDate: DateTime.parse(
-                                                  kelas.startDate ?? ''),
-                                              schedule: kelas.schedule ??
-                                                  'No Schedule',
-                                              classDescription:
-                                                  kelas.description ??
-                                                      'No Description',
-                                              targetLearning:
-                                                  kelas.targetLearning,
-                                              terms: kelas.terms,
-                                              durationInDays:
-                                                  kelas.durationInDays,
-                                              price: kelas.price ?? 0,
-                                              location: kelas.location,
-                                              address: kelas.address,
-                                              // Lanjutkan dengan parameter lainnya...
-                                            ),
-                                          ),
-                                        );
-                                      },
+                                      onPressed: availableSlots < 0
+                                          ? () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      DetailClassMentorSD(
+                                                    addressMentoring:
+                                                        kelas.address ?? "",
+                                                    locationMentoring:
+                                                        kelas.location ?? "",
+                                                    mentorName: widget.name,
+                                                    transaction:
+                                                        kelas.transactions ??
+                                                            [],
+                                                    mentorData: widget.mentor,
+                                                    classId: kelas.id,
+                                                    classname: kelas.name ??
+                                                        'No Class Name',
+                                                    classprice:
+                                                        kelas.price ?? 0,
+                                                    classduration:
+                                                        kelas.durationInDays ??
+                                                            0,
+                                                    maxParticipants:
+                                                        kelas.maxParticipants ??
+                                                            0,
+                                                    endDate: DateTime.parse(
+                                                        kelas.endDate ?? ''),
+                                                    startDate: DateTime.parse(
+                                                        kelas.startDate ?? ''),
+                                                    schedule: kelas.schedule ??
+                                                        'No Schedule',
+                                                    classDescription:
+                                                        kelas.description ??
+                                                            'No Description',
+                                                    targetLearning:
+                                                        kelas.targetLearning,
+                                                    terms: kelas.terms,
+                                                    durationInDays:
+                                                        kelas.durationInDays,
+                                                    price: kelas.price ?? 0,
+                                                    location: kelas.location,
+                                                    address: kelas.address,
+                                                    // Lanjutkan dengan parameter lainnya...
+                                                  ),
+                                                ),
+                                              );
+                                            }
+                                          : () {
+                                              showTopSnackBar(context,
+                                                  'Maaf, slot kelas ini sudah penuh',
+                                                  leftBarIndicatorColor:
+                                                      Colors.red);
+                                            },
 
                                       title: kelas.name ?? 'No Class Name',
                                     ),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mentormatch_apps/mentor/screen/my_class_mentor/all_class_mentor_screen.dart';
-import 'package:mentormatch_apps/mentor/screen/my_class_mentor/my_session_create_mentor.dart';
+import 'package:mentormatch_apps/mentor/screen/my_class_mentor/class_submission_mentor_screen.dart';
+import 'package:mentormatch_apps/mentor/screen/my_class_mentor/my_session_mentor.dart';
 import 'package:mentormatch_apps/mentor/screen/my_class_mentor/premium_class_mentor_screen.dart';
 import 'package:mentormatch_apps/mentor/screen/notification_mentor_screen.dart';
 import 'package:mentormatch_apps/mentor/service/notification_service.dart';
@@ -40,25 +40,25 @@ class _MyClassMentorListScreenState extends State<MyClassMentorListScreen> {
     }
   }
 
-  bool isAllClassActive = true;
+// tab pengajuan kelas
+
+  bool isClassSubmissionActive = true;
   bool isPremiumClassActive = false;
   bool isSessionActive = false; // Renamed for consistency
   void changeClass(String menu) {
     setState(() {
       if (menu == "Premium Class") {
+        isClassSubmissionActive = false;
         isPremiumClassActive = true;
         isSessionActive = false;
-        isAllClassActive = false;
       } else if (menu == "My Session") {
-        // Corrected the condition
+        isClassSubmissionActive = false;
         isPremiumClassActive = false;
         isSessionActive = true;
-        isAllClassActive = false;
       } else {
-        menu == "All Class";
-        isAllClassActive = true;
+        menu = "Class Submission";
+        isClassSubmissionActive = true;
         isPremiumClassActive = false;
-
         isSessionActive = false;
       }
     });
@@ -138,9 +138,8 @@ class _MyClassMentorListScreenState extends State<MyClassMentorListScreen> {
                     Padding(
                       padding: const EdgeInsets.all(6.0),
                       child: Container(
-                        width: 80,
                         height: 38,
-                        decoration: isAllClassActive
+                        decoration: isClassSubmissionActive
                             ? BoxDecoration(
                                 borderRadius: BorderRadius.circular(4),
                                 color: ColorStyle().secondaryColors,
@@ -153,12 +152,12 @@ class _MyClassMentorListScreenState extends State<MyClassMentorListScreen> {
                               ),
                         child: TextButton(
                           onPressed: () {
-                            changeClass("All Class");
+                            changeClass("Class Submission");
                           },
                           child: Text(
-                            "All Class",
+                            "Class Submission",
                             style: FontFamily().boldText.copyWith(
-                                  color: isAllClassActive
+                                  color: isClassSubmissionActive
                                       ? ColorStyle().whiteColors
                                       : ColorStyle().secondaryColors,
                                 ),
@@ -169,7 +168,6 @@ class _MyClassMentorListScreenState extends State<MyClassMentorListScreen> {
                     Padding(
                       padding: const EdgeInsets.all(6.0),
                       child: Container(
-                        width: 120,
                         height: 38,
                         decoration: isPremiumClassActive
                             ? BoxDecoration(
@@ -200,7 +198,6 @@ class _MyClassMentorListScreenState extends State<MyClassMentorListScreen> {
                     Padding(
                       padding: const EdgeInsets.all(6.0),
                       child: Container(
-                        width: 80,
                         height: 38,
                         decoration: isSessionActive
                             ? BoxDecoration(
@@ -233,13 +230,13 @@ class _MyClassMentorListScreenState extends State<MyClassMentorListScreen> {
               ),
               Column(
                 children: [
-                  isPremiumClassActive
-                      ? PremiumClassMentorScreen()
+                  isClassSubmissionActive
+                      ? ClassSubmissionMentorScreen()
                       : isSessionActive
                           ? MySessionCreate()
-                          : isAllClassActive
-                              ? AllClassMentorScreen()
-                              : PremiumClassMentorScreen()
+                          : isPremiumClassActive
+                              ? PremiumClassMentorScreen()
+                              : ClassSubmissionMentorScreen()
                 ],
               )
             ],

@@ -6,21 +6,22 @@ import 'package:mentormatch_apps/mentor/service/my_class_create_mentor_service.d
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
 
-class AllClassMentorScreen extends StatefulWidget {
-  AllClassMentorScreen({Key? key}) : super(key: key);
+class ClassSubmissionMentorScreen extends StatefulWidget {
+  ClassSubmissionMentorScreen({Key? key}) : super(key: key);
 
   @override
-  State<AllClassMentorScreen> createState() => _AllClassMentorScreenState();
+  State<ClassSubmissionMentorScreen> createState() =>
+      _ClassSubmissionMentorScreenState();
 }
 
-class _AllClassMentorScreenState extends State<AllClassMentorScreen> {
+class _ClassSubmissionMentorScreenState
+    extends State<ClassSubmissionMentorScreen> {
   late Future<MyClassMentorMondel> classData;
+
   int _getPriority(AllClass userClass) {
     DateTime now = DateTime.now();
-    DateTime startDate = DateTime.parse(
-        userClass.startDate.toString()); // Asumsi startDate tidak null
-    DateTime endDate = DateTime.parse(
-        userClass.endDate.toString()); // Asumsi endDate tidak null
+    DateTime startDate = DateTime.parse(userClass.startDate.toString());
+    DateTime endDate = DateTime.parse(userClass.endDate.toString());
 
     int getAvailableSlotCount(AllClass userClass) {
       int approvedCount = userClass.transactions
@@ -41,67 +42,39 @@ class _AllClassMentorScreenState extends State<AllClassMentorScreen> {
     bool isActive = userClass.isActive!;
     bool isAvailable = userClass.isAvailable!;
     int maxParticipants = userClass.maxParticipants!;
-    Color buttonColor = ColorStyle().primaryColors;
-    String buttonText = "Available";
+    String buttonText = "Unavailable";
     bool isRejected = userClass.rejectReason != null;
 
-    // Tentukan warna tombol dan teks berdasarkan kondisi status kelas
-
     if (isAvailable && totalApprovedAndPendingCount < maxParticipants) {
-      buttonColor = ColorStyle().secondaryColors;
       buttonText = "Available";
     } else if (!isAvailable && !isVerified && !isActive && isRejected) {
-      // Kondisi untuk "Rejected"
-      buttonColor = ColorStyle().errorColors; // Warna untuk status "Rejected"
       buttonText = "Rejected";
-      //kondisi pending
     } else if (!isAvailable &&
         !isVerified &&
         !isActive &&
         now.isBefore(startDate)) {
-      buttonColor = ColorStyle().pendingColors;
       buttonText = "Pending";
     } else if (totalApprovedAndPendingCount >= maxParticipants && !isActive) {
-      buttonColor = ColorStyle().fullbookedColors;
       buttonText = "Full";
-      // ketika startDate = now , dan now <+ endDate
     } else if (isActive) {
-      buttonColor = ColorStyle().succesColors;
       buttonText = "Active";
     } else if (totalApprovedAndPendingCount > 0 && now.isAfter(endDate)) {
-      buttonColor = ColorStyle().disableColors;
       buttonText = "Completed";
     } else if (totalApprovedAndPendingCount == 0 && now.isAfter(startDate)) {
-      buttonColor = ColorStyle().blackColors;
       buttonText = "Expired";
-    } else {
-      // Penanganan default jika ada, untuk kasus yang tidak tertangani oleh kondisi di atas
-      buttonColor = ColorStyle().primaryColors; // Asumsi warna default
-      buttonText = "Unavailable"; // Teks default
     }
-    // Kembalikan prioritas yang dihitung
+
     return _calculatePriority(buttonText);
   }
 
   int _calculatePriority(String buttonText) {
-    // Lakukan perhitungan prioritas berdasarkan teks tombol
     switch (buttonText) {
       case "Rejected":
         return 1;
       case "Pending":
         return 2;
-      case "Full":
-        return 3;
-      case "Active":
-        return 4;
-      case "Completed":
-        return 5;
-      case "Expired":
-        return 6;
-      case "Unavailable":
-        return 7;
       default:
-        return 8;
+        return 8; // Not of interest for our filtered list
     }
   }
 
@@ -121,13 +94,13 @@ class _AllClassMentorScreenState extends State<AllClassMentorScreen> {
   @override
   void initState() {
     super.initState();
-    // Initialize the future without passing userId
     classData = ListClassMentor().fetchClassData();
 
-    /// mebuat sort sesuai dengan prioritas status
+    /// Filter only pending and rejected classes
     classData.then((value) {
-      value.user?.userClass?.sort((a, b) {
-        return _getPriority(a).compareTo(_getPriority(b));
+      value.user?.userClass?.retainWhere((userClass) {
+        int priority = _getPriority(userClass);
+        return priority == 1 || priority == 2;
       });
     });
   }
@@ -152,8 +125,7 @@ class _AllClassMentorScreenState extends State<AllClassMentorScreen> {
               height: MediaQuery.of(context).size.height / 2.0,
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child:
-                    Center(child: Text('Kamu belum memiliki kelas saat ini')),
+                child: Center(child: Text('Kamu belum men kelas saat ini')),
               ),
             );
           }
@@ -181,7 +153,7 @@ class _AllClassMentorScreenState extends State<AllClassMentorScreen> {
                             ),
                           ),
                         );
-                      } else {
+                      } else if (statusButton == 2) {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -237,27 +209,8 @@ class _AllClassMentorScreenState extends State<AllClassMentorScreen> {
                               if (statusButton == 2)
                                 createStatusButton(
                                     "Pending", ColorStyle().pendingColors),
-                              if (statusButton == 3)
-                                createStatusButton(
-                                    "Full", ColorStyle().fullbookedColors),
-                              if (statusButton == 4)
-                                createStatusButton(
-                                    "Active", ColorStyle().succesColors),
-                              if (statusButton == 5)
-                                createStatusButton(
-                                    "Completed", ColorStyle().disableColors),
-                              if (statusButton == 6)
-                                createStatusButton(
-                                    "Expired", ColorStyle().blackColors),
-                              if (statusButton == 7)
-                                createStatusButton(
-                                    "Unavailable", ColorStyle().primaryColors),
-                              if (statusButton == 8)
-                                createStatusButton(
-                                    "Available", ColorStyle().secondaryColors),
                               const SizedBox(height: 12),
                               Text(
-                                //nama kelas
                                 data.name ?? '',
                                 style: FontFamily().boldText.copyWith(
                                     fontSize: 14,
@@ -270,17 +223,13 @@ class _AllClassMentorScreenState extends State<AllClassMentorScreen> {
                                       color: ColorStyle().blackColors,
                                     ),
                               ),
-
                               const SizedBox(height: 4),
                               Text(
-                                //durationIndays
-                                'Durasi kelas                        : ${data.durationInDays} hari',
+                                'Durasi kelas : ${data.durationInDays} hari',
                                 style: FontFamily().regularText.copyWith(
                                       color: ColorStyle().blackColors,
                                     ),
                               ),
-
-                              // buat align text button di kanan menuju DetailMyclass namun aoabila statusnya rejected maka ke editrejectedClaas
                             ],
                           ),
                         ),
@@ -298,7 +247,7 @@ class _AllClassMentorScreenState extends State<AllClassMentorScreen> {
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child:
-                    Center(child: Text('Kamu belum memiliki kelas saat ini')),
+                    Center(child: Text('Kamu belum mengajukan kelas saat ini')),
               ));
         }
       },

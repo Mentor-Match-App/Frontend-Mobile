@@ -215,7 +215,7 @@ class _DetailClassMentorAllState extends State<DetailClassMentorAll> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        TittleTextField(title: 'Jumlah Mentee dikelas'),
+                        TittleTextField(title: 'Kapasitas Kelas'),
                         Padding(
                           padding: const EdgeInsets.only(top: 8.0),
                           child: Text(
@@ -368,7 +368,7 @@ class _DetailClassMentorAllState extends State<DetailClassMentorAll> {
           ],
         ));
   }
-  
+
   void _showDialog(BuildContext context) {
     showDialog(
       context: context,
