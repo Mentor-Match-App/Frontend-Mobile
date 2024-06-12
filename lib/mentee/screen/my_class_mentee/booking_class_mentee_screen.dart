@@ -19,6 +19,7 @@ class BookingClassMenteeScreen extends StatefulWidget {
 
 class _BookingClassMenteeScreenState extends State<BookingClassMenteeScreen> {
   Future<List<TransactionMyClass>>? _userData;
+
   int getClassStatusPriority(TransactionMyClass transaction) {
     if (transaction.paymentStatus == "Rejected") {
       return 0; // Highest priority

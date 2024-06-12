@@ -91,8 +91,8 @@ class _PremiumClassMentorScreenState extends State<PremiumClassMentorScreen> {
         return 5;
       case "Expired":
         return 6;
-      case "Unavailable":
-        return 7;
+      // case "Unavailable":
+      //   return 7;
       default:
         return 8;
     }
@@ -252,9 +252,9 @@ class _PremiumClassMentorScreenState extends State<PremiumClassMentorScreen> {
                               if (statusButton == 6)
                                 createStatusButton(
                                     "Expired", ColorStyle().blackColors),
-                              if (statusButton == 7)
-                                createStatusButton(
-                                    "Unavailable", ColorStyle().primaryColors),
+                              // if (statusButton == 7)
+                              //   createStatusButton(
+                              //       "Unavailable", ColorStyle().primaryColors),
                               if (statusButton == 8)
                                 createStatusButton(
                                     "Available", ColorStyle().secondaryColors),

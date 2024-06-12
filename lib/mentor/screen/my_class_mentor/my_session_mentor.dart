@@ -221,8 +221,6 @@ class _MySessionCreateState extends State<MySessionCreate> {
                                       foregroundColor: ColorStyle().whiteColors,
                                     ),
                                     onPressed: () {
-                                      // final zommLink = session.zoomLink ?? '';
-                                      // _launchURL(zommLink);
                                       if (session.zoomLink == null ||
                                           session.zoomLink!.isEmpty) {
                                         showTopSnackBar(

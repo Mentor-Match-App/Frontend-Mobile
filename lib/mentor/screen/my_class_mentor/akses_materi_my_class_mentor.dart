@@ -35,7 +35,8 @@ class _MyMateriMentorState extends State<MyMateriMentor> {
       TextEditingController();
   final TextEditingController _linkMateriPembelajaranController =
       TextEditingController();
-  bool _isLoading = false; // Menambahkan flag untuk loading state
+  bool _isLoading = false;
+
   _launchURL(String url) async {
     // ignore: deprecated_member_use
     if (await canLaunch(url)) {
@@ -54,7 +55,6 @@ class _MyMateriMentorState extends State<MyMateriMentor> {
     super.dispose();
   }
 
-  /// sent materi //
   // Fungsi untuk mengirim materi pembelajaran
   Future<void> _sendMaterial() async {
     String title = _materiPembelajaranController.text;
@@ -91,8 +91,6 @@ class _MyMateriMentorState extends State<MyMateriMentor> {
         showTopSnackBar(context, responseMessage,
             leftBarIndicatorColor: ColorStyle().errorColors);
       }
-
-      // Tambahkan materi yang baru saja dikirim ke daftar materi yang ditampilkan
 
       // Bersihkan field setelah pengiriman berhasil
       _materiPembelajaranController.clear();

@@ -343,17 +343,6 @@ class _DetailMyClassMentorScreenState extends State<DetailMyClassMentorScreen> {
                           title: "Meeting",
                           icon: 'assets/Handoff/icon/MyClass/meeting_icon.png',
                           onTap: () {
-                            // if (widget.linkZoom == null ||
-                            //     widget.linkZoom!.isEmpty) {
-                            //   showTopSnackBar(
-                            //       context, "Link Zoom belum tersedia",
-                            //       leftBarIndicatorColor:
-                            //           ColorStyle().errorColors);
-                            // } else {
-                            //   _launchURL(widget.linkZoom!);
-                            // }
-                            // jika widget.classData.address != null atau widget.classData.address!.isEmpty tampilkan showTopSnackBar dengan pesan "Kelas ini dilakukan secara offline"
-
                             if (widget.addressMentoring != null ||
                                 widget.addressMentoring!.isEmpty) {
                               showTopSnackBar(

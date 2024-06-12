@@ -27,7 +27,7 @@ class _AllKarierScreenState extends State<AllKarierScreen> {
       future: futureKarierData,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Container(
+          return SizedBox(
               height: MediaQuery.of(context).size.height / 2.0,
               child: Center(child: CircularProgressIndicator()));
         } else if (snapshot.hasError) {

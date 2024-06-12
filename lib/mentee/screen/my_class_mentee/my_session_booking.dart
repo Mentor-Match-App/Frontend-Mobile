@@ -243,11 +243,11 @@ class _MySessionBookingState extends State<MySessionBooking> {
             ),
           );
         } else {
-          return Container(
+          return SizedBox(
               width: double.infinity,
               height: MediaQuery.of(context).size.height / 2.0,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
+              child: const Padding(
+                padding: EdgeInsets.all(8.0),
                 child:
                     Center(child: Text('Kamu belum memiliki session saat ini')),
               ));
