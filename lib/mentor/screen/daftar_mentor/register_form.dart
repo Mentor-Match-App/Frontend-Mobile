@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mentormatch_apps/mentor/screen/daftar_mentor/verification_regist.dart';
 import 'package:mentormatch_apps/mentor/service/register_mentor_service.dart';
-import 'package:mentormatch_apps/preferences/%20preferences_helper.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
 import 'package:mentormatch_apps/style/text.dart';
 import 'package:mentormatch_apps/widget/button.dart';
@@ -354,7 +353,7 @@ class _RegisterMentorScreenState extends State<RegisterMentorScreen> {
             }
 
             // Regular expression to validate a URL
-            final urlPattern =
+            const urlPattern =
                 r'^(https?:\/\/)?([a-z0-9-]+\.)+[a-z]{2,6}(\/[^\s]*)?$';
             final urlRegExp = RegExp(urlPattern);
 
@@ -382,7 +381,7 @@ class _RegisterMentorScreenState extends State<RegisterMentorScreen> {
           },
         ),
         _textFieldWithTitle(
-          "portofolio",
+          "Portofolio",
           _portofolioController,
           "Enter Your portofolio",
           onChanged: (value) {
@@ -396,7 +395,7 @@ class _RegisterMentorScreenState extends State<RegisterMentorScreen> {
             }
 
             // Regular expression to validate a URL
-            final urlPattern =
+            const urlPattern =
                 r'^(https?:\/\/)?([a-z0-9-]+\.)+[a-z]{2,6}(\/[^\s]*)?$';
             final urlRegExp = RegExp(urlPattern);
 
@@ -443,22 +442,40 @@ class _RegisterMentorScreenState extends State<RegisterMentorScreen> {
           children: [
             TittleTextField(
                 title: "Skill", color: ColorStyle().secondaryColors),
-            TextButton.icon(
-              onPressed: _addSkill,
-              icon: const Icon(Icons.add, size: 16),
-              label: Text("Add Skill", style: FontFamily().regularText),
-            ),
           ],
         ),
         TextFieldWidget(
           controller: _skillController,
           hintText: "Skill",
           validator: (value) {
-            if (value!.isEmpty && _skills.isEmpty) {
-              return 'Please enter your skill';
+            if (value!.isNotEmpty) {
+              return "Press the add button to add the skill";
+            } else if (_skills.isEmpty) {
+              return "You must have at least one skill";
             }
             return null;
           },
+        ),
+        const SizedBox(height: 8),
+        Align(
+          alignment: Alignment.centerRight,
+          child: TextButton.icon(
+            onPressed: () {
+              if (_skillController.text.isEmpty) {
+                _formKey.currentState!.validate();
+                showTopSnackBar(context, "Please enter a skill",
+                    leftBarIndicatorColor: Colors.red);
+              } else if (_skills
+                  .any((skill) => skill['skill'] == _skillController.text)) {
+                showTopSnackBar(context, "Skill already added",
+                    leftBarIndicatorColor: Colors.red);
+              } else {
+                _addSkill();
+              }
+            },
+            icon: const Icon(Icons.add, size: 16),
+            label: Text("Add Skill", style: FontFamily().regularText),
+          ),
         ),
       ],
     );
@@ -498,11 +515,6 @@ class _RegisterMentorScreenState extends State<RegisterMentorScreen> {
           children: [
             TittleTextField(
                 title: "Experience", color: ColorStyle().secondaryColors),
-            TextButton.icon(
-              onPressed: _addExperience,
-              icon: const Icon(Icons.add, size: 16),
-              label: Text("Add Experience", style: FontFamily().regularText),
-            ),
           ],
         ),
         TextFieldWidget(
@@ -513,6 +525,34 @@ class _RegisterMentorScreenState extends State<RegisterMentorScreen> {
         TextFieldWidget(
           controller: _experienceCompanyController,
           hintText: "Company",
+          validator: (value) {
+            if (_roleController.text.isNotEmpty &&
+                _experienceCompanyController.text.isEmpty) {
+              return "role and company must be filled together";
+            } else if (_roleController.text.isNotEmpty &&
+                _experienceCompanyController.text.isNotEmpty) {
+              return "add experience using the add experience button";
+            }
+            return null;
+          },
+        ),
+        const SizedBox(height: 8),
+        Align(
+          alignment: Alignment.centerRight,
+          child: TextButton.icon(
+            onPressed: () {
+              if (_roleController.text.isEmpty ||
+                  _experienceCompanyController.text.isEmpty) {
+                _formKey.currentState!.validate();
+                showTopSnackBar(context, "Please fill all fields",
+                    leftBarIndicatorColor: Colors.red);
+              } else {
+                _addExperience();
+              }
+            },
+            icon: const Icon(Icons.add, size: 16),
+            label: Text("Add Experience", style: FontFamily().regularText),
+          ),
         ),
       ],
     );

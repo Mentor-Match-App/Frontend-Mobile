@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:mentormatch_apps/mentee/screen/my_class_mentee/my_class_list_mentee_screen.dart';
 import 'package:mentormatch_apps/mentee/screen/bottom_mentee_screen.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
@@ -140,6 +138,7 @@ class _DetailBookingSessionState extends State<DetailBookingSession> {
                       MaterialPageRoute(
                           builder: (context) => const BottomNavbarMenteeScreen(
                                 activeScreen: 1,
+                                subMenu: "Session",
                               )),
                       (Route<dynamic> route) =>
                           false, // Remove all routes until the new route

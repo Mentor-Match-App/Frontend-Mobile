@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mentormatch_apps/mentor/model/my_class_mentor_model.dart';
 import 'package:mentormatch_apps/mentor/screen/my_class_mentor/detail_my_class_mentor_screen.dart';
-import 'package:mentormatch_apps/mentor/screen/my_class_mentor/edit_class_rejected.dart';
 import 'package:mentormatch_apps/mentor/service/my_class_create_mentor_service.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
@@ -41,37 +40,23 @@ class _PremiumClassMentorScreenState extends State<PremiumClassMentorScreen> {
     bool isActive = userClass.isActive!;
     bool isAvailable = userClass.isAvailable!;
     int maxParticipants = userClass.maxParticipants!;
-    Color buttonColor = ColorStyle().primaryColors;
     String buttonText = "Available";
-    bool isRejected = userClass.rejectReason != null;
 
-    if (isAvailable && totalApprovedAndPendingCount < maxParticipants) {
-      buttonColor = ColorStyle().secondaryColors;
-      buttonText = "Available";
-    } else if (!isAvailable && !isVerified && !isActive && isRejected) {
-      buttonColor = ColorStyle().errorColors;
-      buttonText = "Rejected";
-    } else if (!isAvailable &&
-        !isVerified &&
-        !isActive &&
+    if (isVerified &&
+        isAvailable &&
+        totalApprovedAndPendingCount < maxParticipants &&
         now.isBefore(startDate)) {
-      buttonColor = ColorStyle().pendingColors;
-      buttonText = "Pending";
+      buttonText = "Scheduled";
     } else if (totalApprovedAndPendingCount >= maxParticipants && !isActive) {
-      buttonColor = ColorStyle().fullbookedColors;
       buttonText = "Full";
     } else if (isActive) {
-      buttonColor = ColorStyle().succesColors;
       buttonText = "Active";
     } else if (totalApprovedAndPendingCount > 0 && now.isAfter(endDate)) {
-      buttonColor = ColorStyle().disableColors;
-      buttonText = "Completed";
-    } else if (totalApprovedAndPendingCount == 0 && now.isAfter(startDate)) {
-      buttonColor = ColorStyle().blackColors;
+      buttonText = "Finished";
+    } else if (isVerified &&
+        totalApprovedAndPendingCount == 0 &&
+        now.isAfter(startDate)) {
       buttonText = "Expired";
-    } else {
-      buttonColor = ColorStyle().primaryColors;
-      buttonText = "Unavailable";
     }
 
     return _calculatePriority(buttonText);
@@ -79,22 +64,18 @@ class _PremiumClassMentorScreenState extends State<PremiumClassMentorScreen> {
 
   int _calculatePriority(String buttonText) {
     switch (buttonText) {
-      case "Rejected":
+      case "Active":
         return 1;
-      case "Pending":
+      case "Scheduled":
         return 2;
       case "Full":
         return 3;
-      case "Active":
+      case "Finished":
         return 4;
-      case "Completed":
-        return 5;
       case "Expired":
-        return 6;
-      // case "Unavailable":
-      //   return 7;
+        return 5;
       default:
-        return 8;
+        return 6;
     }
   }
 
@@ -115,11 +96,6 @@ class _PremiumClassMentorScreenState extends State<PremiumClassMentorScreen> {
   void initState() {
     super.initState();
     classData = ListClassMentor().fetchClassData();
-    classData.then((value) {
-      value.user?.userClass?.sort((a, b) {
-        return _getPriority(a).compareTo(_getPriority(b));
-      });
-    });
   }
 
   @override
@@ -150,16 +126,19 @@ class _PremiumClassMentorScreenState extends State<PremiumClassMentorScreen> {
 
           var filteredClasses = userClass.where((data) {
             int priority = _getPriority(data);
-            return priority != 1 &&
-                priority != 2; // Exclude "Rejected" and "Pending"
+            return priority != 6; // Exclude "Unavailable"
           }).toList();
+
+          // Sorting the filteredClasses by priority
+          filteredClasses
+              .sort((a, b) => _getPriority(a).compareTo(_getPriority(b)));
 
           if (filteredClasses.isEmpty) {
             return SizedBox(
               width: double.infinity,
               height: MediaQuery.of(context).size.height / 2.0,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
+              child: const Padding(
+                padding: EdgeInsets.all(8.0),
                 child:
                     Center(child: Text('Kamu belum memiliki kelas saat ini')),
               ),
@@ -181,45 +160,34 @@ class _PremiumClassMentorScreenState extends State<PremiumClassMentorScreen> {
                   int statusButton = _getPriority(data);
                   return GestureDetector(
                     onTap: () {
-                      if (statusButton == 1) {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => EditRejectedClass(
-                              classData: data,
-                            ),
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => DetailMyClassMentorScreen(
+                            feedbacks: data.feedbacks ?? [],
+                            addressMentoring: data.address ?? 'Meeting Zoom',
+                            locationMentoring: data.location ?? '',
+                            approvedTransactionsCount:
+                                approvedTransactionsCount,
+                            transactions: data.transactions ?? [],
+                            evaluation: data.evaluations ?? [],
+                            learningMaterial: data.learningMaterial ?? [],
+                            userClass: data,
+                            aksesLinkZoom: data.zoomLink ?? '',
+                            deskripsiKelas: data.description.toString(),
+                            classid: data.id.toString(),
+                            durationInDays: data.durationInDays ?? 0,
+                            endDate: DateTime.parse(data.endDate ?? ''),
+                            startDate: DateTime.parse(data.startDate ?? ''),
+                            term: data.terms ?? [],
+                            maxParticipants: data.maxParticipants ?? 0,
+                            schedule: data.schedule ?? '',
+                            targetLearning: data.targetLearning ?? [],
+                            linkZoom: data.zoomLink ?? '',
+                            namaKelas: data.name ?? '',
                           ),
-                        );
-                      } else {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => DetailMyClassMentorScreen(
-                              feedbacks: data.feedbacks ?? [],
-                              addressMentoring: data.address ?? 'Meeting Zoom',
-                              locationMentoring: data.location ?? '',
-                              approvedTransactionsCount:
-                                  approvedTransactionsCount,
-                              transactions: data.transactions ?? [],
-                              evaluation: data.evaluations ?? [],
-                              learningMaterial: data.learningMaterial ?? [],
-                              userClass: data,
-                              aksesLinkZoom: data.zoomLink ?? '',
-                              deskripsiKelas: data.description.toString(),
-                              classid: data.id.toString(),
-                              durationInDays: data.durationInDays ?? 0,
-                              endDate: DateTime.parse(data.endDate ?? ''),
-                              startDate: DateTime.parse(data.startDate ?? ''),
-                              term: data.terms ?? [],
-                              maxParticipants: data.maxParticipants ?? 0,
-                              schedule: data.schedule ?? '',
-                              targetLearning: data.targetLearning ?? [],
-                              linkZoom: data.zoomLink ?? '',
-                              namaKelas: data.name ?? '',
-                            ),
-                          ),
-                        );
-                      }
+                        ),
+                      );
                     },
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -240,24 +208,21 @@ class _PremiumClassMentorScreenState extends State<PremiumClassMentorScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              if (statusButton == 1)
+                                createStatusButton(
+                                    "Active", ColorStyle().succesColors),
+                              if (statusButton == 2)
+                                createStatusButton(
+                                    "Scheduled", ColorStyle().secondaryColors),
                               if (statusButton == 3)
                                 createStatusButton(
                                     "Full", ColorStyle().fullbookedColors),
                               if (statusButton == 4)
                                 createStatusButton(
-                                    "Active", ColorStyle().succesColors),
+                                    "Finished", ColorStyle().disableColors),
                               if (statusButton == 5)
                                 createStatusButton(
-                                    "Completed", ColorStyle().disableColors),
-                              if (statusButton == 6)
-                                createStatusButton(
-                                    "Expired", ColorStyle().blackColors),
-                              // if (statusButton == 7)
-                              //   createStatusButton(
-                              //       "Unavailable", ColorStyle().primaryColors),
-                              if (statusButton == 8)
-                                createStatusButton(
-                                    "Available", ColorStyle().secondaryColors),
+                                    "Expired", ColorStyle().errorColors),
                               const SizedBox(height: 12),
                               Text(
                                 data.name ?? '',
@@ -267,7 +232,7 @@ class _PremiumClassMentorScreenState extends State<PremiumClassMentorScreen> {
                               ),
                               const SizedBox(height: 8),
                               Text(
-                                'Jumlah mentee terdaftar : ${approvedTransactionsCount} orang',
+                                'Jumlah mentee terdaftar : $approvedTransactionsCount orang',
                                 style: FontFamily().regularText.copyWith(
                                       color: ColorStyle().blackColors,
                                     ),

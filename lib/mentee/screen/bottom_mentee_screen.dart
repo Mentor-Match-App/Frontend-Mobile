@@ -7,8 +7,10 @@ import 'package:mentormatch_apps/widget/bottom_nav.dart';
 
 class BottomNavbarMenteeScreen extends StatefulWidget {
   final int? activeScreen;
-  const BottomNavbarMenteeScreen({Key? key, this.activeScreen})
-      : super(key: key);
+  final String subMenu; // New parameter for sub-menu selection
+
+  const BottomNavbarMenteeScreen(
+      {super.key, this.activeScreen, this.subMenu = ''});
 
   @override
   State<BottomNavbarMenteeScreen> createState() =>
@@ -37,7 +39,9 @@ class _BottomNavbarMenteeScreenState extends State<BottomNavbarMenteeScreen> {
     if (index == 0) {
       return HomeMenteeScreen();
     } else if (index == 1) {
-      return MyClassMenteeListScreen();
+      return MyClassMenteeListScreen(
+        subMenu: widget.subMenu,
+      );
     } else if (index == 2) {
       return CommunityMenteeScreen();
     } else {

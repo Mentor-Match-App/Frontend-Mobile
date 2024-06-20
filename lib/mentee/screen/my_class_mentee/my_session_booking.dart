@@ -26,7 +26,7 @@ class _MySessionBookingState extends State<MySessionBooking> {
     } else if (userSessions.isActive == false &&
         DateTime.now().isBefore(DateTime.parse(userSessions.endTime!))) {
       buttonText = "Active";
-    } else if (userSessions.isActive == false &&
+    } else if (userSessions.isActive == false ||
         DateTime.now().isAfter(DateTime.parse(userSessions.endTime!))) {
       buttonText = "Finished";
     }

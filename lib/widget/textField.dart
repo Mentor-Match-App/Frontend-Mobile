@@ -39,8 +39,8 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
       key: widget.formKey,
       child: Padding(
         padding: const EdgeInsets.only(left: 8.0),
-        child: SizedBox(
-          height: 38,
+        child: Container(
+          constraints: const BoxConstraints(minHeight: 40), // Set a minimum height
           child: TextFormField(
             autovalidateMode:
                 AutovalidateMode.onUserInteraction, // Set autovalidateMode

@@ -343,8 +343,7 @@ class _DetailMyClassMentorScreenState extends State<DetailMyClassMentorScreen> {
                           title: "Meeting",
                           icon: 'assets/Handoff/icon/MyClass/meeting_icon.png',
                           onTap: () {
-                            if (widget.addressMentoring != null ||
-                                widget.addressMentoring!.isEmpty) {
+                            if (widget.locationMentoring == "Offline") {
                               showTopSnackBar(
                                   context, "Kelas ini dilakukan secara offline",
                                   leftBarIndicatorColor:

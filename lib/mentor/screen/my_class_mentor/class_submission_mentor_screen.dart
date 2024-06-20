@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mentormatch_apps/mentor/model/my_class_mentor_model.dart';
-import 'package:mentormatch_apps/mentor/screen/my_class_mentor/detail_my_class_mentor_screen.dart';
 import 'package:mentormatch_apps/mentor/screen/my_class_mentor/edit_class_rejected.dart';
+import 'package:mentormatch_apps/mentor/screen/my_class_mentor/pending_class_mentor_screen.dart';
 import 'package:mentormatch_apps/mentor/service/my_class_create_mentor_service.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
@@ -74,7 +74,7 @@ class _ClassSubmissionMentorScreenState
       case "Pending":
         return 2;
       default:
-        return 8; // Not of interest for our filtered list
+        return 3; // Not of interest for our filtered list
     }
   }
 
@@ -157,7 +157,7 @@ class _ClassSubmissionMentorScreenState
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => DetailMyClassMentorScreen(
+                            builder: (context) => PendingClassMentorScreen(
                               feedbacks: data.feedbacks ?? [],
                               addressMentoring: data.address ?? 'Meeting Zoom',
                               locationMentoring: data.location ?? '',

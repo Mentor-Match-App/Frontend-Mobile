@@ -17,7 +17,7 @@ class _ContohPremiumClassState extends State<ContohPremiumClass> {
   bool isDropdownOpenedSyarat = false;
   IconData dropdownIcon = Icons.arrow_drop_down_outlined;
 
- void toggleDropdown(String dropdownKey) {
+  void toggleDropdown(String dropdownKey) {
     setState(() {
       if (dropdownKey == "NameClass") {
         isDropdownOpenedNameClass = !isDropdownOpenedNameClass;
@@ -36,7 +36,7 @@ class _ContohPremiumClassState extends State<ContohPremiumClass> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Persetujuan Premium Class',
+          'Contoh Panduan Pembuatan Premium Class',
           style: FontFamily()
               .boldText
               .copyWith(color: ColorStyle().primaryColors, fontSize: 16),
@@ -49,7 +49,7 @@ class _ContohPremiumClassState extends State<ContohPremiumClass> {
             child: Column(
               children: [
                 CardContohPremiumClass(
-                    tittle: 'Tinkat Pendiikan',
+                    tittle: 'Tinkat Pendidikan',
                     desc:
                         'Tingkat pendidikan dapat kamu isi sesuai dengan level pendidikan kelas yang ingin kamu buat mulai dari SD, SMP, SMA, Kuilah dan Karier'),
                 CardContohPremiumClass(
@@ -104,7 +104,7 @@ class _ContohPremiumClassState extends State<ContohPremiumClass> {
                       'Rincian Kegiatan merupakan deskripsi kelas ini memberikan gambaran umum tentang program pelatihan UI/UX Research and Design yang akan diselenggarakan, termasuk durasi, kapasitas peserta, jadwal, dan metodologi evaluasi.',
                   subtitle: 'Contoh Rincian Kegiatan',
                   dropdownContent: isDropdownOpenedRincianKegiatan,
-              toggleDropdown: () => toggleDropdown('RincianKegiatan'),
+                  toggleDropdown: () => toggleDropdown('RincianKegiatan'),
                 ),
                 CardContohPremiumClassDropDown(
                   title: 'Target Pembelajaran',
@@ -222,7 +222,7 @@ class _ContohPremiumClassState extends State<ContohPremiumClass> {
                   ),
                   isDropdownOpened: isDropdownOpenedTarget,
                   dropdownContent: isDropdownOpenedTarget,
-                  toggleDropdown: () =>toggleDropdown('Target'),
+                  toggleDropdown: () => toggleDropdown('Target'),
                 ),
                 CardContohPremiumClassDropDown(
                   title: 'Syarat & Ketentuan',
@@ -295,7 +295,7 @@ class _ContohPremiumClassState extends State<ContohPremiumClass> {
                   ),
                   isDropdownOpened: isDropdownOpenedSyarat,
                   dropdownContent: isDropdownOpenedSyarat,
-                  toggleDropdown: () =>toggleDropdown('Syarat'),
+                  toggleDropdown: () => toggleDropdown('Syarat'),
                 ),
               ],
             ),

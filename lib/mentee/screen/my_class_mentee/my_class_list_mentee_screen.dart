@@ -9,7 +9,10 @@ import 'package:mentormatch_apps/style/font_style.dart';
 import 'package:mentormatch_apps/widget/search_bar.dart';
 
 class MyClassMenteeListScreen extends StatefulWidget {
-  MyClassMenteeListScreen({Key? key}) : super(key: key);
+  final String subMenu; // New parameter for initial sub-menu
+
+  const MyClassMenteeListScreen({Key? key, required this.subMenu})
+      : super(key: key);
 
   @override
   State<MyClassMenteeListScreen> createState() =>
@@ -38,6 +41,7 @@ class _MyClassMenteeListScreenState extends State<MyClassMenteeListScreen> {
   void initState() {
     super.initState();
     _fetchUnreadNotificationsCount();
+    changeClass(widget.subMenu); // Set the initial sub-menu
   }
 
   bool isBookingClassActive = true;

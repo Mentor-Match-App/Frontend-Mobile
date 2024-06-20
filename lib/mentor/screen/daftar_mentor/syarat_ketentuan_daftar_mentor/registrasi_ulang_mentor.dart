@@ -9,6 +9,7 @@ import 'package:mentormatch_apps/style/text.dart';
 import 'package:mentormatch_apps/widget/button.dart';
 import 'package:mentormatch_apps/widget/flush_bar_widget.dart';
 import 'package:mentormatch_apps/widget/textField.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class RegisterUlangMentorScreen extends StatefulWidget {
   RegisterUlangMentorScreen({
@@ -92,8 +93,12 @@ class _RegisterUlangMentorScreenState extends State<RegisterUlangMentorScreen> {
   }
 
   void _loadProfileData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
     final profileData = await mentorService.getMentorProfile();
+
     setState(() {
+      _name = prefs.getString('name') ?? "";
       //gender
       _selectedGender = profileData.user!.gender ?? '';
       _jobController.text = profileData.user!.experiences
@@ -231,8 +236,7 @@ class _RegisterUlangMentorScreenState extends State<RegisterUlangMentorScreen> {
   Widget _formFields() {
     return Column(
       children: [
-        _genderDropdownField(), // Replace the gender text field with this
-
+        _genderDropdownField(),
         _textFieldWithTitle(
           "Job/Title",
           _jobController,
@@ -241,6 +245,12 @@ class _RegisterUlangMentorScreenState extends State<RegisterUlangMentorScreen> {
             setState(() {
               job = value;
             });
+          },
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'This field is required';
+            }
+            return null;
           },
         ),
         _textFieldWithTitle(
@@ -252,6 +262,12 @@ class _RegisterUlangMentorScreenState extends State<RegisterUlangMentorScreen> {
               company = value;
             });
           },
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'This field is required';
+            }
+            return null;
+          },
         ),
         _textFieldWithTitle(
           "Location",
@@ -262,9 +278,14 @@ class _RegisterUlangMentorScreenState extends State<RegisterUlangMentorScreen> {
               company = value;
             });
           },
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'This field is required';
+            }
+            return null;
+          },
         ),
         const SizedBox(height: 12),
-
         Align(
           alignment: Alignment.centerLeft,
           child: TittleTextField(
@@ -272,7 +293,6 @@ class _RegisterUlangMentorScreenState extends State<RegisterUlangMentorScreen> {
             color: ColorStyle().secondaryColors,
           ),
         ),
-
         Padding(
           // Add padding left to the column
           padding: const EdgeInsets.only(left: 16),
@@ -296,6 +316,12 @@ class _RegisterUlangMentorScreenState extends State<RegisterUlangMentorScreen> {
                     accountName = value;
                   });
                 },
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'This field is required';
+                  }
+                  return null;
+                },
               ),
               _textFieldWithTitle(
                 "Account Number",
@@ -306,6 +332,16 @@ class _RegisterUlangMentorScreenState extends State<RegisterUlangMentorScreen> {
                     accountNumber = value;
                   });
                 },
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'This field is required';
+                  }
+                  final numericRegex = RegExp(r'^[0-9]+$');
+                  if (!numericRegex.hasMatch(value)) {
+                    return 'Please enter a valid number';
+                  }
+                  return null;
+                },
               ),
             ],
           ),
@@ -315,29 +351,74 @@ class _RegisterUlangMentorScreenState extends State<RegisterUlangMentorScreen> {
         _skillChips(),
         const SizedBox(height: 12),
         _textFieldWithTitle(
-            "LinkedIn", _linkedinController, "Enter Your LinkedIn URL",
-            onChanged: (value) {
-          setState(() {
-            linkedin = value;
-          });
-        }),
+          "LinkedIn",
+          _linkedinController,
+          "Enter Your LinkedIn URL",
+          onChanged: (value) {
+            setState(() {
+              linkedin = value;
+            });
+          },
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'This field is required';
+            }
 
-        _textFieldWithTitle("About", _aboutController, "Enter Your About",
-            onChanged: (value) {
-          setState(() {
-            about = value;
-          });
-        }),
+            // Regular expression to validate a URL
+            const urlPattern =
+                r'^(https?:\/\/)?([a-z0-9-]+\.)+[a-z]{2,6}(\/[^\s]*)?$';
+            final urlRegExp = RegExp(urlPattern);
+
+            if (!urlRegExp.hasMatch(value)) {
+              return 'Please enter a valid URL';
+            }
+
+            return null;
+          },
+        ),
         _textFieldWithTitle(
-            "portofolio", _portofolioController, "Enter Your portofolio",
-            onChanged: (value) {
-          setState(() {
-            portofolio = value;
-          });
-        }),
+          "About",
+          _aboutController,
+          "Enter Your About",
+          onChanged: (value) {
+            setState(() {
+              about = value;
+            });
+          },
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'This field is required';
+            }
+            return null;
+          },
+        ),
+        _textFieldWithTitle(
+          "Portofolio",
+          _portofolioController,
+          "Enter Your portofolio",
+          onChanged: (value) {
+            setState(() {
+              portofolio = value;
+            });
+          },
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'This field is required';
+            }
 
+            // Regular expression to validate a URL
+            const urlPattern =
+                r'^(https?:\/\/)?([a-z0-9-]+\.)+[a-z]{2,6}(\/[^\s]*)?$';
+            final urlRegExp = RegExp(urlPattern);
+
+            if (!urlRegExp.hasMatch(value)) {
+              return 'Please enter a valid URL';
+            }
+
+            return null;
+          },
+        ),
         _experienceField(),
-
         _experienceChips(),
         const SizedBox(height: 12),
         _applyButton(),
@@ -347,7 +428,9 @@ class _RegisterUlangMentorScreenState extends State<RegisterUlangMentorScreen> {
 
   Widget _textFieldWithTitle(
       String title, TextEditingController controller, String hintText,
-      {bool enabled = true, Function(String)? onChanged}) {
+      {bool enabled = true,
+      Function(String)? onChanged,
+      String? Function(String?)? validator}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -357,6 +440,7 @@ class _RegisterUlangMentorScreenState extends State<RegisterUlangMentorScreen> {
           controller: controller,
           enabled: enabled,
           onChanged: onChanged, // Add this line
+          validator: validator, // Add this line
         ),
       ],
     );
@@ -370,16 +454,40 @@ class _RegisterUlangMentorScreenState extends State<RegisterUlangMentorScreen> {
           children: [
             TittleTextField(
                 title: "Skill", color: ColorStyle().secondaryColors),
-            TextButton.icon(
-              onPressed: _addSkill,
-              icon: const Icon(Icons.add, size: 16),
-              label: Text("Add Skill", style: FontFamily().regularText),
-            ),
           ],
         ),
         TextFieldWidget(
           controller: _skillController,
           hintText: "Skill",
+          validator: (value) {
+            if (value!.isNotEmpty) {
+              return "Press the add button to add the skill";
+            } else if (_skills.isEmpty) {
+              return "You must have at least one skill";
+            }
+            return null;
+          },
+        ),
+        const SizedBox(height: 8),
+        Align(
+          alignment: Alignment.centerRight,
+          child: TextButton.icon(
+            onPressed: () {
+              if (_skillController.text.isEmpty) {
+                _formKey.currentState!.validate();
+                showTopSnackBar(context, "Please enter a skill",
+                    leftBarIndicatorColor: Colors.red);
+              } else if (_skills
+                  .any((skill) => skill['skill'] == _skillController.text)) {
+                showTopSnackBar(context, "Skill already added",
+                    leftBarIndicatorColor: Colors.red);
+              } else {
+                _addSkill();
+              }
+            },
+            icon: const Icon(Icons.add, size: 16),
+            label: Text("Add Skill", style: FontFamily().regularText),
+          ),
         ),
       ],
     );
@@ -419,11 +527,6 @@ class _RegisterUlangMentorScreenState extends State<RegisterUlangMentorScreen> {
           children: [
             TittleTextField(
                 title: "Experience", color: ColorStyle().secondaryColors),
-            TextButton.icon(
-              onPressed: _addExperience,
-              icon: const Icon(Icons.add, size: 16),
-              label: Text("Add Experience", style: FontFamily().regularText),
-            ),
           ],
         ),
         TextFieldWidget(
@@ -434,6 +537,34 @@ class _RegisterUlangMentorScreenState extends State<RegisterUlangMentorScreen> {
         TextFieldWidget(
           controller: _experienceCompanyController,
           hintText: "Company",
+          validator: (value) {
+            if (_roleController.text.isNotEmpty &&
+                _experienceCompanyController.text.isEmpty) {
+              return "role and company must be filled together";
+            } else if (_roleController.text.isNotEmpty &&
+                _experienceCompanyController.text.isNotEmpty) {
+              return "add experience using the add experience button";
+            }
+            return null;
+          },
+        ),
+        const SizedBox(height: 8),
+        Align(
+          alignment: Alignment.centerRight,
+          child: TextButton.icon(
+            onPressed: () {
+              if (_roleController.text.isEmpty ||
+                  _experienceCompanyController.text.isEmpty) {
+                _formKey.currentState!.validate();
+                showTopSnackBar(context, "Please fill all fields",
+                    leftBarIndicatorColor: Colors.red);
+              } else {
+                _addExperience();
+              }
+            },
+            icon: const Icon(Icons.add, size: 16),
+            label: Text("Add Experience", style: FontFamily().regularText),
+          ),
         ),
       ],
     );
@@ -513,7 +644,7 @@ class _RegisterUlangMentorScreenState extends State<RegisterUlangMentorScreen> {
               onPressed: () {
                 _updateMentor();
               },
-              title: "Apply",
+              title: "Daftar Ulang",
             ),
     );
   }

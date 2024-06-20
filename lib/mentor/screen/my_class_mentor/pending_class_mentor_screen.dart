@@ -1,63 +1,64 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:mentormatch_apps/mentee/model/my_class_model.dart';
-import 'package:mentormatch_apps/mentee/screen/my_class_mentee/akses_materi_my_class.dart';
-import 'package:mentormatch_apps/mentee/screen/my_class_mentee/evaluasi_mentee_screen.dart';
-import 'package:mentormatch_apps/mentee/screen/my_class_mentee/review_mentor_screen.dart';
-import 'package:mentormatch_apps/mentee/screen/notification_mentee_screen.dart';
+import 'package:mentormatch_apps/mentor/model/my_class_mentor_model.dart';
+import 'package:mentormatch_apps/mentor/screen/notification_mentor_screen.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
 import 'package:mentormatch_apps/style/text.dart';
-import 'package:mentormatch_apps/widget/category_card.dart';
-import 'package:mentormatch_apps/widget/flush_bar_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class DetailMyClassMenteeScreen extends StatefulWidget {
+class PendingClassMentorScreen extends StatefulWidget {
+  final List<FeedbackMyClassMentor> feedbacks;
+  final String locationMentoring;
+  final String addressMentoring;
+  final int approvedTransactionsCount;
+  final List<Transaction> transactions;
+  final List<LearningMaterialMentor> learningMaterial;
+  final List<Evaluation> evaluation;
   final DateTime endDate;
   final DateTime startDate;
   final String schedule;
   final int maxParticipants;
+  final List<String> term;
   final List<String> targetLearning;
-  final List<LearningMaterialMyClass> learningMaterial;
-  final String mentorId;
-  final String mentorPhoto;
-  final int periode;
-  final String mentorName;
-  final String namaKelas;
-  final List<String> terms;
-  final String descriptionKelas;
+  final String aksesLinkZoom;
+  final String deskripsiKelas;
+  final String classid;
   final String linkZoom;
-  final String linkEvaluasi;
-  final List<EvaluationMyClass> evaluasi;
-  final ClassMyClass classData;
+  final String namaKelas;
+  final int durationInDays;
+  final AllClass userClass;
 
-  DetailMyClassMenteeScreen(
-      {Key? key,
-      required this.endDate,
-      required this.startDate,
-      required this.schedule,
-      required this.maxParticipants,
-      required this.targetLearning,
-      required this.learningMaterial,
-      required this.periode,
-      required this.mentorName,
-      required this.namaKelas,
-      required this.terms,
-      required this.descriptionKelas,
-      required this.linkZoom,
-      required this.linkEvaluasi,
-      required this.evaluasi,
-      required this.classData,
-      required this.mentorPhoto,
-      required this.mentorId})
-      : super(key: key);
+  PendingClassMentorScreen({
+    Key? key,
+    required this.feedbacks,
+    required this.locationMentoring,
+    required this.addressMentoring,
+    required this.approvedTransactionsCount,
+    required this.transactions,
+    required this.namaKelas,
+    required this.durationInDays,
+    required this.endDate,
+    required this.startDate,
+    required this.schedule,
+    required this.maxParticipants,
+    required this.term,
+    required this.targetLearning,
+    required this.aksesLinkZoom,
+    required this.deskripsiKelas,
+    required this.classid,
+    required this.userClass,
+    required this.learningMaterial,
+    required this.linkZoom,
+    required this.evaluation,
+  }) : super(key: key);
 
   @override
-  State<DetailMyClassMenteeScreen> createState() =>
-      _DetailMyClassMenteeScreenState();
+  State<PendingClassMentorScreen> createState() =>
+      _PendingClassMentorScreenState();
 }
 
-class _DetailMyClassMenteeScreenState extends State<DetailMyClassMenteeScreen> {
+class _PendingClassMentorScreenState extends State<PendingClassMentorScreen> {
   _launchURL(String url) async {
     // ignore: deprecated_member_use
     if (await canLaunch(url)) {
@@ -89,7 +90,7 @@ class _DetailMyClassMenteeScreenState extends State<DetailMyClassMenteeScreen> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => NotificationMenteeScreen(),
+                  builder: (context) => NotificationMentorScreen(),
                 ),
               );
             },
@@ -116,13 +117,13 @@ class _DetailMyClassMenteeScreenState extends State<DetailMyClassMenteeScreen> {
                   ),
                 ),
                 Text(
-                  "${widget.periode} Hari",
+                  "${widget.durationInDays} Hari",
                   style: FontFamily().regularText.copyWith(
                       color: ColorStyle().primaryColors, fontSize: 14),
                 ),
                 const SizedBox(height: 12),
                 Text(
-                  widget.descriptionKelas.toString(),
+                  widget.deskripsiKelas.toString(),
                   style: FontFamily().regularText,
                 ),
                 const SizedBox(height: 12),
@@ -131,10 +132,10 @@ class _DetailMyClassMenteeScreenState extends State<DetailMyClassMenteeScreen> {
                   children: [
                     TittleTextField(title: 'Periode Kelas '),
                     Padding(
-                      padding: const EdgeInsets.only(top: 8.0),
+                      padding: const EdgeInsets.only(top: 2.0),
                       child: Text(
                         // buat seperti ini 30 Hari ( 24 Februari - 24 Maret 2024)
-                        '${widget.periode} Hari ($formattedStartDate - $formattedEndDate)',
+                        '${widget.durationInDays} Hari ($formattedStartDate - $formattedEndDate)',
 
                         style: FontFamily().regularText,
                       ),
@@ -147,7 +148,7 @@ class _DetailMyClassMenteeScreenState extends State<DetailMyClassMenteeScreen> {
                   children: [
                     TittleTextField(title: 'Jadwal Hari Kelas'),
                     Padding(
-                      padding: const EdgeInsets.only(top: 8.0),
+                      padding: const EdgeInsets.only(top: 2.0),
                       child: Text(
                         widget.schedule,
                         style: FontFamily().regularText,
@@ -161,9 +162,23 @@ class _DetailMyClassMenteeScreenState extends State<DetailMyClassMenteeScreen> {
                   children: [
                     TittleTextField(title: 'Kapasitas Kelas'),
                     Padding(
-                      padding: const EdgeInsets.only(top: 8.0),
+                      padding: const EdgeInsets.only(top: 2.0),
                       child: Text(
                         '${widget.maxParticipants} Orang',
+                        style: FontFamily().regularText,
+                      ),
+                    )
+                  ],
+                ),
+                const SizedBox(height: 12),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    TittleTextField(title: 'Jumlah Mentee terdaftar'),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 2.0),
+                      child: Text(
+                        '${widget.approvedTransactionsCount} Orang ',
                         style: FontFamily().regularText,
                       ),
                     )
@@ -176,12 +191,12 @@ class _DetailMyClassMenteeScreenState extends State<DetailMyClassMenteeScreen> {
                     Padding(
                       padding: const EdgeInsets.only(top: 2.0),
                       child: Text(
-                        widget.classData.location.toString(),
+                        widget.locationMentoring,
                         style: FontFamily().regularText,
                       ),
                     ),
                     Text(
-                      "Lokasi : ${widget.classData.address == null || widget.classData.address!.isEmpty ? "Meeting Zoom" : widget.classData.address}",
+                      "Lokasi : ${widget.addressMentoring == null || widget.addressMentoring!.isEmpty ? "Meeting Zoom" : widget.addressMentoring}",
                       style: FontFamily().regularText,
                     )
                   ],
@@ -192,20 +207,17 @@ class _DetailMyClassMenteeScreenState extends State<DetailMyClassMenteeScreen> {
                   children: [
                     TittleTextField(title: 'Module Pembelajaran '),
                     Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: const EdgeInsets.all(2.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: (widget.terms != null &&
-                                widget.terms!.isNotEmpty)
-                            ? widget.terms!.map<Widget>((term) {
+                        children: (widget.term.isNotEmpty)
+                            ? widget.term.map<Widget>((term) {
                                 return Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    const Text(
-                                      '\u2022 ',
-                                      style: TextStyle(
-                                          /* Your bullet point style */),
-                                    ),
+                                    const Text('\u2022 ',
+                                        style: TextStyle(
+                                            /* Your bullet point style */)),
                                     Expanded(
                                       child: Text(
                                         term,
@@ -237,9 +249,8 @@ class _DetailMyClassMenteeScreenState extends State<DetailMyClassMenteeScreen> {
                       padding: const EdgeInsets.all(8.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: (widget.targetLearning != null &&
-                                widget.targetLearning!.isNotEmpty)
-                            ? widget.targetLearning!.map<Widget>((term) {
+                        children: (widget.targetLearning.isNotEmpty)
+                            ? widget.targetLearning.map<Widget>((term) {
                                 return Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -313,101 +324,13 @@ class _DetailMyClassMenteeScreenState extends State<DetailMyClassMenteeScreen> {
                   style: FontFamily().boldText.copyWith(
                       color: ColorStyle().primaryColors, fontSize: 14),
                 ),
-                Text("Pilih menu dibawah ini untuk melakukan aktivitas kelas",
-                    style: FontFamily().regularText),
-                const SizedBox(height: 12),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 9.0),
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: [
-                        CardMyClass(
-                          messsage:
-                              "Klik untuk melakukan meeting dengan mentor",
-                          title: "Meeting",
-                          icon: 'assets/Handoff/icon/MyClass/meeting_icon.png',
-                          onTap: () {
-                            if (widget.classData.location == "Offline") {
-                              showTopSnackBar(
-                                  context, "Kelas ini dilakukan secara offline",
-                                  leftBarIndicatorColor:
-                                      ColorStyle().errorColors);
-                            } else {
-                              if (widget.linkZoom == null ||
-                                  widget.linkZoom!.isEmpty) {
-                                showTopSnackBar(
-                                    context, "Link Zoom belum tersedia",
-                                    leftBarIndicatorColor:
-                                        ColorStyle().errorColors);
-                              } else {
-                                _launchURL(widget.linkZoom!);
-                              }
-                            }
-                          },
-                        ),
-                        const SizedBox(
-                          width: 8,
-                        ),
-                        CardMyClass(
-                            messsage: "Klik untuk melihat materi kelass",
-                            title: "Materi",
-                            icon: 'assets/Handoff/icon/MyClass/materi_icon.png',
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => MaterMyClass(
-                                    learningMaterial: widget.learningMaterial,
-                                  ),
-                                ),
-                              );
-                            }),
-                        const SizedBox(
-                          width: 8,
-                        ),
-                        CardMyClass(
-                          messsage: "Klik untuk melakukan evaluasi",
-                          title: "Evaluasi",
-                          icon: 'assets/Handoff/icon/MyClass/evaluasi_icon.png',
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => EvaluasiMenteeScreen(
-                                  evaluasi: widget.evaluasi,
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                        const SizedBox(
-                          width: 8,
-                        ),
-                        CardMyClass(
-                          messsage:
-                              "Klik untuk memberikan review kepada mentor",
-                          title: "Review",
-                          icon: 'assets/Handoff/icon/MyClass/review_icon.png',
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ReviewMentorScreen(
-                                  mentorId: widget.mentorId,
-                                  mentorPhoto: widget.mentorPhoto,
-                                  mentorName: widget.mentorName,
-                                  classPeriode: widget.periode,
-                                  className: widget.namaKelas,
-                                ),
-                              ),
-                            );
-                          },
-                        )
-                      ],
-                    ),
-                  ),
+                SizedBox(
+                  height: 12,
                 ),
+                Text("Aktivitas kelas belum tersedia",
+                    style: FontFamily().regularText.copyWith(
+                        color: ColorStyle().disableColors, fontSize: 14)),
+                const SizedBox(height: 12),
               ],
             ),
           ),

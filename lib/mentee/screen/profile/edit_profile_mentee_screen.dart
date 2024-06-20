@@ -187,14 +187,17 @@ class _EditProfileMenteeScreenState extends State<EditProfileMenteeScreen> {
         children: [
           SingleChildScrollView(
             padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-            child: Column(
-              children: [
-                _profileSection(),
-                _formFields(),
-                const SizedBox(height: 40),
-                _saveButton(context),
-                const SizedBox(height: 10),
-              ],
+            child: Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  _profileSection(),
+                  _formFields(),
+                  const SizedBox(height: 40),
+                  _saveButton(context),
+                  const SizedBox(height: 10),
+                ],
+              ),
             ),
           ),
           if (_isSaving)
@@ -221,9 +224,13 @@ class _EditProfileMenteeScreenState extends State<EditProfileMenteeScreen> {
     return Column(
       children: [
         _textFieldWithTitle("Email", _emailController, "Your email",
-            enabled: false), // Assuming you have an email controller
+            enabled: false,
+            validator:
+                (String? value) {}), // Assuming you have an email controller
         _textFieldWithTitle("Name", _nameController, "Your name",
-            enabled: false), // Assuming you have a name controller
+            enabled: false,
+            validator:
+                (String? value) {}), // Assuming you have a name controller
         _textFieldWithTitle(
           "Job",
           _jobController,
@@ -232,6 +239,12 @@ class _EditProfileMenteeScreenState extends State<EditProfileMenteeScreen> {
             setState(() {
               job = value;
             });
+          },
+          validator: (value) {
+            if (value!.isEmpty) {
+              return "Job cannot be empty";
+            }
+            return null;
           },
         ),
         _textFieldWithTitle(
@@ -243,23 +256,43 @@ class _EditProfileMenteeScreenState extends State<EditProfileMenteeScreen> {
               company = value;
             });
           },
+          validator: (value) {
+            if (value!.isEmpty) {
+              return "School/University/Company cannot be empty";
+            }
+            return null;
+          },
         ),
         const SizedBox(height: 12),
         _skillField(),
         _skillChips(),
         const SizedBox(height: 12),
         _textFieldWithTitle(
-            "Location", _locationController, "Enter Your Location",
-            onChanged: (value) {
-          setState(() {
-            location = value;
-          });
-        }),
+          "Location",
+          _locationController,
+          "Enter Your Location",
+          onChanged: (value) {
+            setState(() {
+              location = value;
+            });
+          },
+          validator: (value) {
+            if (value!.isEmpty) {
+              return "Location cannot be empty";
+            }
+            return null;
+          },
+        ),
         _textFieldWithTitle("About", _aboutController, "Enter Your About",
             onChanged: (value) {
           setState(() {
             about = value;
           });
+        }, validator: (value) {
+          if (value!.isEmpty) {
+            return "About cannot be empty";
+          }
+          return null;
         }),
         _textFieldWithTitle(
             "LinkedIn", _linkedinController, "Enter Your LinkedIn URL",
@@ -267,6 +300,20 @@ class _EditProfileMenteeScreenState extends State<EditProfileMenteeScreen> {
           setState(() {
             linkedin = value;
           });
+        }, validator: (value) {
+          if (value!.isEmpty) {
+            return "LinkedIn cannot be empty";
+          }
+          // Regular expression to validate a URL
+          const urlPattern =
+              r'^(https?:\/\/)?([a-z0-9-]+\.)+[a-z]{2,6}(\/[^\s]*)?$';
+          final urlRegExp = RegExp(urlPattern);
+
+          if (!urlRegExp.hasMatch(value)) {
+            return 'Please enter a valid URL';
+          }
+
+          return null;
         }),
         const SizedBox(height: 12),
         _experienceField(),
@@ -277,7 +324,9 @@ class _EditProfileMenteeScreenState extends State<EditProfileMenteeScreen> {
 
   Widget _textFieldWithTitle(
       String title, TextEditingController controller, String hintText,
-      {bool enabled = true, Function(String)? onChanged}) {
+      {required FormFieldValidator<String> validator,
+      bool enabled = true,
+      Function(String)? onChanged}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -286,7 +335,8 @@ class _EditProfileMenteeScreenState extends State<EditProfileMenteeScreen> {
           hintText: hintText,
           controller: controller,
           enabled: enabled,
-          onChanged: onChanged, // Add this line
+          onChanged: onChanged,
+          validator: validator,
         ),
       ],
     );
@@ -300,17 +350,40 @@ class _EditProfileMenteeScreenState extends State<EditProfileMenteeScreen> {
           children: [
             TittleTextField(
                 title: "Skill", color: ColorStyle().secondaryColors),
-            TextButton.icon(
-              onPressed: _addSkill,
-              icon: const Icon(Icons.add, size: 16),
-              label: Text("Add Skill", style: FontFamily().regularText),
-            ),
           ],
         ),
         TextFieldWidget(
           controller: _skillController,
           hintText: "Skill",
-          formKey: _formKey,
+          validator: (value) {
+            if (value!.isNotEmpty) {
+              return "Press the add button to add the skill";
+            } else if (_skills.isEmpty) {
+              return "You must have at least one skill";
+            }
+            return null;
+          },
+        ),
+        SizedBox(height: 8),
+        Align(
+          alignment: Alignment.centerRight,
+          child: TextButton.icon(
+            onPressed: () {
+              if (_skillController.text.isEmpty) {
+                _formKey.currentState!.validate();
+                showTopSnackBar(context, "Please enter a skill",
+                    leftBarIndicatorColor: Colors.red);
+              } else if (_skills
+                  .any((skill) => skill['skill'] == _skillController.text)) {
+                showTopSnackBar(context, "Skill already added",
+                    leftBarIndicatorColor: Colors.red);
+              } else {
+                _addSkill();
+              }
+            },
+            icon: const Icon(Icons.add, size: 16),
+            label: Text("Add Skill", style: FontFamily().regularText),
+          ),
         ),
       ],
     );
@@ -324,11 +397,6 @@ class _EditProfileMenteeScreenState extends State<EditProfileMenteeScreen> {
           children: [
             TittleTextField(
                 title: "Experience", color: ColorStyle().secondaryColors),
-            TextButton.icon(
-              onPressed: _addExperience,
-              icon: const Icon(Icons.add, size: 16),
-              label: Text("Add Experience", style: FontFamily().regularText),
-            ),
           ],
         ),
         TextFieldWidget(
@@ -339,6 +407,34 @@ class _EditProfileMenteeScreenState extends State<EditProfileMenteeScreen> {
         TextFieldWidget(
           controller: _experienceCompanyController,
           hintText: "Company",
+          validator: (value) {
+            if (_roleController.text.isNotEmpty &&
+                _experienceCompanyController.text.isEmpty) {
+              return "role and company must be filled together";
+            } else if (_roleController.text.isNotEmpty &&
+                _experienceCompanyController.text.isNotEmpty) {
+              return "add experience using the add experience button";
+            }
+            return null;
+          },
+        ),
+        SizedBox(height: 8),
+        Align(
+          alignment: Alignment.centerRight,
+          child: TextButton.icon(
+            onPressed: () {
+              if (_roleController.text.isEmpty ||
+                  _experienceCompanyController.text.isEmpty) {
+                _formKey.currentState!.validate();
+                showTopSnackBar(context, "Please fill all fields",
+                    leftBarIndicatorColor: Colors.red);
+              } else {
+                _addExperience();
+              }
+            },
+            icon: const Icon(Icons.add, size: 16),
+            label: Text("Add Experience", style: FontFamily().regularText),
+          ),
         ),
       ],
     );
@@ -374,11 +470,41 @@ class _EditProfileMenteeScreenState extends State<EditProfileMenteeScreen> {
     return ElevatedButtonWidget(
       title: "Simpan",
       onPressed: () async {
-        if (_skills.isEmpty) {
-          showTopSnackBar(context, 'Please add at least one skill',
-              leftBarIndicatorColor: ColorStyle().errorColors);
-        } else if (_formKey.currentState!.validate()) {
-          _formKey.currentState!.save();
+        if (_formKey.currentState!.validate()) {
+          if (_skills.isEmpty) {
+            showTopSnackBar(context, "You must have at least one skill",
+                leftBarIndicatorColor: Colors.red);
+
+            return;
+          }
+          if (experiences.isEmpty) {
+            showTopSnackBar(context, "You must have at least one experience",
+                leftBarIndicatorColor: Colors.red);
+
+            return;
+          }
+
+          // suruh mengklik tombol add experience jika role dan company terisi
+          if (_roleController.text.isNotEmpty ||
+              _experienceCompanyController.text.isNotEmpty) {
+            showTopSnackBar(context,
+                "experiences must be added using add experience button",
+                leftBarIndicatorColor: Colors.red);
+
+            return;
+          }
+
+          // validasi semua field
+          if (_jobController.text.isEmpty ||
+              _companyController.text.isEmpty ||
+              _locationController.text.isEmpty ||
+              _aboutController.text.isEmpty ||
+              _linkedinController.text.isEmpty) {
+            showTopSnackBar(context, "Please fill all required fields",
+                leftBarIndicatorColor: Colors.red);
+
+            return;
+          }
           await _updateUserProfile();
           showTopSnackBar(context, 'Profile updated successfully',
               leftBarIndicatorColor: ColorStyle().succesColors);
