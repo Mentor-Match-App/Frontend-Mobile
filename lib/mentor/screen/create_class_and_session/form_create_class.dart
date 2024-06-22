@@ -271,7 +271,7 @@ class _FormCreatePremiumClassScreenState
       final DateTime startDate = formatter.parse(startDateController.text);
       final DateTime endDate = formatter.parse(endDateController.text);
       final int duration = endDate.difference(startDate).inDays +
-          1; // Tambahkan 1 untuk termasuk hari terakhir
+          1; // Tambahkan 1 untuk termasuk hari terakhir 
 
       if (duration >= 0) {
         durationInDaysController.text = duration.toString();

@@ -121,7 +121,7 @@ class _DetailEvaluationMenteeMentorScreenState
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              "Rincian Kegiatan",
+              "Send Feedback Evaluasi",
               style: FontFamily()
                   .titleText
                   .copyWith(color: ColorStyle().primaryColors),

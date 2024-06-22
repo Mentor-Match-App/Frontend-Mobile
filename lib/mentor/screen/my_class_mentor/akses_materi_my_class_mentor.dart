@@ -205,6 +205,21 @@ class _MyMateriMentorState extends State<MyMateriMentor> {
               TextFieldWidget(
                 controller: _linkMateriPembelajaranController,
                 hintText: "masukkan link materi pembelajaran",
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Field tidak boleh kosong';
+                  }
+
+                  const urlPattern =
+                      r'^(https?:\/\/)?([a-z0-9-]+\.)+[a-z]{2,6}(\/[^\s]*)?$';
+                  final urlRegExp = RegExp(urlPattern);
+
+                  if (!urlRegExp.hasMatch(value)) {
+                    return 'Please enter a valid URL';
+                  }
+
+                  return null;
+                },
               ),
               SizedBox(height: 12),
               Align(

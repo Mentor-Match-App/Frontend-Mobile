@@ -125,7 +125,8 @@ class _ClassSubmissionMentorScreenState
               height: MediaQuery.of(context).size.height / 2.0,
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Center(child: Text('Kamu belum men kelas saat ini')),
+                child:
+                    Center(child: Text('Kamu belum memiliki kelas saat ini')),
               ),
             );
           }

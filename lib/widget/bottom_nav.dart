@@ -18,7 +18,7 @@ class BottomNavbarWidget extends StatelessWidget {
       items: const <BottomNavigationBarItem>[
         BottomNavigationBarItem(
           icon: Icon(Icons.home_filled),
-          label: 'Beranda',
+          label: 'Home',
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.menu_book_sharp),
@@ -30,7 +30,7 @@ class BottomNavbarWidget extends StatelessWidget {
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.person_outline),
-          label: 'Profil',
+          label: 'Profile',
         ),
       ],
       // backgroundColor: const Color(0xFF2465ac),

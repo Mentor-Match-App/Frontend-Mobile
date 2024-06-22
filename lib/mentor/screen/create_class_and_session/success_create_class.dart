@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:mentormatch_apps/mentor/screen/my_class_mentor/my_class_list_mentor_screen.dart';
-import 'package:mentormatch_apps/mentor/screen/my_class_mentor/premium_class_mentor_screen.dart';
 import 'package:mentormatch_apps/mentor/screen/bottom_mentor_screen.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
@@ -18,7 +16,9 @@ class _SuccesCreateClassScreenState extends State<SuccesCreateClassScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: Image.asset('assets/Handoff/logo/LogoMobile.png'),
+      ),
       body: ListView(
         children: [
           Padding(
@@ -48,9 +48,10 @@ class _SuccesCreateClassScreenState extends State<SuccesCreateClassScreen> {
                     Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const BottomNavbarMentorScreen(
-                              activeScreen: 1,
-                            )),
+                            builder: (context) =>
+                                const BottomNavbarMentorScreen(
+                                  activeScreen: 1,
+                                )),
                         (route) => false);
                   },
                 )

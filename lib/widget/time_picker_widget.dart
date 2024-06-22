@@ -158,11 +158,16 @@ class _DatePickerSessionsWidgetState extends State<DatePickerSessionsWidget> {
   DateTime selectedDate = DateTime.now();
 
   Future<void> _selectDate(BuildContext context) async {
+    final DateTime now = DateTime.now();
+    final DateTime firstSelectableDate = now.add(Duration(days: 1));
+
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: selectedDate,
-      firstDate: DateTime(2024),
-      lastDate: DateTime(2025),
+      initialDate: selectedDate.isBefore(firstSelectableDate)
+          ? firstSelectableDate
+          : selectedDate,
+      firstDate: firstSelectableDate,
+      lastDate: DateTime(2050),
     );
     if (picked != null) {
       widget.controller.text = DateFormat('dd-MM-yyyy').format(picked);
