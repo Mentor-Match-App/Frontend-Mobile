@@ -73,7 +73,7 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'Flutter Demo',
+        title: 'Mentor Match',
         theme: ThemeData(
           useMaterial3: true,
         ),

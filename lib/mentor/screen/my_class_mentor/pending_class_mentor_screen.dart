@@ -59,11 +59,9 @@ class PendingClassMentorScreen extends StatefulWidget {
 }
 
 class _PendingClassMentorScreenState extends State<PendingClassMentorScreen> {
-  _launchURL(String url) async {
-    // ignore: deprecated_member_use
-    if (await canLaunch(url)) {
-      // ignore: deprecated_member_use
-      await launch(url);
+  _launchURL(Uri url) async {
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url);
     } else {
       throw 'Tidak dapat membuka $url';
     }

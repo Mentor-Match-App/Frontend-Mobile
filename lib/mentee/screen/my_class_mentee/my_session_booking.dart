@@ -19,15 +19,20 @@ class _MySessionBookingState extends State<MySessionBooking> {
 
   int _getPriority(SessionMyClass userSessions) {
     String buttonText = "Available";
-    // buttonCollor scheduled ketika isActive bernilai true + startTimenya belum mulai
-    if (userSessions.isActive == true &&
-        DateTime.parse(userSessions.startTime!).isAfter(DateTime.now())) {
+
+    DateTime startTime = DateTime.parse(userSessions.startTime!);
+    startTime = startTime.toLocal().subtract(const Duration(hours: 7));
+
+    DateTime endTime = DateTime.parse(userSessions.endTime!);
+    endTime = endTime.toLocal().subtract(const Duration(hours: 7));
+
+    if (userSessions.isActive == true && startTime.isAfter(DateTime.now())) {
       buttonText = "Scheduled";
     } else if (userSessions.isActive == false &&
-        DateTime.now().isBefore(DateTime.parse(userSessions.endTime!))) {
+        DateTime.now().isBefore(endTime)) {
       buttonText = "Active";
     } else if (userSessions.isActive == false ||
-        DateTime.now().isAfter(DateTime.parse(userSessions.endTime!))) {
+        DateTime.now().isAfter(endTime)) {
       buttonText = "Finished";
     }
 

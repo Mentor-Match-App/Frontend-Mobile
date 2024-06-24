@@ -61,11 +61,16 @@ class DetailMentorClassAllScreen extends StatefulWidget {
 
 class _DetailMentorClassAllScreenState
     extends State<DetailMentorClassAllScreen> {
-  _launchURL(String url) async {
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Tidak dapat membuka $url';
+  Future<void> _launchURL(String urlString) async {
+    try {
+      final Uri url = Uri.parse(urlString);
+      if (await canLaunchUrl(url)) {
+        await launchUrl(url);
+      } else {
+        throw 'Tidak dapat membuka $urlString';
+      }
+    } catch (e) {
+      throw 'URL tidak valid: $urlString';
     }
   }
 

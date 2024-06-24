@@ -2,9 +2,9 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mentormatch_apps/mentee/model/my_class_model.dart';
-import 'package:mentormatch_apps/mentee/screen/session/detail_session_mentor.dart';
 import 'package:mentormatch_apps/mentee/screen/detail_mentor_class_screen.dart';
 import 'package:mentormatch_apps/mentee/screen/my_class_mentee/detail_my_class_mentee_screen.dart';
+import 'package:mentormatch_apps/mentee/screen/session/detail_session_mentor.dart';
 import 'package:mentormatch_apps/mentee/service/session_mentor_service.dart';
 import 'package:mentormatch_apps/mentor/model/mentor_model.dart';
 import 'package:mentormatch_apps/mentor/model/session_model.dart';
@@ -236,11 +236,9 @@ class _SearchPageMenteeMobileState extends State<SearchPageMenteeMobile> {
   }
 
   /// link zoom akses///
-  _launchURL(String url) async {
-    // ignore: deprecated_member_use
-    if (await canLaunch(url)) {
-      // ignore: deprecated_member_use
-      await launch(url);
+  _launchURL(Uri url) async {
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url);
     } else {
       throw 'Tidak dapat membuka $url';
     }

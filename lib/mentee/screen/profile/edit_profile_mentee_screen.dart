@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mentormatch_apps/mentee/screen/bottom_mentee_screen.dart';
 import 'package:mentormatch_apps/mentee/screen/profile/service.dart';
+import 'package:mentormatch_apps/mentor/service/choose_role_service.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
 import 'package:mentormatch_apps/widget/button.dart';
@@ -20,6 +21,7 @@ class EditProfileMenteeScreen extends StatefulWidget {
   final String currentCompany;
   final List<Map<String, String>> experiences;
   final int activeScreen;
+  final String? selectedRole;
 
   const EditProfileMenteeScreen({
     Key? key,
@@ -31,6 +33,7 @@ class EditProfileMenteeScreen extends StatefulWidget {
     required this.currentCompany,
     required this.experiences,
     required this.activeScreen, // Add this line
+    this.selectedRole,
   }) : super(key: key);
 
   @override
@@ -39,6 +42,8 @@ class EditProfileMenteeScreen extends StatefulWidget {
 }
 
 class _EditProfileMenteeScreenState extends State<EditProfileMenteeScreen> {
+  final ChooseRoleService chooseRoleService = ChooseRoleService();
+
   final TextEditingController _skillController = TextEditingController();
   List<Map<String, String>> _skills = [];
   final _formKey = GlobalKey<FormState>();
@@ -508,6 +513,10 @@ class _EditProfileMenteeScreenState extends State<EditProfileMenteeScreen> {
           await _updateUserProfile();
           showTopSnackBar(context, 'Profile updated successfully',
               leftBarIndicatorColor: ColorStyle().succesColors);
+
+          if (widget.selectedRole == 'Mentee') {
+            await chooseRoleService.chooseRole("Mentee");
+          }
 
           if (widget.activeScreen == 0) {
             Navigator.pushAndRemoveUntil(

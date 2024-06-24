@@ -60,9 +60,9 @@ class _BookingClassMenteeScreenState extends State<BookingClassMenteeScreen> {
     );
   }
 
-  _launchURL(String url) async {
-    if (await canLaunch(url)) {
-      await launch(url);
+  _launchURL(Uri url) async {
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url);
     } else {
       throw 'Tidak dapat membuka $url';
     }

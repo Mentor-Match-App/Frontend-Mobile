@@ -20,35 +20,35 @@ class _MySessionCreateState extends State<MySessionCreate> {
 
   int _getPriority(Session userSessions) {
     String buttonText = "Available";
-    // buttonCollor scheduled ketika isActive bernilai true + belum
 
-    if (userSessions.isActive == true) {
+    DateTime startTime = DateTime.parse(userSessions.startTime!);
+    startTime = startTime.toLocal().subtract(const Duration(hours: 7));
+
+    DateTime endTime = DateTime.parse(userSessions.endTime!);
+    endTime = endTime.toLocal().subtract(const Duration(hours: 7));
+
+    if (userSessions.isActive == true &&
+        userSessions.participant!.length < userSessions.maxParticipants! &&
+        DateTime.now().isBefore(startTime) &&
+        DateTime.now().isBefore(endTime)) {
       buttonText = "Scheduled";
-      // buttonCollor full ketika participant.length == maxParticipant + startTime nya belum mulai + isActive bernilai false
-    }
-    if (userSessions.participant!.length == userSessions.maxParticipants &&
-        DateTime.now().isBefore(DateTime.parse(userSessions.startTime!)) &&
-        DateTime.now().isBefore(DateTime.parse(userSessions.endTime!)) &&
+    } else if (userSessions.participant!.length ==
+            userSessions.maxParticipants &&
+        DateTime.now().isBefore(startTime) &&
+        DateTime.now().isBefore(endTime) &&
         userSessions.isActive == true) {
       buttonText = "Full";
-    }
-
-    // buttonCollor active ketika isActive bernilai false + participant.length >= 1 + dan waktunya masih berlangsung
-    if (userSessions.isActive == false &&
-        userSessions.participant!.length >= 1 &&
-        DateTime.now().isBefore(DateTime.parse(userSessions.endTime!))) {
+    } else if (userSessions.isActive == false &&
+        userSessions.participant!.isNotEmpty &&
+        DateTime.now().isBefore(endTime)) {
       buttonText = "Active";
-    }
-    if (userSessions.isActive == false &&
-        userSessions.participant!.length == 0 &&
-        DateTime.now().isAfter(DateTime.parse(userSessions.startTime!))) {
+    } else if (userSessions.isActive == false &&
+        userSessions.participant!.isEmpty &&
+        DateTime.now().isAfter(startTime)) {
       buttonText = "Expired";
-    }
-
-    // buttonCollor finished ketika isActive bernilai false + participant.length >= 1 + sudah lewat endTime
-    else if (userSessions.isActive == false &&
-        userSessions.participant!.length >= 1 &&
-        DateTime.now().isAfter(DateTime.parse(userSessions.endTime!))) {
+    } else if (userSessions.isActive == false &&
+        userSessions.participant!.isNotEmpty &&
+        DateTime.now().isAfter(endTime)) {
       buttonText = "Finished";
     }
 
@@ -73,11 +73,9 @@ class _MySessionCreateState extends State<MySessionCreate> {
   }
 
   //// link zoom akses///
-  _launchURL(String url) async {
-    // ignore: deprecated_member_use
-    if (await canLaunch(url)) {
-      // ignore: deprecated_member_use
-      await launch(url);
+  _launchURL(Uri url) async {
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url);
     } else {
       throw 'Tidak dapat membuka $url';
     }

@@ -101,14 +101,16 @@ class _EvaluasiMentorScreenState extends State<EvaluasiMentorScreen> {
           leftBarIndicatorColor: ColorStyle().errorColors);
     } finally {
       setState(() => _isLoading = false);
+
+      setState(() {
+        _futureClassData = ListClassMentor().fetchClassData();
+      });
     }
   }
 
-  _launchURL(String url) async {
-    // ignore: deprecated_member_use
-    if (await canLaunch(url)) {
-      // ignore: deprecated_member_use
-      await launch(url);
+  _launchURL(Uri url) async {
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url);
     } else {
       throw 'Tidak dapat membuka $url';
     }

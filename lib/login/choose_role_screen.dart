@@ -63,7 +63,7 @@ class _ChooseRoleScreenState extends State<ChooseRoleScreen> {
                               ElevatedButtonWidget(
                                 onPressed: () async {
                                   // Start the async operation
-                                  await chooseRoleService.chooseRole("Mentee");
+                                  // await chooseRoleService.chooseRole("Mentee");
 
                                   // Check if the widget is still mounted before using the context
                                   if (mounted) {
@@ -80,6 +80,7 @@ class _ChooseRoleScreenState extends State<ChooseRoleScreen> {
                                           currentJob: '',
                                           currentCompany: '',
                                           experiences: [],
+                                          selectedRole: 'Mentee',
                                         ),
                                       ),
                                       (route) => false,

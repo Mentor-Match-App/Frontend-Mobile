@@ -37,13 +37,16 @@ class _MyMateriMentorState extends State<MyMateriMentor> {
       TextEditingController();
   bool _isLoading = false;
 
-  _launchURL(String url) async {
-    // ignore: deprecated_member_use
-    if (await canLaunch(url)) {
-      // ignore: deprecated_member_use
-      await launch(url);
-    } else {
-      throw 'Tidak dapat membuka $url';
+  Future<void> _launchURL(String urlString) async {
+    try {
+      final Uri url = Uri.parse(urlString);
+      if (await canLaunchUrl(url)) {
+        await launchUrl(url);
+      } else {
+        throw 'Tidak dapat membuka $urlString';
+      }
+    } catch (e) {
+      throw 'URL tidak valid: $urlString';
     }
   }
 

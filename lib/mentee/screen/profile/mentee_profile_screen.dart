@@ -59,11 +59,16 @@ class _ProfileMenteeScreenState extends State<ProfileMenteeScreen> {
     });
   }
 
-  _launchURL(String url) async {
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Tidak dapat membuka $url';
+  Future<void> _launchURL(String urlString) async {
+    try {
+      final Uri url = Uri.parse(urlString);
+      if (await canLaunchUrl(url)) {
+        await launchUrl(url);
+      } else {
+        throw 'Tidak dapat membuka $urlString';
+      }
+    } catch (e) {
+      throw 'URL tidak valid: $urlString';
     }
   }
 
@@ -131,7 +136,7 @@ class _ProfileMenteeScreenState extends State<ProfileMenteeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-     appBar: AppBar(
+      appBar: AppBar(
         backgroundColor: ColorStyle().whiteColors,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -186,7 +191,7 @@ class _ProfileMenteeScreenState extends State<ProfileMenteeScreen> {
           ],
         ),
       ),
-       body: FutureBuilder<MenteeProfile>(
+      body: FutureBuilder<MenteeProfile>(
         future: menteeService
             .getMenteeProfile(), // Call the asynchronous fetchMentee method here
         builder: (context, snapshot) {
