@@ -5,7 +5,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileService {
   Dio dio = Dio(); // Create Dio instance
-  
 
   Future<void> updateProfile({
     required String job,
@@ -13,8 +12,8 @@ class ProfileService {
     required List<String> skills,
     required String location,
     required String about,
-    required String linkedin,
-    required List<Map<String, String>> experiences,
+    String? linkedin,
+    List<Map<String, String>>? experiences,
   }) async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token') ?? '';

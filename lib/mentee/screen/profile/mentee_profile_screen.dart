@@ -12,6 +12,7 @@ import 'package:mentormatch_apps/style/font_style.dart';
 import 'package:mentormatch_apps/style/text.dart';
 import 'package:mentormatch_apps/widget/category_card.dart';
 import 'package:mentormatch_apps/widget/experience_widget.dart';
+import 'package:mentormatch_apps/widget/flush_bar_widget.dart';
 import 'package:mentormatch_apps/widget/profile_avatar.dart';
 import 'package:mentormatch_apps/widget/show_dialog_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -159,7 +160,7 @@ class _ProfileMenteeScreenState extends State<ProfileMenteeScreen> {
                       _fetchUnreadNotificationsCount(); // Fetch the unread count when returning to this screen
                     });
                   },
-                  icon: Icon(Icons.notifications_none_outlined),
+                  icon: const Icon(Icons.notifications_none_outlined),
                   color: ColorStyle().secondaryColors,
                 ),
                 if (_unreadNotificationsCount > 0)
@@ -167,18 +168,18 @@ class _ProfileMenteeScreenState extends State<ProfileMenteeScreen> {
                     right: 11,
                     top: 11,
                     child: Container(
-                      padding: EdgeInsets.all(2),
+                      padding: const EdgeInsets.all(2),
                       decoration: BoxDecoration(
                         color: Colors.red,
                         borderRadius: BorderRadius.circular(6),
                       ),
-                      constraints: BoxConstraints(
+                      constraints: const BoxConstraints(
                         minWidth: 14,
                         minHeight: 14,
                       ),
                       child: Text(
                         '$_unreadNotificationsCount',
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: Colors.white,
                           fontSize: 8,
                         ),
@@ -196,7 +197,7 @@ class _ProfileMenteeScreenState extends State<ProfileMenteeScreen> {
             .getMenteeProfile(), // Call the asynchronous fetchMentee method here
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
+            return const Center(
               child: CircularProgressIndicator(),
             );
           } else if (snapshot.hasError) {
@@ -221,7 +222,7 @@ class _ProfileMenteeScreenState extends State<ProfileMenteeScreen> {
                           ),
                     ),
                     Transform.translate(
-                      offset: Offset(0.0, -120 / 2.0),
+                      offset: const Offset(0.0, -120 / 2.0),
                       child: Center(
                         child: Column(
                           children: [
@@ -247,7 +248,7 @@ class _ProfileMenteeScreenState extends State<ProfileMenteeScreen> {
                                       top:
                                           0, // Adjust as needed to position the edit icon correctly
                                       child: IconButton(
-                                        icon: Icon(Icons.edit),
+                                        icon: const Icon(Icons.edit),
                                         onPressed: _navigateToEditProfile,
                                       )),
                                 ],
@@ -262,7 +263,7 @@ class _ProfileMenteeScreenState extends State<ProfileMenteeScreen> {
                                     Icons.work,
                                     color: ColorStyle().primaryColors,
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                       width:
                                           8), // Provides a small gap between the icon and the text
                                   Text(
@@ -283,7 +284,7 @@ class _ProfileMenteeScreenState extends State<ProfileMenteeScreen> {
                                     Icons.location_on,
                                     color: ColorStyle().primaryColors,
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                       width:
                                           8), // Provides a small gap between the icon and the text
                                   Text(
@@ -325,11 +326,16 @@ class _ProfileMenteeScreenState extends State<ProfileMenteeScreen> {
                                               ColorStyle().whiteColors,
                                         ),
                                         onPressed: () {
-                                          final linkedlnlink =
-                                              mentee?.user!.linkedin ?? '';
-                                          _launchURL(linkedlnlink);
+                                          if (mentee.user!.linkedin == null ||
+                                              mentee.user!.linkedin == '') {
+                                            showTopSnackBar(context,
+                                                'LinkedIn belum diisi');
+                                          } else {
+                                            _launchURL(
+                                                mentee.user!.linkedin ?? '');
+                                          }
                                         },
-                                        icon: Icon(Icons.link),
+                                        icon: const Icon(Icons.link),
                                         label: Text('Linkedln',
                                             style: FontFamily()
                                                 .regularText
@@ -352,23 +358,44 @@ class _ProfileMenteeScreenState extends State<ProfileMenteeScreen> {
                                     title: 'Experience',
                                     color: ColorStyle().primaryColors,
                                   ),
-                                  Column(
-                                    children: mentee.user!.experiences
-                                            ?.where((experience) =>
-                                                experience.isCurrentJob ==
-                                                false)
-                                            .map((experience) {
-                                          return ExperienceWidget(
-                                            role: experience.jobTitle ??
-                                                'No Job Title',
-                                            company: experience.company ??
-                                                'No Company',
-                                          );
-                                        }).toList() ??
-                                        [
-                                          Text('No experiences')
-                                        ], // Jika tidak ada pengalaman atau list kosong, tampilkan 'No experiences'
-                                  )
+                                  const SizedBox(
+                                    height: 8,
+                                  ),
+                                  if (mentee.user!.experiences
+                                          ?.where((experience) =>
+                                              experience.isCurrentJob == false)
+                                          .toList()
+                                          .isEmpty ??
+                                      true)
+                                    Padding(
+                                      padding:
+                                          const EdgeInsets.only(left: 12.0),
+                                      child: Text(
+                                        'no experiences',
+                                        style: FontFamily()
+                                            .regularText
+                                            .copyWith(
+                                              fontSize: 14,
+                                              color: ColorStyle().disableColors,
+                                            ),
+                                      ),
+                                    )
+                                  else
+                                    Column(
+                                      children: mentee.user!.experiences
+                                              ?.where((experience) =>
+                                                  experience.isCurrentJob ==
+                                                  false)
+                                              .map((experience) {
+                                            return ExperienceWidget(
+                                              role: experience.jobTitle ??
+                                                  'No Job Title',
+                                              company: experience.company ??
+                                                  'No Company',
+                                            );
+                                          }).toList() ??
+                                          [const Text('No experiences')],
+                                    )
                                 ],
                               ),
                             ),
@@ -379,7 +406,7 @@ class _ProfileMenteeScreenState extends State<ProfileMenteeScreen> {
                                 color: ColorStyle().primaryColors,
                               ),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 8,
                             ),
                             Align(
@@ -393,7 +420,7 @@ class _ProfileMenteeScreenState extends State<ProfileMenteeScreen> {
                                                   skill: skill,
                                                 ))
                                             .toList() ??
-                                        [Text('No skills')]),
+                                        [const Text('No skills')]),
                               ),
                             ),
                             const SizedBox(
