@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:mentormatch_apps/mentee/model/my_class_model.dart';
 import 'package:mentormatch_apps/mentee/screen/my_class_mentee/booking_class_mentee_screen.dart';
 import 'package:mentormatch_apps/mentee/screen/my_class_mentee/my_session_booking.dart';
 import 'package:mentormatch_apps/mentee/screen/my_class_mentee/premium_class_mentee_screen.dart';
 import 'package:mentormatch_apps/mentee/screen/notification_mentee_screen.dart';
+import 'package:mentormatch_apps/mentor/service/my_class_service.dart';
 import 'package:mentormatch_apps/mentor/service/notification_service.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
@@ -11,8 +13,7 @@ import 'package:mentormatch_apps/widget/search_bar.dart';
 class MyClassMenteeListScreen extends StatefulWidget {
   final String subMenu; // New parameter for initial sub-menu
 
-  const MyClassMenteeListScreen({Key? key, required this.subMenu})
-      : super(key: key);
+  const MyClassMenteeListScreen({super.key, required this.subMenu});
 
   @override
   State<MyClassMenteeListScreen> createState() =>
@@ -22,6 +23,72 @@ class MyClassMenteeListScreen extends StatefulWidget {
 class _MyClassMenteeListScreenState extends State<MyClassMenteeListScreen> {
   int _unreadNotificationsCount = 0;
   final NotificationService _notificationService = NotificationService();
+  late Future<List<TransactionMyClass>> classData;
+  late Future<List<ParticipantMyClass>> sessionData;
+
+  int _getClassPriority(TransactionMyClass transaction) {
+    DateTime now = DateTime.now();
+    DateTime startDate =
+        DateTime.parse(transaction.transactionClass?.startDate ?? '');
+    DateTime endDate =
+        DateTime.parse(transaction.transactionClass?.endDate ?? '');
+    bool isClassActive = now.isAfter(startDate) &&
+        now.isBefore(endDate) &&
+        transaction.paymentStatus == "Approved";
+    bool isClassScheduled =
+        now.isBefore(startDate) && transaction.paymentStatus == "Approved";
+    bool isClassFinished =
+        now.isAfter(endDate) && transaction.paymentStatus == "Approved";
+
+    if (transaction.paymentStatus == "Rejected") {
+      return 0; // Highest priority
+    } else if (transaction.paymentStatus == "Pending") {
+      return 1;
+    } else if (transaction.paymentStatus == "Expired") {
+      return 2;
+    } else if (isClassActive) {
+      return 3;
+    } else if (isClassScheduled) {
+      return 4;
+    } else if (isClassFinished) {
+      return 5;
+    }
+    return 6;
+  }
+
+  int _getSessionPriority(SessionMyClass userSessions) {
+    String buttonText = "Available";
+
+    DateTime startTime = DateTime.parse(userSessions.startTime!);
+    startTime = startTime.toLocal().subtract(const Duration(hours: 7));
+    DateTime endTime = DateTime.parse(userSessions.endTime!);
+    endTime = endTime.toLocal().subtract(const Duration(hours: 7));
+
+    if (userSessions.isActive == true && startTime.isAfter(DateTime.now())) {
+      buttonText = "Scheduled";
+    } else if (userSessions.isActive == false &&
+        DateTime.now().isBefore(endTime) &&
+        DateTime.now().isAfter(startTime)) {
+      buttonText = "Active";
+    } else if (userSessions.isActive == false &&
+        DateTime.now().isAfter(endTime)) {
+      buttonText = "Finished";
+    }
+
+    return _calculateSessionpriority(buttonText);
+  }
+
+  int _calculateSessionpriority(String buttonText) {
+    if (buttonText == "Active") {
+      return 1;
+    } else if (buttonText == "Scheduled") {
+      return 2;
+    } else if (buttonText == "Finished") {
+      return 3;
+    } else {
+      return 0;
+    }
+  }
 
   Future<void> _fetchUnreadNotificationsCount() async {
     try {
@@ -42,6 +109,7 @@ class _MyClassMenteeListScreenState extends State<MyClassMenteeListScreen> {
     super.initState();
     _fetchUnreadNotificationsCount();
     changeClass(widget.subMenu); // Set the initial sub-menu
+    fetchData();
   }
 
   bool isBookingClassActive = true;
@@ -64,6 +132,40 @@ class _MyClassMenteeListScreenState extends State<MyClassMenteeListScreen> {
         isSessionActive = true;
       }
     });
+  }
+
+  Future<void> fetchData() async {
+    setState(() {
+      classData = BookingService().fetchUserTransactions();
+      sessionData = BookingService().fetchUserSessions();
+    });
+  }
+
+  int _getBookingClassCount(List<TransactionMyClass> transactions) {
+    return transactions
+        .where((c) =>
+            _getClassPriority(c) == 0 ||
+            _getClassPriority(c) == 1 ||
+            _getClassPriority(c) == 2)
+        .length;
+  }
+
+  int _getPremiumClassCount(List<TransactionMyClass> transactions) {
+    return transactions
+        .where((c) =>
+            _getClassPriority(c) == 3 ||
+            _getClassPriority(c) == 4 ||
+            _getClassPriority(c) == 5)
+        .length;
+  }
+
+  int _getSessionCount(List<ParticipantMyClass> sessions) {
+    return sessions
+        .where((s) =>
+            _getSessionPriority(s.session!) == 1 ||
+            _getSessionPriority(s.session!) == 2 ||
+            _getSessionPriority(s.session!) == 3)
+        .length;
   }
 
   @override
@@ -93,7 +195,7 @@ class _MyClassMenteeListScreenState extends State<MyClassMenteeListScreen> {
                       _fetchUnreadNotificationsCount(); // Fetch the unread count when returning to this screen
                     });
                   },
-                  icon: Icon(Icons.notifications_none_outlined),
+                  icon: const Icon(Icons.notifications_none_outlined),
                   color: ColorStyle().secondaryColors,
                 ),
                 if (_unreadNotificationsCount > 0)
@@ -101,18 +203,18 @@ class _MyClassMenteeListScreenState extends State<MyClassMenteeListScreen> {
                     right: 11,
                     top: 11,
                     child: Container(
-                      padding: EdgeInsets.all(2),
+                      padding: const EdgeInsets.all(2),
                       decoration: BoxDecoration(
                         color: Colors.red,
                         borderRadius: BorderRadius.circular(6),
                       ),
-                      constraints: BoxConstraints(
+                      constraints: const BoxConstraints(
                         minWidth: 14,
                         minHeight: 14,
                       ),
                       child: Text(
                         '$_unreadNotificationsCount',
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: Colors.white,
                           fontSize: 8,
                         ),
@@ -125,121 +227,173 @@ class _MyClassMenteeListScreenState extends State<MyClassMenteeListScreen> {
           ],
         ),
       ),
-      body: ListView(children: [
-        Column(
-          children: [
-            SearchBarWidgetMentee(),
-            Padding(
-              padding: const EdgeInsets.only(left: 8.0),
-              child: Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(6.0),
-                    child: Container(
-                      height: 38,
-                      decoration: isBookingClassActive
-                          ? BoxDecoration(
-                              borderRadius: BorderRadius.circular(4),
-                              color: ColorStyle().secondaryColors,
-                            )
-                          : BoxDecoration(
-                              borderRadius: BorderRadius.circular(4),
-                              border: Border.all(
-                                color: ColorStyle().secondaryColors,
-                              ),
+      body: FutureBuilder<List<TransactionMyClass>>(
+        future: classData,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return SizedBox(
+                height: MediaQuery.of(context).size.height / 2.0,
+                child: const Center(child: CircularProgressIndicator()));
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (snapshot.hasData) {
+            final classes = snapshot.data!;
+            final bookingClassCount = _getBookingClassCount(classes);
+            final premiumClassCount = _getPremiumClassCount(classes);
+
+            return FutureBuilder(
+              future: sessionData,
+              builder: (context, sessionSnapshot) {
+                if (sessionSnapshot.connectionState ==
+                    ConnectionState.waiting) {
+                  return SizedBox(
+                      height: MediaQuery.of(context).size.height / 2.0,
+                      child: const Center(child: CircularProgressIndicator()));
+                } else if (sessionSnapshot.hasError) {
+                  return Center(child: Text('Error: ${sessionSnapshot.error}'));
+                } else if (sessionSnapshot.hasData) {
+                  final List<ParticipantMyClass> sessions =
+                      sessionSnapshot.data!;
+                  final sessionCount = _getSessionCount(sessions);
+
+                  return ListView(children: [
+                    Column(
+                      children: [
+                        const SearchBarWidgetMentee(),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8.0),
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(6.0),
+                                  child: Container(
+                                    height: 38,
+                                    decoration: isBookingClassActive
+                                        ? BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(4),
+                                            color: ColorStyle().secondaryColors,
+                                          )
+                                        : BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(4),
+                                            border: Border.all(
+                                              color:
+                                                  ColorStyle().secondaryColors,
+                                            ),
+                                          ),
+                                    child: TextButton(
+                                      onPressed: () {
+                                        changeClass("Booking Class");
+                                      },
+                                      child: Text(
+                                        "Booking Class ( $bookingClassCount )",
+                                        style: FontFamily().boldText.copyWith(
+                                              color: isBookingClassActive
+                                                  ? ColorStyle().whiteColors
+                                                  : ColorStyle()
+                                                      .secondaryColors,
+                                            ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(6.0),
+                                  child: Container(
+                                    height: 38,
+                                    decoration: isPremiumClassActive
+                                        ? BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(4),
+                                            color: ColorStyle().secondaryColors,
+                                          )
+                                        : BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(4),
+                                            border: Border.all(
+                                              color:
+                                                  ColorStyle().secondaryColors,
+                                            ),
+                                          ),
+                                    child: TextButton(
+                                      onPressed: () {
+                                        changeClass("Premium Class");
+                                      },
+                                      child: Text(
+                                        "Premium Class ( $premiumClassCount )",
+                                        style: FontFamily().boldText.copyWith(
+                                              color: isPremiumClassActive
+                                                  ? ColorStyle().whiteColors
+                                                  : ColorStyle()
+                                                      .secondaryColors,
+                                            ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(6.0),
+                                  child: Container(
+                                    height: 38,
+                                    decoration: isSessionActive
+                                        ? BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(4),
+                                            color: ColorStyle().secondaryColors,
+                                          )
+                                        : BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(4),
+                                            border: Border.all(
+                                              color:
+                                                  ColorStyle().secondaryColors,
+                                            ),
+                                          ),
+                                    child: TextButton(
+                                      onPressed: () {
+                                        changeClass("Session");
+                                      },
+                                      child: Text(
+                                        "Session ( $sessionCount )",
+                                        style: FontFamily().boldText.copyWith(
+                                              color: isSessionActive
+                                                  ? ColorStyle().whiteColors
+                                                  : ColorStyle()
+                                                      .secondaryColors,
+                                            ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
-                      child: TextButton(
-                        onPressed: () {
-                          changeClass("Booking Class");
-                        },
-                        child: Text(
-                          "Booking Class",
-                          style: FontFamily().boldText.copyWith(
-                                color: isBookingClassActive
-                                    ? ColorStyle().whiteColors
-                                    : ColorStyle().secondaryColors,
-                              ),
+                          ),
                         ),
-                      ),
+                        Column(
+                          children: [
+                            isBookingClassActive
+                                ? BookingClassMenteeScreen()
+                                : isPremiumClassActive
+                                    ? PremiumClassMenteeScreen()
+                                    : isSessionActive
+                                        ? MySessionBooking()
+                                        : BookingClassMenteeScreen()
+                          ],
+                        )
+                      ],
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(6.0),
-                    child: Container(
-                      height: 38,
-                      decoration: isPremiumClassActive
-                          ? BoxDecoration(
-                              borderRadius: BorderRadius.circular(4),
-                              color: ColorStyle().secondaryColors,
-                            )
-                          : BoxDecoration(
-                              borderRadius: BorderRadius.circular(4),
-                              border: Border.all(
-                                color: ColorStyle().secondaryColors,
-                              ),
-                            ),
-                      child: TextButton(
-                        onPressed: () {
-                          changeClass("Premium Class");
-                        },
-                        child: Text(
-                          "Premium Class",
-                          style: FontFamily().boldText.copyWith(
-                                color: isPremiumClassActive
-                                    ? ColorStyle().whiteColors
-                                    : ColorStyle().secondaryColors,
-                              ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(6.0),
-                    child: Container(
-                      height: 38,
-                      decoration: isSessionActive
-                          ? BoxDecoration(
-                              borderRadius: BorderRadius.circular(4),
-                              color: ColorStyle().secondaryColors,
-                            )
-                          : BoxDecoration(
-                              borderRadius: BorderRadius.circular(4),
-                              border: Border.all(
-                                color: ColorStyle().secondaryColors,
-                              ),
-                            ),
-                      child: TextButton(
-                        onPressed: () {
-                          changeClass("Session");
-                        },
-                        child: Text(
-                          "Session",
-                          style: FontFamily().boldText.copyWith(
-                                color: isSessionActive
-                                    ? ColorStyle().whiteColors
-                                    : ColorStyle().secondaryColors,
-                              ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Column(
-              children: [
-                isBookingClassActive
-                    ? BookingClassMenteeScreen()
-                    : isPremiumClassActive
-                        ? PremiumClassMenteeScreen()
-                        : isSessionActive
-                            ? MySessionBooking()
-                            : BookingClassMenteeScreen()
-              ],
-            )
-          ],
-        ),
-      ]),
+                  ]);
+                }
+                return const SizedBox();
+              },
+            );
+          }
+          return const SizedBox();
+        },
+      ),
     );
   }
 }

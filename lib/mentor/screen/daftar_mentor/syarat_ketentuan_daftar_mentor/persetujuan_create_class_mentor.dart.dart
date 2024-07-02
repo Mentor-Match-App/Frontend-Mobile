@@ -133,7 +133,7 @@ class _PersetujuanPremiClassMentorState
                     ),
                   ],
                 ),
-                 Row(
+                Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text('\u2022'),
@@ -208,7 +208,7 @@ class _PersetujuanPremiClassMentorState
                     ),
                   ],
                 ),
-                 Row(
+                Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text('\u2022'),
@@ -350,11 +350,17 @@ class _PersetujuanPremiClassMentorState
                 ),
                 Align(
                   alignment: Alignment.centerRight,
-                  child: TextButton(
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: ColorStyle().primaryColors,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
                     onPressed: _isSelected
                         ? () {
-                            Navigator.of(context).pushReplacement(
-                                MaterialPageRoute(
+                            Navigator.of(context)
+                                .pushReplacement(MaterialPageRoute(
                                     builder: (context) =>
                                         // ignore: prefer_const_constructors
                                         FormCreatePremiumClassScreen()));
@@ -365,7 +371,7 @@ class _PersetujuanPremiClassMentorState
                       'Lanjutkan',
                       style: FontFamily().boldText.copyWith(
                             color: _isSelected
-                                ? ColorStyle().primaryColors
+                                ? ColorStyle().whiteColors
                                 : ColorStyle().disableColors,
                             fontSize: 16,
                           ),
@@ -375,7 +381,6 @@ class _PersetujuanPremiClassMentorState
               ],
             ),
           ),
-         
         ],
       ),
     );

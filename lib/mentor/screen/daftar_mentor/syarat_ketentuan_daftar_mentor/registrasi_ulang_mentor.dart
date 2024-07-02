@@ -238,9 +238,9 @@ class _RegisterUlangMentorScreenState extends State<RegisterUlangMentorScreen> {
       children: [
         _genderDropdownField(),
         _textFieldWithTitle(
-          "Job/Title",
+          "Job title",
           _jobController,
-          "Enter Your Job/Position",
+          "Enter your current job title",
           onChanged: (value) {
             setState(() {
               job = value;
@@ -248,15 +248,16 @@ class _RegisterUlangMentorScreenState extends State<RegisterUlangMentorScreen> {
           },
           validator: (value) {
             if (value == null || value.isEmpty) {
-              return 'This field is required';
+              return 'Job/Title is required';
             }
             return null;
           },
+          maxLines: 1,
         ),
         _textFieldWithTitle(
           "Company",
           _companyController,
-          "Enter Your Company",
+          "Enter your current company",
           onChanged: (value) {
             setState(() {
               company = value;
@@ -264,10 +265,11 @@ class _RegisterUlangMentorScreenState extends State<RegisterUlangMentorScreen> {
           },
           validator: (value) {
             if (value == null || value.isEmpty) {
-              return 'This field is required';
+              return 'Company is required';
             }
             return null;
           },
+          maxLines: 1,
         ),
         _textFieldWithTitle(
           "Location",
@@ -280,10 +282,11 @@ class _RegisterUlangMentorScreenState extends State<RegisterUlangMentorScreen> {
           },
           validator: (value) {
             if (value == null || value.isEmpty) {
-              return 'This field is required';
+              return 'Location is required';
             }
             return null;
           },
+          maxLines: 1,
         ),
         const SizedBox(height: 12),
         Align(
@@ -303,14 +306,14 @@ class _RegisterUlangMentorScreenState extends State<RegisterUlangMentorScreen> {
                 title: "Bank",
                 color: ColorStyle().secondaryColors,
               ),
-              TextFieldWidget(
+              const TextFieldWidget(
                 enabled: false,
                 hintText: "BCA",
               ),
               _textFieldWithTitle(
                 "Account Name",
                 _accountNameController,
-                "Enter Your Account Name",
+                "Enter your account name",
                 onChanged: (value) {
                   setState(() {
                     accountName = value;
@@ -318,15 +321,16 @@ class _RegisterUlangMentorScreenState extends State<RegisterUlangMentorScreen> {
                 },
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'This field is required';
+                    return 'Account Name is required';
                   }
                   return null;
                 },
+                maxLines: 1,
               ),
               _textFieldWithTitle(
                 "Account Number",
                 _accountNumberController,
-                "Enter Your Account Number",
+                "Enter your account number",
                 onChanged: (value) {
                   setState(() {
                     accountNumber = value;
@@ -334,14 +338,19 @@ class _RegisterUlangMentorScreenState extends State<RegisterUlangMentorScreen> {
                 },
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'This field is required';
+                    return 'Account number is required';
                   }
                   final numericRegex = RegExp(r'^[0-9]+$');
                   if (!numericRegex.hasMatch(value)) {
                     return 'Please enter a valid number';
                   }
+                  // check space
+                  if (value.contains(' ')) {
+                    return 'Please enter a valid number';
+                  }
                   return null;
                 },
+                maxLines: 1,
               ),
             ],
           ),
@@ -353,28 +362,28 @@ class _RegisterUlangMentorScreenState extends State<RegisterUlangMentorScreen> {
         _textFieldWithTitle(
           "LinkedIn",
           _linkedinController,
-          "Enter Your LinkedIn URL",
+          "Enter your linkedIn URL",
           onChanged: (value) {
             setState(() {
               linkedin = value;
             });
           },
           validator: (value) {
-            if (value == null || value.isEmpty) {
-              return 'This field is required';
+            if (value!.isEmpty) {
+              return 'LinkedIn URL is required';
             }
-
             // Regular expression to validate a URL
             const urlPattern =
                 r'^(https?:\/\/)?([a-z0-9-]+\.)+[a-z]{2,6}(\/[^\s]*)?$';
             final urlRegExp = RegExp(urlPattern);
 
             if (!urlRegExp.hasMatch(value)) {
-              return 'Please enter a valid URL';
+              return 'Insert link URL: https://www.linkedin.com/in/yourname';
             }
 
             return null;
           },
+          maxLines: 1,
         ),
         _textFieldWithTitle(
           "About",
@@ -417,6 +426,7 @@ class _RegisterUlangMentorScreenState extends State<RegisterUlangMentorScreen> {
 
             return null;
           },
+          maxLines: 1,
         ),
         _experienceField(),
         _experienceChips(),
@@ -430,6 +440,7 @@ class _RegisterUlangMentorScreenState extends State<RegisterUlangMentorScreen> {
       String title, TextEditingController controller, String hintText,
       {bool enabled = true,
       Function(String)? onChanged,
+      int? maxLines,
       String? Function(String?)? validator}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -439,8 +450,9 @@ class _RegisterUlangMentorScreenState extends State<RegisterUlangMentorScreen> {
           hintText: hintText,
           controller: controller,
           enabled: enabled,
-          onChanged: onChanged, // Add this line
-          validator: validator, // Add this line
+          onChanged: onChanged,
+          validator: validator,
+          maxLines: maxLines,
         ),
       ],
     );
@@ -467,6 +479,7 @@ class _RegisterUlangMentorScreenState extends State<RegisterUlangMentorScreen> {
             }
             return null;
           },
+          maxLines: 1,
         ),
         const SizedBox(height: 8),
         Align(
@@ -532,6 +545,7 @@ class _RegisterUlangMentorScreenState extends State<RegisterUlangMentorScreen> {
         TextFieldWidget(
           controller: _roleController,
           hintText: "Role",
+          maxLines: 1,
         ),
         const SizedBox(height: 12),
         TextFieldWidget(
@@ -547,6 +561,7 @@ class _RegisterUlangMentorScreenState extends State<RegisterUlangMentorScreen> {
             }
             return null;
           },
+          maxLines: 1,
         ),
         const SizedBox(height: 8),
         Align(
@@ -612,7 +627,7 @@ class _RegisterUlangMentorScreenState extends State<RegisterUlangMentorScreen> {
               borderSide: BorderSide.none,
             ),
           ),
-          hint: Text("Select Your Gender"),
+          hint: const Text("Select Your Gender"),
           style: FontFamily().regularText.copyWith(
                 color: ColorStyle().disableColors,
               ),

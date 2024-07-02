@@ -1,7 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:mentormatch_apps/mentor/screen/create_class_and_session/form_create_session.dart';
-import 'package:mentormatch_apps/mentor/screen/daftar_mentor/syarat_ketentuan_daftar_mentor/persetujuan_1.dart';
+import 'package:mentormatch_apps/mentor/screen/daftar_mentor/syarat_ketentuan_daftar_mentor/persetujuan_create_class_mentor.dart.dart';
 import 'package:mentormatch_apps/mentor/screen/notification_mentor_screen.dart';
 import 'package:mentormatch_apps/mentor/service/notification_service.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
@@ -11,7 +11,7 @@ import 'package:mentormatch_apps/widget/carausel_home.dart';
 import 'package:mentormatch_apps/widget/search_bar.dart';
 
 class HomeMentorScreen extends StatefulWidget {
-  const HomeMentorScreen({Key? key}) : super(key: key);
+  const HomeMentorScreen({super.key});
 
   @override
   State<HomeMentorScreen> createState() => _HomeMentorScreenState();
@@ -45,19 +45,19 @@ class _HomeMentorScreenState extends State<HomeMentorScreen> {
     {
       'title': 'Hello,\nSelamat datang di MentorMatch',
       'description': 'Mulailah membuat kelas yang akan membantu banyak orang',
-      'imagePath': 'assets/Handoff/ilustrator/banner.png'
+      'imagePath': 'assets/Handoff/ilustrator/hello.png'
     },
     {
       'title': 'Menjadi Inspirasi Bagi Generasi Muda',
       'description':
           'Berbagi pengalaman dan pengetahuan Anda untuk membantu generasi muda meraih impian mereka.',
-      'imagePath': 'assets/Handoff/ilustrator/looking mentor.png'
+      'imagePath': 'assets/Handoff/ilustrator/community.png'
     },
     {
       'title': 'Siap untuk membuat perubahan?',
       'description':
           'Dengan menjadi mentor, Anda memberikan ilmu inspiratif kepada generasi.',
-      'imagePath': 'assets/Handoff/ilustrator/learn-by-online.png'
+      'imagePath': 'assets/Handoff/ilustrator/online_meeting.png'
     },
   ];
   @override

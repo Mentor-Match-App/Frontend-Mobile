@@ -184,11 +184,19 @@ class _PersetujuanMentorScreenState extends State<PersetujuanMentorScreen> {
                 ),
                 Align(
                   alignment: Alignment.centerRight,
-                  child: TextButton(
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: ColorStyle().primaryColors,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
                     onPressed: _isSelected
                         ? () {
-                           Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(builder: (context) =>PersetujuanRekeningScreen()));
+                            Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        PersetujuanRekeningScreen()));
                           }
                         : null, // Tidak mengizinkan klik jika radio button belum dicentang
 
@@ -196,9 +204,9 @@ class _PersetujuanMentorScreenState extends State<PersetujuanMentorScreen> {
                       'Lanjutkan',
                       style: FontFamily().boldText.copyWith(
                             color: _isSelected
-                                ? ColorStyle().primaryColors
+                                ? ColorStyle().whiteColors
                                 : ColorStyle().disableColors,
-                                fontSize: 16,
+                            fontSize: 16,
                           ),
                     ),
                   ),

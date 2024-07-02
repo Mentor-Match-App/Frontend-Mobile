@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:mentormatch_apps/mentor/model/my_class_mentor_model.dart';
+import 'package:mentormatch_apps/mentor/screen/create_class_and_session/form_create_session.dart';
 import 'package:mentormatch_apps/mentor/service/my_class_create_mentor_service.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
@@ -29,25 +30,21 @@ class _MySessionCreateState extends State<MySessionCreate> {
 
     if (userSessions.isActive == true &&
         userSessions.participant!.length < userSessions.maxParticipants! &&
-        DateTime.now().isBefore(startTime) &&
-        DateTime.now().isBefore(endTime)) {
+        DateTime.now().isBefore(startTime)) {
       buttonText = "Scheduled";
     } else if (userSessions.participant!.length ==
             userSessions.maxParticipants &&
-        DateTime.now().isBefore(startTime) &&
-        DateTime.now().isBefore(endTime) &&
-        userSessions.isActive == true) {
+        DateTime.now().isBefore(startTime)) {
       buttonText = "Full";
     } else if (userSessions.isActive == false &&
         userSessions.participant!.isNotEmpty &&
-        DateTime.now().isBefore(endTime)) {
+        DateTime.now().isBefore(endTime) &&
+        DateTime.now().isAfter(startTime)) {
       buttonText = "Active";
-    } else if (userSessions.isActive == false &&
-        userSessions.participant!.isEmpty &&
+    } else if (userSessions.participant!.isEmpty &&
         DateTime.now().isAfter(startTime)) {
       buttonText = "Expired";
-    } else if (userSessions.isActive == false &&
-        userSessions.participant!.isNotEmpty &&
+    } else if (userSessions.participant!.isNotEmpty &&
         DateTime.now().isAfter(endTime)) {
       buttonText = "Finished";
     }
@@ -55,7 +52,6 @@ class _MySessionCreateState extends State<MySessionCreate> {
     return _calculatePriority(buttonText);
   }
 
-// susunannya ad
   int _calculatePriority(String buttonText) {
     if (buttonText == "Active") {
       return 1;
@@ -67,9 +63,8 @@ class _MySessionCreateState extends State<MySessionCreate> {
       return 4;
     } else if (buttonText == "Expired") {
       return 5;
-    } else {
-      return 0;
     }
+    return 0;
   }
 
   //// link zoom akses///
@@ -122,7 +117,53 @@ class _MySessionCreateState extends State<MySessionCreate> {
         } else if (snapshot.hasError) {
           return Text("Error: ${snapshot.error}");
         } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-          // Menggunakan SingleChildScrollView dan Column untuk menampilkan data
+          if (snapshot.data!.isEmpty) {
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: SizedBox(
+                width: double.infinity,
+                height: MediaQuery.of(context).size.height / 2,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset(
+                        'assets/Handoff/ilustrator/empty_session.png',
+                        width: 270,
+                        height: 270,
+                      ),
+                      const SizedBox(height: 20),
+                      TextButton.icon(
+                        style: TextButton.styleFrom(
+                          foregroundColor: ColorStyle().primaryColors,
+                          backgroundColor: ColorStyle().primaryColors,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => FormCreateSessionScreen(),
+                            ),
+                          );
+                        },
+                        icon: Icon(Icons.add, color: ColorStyle().whiteColors),
+                        label: Text(
+                          "Buat Session",
+                          style: FontFamily()
+                              .boldText
+                              .copyWith(color: ColorStyle().whiteColors),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          }
           return SingleChildScrollView(
             child: Column(
               children: snapshot.data!.map((session) {
@@ -248,14 +289,51 @@ class _MySessionCreateState extends State<MySessionCreate> {
             ),
           );
         } else {
-          return SizedBox(
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: SizedBox(
               width: double.infinity,
-              height: MediaQuery.of(context).size.height / 2.0,
+              height: MediaQuery.of(context).size.height / 2,
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child:
-                    Center(child: Text('Kamu belum memiliki session saat ini')),
-              ));
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      'assets/Handoff/ilustrator/empty_session.png',
+                      width: 270,
+                      height: 270,
+                    ),
+                    const SizedBox(height: 20),
+                    TextButton.icon(
+                      style: TextButton.styleFrom(
+                        foregroundColor: ColorStyle().primaryColors,
+                        backgroundColor: ColorStyle().primaryColors,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => FormCreateSessionScreen(),
+                          ),
+                        );
+                      },
+                      icon: Icon(Icons.add, color: ColorStyle().whiteColors),
+                      label: Text(
+                        "Buat Session",
+                        style: FontFamily()
+                            .boldText
+                            .copyWith(color: ColorStyle().whiteColors),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
         }
       },
     );

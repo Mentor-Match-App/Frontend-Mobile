@@ -49,13 +49,13 @@ class _ContohPremiumClassState extends State<ContohPremiumClass> {
             child: Column(
               children: [
                 CardContohPremiumClass(
-                    tittle: 'Tinkat Pendidikan',
+                    tittle: 'Tingkat Pendidikan',
                     desc:
-                        'Tingkat pendidikan dapat kamu isi sesuai dengan level pendidikan kelas yang ingin kamu buat mulai dari SD, SMP, SMA, Kuilah dan Karier'),
+                        'Tingkat pendidikan dapat kamu isi sesuai dengan level pendidikan kelas yang ingin kamu buat mulai dari SD, SMP, SMA, Kuliah dan Karier'),
                 CardContohPremiumClass(
                     tittle: 'Bidang & Minat',
                     desc:
-                        'Isilah bidang dan minat dengan memilih opsi yang sesuai dengan fokus dari kelas yang Anda buat atau bidang lainnya yang relevan dengan konten kelas yang Anda tawarkan.'),
+                        'Isilah bidang dan minat dengan memilih opsi yang sesuai dengan fokus dari kelas yang Anda buat atau bidang lain yang relevan dengan konten kelas yang Anda tawarkan.'),
                 CardContohPremiumClassDropDown(
                   widget: Text(
                     'UI/UX Research & Design',
@@ -74,7 +74,7 @@ class _ContohPremiumClassState extends State<ContohPremiumClass> {
                 CardContohPremiumClass(
                   tittle: 'Harga',
                   desc:
-                      'Harga kelas dapat kamu isi sesuai dengan nilai yang Anda yakini mencerminkan nilai dari materi, pengalaman pembelajaran, serta bimbingan yang diberikan dalam kelas ini. Usahakan harga sesuai dengan kapasitas mentee yang akan kamu buat. Namun harga tersebut akan di potong 70% sesuai dengan syarat & ketentuan yang telah berlaku. ',
+                      'Harga kelas dapat kamu isi sesuai dengan nilai yang Anda yakini mencerminkan nilai dari materi, pengalaman pembelajaran, serta bimbingan yang diberikan dalam kelas ini. Usahakan harga sesuai dengan kapasitas mentee yang akan kamu buat. Namun harga tersebut akan dipotong 70% sesuai dengan syarat & ketentuan yang telah berlaku. ',
                 ),
                 CardContohPremiumClass(
                   tittle: 'Kapasitas Kelas',
@@ -123,7 +123,9 @@ class _ContohPremiumClassState extends State<ContohPremiumClass> {
                           Expanded(
                             child: Text(
                               'Memahami UX Writing danmenerapkan keahlian UI/UX Revamap dan dipublikasikan pada stakeholer',
-                              style: FontFamily().regularText,
+                              style: FontFamily().regularText.copyWith(
+                                    fontSize: 12,
+                                  ),
                             ),
                           ),
                         ],
@@ -137,8 +139,10 @@ class _ContohPremiumClassState extends State<ContohPremiumClass> {
                           ),
                           Expanded(
                             child: Text(
-                              'Mampu membuat Prototype produt dengan menggunakan design system yang disusun',
-                              style: FontFamily().regularText,
+                              'Mampu membuat Prototype produk dengan menggunakan design sistem yang disusun',
+                              style: FontFamily().regularText.copyWith(
+                                    fontSize: 12,
+                                  ),
                             ),
                           ),
                         ],
@@ -152,8 +156,10 @@ class _ContohPremiumClassState extends State<ContohPremiumClass> {
                           ),
                           Expanded(
                             child: Text(
-                              'Memhami Fundamental UI//UX',
-                              style: FontFamily().regularText,
+                              'Memahami Fundamental UI//UX',
+                              style: FontFamily().regularText.copyWith(
+                                    fontSize: 12,
+                                  ),
                             ),
                           ),
                         ],
@@ -167,8 +173,10 @@ class _ContohPremiumClassState extends State<ContohPremiumClass> {
                           ),
                           Expanded(
                             child: Text(
-                              'Memahami design thingking proses empathizing dan memhami kebutuhan user',
-                              style: FontFamily().regularText,
+                              'Memahami design thinking process empathizing dan memahami kebutuhan user',
+                              style: FontFamily().regularText.copyWith(
+                                    fontSize: 12,
+                                  ),
                             ),
                           ),
                         ],
@@ -182,8 +190,10 @@ class _ContohPremiumClassState extends State<ContohPremiumClass> {
                           ),
                           Expanded(
                             child: Text(
-                              'Memahami design t hiking proces defining & ideation dengan kompoten untuk mencari solusi dari permasalahn yang dihadapi user',
-                              style: FontFamily().regularText,
+                              'Memahami design thiking proces defining & ideation dengan kompeten untuk mencari solusi dari permasalahn yang di hadapi user',
+                              style: FontFamily().regularText.copyWith(
+                                    fontSize: 12,
+                                  ),
                             ),
                           ),
                         ],
@@ -197,8 +207,10 @@ class _ContohPremiumClassState extends State<ContohPremiumClass> {
                           ),
                           Expanded(
                             child: Text(
-                              'Memhami mekanisme testing untuk diterapkan pada  design produk yang telah dibuat dan menerima feedback dari setiap user testing',
-                              style: FontFamily().regularText,
+                              'Memahami mekanisme testing untuk diterapkan pada design produk yang dibuat dan menerima feedback dari setiap user testing',
+                              style: FontFamily().regularText.copyWith(
+                                    fontSize: 12,
+                                  ),
                             ),
                           ),
                         ],
@@ -213,7 +225,9 @@ class _ContohPremiumClassState extends State<ContohPremiumClass> {
                           Expanded(
                             child: Text(
                               'Memahami peran UI/UX dalam pengembangan perangkat lunak',
-                              style: FontFamily().regularText,
+                              style: FontFamily().regularText.copyWith(
+                                    fontSize: 12,
+                                  ),
                             ),
                           ),
                         ],
@@ -240,8 +254,10 @@ class _ContohPremiumClassState extends State<ContohPremiumClass> {
                           ),
                           Expanded(
                             child: Text(
-                              'Memiliki intregitas dan kesungguhan dalam menjalankan premium class',
-                              style: FontFamily().regularText,
+                              'Memiliki intregritas dan kesungguhan dalam menjalankan premium class',
+                              style: FontFamily().regularText.copyWith(
+                                    fontSize: 12,
+                                  ),
                             ),
                           ),
                         ],
@@ -256,7 +272,9 @@ class _ContohPremiumClassState extends State<ContohPremiumClass> {
                           Expanded(
                             child: Text(
                               'Mempunyai komitmen yang tinggi dalam mengikuti kelas',
-                              style: FontFamily().regularText,
+                              style: FontFamily().regularText.copyWith(
+                                    fontSize: 12,
+                                  ),
                             ),
                           ),
                         ],
@@ -270,8 +288,10 @@ class _ContohPremiumClassState extends State<ContohPremiumClass> {
                           ),
                           Expanded(
                             child: Text(
-                              'Selama kelas berlangsung di harapkan oncame agar proses pembelajaran berjalan dengan kodusif',
-                              style: FontFamily().regularText,
+                              'Selama kelas berlangsung di harapkan mentee dan mentor oncam agar proses pembelajaran berjalan dengan kodusif',
+                              style: FontFamily().regularText.copyWith(
+                                    fontSize: 12,
+                                  ),
                             ),
                           ),
                         ],
@@ -285,8 +305,10 @@ class _ContohPremiumClassState extends State<ContohPremiumClass> {
                           ),
                           Expanded(
                             child: Text(
-                              'Memiliki laptop dengan spesifikasi minila (Prosesor intel RAM minimum 7 Gb)',
-                              style: FontFamily().regularText,
+                              'Memiliki laptop dengan spesifikasi minimal (Prosesor intel RAM minimum 7 Gb)',
+                              style: FontFamily().regularText.copyWith(
+                                    fontSize: 12,
+                                  ),
                             ),
                           ),
                         ],

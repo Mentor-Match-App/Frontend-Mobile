@@ -8,7 +8,7 @@ import 'package:mentormatch_apps/widget/card_community.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class CommunityMentorScreen extends StatefulWidget {
-  CommunityMentorScreen({Key? key}) : super(key: key);
+  const CommunityMentorScreen({super.key});
 
   @override
   State<CommunityMentorScreen> createState() => _CommunityMentorScreenState();

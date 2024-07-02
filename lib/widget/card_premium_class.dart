@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
@@ -11,7 +10,7 @@ class CardPremiumClassOptions extends StatefulWidget {
   final String? description;
   final VoidCallback? onPressed;
   const CardPremiumClassOptions(
-      {Key? key,  this.description, this.onPressed, required this.image})
+      {Key? key, this.description, this.onPressed, required this.image})
       : super(key: key);
 
   @override
@@ -69,7 +68,6 @@ class _CardPremiumClassOptionsState extends State<CardPremiumClassOptions> {
   }
 }
 
-
 class CardContohPremiumClass extends StatefulWidget {
   final String tittle;
   final String desc;
@@ -126,7 +124,7 @@ class CardContohPremiumClassDropDown extends StatefulWidget {
       required this.toggleDropdown,
       required this.desc,
       required this.subtitle,
-required this.widget})
+      required this.widget})
       : super(key: key);
 
   @override
@@ -155,12 +153,13 @@ class _CardContohPremiumClassDropDownState
               ),
               Text(
                 widget.desc,
-                style: FontFamily().regularText,
+                style: FontFamily().regularText.copyWith(),
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Text(
+                    textAlign: TextAlign.start,
                     widget.subtitle,
                     style: FontFamily().regularText.copyWith(
                         color: ColorStyle().primaryColors,
@@ -178,9 +177,8 @@ class _CardContohPremiumClassDropDownState
               ),
               if (widget.isDropdownOpened)
                 Padding(
-                  padding: const EdgeInsets.only(left: 12.0, right: 12.0),
-                  child: widget.widget
-                ),
+                    padding: const EdgeInsets.only(left: 12.0, right: 12.0),
+                    child: widget.widget),
             ],
           ),
         ),

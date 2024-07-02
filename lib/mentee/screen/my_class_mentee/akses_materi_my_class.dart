@@ -151,7 +151,7 @@ class _MaterMyClassState extends State<MaterMyClass> {
                 _launchURL(linkEvaluasi);
               },
               child: Text(
-                'Download Materi',
+                'Lihat Materi',
                 style: FontFamily().buttonText.copyWith(fontSize: 10),
               ),
             ),

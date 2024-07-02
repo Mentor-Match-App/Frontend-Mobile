@@ -5,7 +5,7 @@ import 'package:mentormatch_apps/style/font_style.dart';
 import 'package:mentormatch_apps/style/text.dart';
 
 class PersetujuanRekeningScreen extends StatefulWidget {
-  PersetujuanRekeningScreen({Key? key}) : super(key: key);
+  const PersetujuanRekeningScreen({super.key});
 
   @override
   State<PersetujuanRekeningScreen> createState() =>
@@ -169,12 +169,19 @@ class _PersetujuanRekeningScreenState extends State<PersetujuanRekeningScreen> {
                 ),
                 Align(
                   alignment: Alignment.centerRight,
-                  child: TextButton(
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: ColorStyle().primaryColors,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
                     onPressed: _isSelected
                         ? () {
                             Navigator.of(context).pushReplacement(
                               MaterialPageRoute(
-                                builder: (context) => RegisterMentorScreen(),
+                                builder: (context) =>
+                                    const RegisterMentorScreen(),
                               ),
                             );
                           }
@@ -184,7 +191,7 @@ class _PersetujuanRekeningScreenState extends State<PersetujuanRekeningScreen> {
                       'Lanjutkan',
                       style: FontFamily().boldText.copyWith(
                             color: _isSelected
-                                ? ColorStyle().primaryColors
+                                ? ColorStyle().whiteColors
                                 : ColorStyle().disableColors,
                             fontSize: 16,
                           ),

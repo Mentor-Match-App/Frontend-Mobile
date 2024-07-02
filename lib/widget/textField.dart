@@ -13,6 +13,7 @@ class TextFieldWidget extends StatefulWidget {
   final TextEditingController? controller;
   final bool? enabled; // tambahkan properti enabled
   final String? errorText;
+  final int? maxLines;
 
   const TextFieldWidget({
     Key? key,
@@ -25,6 +26,7 @@ class TextFieldWidget extends StatefulWidget {
     this.validator,
     this.ontap,
     this.readOnly,
+    this.maxLines,
     Function(String p1)? onChanged, // inisialisasi properti enabled
   }) : super(key: key);
 
@@ -40,7 +42,8 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
       child: Padding(
         padding: const EdgeInsets.only(left: 8.0),
         child: Container(
-          constraints: const BoxConstraints(minHeight: 40), // Set a minimum height
+          constraints:
+              const BoxConstraints(minHeight: 40), // Set a minimum height
           child: TextFormField(
             autovalidateMode:
                 AutovalidateMode.onUserInteraction, // Set autovalidateMode
@@ -66,7 +69,7 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
                   vertical: 8.0, horizontal: 12.0), // Add padding
             ),
             onTap: widget.ontap,
-            maxLines: null, // Allow multiple lines
+            maxLines: widget.maxLines,
             textAlignVertical: TextAlignVertical.center,
           ),
         ),

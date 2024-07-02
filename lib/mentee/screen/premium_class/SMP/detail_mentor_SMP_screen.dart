@@ -92,13 +92,11 @@ class _DetailMentorSMPScreenState extends State<DetailMentorSMPScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Container(
-                width: double.infinity,
-                height: MediaQuery.of(context).size.height * 0.20,
-                decoration: BoxDecoration(
-                    color: ColorStyle()
-                        .tertiaryColors // Warna latar belakang yang diinginkan
-                    ),
+              Image.asset(
+                'assets/Handoff/ilustrator/background.png',
+                width: double.maxFinite,
+                height: 180,
+                fit: BoxFit.cover,
               ),
               Transform.translate(
                 offset: Offset(0.0, -120 / 2.0),

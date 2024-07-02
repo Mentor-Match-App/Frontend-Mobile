@@ -10,8 +10,10 @@ import 'package:mentormatch_apps/widget/flush_bar_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class MySessionBooking extends StatefulWidget {
+  const MySessionBooking({super.key});
+
   @override
-  _MySessionBookingState createState() => _MySessionBookingState();
+  State<MySessionBooking> createState() => _MySessionBookingState();
 }
 
 class _MySessionBookingState extends State<MySessionBooking> {
@@ -73,7 +75,6 @@ class _MySessionBookingState extends State<MySessionBooking> {
     );
   }
 
-//// link zoom akses///
   _launchURL(String url) async {
     // ignore: deprecated_member_use
     if (await canLaunch(url)) {
@@ -89,13 +90,35 @@ class _MySessionBookingState extends State<MySessionBooking> {
       future: _userData,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Container(
+          return SizedBox(
               height: MediaQuery.of(context).size.height / 2.0,
-              child: Center(child: CircularProgressIndicator()));
+              child: const Center(child: CircularProgressIndicator()));
         } else if (snapshot.hasError) {
           return Center(child: Text('Error: ${snapshot.error}'));
         } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
           final List<ParticipantMyClass> participants = snapshot.data!;
+          if (participants.isEmpty) {
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: SizedBox(
+                width: double.infinity,
+                height: MediaQuery.of(context).size.height / 2,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset(
+                        'assets/Handoff/ilustrator/empty_session.png',
+                        width: 270,
+                        height: 270,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          }
           return SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.only(
@@ -124,7 +147,7 @@ class _MySessionBookingState extends State<MySessionBooking> {
                           BoxShadow(
                             color: Colors.black.withOpacity(0.1),
                             blurRadius: 2,
-                            offset: Offset(0, 2),
+                            offset: const Offset(0, 2),
                           ),
                         ],
                         color: ColorStyle().whiteColors,
@@ -152,11 +175,11 @@ class _MySessionBookingState extends State<MySessionBooking> {
                                   fit: BoxFit.cover,
                                   width: 98,
                                   height: 98,
-                                  placeholder: (context, url) => Center(
+                                  placeholder: (context, url) => const Center(
                                     child: CircularProgressIndicator(),
                                   ),
                                   errorWidget: (context, url, error) =>
-                                      Icon(Icons.error),
+                                      const Icon(Icons.error),
                                 )),
                                 const SizedBox(
                                   width: 10,
@@ -180,14 +203,14 @@ class _MySessionBookingState extends State<MySessionBooking> {
                                             fontWeight: FontWeight.w400,
                                             color: ColorStyle().disableColors),
                                       ),
-                                      Text('Jadwal : ${formattedJadwal}',
+                                      Text('Jadwal : $formattedJadwal',
                                           style: GoogleFonts.poppins(
                                               fontSize: 12,
                                               fontWeight: FontWeight.w400,
                                               color:
                                                   ColorStyle().disableColors)),
                                       Text(
-                                          'Jam      : ${formattedStartTime} - ${formattedEndTime}',
+                                          'Jam      : $formattedStartTime - $formattedEndTime',
                                           style: GoogleFonts.poppins(
                                               fontSize: 12,
                                               fontWeight: FontWeight.w400,
@@ -227,7 +250,7 @@ class _MySessionBookingState extends State<MySessionBooking> {
                                         _launchURL(zoomLink);
                                       }
                                     },
-                                    icon: Icon(Icons.link),
+                                    icon: const Icon(Icons.link),
                                     label: Text('Join Session',
                                         style: FontFamily()
                                             .regularText
@@ -248,14 +271,26 @@ class _MySessionBookingState extends State<MySessionBooking> {
             ),
           );
         } else {
-          return SizedBox(
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: SizedBox(
               width: double.infinity,
-              height: MediaQuery.of(context).size.height / 2.0,
-              child: const Padding(
-                padding: EdgeInsets.all(8.0),
-                child:
-                    Center(child: Text('Kamu belum memiliki session saat ini')),
-              ));
+              height: MediaQuery.of(context).size.height / 2,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      'assets/Handoff/ilustrator/empty_session.png',
+                      width: 270,
+                      height: 270,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
         }
       },
     );

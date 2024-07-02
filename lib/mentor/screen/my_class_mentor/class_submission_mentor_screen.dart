@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mentormatch_apps/mentor/model/my_class_mentor_model.dart';
+import 'package:mentormatch_apps/mentor/screen/daftar_mentor/syarat_ketentuan_daftar_mentor/persetujuan_create_class_mentor.dart.dart';
 import 'package:mentormatch_apps/mentor/screen/my_class_mentor/edit_class_rejected.dart';
 import 'package:mentormatch_apps/mentor/screen/my_class_mentor/pending_class_mentor_screen.dart';
 import 'package:mentormatch_apps/mentor/service/my_class_create_mentor_service.dart';
@@ -7,7 +8,7 @@ import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
 
 class ClassSubmissionMentorScreen extends StatefulWidget {
-  ClassSubmissionMentorScreen({Key? key}) : super(key: key);
+  const ClassSubmissionMentorScreen({super.key});
 
   @override
   State<ClassSubmissionMentorScreen> createState() =>
@@ -118,22 +119,59 @@ class _ClassSubmissionMentorScreenState
       future: classData,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Container(
+          return SizedBox(
             height: MediaQuery.of(context).size.height / 2.0,
-            child: Center(child: CircularProgressIndicator()),
+            child: const Center(child: CircularProgressIndicator()),
           );
         } else if (snapshot.hasError) {
           return Text("Error: ${snapshot.error}");
         } else if (snapshot.hasData) {
-          var userClass = snapshot.data!.user?.userClass;
-          if (userClass == null || userClass.isEmpty) {
-            return SizedBox(
-              width: double.infinity,
-              height: MediaQuery.of(context).size.height / 2.0,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child:
-                    Center(child: Text('Kamu belum memiliki kelas saat ini')),
+          var userClass = snapshot.data!.user?.userClass!;
+          if (userClass!.isEmpty) {
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: SizedBox(
+                width: double.infinity,
+                height: MediaQuery.of(context).size.height / 2,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset(
+                        'assets/Handoff/ilustrator/empty_submission.png',
+                        width: 270,
+                        height: 270,
+                      ),
+                      const SizedBox(height: 20),
+                      TextButton.icon(
+                        style: TextButton.styleFrom(
+                          foregroundColor: ColorStyle().primaryColors,
+                          backgroundColor: ColorStyle().primaryColors,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  PersetujuanPremiClassMentor(),
+                            ),
+                          );
+                        },
+                        icon: Icon(Icons.add, color: ColorStyle().whiteColors),
+                        label: Text(
+                          "Buat Kelas",
+                          style: FontFamily()
+                              .boldText
+                              .copyWith(color: ColorStyle().whiteColors),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
             );
           }
@@ -201,7 +239,7 @@ class _ClassSubmissionMentorScreenState
                             BoxShadow(
                               color: Colors.black.withOpacity(0.1),
                               blurRadius: 2,
-                              offset: Offset(0, 2),
+                              offset: const Offset(0, 2),
                             ),
                           ],
                           color: ColorStyle().whiteColors,
@@ -252,8 +290,8 @@ class _ClassSubmissionMentorScreenState
           return SizedBox(
               width: double.infinity,
               height: MediaQuery.of(context).size.height / 2.0,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
+              child: const Padding(
+                padding: EdgeInsets.all(8.0),
                 child:
                     Center(child: Text('Kamu belum mengajukan kelas saat ini')),
               ));

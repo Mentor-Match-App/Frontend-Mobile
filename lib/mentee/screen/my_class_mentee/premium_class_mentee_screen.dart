@@ -6,11 +6,12 @@ import 'package:mentormatch_apps/mentee/screen/my_class_mentee/detail_my_class_m
 import 'package:mentormatch_apps/mentor/service/my_class_service.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class PremiumClassMenteeScreen extends StatefulWidget {
+  const PremiumClassMenteeScreen({super.key});
+
   @override
-  _PremiumClassMenteeScreenState createState() =>
+  State<PremiumClassMenteeScreen> createState() =>
       _PremiumClassMenteeScreenState();
 }
 
@@ -64,27 +65,41 @@ class _PremiumClassMenteeScreenState extends State<PremiumClassMenteeScreen> {
     );
   }
 
-  _launchURL(Uri url) async {
-    if (await canLaunchUrl(url)) {
-      await launchUrl(url);
-    } else {
-      throw 'Tidak dapat membuka $url';
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<TransactionMyClass>>(
       future: _userData,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Container(
+          return SizedBox(
               height: MediaQuery.of(context).size.height / 2.0,
-              child: Center(child: CircularProgressIndicator()));
+              child: const Center(child: CircularProgressIndicator()));
         } else if (snapshot.hasError) {
           return Center(child: Text('Error: ${snapshot.error}'));
         } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
           final List<TransactionMyClass> classBooking = snapshot.data!;
+          if (classBooking.isEmpty) {
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: SizedBox(
+                width: double.infinity,
+                height: MediaQuery.of(context).size.height / 2,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset(
+                        'assets/Handoff/ilustrator/empty.png',
+                        width: 270,
+                        height: 270,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          }
           return SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.only(
@@ -130,7 +145,7 @@ class _PremiumClassMenteeScreenState extends State<PremiumClassMenteeScreen> {
                             BoxShadow(
                               color: Colors.black.withOpacity(0.1),
                               blurRadius: 2,
-                              offset: Offset(0, 2),
+                              offset: const Offset(0, 2),
                             ),
                           ],
                           color: ColorStyle().whiteColors,
@@ -148,7 +163,7 @@ class _PremiumClassMenteeScreenState extends State<PremiumClassMenteeScreen> {
                               else if (statusButton == 3)
                                 createStatusButton(
                                     "Finished", ColorStyle().disableColors),
-                              SizedBox(height: 10),
+                              const SizedBox(height: 10),
                               Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -159,11 +174,12 @@ class _PremiumClassMenteeScreenState extends State<PremiumClassMenteeScreen> {
                                       fit: BoxFit.cover,
                                       width: 98,
                                       height: 98,
-                                      placeholder: (context, url) => Center(
+                                      placeholder: (context, url) =>
+                                          const Center(
                                         child: CircularProgressIndicator(),
                                       ),
                                       errorWidget: (context, url, error) =>
-                                          Icon(Icons.error),
+                                          const Icon(Icons.error),
                                     ),
                                   ),
                                   const SizedBox(width: 10),
@@ -210,14 +226,26 @@ class _PremiumClassMenteeScreenState extends State<PremiumClassMenteeScreen> {
             ),
           );
         } else {
-          return SizedBox(
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: SizedBox(
               width: double.infinity,
-              height: MediaQuery.of(context).size.height / 2.0,
-              child: const Padding(
-                padding: EdgeInsets.all(8.0),
-                child:
-                    Center(child: Text('Kamu belum memiliki kelas saat ini')),
-              ));
+              height: MediaQuery.of(context).size.height / 2,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      'assets/Handoff/ilustrator/empty.png',
+                      width: 270,
+                      height: 270,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
         }
       },
     );

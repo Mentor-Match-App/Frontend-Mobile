@@ -361,42 +361,58 @@ class _EvaluasiMentorScreenState extends State<EvaluasiMentorScreen> {
                             color: ColorStyle().primaryColors, fontSize: 16),
                       ),
                       Column(
-                        children: List.generate(
-                          widget.transactions
-                              .where((transaction) =>
-                                  transaction.paymentStatus == 'Approved')
-                              .length,
-                          (index) => Column(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: ElevetadButtonWithIcon(
-                                  title: widget.transactions[index].user!.name!,
-                                  onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            DetailEvaluationMenteeMentorScreen(
-                                          classId: widget
-                                              .transactions[index].classId
-                                              .toString(),
-                                          currentMenteeId: widget
-                                              .transactions[index].userId
-                                              .toString(),
-                                          menteeName: widget
-                                              .transactions[index].user!.name
-                                              .toString(),
-                                        ),
+                        children: widget.transactions
+                                .where((transaction) =>
+                                    transaction.paymentStatus == 'Approved')
+                                .isEmpty
+                            ? [
+                                Padding(
+                                  padding: const EdgeInsets.all(24.0),
+                                  child: Center(
+                                    child: Text("Belum ada mentee",
+                                        style: FontFamily().regularText),
+                                  ),
+                                )
+                              ]
+                            : List.generate(
+                                widget.transactions
+                                    .where((transaction) =>
+                                        transaction.paymentStatus == 'Approved')
+                                    .length,
+                                (index) => Column(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: ElevetadButtonWithIcon(
+                                        title: widget
+                                            .transactions[index].user!.name!,
+                                        onPressed: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  DetailEvaluationMenteeMentorScreen(
+                                                classId: widget
+                                                    .transactions[index].classId
+                                                    .toString(),
+                                                currentMenteeId: widget
+                                                    .transactions[index].userId
+                                                    .toString(),
+                                                menteeName: widget
+                                                    .transactions[index]
+                                                    .user!
+                                                    .name
+                                                    .toString(),
+                                              ),
+                                            ),
+                                          );
+                                        },
                                       ),
-                                    );
-                                  },
+                                    )
+                                  ],
                                 ),
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
+                              ),
+                      )
                     ],
                   ),
                 ),

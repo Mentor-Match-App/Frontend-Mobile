@@ -88,12 +88,11 @@ class _DetailMentorSessionsNewState extends State<DetailMentorSessionsNew> {
         children: [
           Column(
             children: [
-              Container(
-                width: double.infinity,
-                height: MediaQuery.of(context).size.height * 0.20,
-                decoration: BoxDecoration(
-                  color: ColorStyle().tertiaryColors,
-                ),
+              Image.asset(
+                'assets/Handoff/ilustrator/background.png',
+                width: double.maxFinite,
+                height: 180,
+                fit: BoxFit.cover,
               ),
               Transform.translate(
                 offset: const Offset(0.0, -60.0),

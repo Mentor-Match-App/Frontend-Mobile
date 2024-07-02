@@ -21,7 +21,7 @@ class EditProfileMentorScreen extends StatefulWidget {
   final List<Map<String, String>> experiences;
 
   const EditProfileMentorScreen({
-    Key? key,
+    super.key,
     required this.skills,
     required this.linkedin,
     required this.about,
@@ -29,7 +29,7 @@ class EditProfileMentorScreen extends StatefulWidget {
     required this.currentJob,
     required this.currentCompany,
     required this.experiences,
-  }) : super(key: key);
+  });
 
   @override
   _EditProfileMentorScreenState createState() =>
@@ -200,7 +200,7 @@ class _EditProfileMentorScreenState extends State<EditProfileMentorScreen> {
             ),
           ),
           if (_isSaving)
-            Center(
+            const Center(
               child: CircularProgressIndicator(),
             ),
         ],
@@ -295,7 +295,7 @@ class _EditProfileMentorScreenState extends State<EditProfileMentorScreen> {
         _textFieldWithTitle(
           "LinkedIn",
           _linkedinController,
-          "Enter Your LinkedIn URL",
+          "Enter your linkedIn URL",
           onChanged: (value) {
             setState(() {
               linkedin = value;
@@ -303,7 +303,7 @@ class _EditProfileMentorScreenState extends State<EditProfileMentorScreen> {
           },
           validator: (value) {
             if (value!.isEmpty) {
-              return "LinkedIn cannot be empty";
+              return 'LinkedIn URL is required';
             }
             // Regular expression to validate a URL
             const urlPattern =
@@ -311,7 +311,7 @@ class _EditProfileMentorScreenState extends State<EditProfileMentorScreen> {
             final urlRegExp = RegExp(urlPattern);
 
             if (!urlRegExp.hasMatch(value)) {
-              return 'Please enter a valid URL';
+              return 'Insert link URL: https://www.linkedin.com/in/yourname';
             }
 
             return null;
@@ -366,7 +366,7 @@ class _EditProfileMentorScreenState extends State<EditProfileMentorScreen> {
             return null;
           },
         ),
-        SizedBox(height: 8),
+        const SizedBox(height: 8),
         Align(
           alignment: Alignment.centerRight,
           child: TextButton.icon(
@@ -420,7 +420,7 @@ class _EditProfileMentorScreenState extends State<EditProfileMentorScreen> {
             return null;
           },
         ),
-        SizedBox(height: 8),
+        const SizedBox(height: 8),
         Align(
           alignment: Alignment.centerRight,
           child: TextButton.icon(
@@ -513,7 +513,7 @@ class _EditProfileMentorScreenState extends State<EditProfileMentorScreen> {
             Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => BottomNavbarMentorScreen(
+                    builder: (context) => const BottomNavbarMentorScreen(
                           activeScreen: 3,
                         )),
                 (route) => false);

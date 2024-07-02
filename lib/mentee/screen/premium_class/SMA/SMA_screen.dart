@@ -12,7 +12,6 @@ import 'package:mentormatch_apps/mentee/screen/premium_class/sma/tech_sma_screen
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
 import 'package:mentormatch_apps/widget/category_card.dart';
-import 'package:mentormatch_apps/widget/navbar.dart';
 import 'package:mentormatch_apps/widget/search_bar.dart';
 
 class SMAScreen extends StatefulWidget {
@@ -215,7 +214,7 @@ class _SMAScreenState extends State<SMAScreen> {
                           _handleMenuSelected('Kimia');
                         },
                         title: "Kimia",
-                        img: 'assets/Handoff/icon/categoryIcon/SMA/Kimia.png',
+                        img: 'assets/Handoff/icon/categoryIcon/SMA/kimia.png',
                       ),
                       CategoriCardWidget(
                         isActive: isTechActive,

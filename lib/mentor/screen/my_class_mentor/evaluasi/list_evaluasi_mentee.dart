@@ -10,12 +10,12 @@ class ListEvaluasiMentee extends StatefulWidget {
   final String currentMenteeId;
   final String classId;
 
-  ListEvaluasiMentee({
-    Key? key,
+  const ListEvaluasiMentee({
+    super.key,
     required this.nameMentee,
     required this.classId,
     required this.currentMenteeId,
-  }) : super(key: key);
+  });
 
   @override
   State<ListEvaluasiMentee> createState() => _ListEvaluasiMenteeState();
@@ -69,6 +69,16 @@ class _ListEvaluasiMenteeState extends State<ListEvaluasiMentee> {
                 .where((userClass) => userClass.id == widget.classId)
                 .toList();
 
+            var evaluations = userClass[0].evaluations ?? [];
+
+            if (evaluations.isEmpty) {
+              return Center(
+                child: Image.asset(
+                  'assets/Handoff/ilustrator/empty_evaluation.png',
+                  height: 200,
+                ),
+              );
+            }
             return ListView.builder(
               itemCount: userClass.length,
               itemBuilder: (context, index) {

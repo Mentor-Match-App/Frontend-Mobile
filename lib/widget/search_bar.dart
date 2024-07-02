@@ -30,33 +30,34 @@ class _SearchBarWidgetMentorState extends State<SearchBarWidgetMentor> {
           );
         },
         child: Container(
-          
           width: 800,
           height: 40,
           decoration: BoxDecoration(
             border: Border.all(color: ColorStyle().tertiaryColors),
             borderRadius: BorderRadius.circular(8),
           ),
-          child: TextField(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => SearchPageMentorMobile()),
-              );
-            },
-            obscureText: false,
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              labelText: 'Search by mentee name, class, or class name',
+          child: AbsorbPointer(
+            child: TextField(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => SearchPageMentorMobile()),
+                );
+              },
+              obscureText: false,
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                labelText: 'Search by mentee name, class, or class name',
 
-              /// style label text
-              labelStyle: TextStyle(
-                color: ColorStyle().textColors,
-                fontSize: 14,
+                /// style label text
+                labelStyle: TextStyle(
+                  color: ColorStyle().textColors,
+                  fontSize: 14,
+                ),
+
+                prefixIcon: Icon(Icons.search),
               ),
-
-              prefixIcon: Icon(Icons.search),
             ),
           ),
         ),
@@ -78,8 +79,7 @@ class SearchBarWidgetMentee extends StatelessWidget {
         onTap: () {
           Navigator.push(
             context,
-            MaterialPageRoute(
-                builder: (context) => SearchPageMenteeMobile()),
+            MaterialPageRoute(builder: (context) => SearchPageMenteeMobile()),
           );
         },
         child: Container(
