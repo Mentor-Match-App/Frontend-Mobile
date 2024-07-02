@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:mentormatch_apps/login/login_screen.dart';
 import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
-import 'package:mentormatch_apps/widget/button.dart';
 
 class SplashScreenFourth extends StatefulWidget {
   SplashScreenFourth({Key? key}) : super(key: key);
@@ -15,82 +14,101 @@ class _SplashScreenFourthState extends State<SplashScreenFourth> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ColorStyle().tertiaryColors,
-      body: Stack(
-        children: [
-          Positioned(
-            top: 50,
-            left: -300,
-            right: 0,
-            child: ClipPath(
-              clipper: HalfCircleClipper(),
-              child: Container(
-                height: 400,
-                decoration: BoxDecoration(
-                  color: ColorStyle().tertiaryColors,
-                  shape: BoxShape.circle,
-                ),
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: SingleChildScrollView(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+      ),
+      //warnanya dwngan #E37517
+      backgroundColor: Colors.white,
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(top: 80.0),
               child: Column(
                 children: [
-                  const SizedBox(
-                    height: 180,
-                  ),
-                  Image.asset(
-                    'assets/Handoff/ilustrator/community.png',
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(24),
-                    child: Container(
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        border: Border(
-                          left: BorderSide(
-                            color: ColorStyle().disableColors,
-                            width: 1,
-                          ),
-                        ),
-                      ),
-                      child: Text(
-                          'Temukan mentor yang berpengalaman dalam tingkat pendidikan Anda, dari SD hingga perguruan tinggi.',
-                          style: FontFamily().regularText),
+                  SizedBox(
+                    child: Image.asset(
+                      'assets/splashscreen_3.png',
+                      //mediaQuery untuk mengambil ukuran layar
+                      width: MediaQuery.of(context).size.width * 0.7,
                     ),
                   ),
-                  ElevatedButtonWidget(
-                    title: 'Get Started',
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Column(
+                      children: [
+                        Text(
+                          'Bagikan Keahlian Anda!',
+                          style: FontFamily().titleText.copyWith(
+                                color: ColorStyle().secondaryColors,
+                              ),
+                        ),
+                        const SizedBox(
+                          height: 4,
+                        ),
+                        Text(
+                            'Kamu juga dapat menjadi mentor bagi\norang lain untuk membagikan pengetahuanmu',
+                            textAlign: TextAlign.center,
+                            style: FontFamily().regularText),
+                      ],
+                    ),
+                  ),
+                  TextButton(
+                    style: ButtonStyle(
+                      backgroundColor: WidgetStateProperty.all<Color>(
+                        ColorStyle().primaryColors,
+                      ),
+                      minimumSize: WidgetStateProperty.all<Size>(
+                        Size(MediaQuery.of(context).size.width * 0.35, 50),
+                      ),
+                      shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                    ),
                     onPressed: () {
-                      Navigator.of(context).pushReplacement(MaterialPageRoute(
-                          builder: (context) => LoginScreen()));
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        PageRouteBuilder(
+                          pageBuilder:
+                              (context, animation, secondaryAnimation) =>
+                                  LoginScreen(),
+                          transitionsBuilder:
+                              (context, animation, secondaryAnimation, child) {
+                            const begin = Offset(1.0, 0.0);
+                            const end = Offset.zero;
+                            const curve = Curves.ease;
+
+                            var tween = Tween(begin: begin, end: end)
+                                .chain(CurveTween(curve: curve));
+
+                            return SlideTransition(
+                              position: animation.drive(tween),
+                              child: child,
+                            );
+                          },
+                        ),
+                        (route) => false,
+                      );
                     },
-                  )
+                    child: Text(
+                      'Get Started',
+                      style: FontFamily().buttonText.copyWith(
+                            color: ColorStyle().whiteColors,
+                          ),
+                    ),
+                  ),
                 ],
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
-}
-
-class HalfCircleClipper extends CustomClipper<Path> {
-  @override
-  Path getClip(Size size) {
-    var path = Path();
-    path.lineTo(0, size.height);
-    path.quadraticBezierTo(
-        size.width / 2, size.height, size.width, size.height);
-    path.lineTo(size.width, 0);
-    path.close();
-    return path;
-  }
-
-  @override
-  bool shouldReclip(CustomClipper<Path> oldClipper) => false;
 }

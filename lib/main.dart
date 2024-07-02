@@ -48,7 +48,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Widget homeScreen = SplashScreenFirst();
+    Widget homeScreen = SplashScreenfirst();
     if (isLoggedIn) {
       switch (userType) {
         case 'Mentee':
