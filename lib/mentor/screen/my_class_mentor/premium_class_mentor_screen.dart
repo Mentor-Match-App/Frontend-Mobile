@@ -6,7 +6,7 @@ import 'package:mentormatch_apps/style/color_style.dart';
 import 'package:mentormatch_apps/style/font_style.dart';
 
 class PremiumClassMentorScreen extends StatefulWidget {
-  PremiumClassMentorScreen({Key? key}) : super(key: key);
+  const PremiumClassMentorScreen({super.key});
 
   @override
   State<PremiumClassMentorScreen> createState() =>
@@ -110,9 +110,14 @@ class _PremiumClassMentorScreenState extends State<PremiumClassMentorScreen> {
     });
   }
 
-  List<AllClass> _sortClassesByPriority(List<AllClass> classes) {
-    classes.sort((a, b) => _getPriority(b).compareTo(_getPriority(a)));
-    return classes;
+  // sort class by priority (Active, Scheduled, Full, Finished, Expired)
+  List<AllClass> _sortClassesByPriority(List<AllClass> userClass) {
+    userClass.sort((a, b) {
+      int priorityA = _getPriority(a);
+      int priorityB = _getPriority(b);
+      return priorityA.compareTo(priorityB);
+    });
+    return userClass;
   }
 
   @override
@@ -121,9 +126,9 @@ class _PremiumClassMentorScreenState extends State<PremiumClassMentorScreen> {
       future: classData,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Container(
+          return SizedBox(
             height: MediaQuery.of(context).size.height / 2.0,
-            child: Center(child: CircularProgressIndicator()),
+            child: const Center(child: CircularProgressIndicator()),
           );
         } else if (snapshot.hasError) {
           return Text("Error: ${snapshot.error}");
@@ -205,7 +210,7 @@ class _PremiumClassMentorScreenState extends State<PremiumClassMentorScreen> {
                             BoxShadow(
                               color: Colors.black.withOpacity(0.1),
                               blurRadius: 2,
-                              offset: Offset(0, 2),
+                              offset: const Offset(0, 2),
                             ),
                           ],
                           color: ColorStyle().whiteColors,
@@ -265,8 +270,8 @@ class _PremiumClassMentorScreenState extends State<PremiumClassMentorScreen> {
           return SizedBox(
               width: double.infinity,
               height: MediaQuery.of(context).size.height / 2.0,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
+              child: const Padding(
+                padding: EdgeInsets.all(8.0),
                 child:
                     Center(child: Text('Kamu belum memiliki kelas saat ini')),
               ));

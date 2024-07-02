@@ -86,9 +86,8 @@ class _FormCreatePremiumClassScreenState
     "Sabtu",
     "Minggu"
   ];
-  List<String> selectedDays = [];
+  List<String> selectedDaysList = [];
 
-  /////////////// fuvtion sent ///////////////////
   TextEditingController scheduleController = TextEditingController();
   TextEditingController locationController = TextEditingController();
   TextEditingController addressController = TextEditingController();
@@ -108,9 +107,7 @@ class _FormCreatePremiumClassScreenState
 
   void deleteTextField(List<TextEditingController> controllers, int index) {
     setState(() {
-      // Pastikan untuk memanggil dispose pada controller yang akan dihapus
       controllers[index].dispose();
-      // Kemudian hapus controller dari list
       controllers.removeAt(index);
     });
   }
@@ -126,7 +123,6 @@ class _FormCreatePremiumClassScreenState
     for (var controller in targetLearningController) {
       controller.dispose();
     }
-    // Dispose controllers when widget is removed from the widget tree
     nameController.dispose();
     priceController.dispose();
     durationInDaysController.dispose();
@@ -279,6 +275,7 @@ class _FormCreatePremiumClassScreenState
 
             setState(() {
               scheduleController.text = sortedDays.join(', ');
+              selectedDaysList = sortedDays.cast<String>();
             });
           },
         );
@@ -305,7 +302,7 @@ class _FormCreatePremiumClassScreenState
           priceController.text.isEmpty ||
           durationInDaysController.text.isEmpty ||
           descriptionCobtroller.text.isEmpty ||
-          selectedDays.isEmpty ||
+          selectedDaysList.isEmpty ||
           (selectedLocation == 'Offline' && addressController.text.isEmpty) ||
           capacitymentee == 0 ||
           startDateController.text.isEmpty ||
@@ -853,7 +850,7 @@ class _FormCreatePremiumClassScreenState
     // Gunakan ekspresi reguler untuk memeriksa apakah value hanya berisi angka
     final isDigitsOnly = RegExp(r'^\d+$').hasMatch(value);
     if (!isDigitsOnly) {
-      return ' hanya boleh berisi angka';
+      return 'hanya boleh berisi angka';
     }
     return null;
   }

@@ -44,7 +44,8 @@ class _HomeMentorScreenState extends State<HomeMentorScreen> {
   final List<Map<String, String>> carouselData = [
     {
       'title': 'Hello,\nSelamat datang di MentorMatch',
-      'description': 'Mulailah membuat kelas yang akan membantu banyak orang',
+      'description':
+          'Mulailah membuat kelas yang akan membantu banyak orang. Jadi mentor dan berbagi ilmu Anda kepada generasi muda',
       'imagePath': 'assets/Handoff/ilustrator/hello.png'
     },
     {
@@ -56,7 +57,7 @@ class _HomeMentorScreenState extends State<HomeMentorScreen> {
     {
       'title': 'Siap untuk membuat perubahan?',
       'description':
-          'Dengan menjadi mentor, Anda memberikan ilmu inspiratif kepada generasi.',
+          'Dengan menjadi mentor, Anda memberikan ilmu inspiratif kepada generasi. Mulailah sekarang!',
       'imagePath': 'assets/Handoff/ilustrator/online_meeting.png'
     },
   ];
